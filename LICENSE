@@ -1,0 +1,7 @@
+LICENSE: MIT
+Targets: NavCog3, NavCogPreview, NavCogFP, NavCogTool
+License File: LICENSE.NavCog3.txt
+
+LICENSE: Apache 2.0
+Targets: NavCogMiraikan
+License File: LICENSE.Miraikan.txt

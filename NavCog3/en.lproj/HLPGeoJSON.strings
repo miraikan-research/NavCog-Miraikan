@@ -1,0 +1,131 @@
+/*******************************************************************************
+ * Copyright (c) 2014, 2016  IBM Corporation, Carnegie Mellon University and others
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *******************************************************************************/
+
+/* (No Commment) */
+"ElvButtonLeft" = "Elevator button is left side of the door";
+
+/* (No Commment) */
+"ElvButtonLeftPlural" = "Elevator buttons are left side of the door";
+
+/* (No Commment) */
+"ElvButtonMiddle" = "Elevator button is between the doors";
+
+/* (No Commment) */
+"ElvButtonMiddlePlural" = "Elevator buttons are between the doors";
+
+/* (No Commment) */
+"ElvButtonRight" = "Elevator button is right side of the door";
+
+/* (No Commment) */
+"ElvButtonRightPlural" = "Elevator buttons are right side of the door";
+
+/* (No Commment) */
+"ElvButtonLeftLower" = "Elevator button is lower left side of the door";
+
+/* (No Commment) */
+"ElvButtonLeftPluralLower" = "Elevator buttons are lower left side of the door";
+
+/* (No Commment) */
+"ElvButtonMiddleLower" = "Elevator button is lower between of the doors";
+
+/* (No Commment) */
+"ElvButtonMiddlePluralLower" = "Elevator buttons are lower between of the doors";
+
+/* (No Commment) */
+"ElvButtonRightLower" = "Elevator button is lower right side of the door";
+
+/* (No Commment) */
+"ElvButtonRightPluralLower" = "Elevator buttons are lower right side of the door";
+
+
+/* No comment provided by engineer. */
+"ElvButtonWithBraille" = "%@ with Braille.";
+
+/* (No Commment) */
+"ElvEqButtonBoth" = "Control buttons are both side of the exit. ";
+
+/* (No Commment) */
+"ElvEqButtonBothBraille" = "Control buttons with Braille are both side of the exit. ";
+
+/* (No Commment) */
+"ElvEqButtonBothLeftBraille" = "Control buttons are both side of the exit, Braille label is available in left. ";
+
+/* (No Commment) */
+"ElvEqButtonBothRightBraille" = "Control buttons are both side of the exit, Braille label is available in right. ";
+
+/* (No Commment) */
+"ElvEqButtonLeft" = "Control buttons are left side of the exit. ";
+
+/* (No Commment) */
+"ElvEqButtonLeftBraille" = "Control buttons with Braille are left side of the exit. ";
+
+/* (No Commment) */
+"ElvEqButtonRight" = "Control buttons are right side of the exit. ";
+
+/* (No Commment) */
+"ElvEqButtonRightBraille" = "Control buttons with Braille are right side of the exit. ";
+
+/* (No Commment) */
+"ElvEqWithVoiceGuide" = "Voice guidance is available";
+
+/* 横断歩道 */
+"crossing" = "crossing";
+
+/* 横断歩道の路面標示の無い交差点の道路 */
+"crossing without sign" = "crossing without sign";
+
+/* エレベーター */
+"elevator" = "elevator";
+
+/* エスカレーター */
+"escalator" = "escalator";
+
+/* 自由通路 */
+"free walkway" = "free walkway";
+
+/* 園路 */
+"garden walk" = "garden walk";
+
+/* 動く歩道 */
+"pedestrian conveyer" = "moving walkway";
+
+/* 歩行者専用道路 */
+"pedestrian road" = "pedestrian road";
+
+/* 踏切 */
+"rail crossing" = "rail crossing";
+
+/* スロープ */
+"ramp" = "ramp";
+
+/* 歩車共存道路 */
+"road" = "road";
+
+/* 歩道 */
+"sidewalk" = "sidewalk";
+
+/* 階段 */
+"stairway" = "stairway";
+
+/* 不明 */
+"unknown" = "unknown";
+

@@ -1,0 +1,125 @@
+//
+//  MapView.swift
+//  NavCogMiraikan
+//
+/*******************************************************************************
+ * Copyright (c) 2021 © Miraikan - The National Museum of Emerging Science and Innovation
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *******************************************************************************/
+
+import Foundation
+import UIKit
+
+struct FloorMapModel : Decodable {
+    let id: String
+    let floor: Int
+    let counter: String?
+    let title: String
+}
+
+class FloorMapView: BaseView {
+    
+    private var map: UIImageView!
+    private var image: UIImage!
+    
+    private let lblTitle = UILabel()
+    private let lblPlace = UILabel()
+    private let btnNav = BaseButton()
+    
+    init(_ model: FloorMapModel) {
+        super.init(frame: .zero)
+        setup(model)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func setup() {
+        super.setup()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.FLOOR_MAP.size,
+                                                    frameWidth: frame.width,
+                                                    imageSize: image.size)
+        
+        let gap = CGFloat(10)
+        var y = safeAreaInsets.top
+        lblTitle.frame.origin = CGPoint(x: 0, y: y)
+        
+        y += lblTitle.frame.height + gap
+        lblPlace.frame.origin = CGPoint(x: 0, y: y)
+        
+        y += lblPlace.frame.height + gap
+        map.frame = CGRect(x: 0,
+                           y: y,
+                           width: image.size.width * scaleFactor,
+                           height: image.size.height * scaleFactor)
+        
+        y += map.frame.height + gap
+        btnNav.center.x = center.x
+        btnNav.frame.origin.y = y
+        btnNav.frame.size.width += 30
+    }
+    
+    private func setup(_ model: FloorMapModel) {
+        lblTitle.text = model.title
+        let floor = model.floor
+        var floorText = "\(floor)階 "
+        
+        if let counter = model.counter {
+            // If the map exists, use it.
+            floorText += counter.uppercased()
+            image = UIImage(named: "f\(floor)_\(counter)")
+            map = UIImageView(image: image)
+        } else {
+            // Otherwise, use the placeholder
+            image = UIImage(named: "no_map")
+            map = UIImageView(image: image)
+        }
+        
+        lblPlace.text = floorText
+        [lblTitle, lblPlace].forEach({
+            $0.textColor = .black
+            $0.sizeToFit()
+            addSubview($0)
+        })
+        
+        addSubview(map)
+        
+        btnNav.setTitle("\(model.title)へナビ", for: .normal)
+        btnNav.setTitleColor(.black, for: .normal)
+        btnNav.backgroundColor = .cyan
+        btnNav.layer.cornerRadius = 5
+        btnNav.layer.borderWidth = 1
+        btnNav.layer.borderColor = UIColor.black.cgColor
+        btnNav.titleEdgeInsets.left = 15
+        btnNav.titleEdgeInsets.right = 15
+        btnNav.sizeToFit()
+        btnNav.tapInside { _ in
+            print("Navigation Started")
+        }
+        addSubview(btnNav)
+    }
+    
+}

@@ -1,0 +1,119 @@
+[{
+    "time": "10:30",
+    "place": "geo_cosmos",
+    "event": "asimo"
+}, {
+    "time": "10:30",
+    "place": "dome_theater",
+    "event": "birthday",
+    "description": "要予約"
+}, {
+    "time": "10:45",
+    "place": "co_studio",
+    "event": "co_studio_hayabusa",
+    "description": "（約15分）"
+}, {
+    "time": "11:00",
+    "place": "geo_cosmos",
+    "event": "digging_the_future",
+    "description": "（約4分）"
+}, {
+    "time": "11:30",
+    "place": "dome_theater",
+    "event": "nine_dimensions",
+    "description": "要予約"
+}, {
+    "time": "11:30",
+    "place": "geo_cosmos",
+    "event": "asimo",
+    "on_holiday": false
+}, {
+    "time": "11:45",
+    "place": "co_studio",
+    "event": "co_studio_cell",
+    "description": "（約15分）"
+}, {
+    "time": "12:00",
+    "place": "geo_cosmos",
+    "event": "covid_19",
+    "description": ""
+}, {
+    "time": "12:30",
+    "place": "dome_theater",
+    "event": "birthday",
+    "description": "要予約"
+}, {
+    "time": "12:30",
+    "place": "geo_cosmos",
+    "event": "asimo",
+    "on_holiday": false
+}, {
+    "time": "13:00",
+    "place": "geo_cosmos",
+    "event": "digging_the_future",
+    "description": "（約4分）"
+}, {
+    "time": "13:30",
+    "place": "dome_theater",
+    "event": "birthday",
+    "description": "要予約"
+}, {
+    "time": "13:30",
+    "place": "geo_cosmos",
+    "event": "asimo",
+    "on_holiday": false
+}, {
+    "time": "13:45",
+    "place": "co_studio",
+    "event": "co_studio_reborn",
+    "description": "（約15分）"
+}, {
+    "time": "14:00",
+    "place": "geo_cosmos",
+    "event": "covid_19",
+    "description": "（約3分）"
+}, {
+    "time": "14:30",
+    "place": "dome_theater",
+    "event": "nine_dimensions",
+    "description": "要予約"
+}, {
+    "time": "14:30",
+    "place": "geo_cosmos",
+    "event": "asimo"
+}, {
+    "time": "15:00",
+    "place": "geo_cosmos",
+    "event": "digging_the_future",
+    "description": "（約4分）"
+}, {
+    "time": "15:30",
+    "place": "dome_theater",
+    "event": "birthday",
+    "description": "要予約"
+}, {
+    "time": "15:30",
+    "place": "geo_cosmos",
+    "event": "asimo",
+    "on_holiday": false
+}, {
+    "time": "15:45",
+    "place": "co_studio",
+    "event": "co_studio_molecule",
+    "description": "（約15分）"
+}, {
+    "time": "16:00",
+    "place": "geo_cosmos",
+    "event": "apollo_11",
+    "description": "（約3分）"
+}, {
+    "time": "16:30",
+    "place": "dome_theater",
+    "event": "birthday",
+    "description": "要予約"
+}, {
+    "time": "16:30",
+    "place": "geo_cosmos",
+    "event": "asimo",
+    "on_holiday": false
+}]

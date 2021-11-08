@@ -1,0 +1,16 @@
+[{
+    "id": "geo_cosmos",
+	"floor": 3,
+	"counter": "l",
+    "title": "ジオ・コスモス"
+}, {
+    "id": "co_studio",
+	"floor": 5,
+	"counter": "1",
+    "title": "コ・スタジオ"
+}, {
+    "id": "dome_theater",
+    "floor": 6,
+    "counter": null,
+    "title": "ドームシアター"
+}]

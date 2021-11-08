@@ -1,0 +1,165 @@
+/*******************************************************************************
+ * Copyright (c) 2014, 2016  IBM Corporation, Carnegie Mellon University and others
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *******************************************************************************/
+
+/* label for distance unit option */
+"Distance unit" = "Distance unit";
+
+"RESTROOM" = "Restroom";
+
+/* Toilet for people with disability */
+"FOR_DISABLEDRESTROOM" = "Wheelchair accessible restroom";
+
+/* Toilet for female */
+"FOR_FEMALEFOR_DISABLEDRESTROOM" = "Female accessible restroom";
+
+/* Toilet for male */
+"FOR_MALEFOR_DISABLEDRESTROOM" = "Male accessible restroom";
+
+/* Toilet for female */
+"FOR_FEMALERESTROOM" = "Female restroom";
+
+/* Toilet for male */
+"FOR_MALERESTROOM" = "Male restroom";
+
+/* feet distance unit label */
+"Feet" = "Feet";
+
+/* No comment provided by engineer. */
+"Loading, please wait" = "Loading, please wait";
+
+/* meter distance unit label */
+"Meter" = "Meter";
+
+/* No comment provided by engineer. */
+"Navigation" = "Navigation History";
+
+/* No comment provided by engineer. */
+"Preview speed" = "Preview speed";
+
+/* label for tts options */
+"Speech_Sound" = "Speech / Sound";
+
+/* label for speech speed option */
+"Speech speed" = "Speech speed";
+
+/* (No Commment) */
+"TOILET" = "Toilet";
+
+/* No comment provided by engineer. */
+"UI_BLIND" = "Blind User";
+
+/* No comment provided by engineer. */
+"UI_Mode" = "UI Mode";
+
+/* No comment provided by engineer. */
+"UI_WHEELCHAIR" = "Wheelchair User / Sighted User";
+
+/* No comment provided by engineer. */
+"Use Elevator" = "Use Elevator";
+
+/* No comment provided by engineer. */
+"Use Escalator" = "Use Escalator";
+
+"Use Moving Walkway" = "Use Moving Walkway";
+
+/* No comment provided by engineer. */
+"Use Stairs" = "Use Stairs";
+
+/* (No Commment) */
+"checkNetworkConnection" = "Check network connection";
+
+"SPEECH_SPEED_CHECK" = "Speech speed is %.2f";
+
+"Exercise" = "Exercise";
+
+"Launch Exercise" = "Launch Exercise";
+
+"Prefer Tactile Paving" = "Prefer Tactile Paving";
+
+"vibrateSetting" = "Use Vibration";
+
+"soundEffectSetting" = "Use Sound Effect";
+
+"for_bone_conduction_headset" = "Sound Effect for Bone Conduction Headset";
+
+"Reset_Location" = "Re-init Localization";
+
+"Open_with_Safari" = "Open with Safari?";
+"Open_with_Safari_Message" = "Is it okay to open a webpage with Safari?";
+
+"CheckServerList" = "Checking server list...";
+"CheckAgreement" = "Checking server setting...";
+"CheckServerConfig" = "Checking server setting...";
+"DOWNLOADING_DATA" = "Downloading data files...";
+
+"NoAltimeterAlertTitle" = "No Barometer Sensor";
+"NoAltimeterAlertMessage" = "NavCog does not support this device. Localization could be unstable because your device does not have barometer sensor.";
+"I_Understand" = "I understand";
+
+"BluetoothOffAlertTitle" = "Bluetooth is off";
+"BluetoothOffAlertMessage" = "You need to turn on bluetooth to enable indoor localization function.";
+"CANCEL" = "Cancel";
+"SETTING" = "Open Settings";
+
+"LocationNotAllowedTitle" = "Location not allowed";
+"LocationNotAllowedMessage" = "You need to allow access to location service to enable indoor localization function.
+From NavCog settings, please select
+Location ->
+While Using the App";
+
+"THANKYOU_SENDING" = "Thank you for your feedback!
+Feedback is sending...";
+
+"Help" = "Help";
+"Instructions" = "Instructions";
+"OpenHelp" = "Open help page";
+"OpenInstructions" = "Open instructions page";
+"Back to mode selection" = "Back to mode selection";
+"Send Feedback" = "Send Feedback";
+"feedbackSubject" = "NavCog-Feedback(%@)";
+"feedbackBody" = "Please input your feedback here.";
+
+"NeedToUpdateAppTitle" = "App Update";
+"NeedToUpdateAppMessage" = "App is required to be updated";
+"OpenAppStore" = "Open App Store";
+
+/* Mode title for "Visually Impaired User" */
+"user_blind" = "Visually Impaired User";
+
+/* Mode title for "Wheelchair User" */
+"user_wheelchair" = "Wheelchair User";
+
+/* Mode title for "Stroller User" */
+"user_stroller" = "Baby Stroller User";
+
+/* Mode title for "General Pedestrian" */
+"user_general" = "General Pedestrian";
+
+/* Mode heading title of setting menu */
+"Mode" = "Mode";
+
+/* Skip to read facility infomation when users pass by */
+"Ignore facility info." = "Ignore facility info.";
+
+/* Show POI detail when users change their heading toward the POI */
+"Show POI with Action" = "Show POI with Action";
+

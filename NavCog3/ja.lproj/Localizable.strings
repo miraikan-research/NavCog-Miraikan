@@ -1,0 +1,182 @@
+/*******************************************************************************
+ * Copyright (c) 2014, 2016  IBM Corporation, Carnegie Mellon University and others
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *******************************************************************************/
+
+/* label for distance unit option */
+"Distance unit" = "距離の単位";
+
+/* label for exercise options */
+"Exercise" = "練習";
+
+"RESTROOM" = "トイレ";
+
+/* Toilet for people with disability */
+"FOR_DISABLEDRESTROOM" = "多機能トイレ";
+
+/* Toilet for female */
+"FOR_FEMALEFOR_DISABLEDRESTROOM" = "女性用多機能トイレ";
+
+/* Toilet for male */
+"FOR_MALEFOR_DISABLEDRESTROOM" = "男性用多機能トイレ";
+
+/* Toilet for female */
+"FOR_FEMALERESTROOM" = "女性用トイレ";
+
+/* Toilet for male */
+"FOR_MALERESTROOM" = "男性用トイレ";
+
+/* feet distance unit label */
+"Feet" = "フィート";
+
+/* No comment provided by engineer. */
+"Initial zoom level for navigation" = "ナビゲーション開始時のズーム";
+
+/* No comment provided by engineer. */
+"Launch Exercise" = "練習を始める";
+
+/* No comment provided by engineer. */
+"Loading, please wait" = "読み込んでいます、少々お待ちください";
+
+/* label for map */
+"Map" = "地図";
+
+/* meter distance unit label */
+"Meter" = "メートル";
+
+/* No comment provided by engineer. */
+"Navigation" = "案内の履歴";
+
+/* No comment provided by engineer. */
+"Prefer Tactile Paving" = "点字ブロックを優先する";
+
+/* No comment provided by engineer. */
+"Preview speed" = "プレビュー速度";
+
+/* No comment provided by engineer. */
+"Preview with action" = "振ってプレビュー";
+
+/* No comment provided by engineer. */
+"SPEECH_SPEED_CHECK" = "読み上げ速度:%.2f";
+
+/* label for speech speed option */
+"Speech speed" = "読み上げ速度";
+
+/* label for tts options */
+"Speech_Sound" = "読み上げ / 音";
+
+/* (No Commment) */
+"TOILET" = "トイレ";
+
+/* No comment provided by engineer. */
+"UI_BLIND" = "視覚障害者ユーザ";
+
+/* No comment provided by engineer. */
+"UI_Mode" = "UIモード";
+
+/* No comment provided by engineer. */
+"UI_WHEELCHAIR" = "車椅子ユーザ / 晴眼者ユーザ";
+
+/* No comment provided by engineer. */
+"Use Elevator" = "エレベーターを使う";
+
+/* No comment provided by engineer. */
+"Use Escalator" = "エスカレーターを使う";
+
+"Use Moving Walkway" = "動く歩道を使う";
+
+/* No comment provided by engineer. */
+"Use Stairs" = "階段を使う";
+
+/* (No Commment) */
+"checkNetworkConnection" = "ネットワークの接続を確認してください";
+
+/* No comment provided by engineer. */
+"soundEffectSetting" = "効果音で通知";
+
+/* No comment provided by engineer. */
+"vibrateSetting" = "振動で通知";
+
+"for_bone_conduction_headset" = "骨伝導ヘッドフォン用の効果音";
+
+"Reset_Location" = "位置推定をやり直す";
+
+"Open_with_Safari" = "Safariで開く";
+"Open_with_Safari_Message" = "ウェブページをSafariで開きますが、よろしいですか？";
+
+"CheckServerList" = "リストを確認中...";
+"CheckAgreement" = "設定を確認中...";
+"CheckServerConfig" = "設定を確認中...";
+"DOWNLOADING_DATA" = "データをダウンロード中...";
+
+"NoAltimeterAlertTitle" = "気圧計がありません";
+"NoAltimeterAlertMessage" = "NavCogはお使いのデバイスをサポートしていません。お使いのデバイスには気圧計が搭載されていないため、位置推定結果が不安定になる可能性があります。";
+"I_Understand" = "了解しました";
+
+"BluetoothOffAlertTitle" = "Bluetoothがオフです";
+"BluetoothOffAlertMessage" = "屋内での位置推定の機能を使うためにはBluetoothをオンにする必要があります。";
+"CANCEL" = "キャンセル";
+"SETTING" = "設定を開く";
+
+
+"LocationNotAllowedTitle" = "位置情報が許可されていません";
+"LocationNotAllowedMessage" = "屋内での位置推定の機能を使うためには位置情報サービスを許可する必要があります。
+NavCogの設定画面から
+位置情報　→
+このAppの使用中のみ許可
+を選択します。";
+
+"THANKYOU_SENDING" = "アンケートにご協力ありがとうございます。
+データを送信中です...";
+
+"Help" = "ヘルプ";
+"Instructions" = "はじめに";
+"OpenHelp" = "ヘルプページを開く";
+"OpenInstructions" = "はじめにを開く";
+"Back to mode selection" = "モード選択に戻る";
+"Send Feedback" = "フィードバックを送信";
+"feedbackSubject" = "NavCog-フィードバック(%@)";
+"feedbackBody" = "フィードバック内容を記載してください";
+
+"NeedToUpdateAppTitle" = "アプリの更新";
+"NeedToUpdateAppMessage" = "アプリの更新が必要です";
+"OpenAppStore" = "App Storeを開く";
+
+
+/* Mode title for "Visually Impaired User" */
+"user_blind" = "視覚障がい者";
+
+/* Mode title for "Wheelchair User" */
+"user_wheelchair" = "車いす利用者";
+
+/* Mode title for "Stroller User" */
+"user_stroller" = "ベビーカー利用者";
+
+/* Mode title for "General Pedestrian" */
+"user_general" = "一般歩行者";
+
+/* Mode heading title of setting menu */
+"Mode" = "モード";
+
+/* Skip to read facility infomation when users pass by */
+"Ignore facility info." = "周辺施設情報を読み上げない";
+
+/* Show POI detail when users change their heading toward the POI */
+"Show POI with Action" = "向いて音声ガイド";
