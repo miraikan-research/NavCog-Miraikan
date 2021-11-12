@@ -81,16 +81,14 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
         btnNavi.sizeToFit()
         btnNavi.tapInside({ [weak self] _ in
             guard let _self = self else { return }
-            if let n = _self.nav {
+            if let n = _self.navVC {
                 if let nodeId = _self.nodeId {
                     n.openMap(nodeId: nodeId)
                 }
                 if let locations = ExhibitionDataStore.shared.exhibitions?
-                    .first(where: { $0.id == _self.id })?
-                    .locations {
-                    let vc = FloorSelectionController(vals: [0: locations],
-                                                      cellId: "floorCell",
-                                                      title: n.title)
+                    .first(where: { $0.id == _self.id })?.locations {
+                    let vc = FloorSelectionController(title: n.title)
+                    vc.items = [0: locations]
                     n.show(vc, sender: nil)
                 }
             }

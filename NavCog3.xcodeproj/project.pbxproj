@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A9AE0FB45967A7B8CDC33BC /* libPods-NavCogPreview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35160725C7FDA4E6ABCFA139 /* libPods-NavCogPreview.a */; };
+		19514A013A0165766E9AAE2E /* libPods-NavCog3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4434DBB4252C53354B18A48B /* libPods-NavCog3.a */; };
 		3008B8B326DDFC42008C27B1 /* HLPDialog in Frameworks */ = {isa = PBXBuildFile; productRef = 3008B8B226DDFC42008C27B1 /* HLPDialog */; };
 		341B73DAD151025E2A79374B /* libPods-NavCogFP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA9F07AEB733BB60BE0E8A9 /* libPods-NavCogFP.a */; };
 		35D0F4EE3B343B80AFB2F3EF /* libPods-NavCogMiraikan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D028BF9D3DF5E5BCF988A86C /* libPods-NavCogMiraikan.a */; };
@@ -112,7 +113,7 @@
 		7E5D3BC81F039E9B002420DA /* POIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5D3BC71F039E9B002420DA /* POIViewController.m */; };
 		7E5E65101F3067F100FE43E5 /* ExpConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5E650F1F3067F100FE43E5 /* ExpConfig.m */; };
 		7E6047921FE0D21C003440B0 /* HLPLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91D384B1F628107008A34D1 /* HLPLocationManager.framework */; };
-		7E6047931FE0D2F8003440B0 /* libPods-NavCog3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AFAE1C3CB403E5BB2703A0E /* libPods-NavCog3.a */; };
+		7E6047931FE0D2F8003440B0 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7E6047971FE0D3DE003440B0 /* HLPLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91D384D1F628161008A34D1 /* HLPLocationManager.framework */; };
 		7E6047981FE0D3DE003440B0 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91EA2E91F550F2800548203 /* Mantle.framework */; };
 		7E60479A1FE0D403003440B0 /* HLPLocationManager.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91D384D1F628161008A34D1 /* HLPLocationManager.framework */; };
@@ -244,7 +245,12 @@
 		D320F5EA2702DFF400F6AD28 /* miraikan_serverlist.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5E92702DFF400F6AD28 /* miraikan_serverlist.json */; };
 		D320F5EB2702DFF400F6AD28 /* miraikan_serverlist.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5E92702DFF400F6AD28 /* miraikan_serverlist.json */; };
 		D320F5EC2702DFF400F6AD28 /* miraikan_serverlist.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5E92702DFF400F6AD28 /* miraikan_serverlist.json */; };
-		D37359292733BB7000A970D3 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37359282733BB7000A970D3 /* BaseListController.swift */; };
+		D364735B273E0CFD00C110B0 /* BaseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735A273E0CFD00C110B0 /* BaseListView.swift */; };
+		D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735C273E0D4400C110B0 /* ExhibitionListController.swift */; };
+		D364735F273E0D4400C110B0 /* EventListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735D273E0D4400C110B0 /* EventListController.swift */; };
+		D3647363273E0D8100C110B0 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3647362273E0D8100C110B0 /* BaseListController.swift */; };
+		D3647365273E0DAE00C110B0 /* RegularExhibitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3647364273E0DAE00C110B0 /* RegularExhibitionController.swift */; };
+		D364736D273E140C00C110B0 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364736C273E140C00C110B0 /* Home.swift */; };
 		D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E97151D98B80100CF2960 /* NavDataStore.m */; };
 		D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E371E3F1E5600208042 /* ServerConfig.m */; };
 		D3A117F027294B0B00BEC1C8 /* AgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E2A1E3F1E3700208042 /* AgreementViewController.m */; };
@@ -263,14 +269,12 @@
 		D3A117FD27294B0B00BEC1C8 /* NavUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E433DD31D6E84D300C6C993 /* NavUtil.m */; };
 		D3A117FE27294B0B00BEC1C8 /* ExhibitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EF87A2704072A00DB9444 /* ExhibitionView.swift */; };
 		D3A117FF27294B0B00BEC1C8 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5992702B8F600F6AD28 /* EventView.swift */; };
-		D3A1180027294B0B00BEC1C8 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F58B2702B8F600F6AD28 /* TodayView.swift */; };
 		D3A1180127294B0B00BEC1C8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EDEDC261D1E0C6800AC111A /* ViewController.m */; };
 		D3A1180227294B0B00BEC1C8 /* NavDeviceTTS.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E433DCA1D6E846300C6C993 /* NavDeviceTTS.m */; };
 		D3A1180327294B0B00BEC1C8 /* BlindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6E42E81D90FD1B006B6899 /* BlindViewController.m */; };
 		D3A1180427294B0B00BEC1C8 /* AppAboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5902702B8F600F6AD28 /* AppAboutView.swift */; };
 		D3A1180527294B0B00BEC1C8 /* NavCommander.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF7F7A71DD17D4A000A625A /* NavCommander.m */; };
 		D3A1180627294B0B00BEC1C8 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7EDEDC231D1E0C6800AC111A /* AppDelegate.mm */; settings = {COMPILER_FLAGS = "-fmodules -fcxx-modules"; }; };
-		D3A1180727294B0B00BEC1C8 /* RegularExhibitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F58A2702B8F600F6AD28 /* RegularExhibitionView.swift */; };
 		D3A1180827294B0B00BEC1C8 /* NavNavigator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5150A31D8BF32800ED25FB /* NavNavigator.m */; };
 		D3A1180927294B0B00BEC1C8 /* MiraikanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */; };
 		D3A1180A27294B0B00BEC1C8 /* ConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E08DB571DB9F08E00E82161 /* ConfigManager.m */; };
@@ -294,13 +298,11 @@
 		D3A1181C27294B0B00BEC1C8 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5802702B8F600F6AD28 /* Model.swift */; };
 		D3A1181D27294B0B00BEC1C8 /* RatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E683DF21E42DE8100D04037 /* RatingViewController.m */; };
 		D3A1181E27294B0B00BEC1C8 /* HLPDataUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8A33BC1D917D5200D20CD5 /* HLPDataUtil.m */; };
-		D3A1181F27294B0B00BEC1C8 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F58C2702B8F600F6AD28 /* Home.swift */; };
 		D3A1182027294B0B00BEC1C8 /* NavDebugHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E1F9F291DEEB1D3003E1B23 /* NavDebugHelper.m */; };
 		D3A1182127294B0B00BEC1C8 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E96D9321DACD0C700D57C8C /* SearchViewController.m */; };
 		D3A1182227294B0B00BEC1C8 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7EDEDC201D1E0C6800AC111A /* main.mm */; };
 		D3A1182327294B0B00BEC1C8 /* HLPSettingViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E9238E01D5189F100875766 /* HLPSettingViewCell.m */; };
 		D3A1182427294B0B00BEC1C8 /* FloorSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */; };
-		D3A1182527294B0B00BEC1C8 /* ExhibitionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5892702B8F600F6AD28 /* ExhibitionListView.swift */; };
 		D3A1182627294B0B00BEC1C8 /* Logging.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E9866CD1D5174780073CB49 /* Logging.m */; };
 		D3A1182727294B0B00BEC1C8 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA49A341F9AE21900E1369B /* WebViewController.m */; };
 		D3A1182827294B0B00BEC1C8 /* NavSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF6FBB11DA4DD8200382F76 /* NavSound.m */; };
@@ -372,6 +374,7 @@
 		35160725C7FDA4E6ABCFA139 /* libPods-NavCogPreview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NavCogPreview.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AF7CE4FA37DA8CC1D99A442 /* Pods-NavCogFP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogFP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogFP/Pods-NavCogFP.debug.xcconfig"; sourceTree = "<group>"; };
 		40D977CBB37A56EF684BDB52 /* Pods-NavCogFP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogFP.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogFP/Pods-NavCogFP.release.xcconfig"; sourceTree = "<group>"; };
+		4434DBB4252C53354B18A48B /* libPods-NavCog3.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NavCog3.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49EF4A10A8A15A8B96509BB9 /* Pods-NavCogPreview.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogPreview.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogPreview/Pods-NavCogPreview.release.xcconfig"; sourceTree = "<group>"; };
 		4BC556D591657CDFAF060D0D /* Pods-NavCogMiraikan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogMiraikan.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogMiraikan/Pods-NavCogMiraikan.release.xcconfig"; sourceTree = "<group>"; };
 		553D73F9F69079BF8547ED01 /* Pods-NavCogMiraikan.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogMiraikan.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogMiraikan/Pods-NavCogMiraikan.debug.xcconfig"; sourceTree = "<group>"; };
@@ -613,10 +616,6 @@
 		D320F5852702B8F600F6AD28 /* schedule.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = schedule.json; sourceTree = "<group>"; };
 		D320F5862702B8F600F6AD28 /* exhibition_category.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = exhibition_category.json; sourceTree = "<group>"; };
 		D320F5872702B8F600F6AD28 /* floor_map.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = floor_map.json; sourceTree = "<group>"; };
-		D320F5892702B8F600F6AD28 /* ExhibitionListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionListView.swift; sourceTree = "<group>"; };
-		D320F58A2702B8F600F6AD28 /* RegularExhibitionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularExhibitionView.swift; sourceTree = "<group>"; };
-		D320F58B2702B8F600F6AD28 /* TodayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
-		D320F58C2702B8F600F6AD28 /* Home.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		D320F58F2702B8F600F6AD28 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D320F5902702B8F600F6AD28 /* AppAboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppAboutView.swift; sourceTree = "<group>"; };
 		D320F5912702B8F600F6AD28 /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
@@ -629,7 +628,12 @@
 		D320F5E42702B94500F6AD28 /* NavCogMiraikan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NavCogMiraikan-Bridging-Header.h"; sourceTree = "<group>"; };
 		D320F5E52702D93700F6AD28 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D320F5E92702DFF400F6AD28 /* miraikan_serverlist.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = miraikan_serverlist.json; path = Miraikan/Utils/miraikan_serverlist.json; sourceTree = SOURCE_ROOT; };
-		D37359282733BB7000A970D3 /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
+		D364735A273E0CFD00C110B0 /* BaseListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseListView.swift; sourceTree = "<group>"; };
+		D364735C273E0D4400C110B0 /* ExhibitionListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionListController.swift; sourceTree = "<group>"; };
+		D364735D273E0D4400C110B0 /* EventListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListController.swift; sourceTree = "<group>"; };
+		D3647362273E0D8100C110B0 /* BaseListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseListController.swift; path = "../../../NavCog-Miraikan-Backup/Miraikan/Components/BaseListController.swift"; sourceTree = "<group>"; };
+		D3647364273E0DAE00C110B0 /* RegularExhibitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularExhibitionController.swift; sourceTree = "<group>"; };
+		D364736C273E140C00C110B0 /* Home.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		D38EF876270406FE00DB9444 /* MiraikanAboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiraikanAboutView.swift; sourceTree = "<group>"; };
 		D38EF87A2704072A00DB9444 /* ExhibitionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionView.swift; sourceTree = "<group>"; };
 		D38EF87E2704492000DB9444 /* HLPHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLPHelper.h; sourceTree = "<group>"; };
@@ -660,7 +664,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E6047931FE0D2F8003440B0 /* libPods-NavCog3.a in Frameworks */,
+				7E6047931FE0D2F8003440B0 /* (null) in Frameworks */,
 				7E6047921FE0D21C003440B0 /* HLPLocationManager.framework in Frameworks */,
 				7E9657F01F619B9300A6B489 /* AssetsLibrary.framework in Frameworks */,
 				7EAE818F1E41E89C007B50D3 /* CoreBluetooth.framework in Frameworks */,
@@ -671,6 +675,7 @@
 				A91EA2E81F550EF800548203 /* Mantle.framework in Frameworks */,
 				7E1F9F2C1DEEB671003E1B23 /* MultipeerConnectivity.framework in Frameworks */,
 				A91AAE5E1F6A786300B5F903 /* ZipArchive.framework in Frameworks */,
+				19514A013A0165766E9AAE2E /* libPods-NavCog3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,6 +751,7 @@
 				9BA9F07AEB733BB60BE0E8A9 /* libPods-NavCogFP.a */,
 				35160725C7FDA4E6ABCFA139 /* libPods-NavCogPreview.a */,
 				D028BF9D3DF5E5BCF988A86C /* libPods-NavCogMiraikan.a */,
+				4434DBB4252C53354B18A48B /* libPods-NavCog3.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1091,11 +1097,11 @@
 				D320F5E52702D93700F6AD28 /* Assets.xcassets */,
 				D320F5922702B8F600F6AD28 /* Components */,
 				D320F5972702B8F600F6AD28 /* Contents */,
-				D320F58C2702B8F600F6AD28 /* Home.swift */,
 				D320F5882702B8F600F6AD28 /* Lists */,
 				D320F58D2702B8F600F6AD28 /* Settings */,
 				D320F57F2702B8F600F6AD28 /* Utils */,
 				D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */,
+				D364736C273E140C00C110B0 /* Home.swift */,
 				D320F5792702B8BB00F6AD28 /* NavCogFP-Bridging-Header.h */,
 				D320F57A2702B8BB00F6AD28 /* NavCogPreview-Bridging-Header.h */,
 				D320F5E42702B94500F6AD28 /* NavCogMiraikan-Bridging-Header.h */,
@@ -1122,9 +1128,9 @@
 		D320F5882702B8F600F6AD28 /* Lists */ = {
 			isa = PBXGroup;
 			children = (
-				D320F5892702B8F600F6AD28 /* ExhibitionListView.swift */,
-				D320F58A2702B8F600F6AD28 /* RegularExhibitionView.swift */,
-				D320F58B2702B8F600F6AD28 /* TodayView.swift */,
+				D364735D273E0D4400C110B0 /* EventListController.swift */,
+				D364735C273E0D4400C110B0 /* ExhibitionListController.swift */,
+				D3647364273E0DAE00C110B0 /* RegularExhibitionController.swift */,
 				D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */,
 			);
 			path = Lists;
@@ -1148,7 +1154,8 @@
 				D320F5942702B8F600F6AD28 /* Customized.swift */,
 				D320F5952702B8F600F6AD28 /* BaseScrollView.swift */,
 				D320F5962702B8F600F6AD28 /* BaseView.swift */,
-				D37359282733BB7000A970D3 /* BaseListController.swift */,
+				D3647362273E0D8100C110B0 /* BaseListController.swift */,
+				D364735A273E0CFD00C110B0 /* BaseListView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2054,6 +2061,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */,
+				D364735B273E0CFD00C110B0 /* BaseListView.swift in Sources */,
 				D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */,
 				D3A117F027294B0B00BEC1C8 /* AgreementViewController.m in Sources */,
 				D3A117F127294B0B00BEC1C8 /* InitViewController.mm in Sources */,
@@ -2062,8 +2070,10 @@
 				D3A117F427294B0B00BEC1C8 /* ServerSelectionViewController.m in Sources */,
 				D3A117F527294B0B00BEC1C8 /* MiraikanMapController.m in Sources */,
 				D3A117F627294B0B00BEC1C8 /* HLPSettingHelper.m in Sources */,
+				D3647363273E0D8100C110B0 /* BaseListController.swift in Sources */,
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
 				D3A117F827294B0B00BEC1C8 /* NavBlindWebView.m in Sources */,
+				D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */,
 				D3A117F927294B0B00BEC1C8 /* DownloadViewController.m in Sources */,
 				D3A117FA27294B0B00BEC1C8 /* NavCoverView.m in Sources */,
 				D3A117FB27294B0B00BEC1C8 /* DestinationTableViewController.m in Sources */,
@@ -2071,19 +2081,18 @@
 				D3A117FD27294B0B00BEC1C8 /* NavUtil.m in Sources */,
 				D3A117FE27294B0B00BEC1C8 /* ExhibitionView.swift in Sources */,
 				D3A117FF27294B0B00BEC1C8 /* EventView.swift in Sources */,
-				D3A1180027294B0B00BEC1C8 /* TodayView.swift in Sources */,
 				D3A1180127294B0B00BEC1C8 /* ViewController.m in Sources */,
 				D3A1180227294B0B00BEC1C8 /* NavDeviceTTS.m in Sources */,
 				D3A1180327294B0B00BEC1C8 /* BlindViewController.m in Sources */,
 				D3A1180427294B0B00BEC1C8 /* AppAboutView.swift in Sources */,
+				D3647365273E0DAE00C110B0 /* RegularExhibitionController.swift in Sources */,
 				D3A1180527294B0B00BEC1C8 /* NavCommander.m in Sources */,
 				D3A1180627294B0B00BEC1C8 /* AppDelegate.mm in Sources */,
-				D3A1180727294B0B00BEC1C8 /* RegularExhibitionView.swift in Sources */,
 				D3A1180827294B0B00BEC1C8 /* NavNavigator.m in Sources */,
 				D3A1180927294B0B00BEC1C8 /* MiraikanController.swift in Sources */,
 				D3A1180A27294B0B00BEC1C8 /* ConfigManager.m in Sources */,
-				D37359292733BB7000A970D3 /* BaseListController.swift in Sources */,
 				D3A1180B27294B0B00BEC1C8 /* NavPreviewer.m in Sources */,
+				D364736D273E140C00C110B0 /* Home.swift in Sources */,
 				D3A1180C27294B0B00BEC1C8 /* FloorMapView.swift in Sources */,
 				D3A1180D27294B0B00BEC1C8 /* ScreenshotHelper.m in Sources */,
 				D3A1180E27294B0B00BEC1C8 /* WelcomViewController.m in Sources */,
@@ -2103,13 +2112,12 @@
 				D3A1181C27294B0B00BEC1C8 /* Model.swift in Sources */,
 				D3A1181D27294B0B00BEC1C8 /* RatingViewController.m in Sources */,
 				D3A1181E27294B0B00BEC1C8 /* HLPDataUtil.m in Sources */,
-				D3A1181F27294B0B00BEC1C8 /* Home.swift in Sources */,
 				D3A1182027294B0B00BEC1C8 /* NavDebugHelper.m in Sources */,
+				D364735F273E0D4400C110B0 /* EventListController.swift in Sources */,
 				D3A1182127294B0B00BEC1C8 /* SearchViewController.m in Sources */,
 				D3A1182227294B0B00BEC1C8 /* main.mm in Sources */,
 				D3A1182327294B0B00BEC1C8 /* HLPSettingViewCell.m in Sources */,
 				D3A1182427294B0B00BEC1C8 /* FloorSelectionController.swift in Sources */,
-				D3A1182527294B0B00BEC1C8 /* ExhibitionListView.swift in Sources */,
 				D3A1182627294B0B00BEC1C8 /* Logging.m in Sources */,
 				D3A1182727294B0B00BEC1C8 /* WebViewController.m in Sources */,
 				D3A1182827294B0B00BEC1C8 /* NavSound.m in Sources */,

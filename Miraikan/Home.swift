@@ -37,52 +37,48 @@ fileprivate struct CardModel : Decodable {
     let isOnline: String?
 }
 
-// Layout for Event Card
-fileprivate class CardView : BaseView {
-    private var img : UIImage!
-    private var imgView: UIImageView!
+// Layout for Special Exhibition or Event
+fileprivate class CardRow : BaseRow {
+    // Default image
+    private var img = UIImage(named: "card_loading")!
+    // Prevent it from reloading every time
+    private var isSet : Bool = false
+    
+    // Views
+    private let imgView = UIImageView()
     private let lblTitle = AutoWrapLabel()
     private let lblPlace = AutoWrapLabel()
     
-    private let model : CardModel
-    
+    // Sizing
     private let gapX = CGFloat(10)
     private let gapY: CGFloat = 5
     
-    init(_ model: CardModel) {
-        self.model = model
-        img = UIImage(named: "card_loading")
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addSubview(imgView)
+        addSubview(lblTitle)
+        addSubview(lblPlace)
+    }
+    
+    public func configure(_ model: CardModel) {
+        if isSet { return }
+        
         if let data = try? Data(contentsOf: URL(string: "\(Host.miraikan.address)\(model.imagePc)")!),
            let image = UIImage(data: data) {
             img = image
         } else {
-            img = UIImage(named: "card_not_available")
+            img = UIImage(named: "card_not_available")!
         }
-        imgView = UIImageView(image: img)
+        imgView.image = img
         
         lblTitle.text = model.title
         lblPlace.text = model.isOnline != nil ? "場所：オンライン" : "場所：xxxxxx"
         
-        super.init(frame: .zero)
+        isSet = true
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func setup() {
-        super.setup()
-        
-        [imgView, lblTitle, lblPlace].forEach({ addSubview($0) })
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction))
-        addGestureRecognizer(tap)
-    }
-    
-    @objc private func tapAction() {
-        if let n = nav {
-            n.show(BaseController(ExhibitionView(permalink: model.permalink), title: model.title), sender: nil)
-        }
     }
     
     override func layoutSubviews() {
@@ -124,249 +120,83 @@ fileprivate class CardView : BaseView {
     
 }
 
-// Specific group for Card Layout
-fileprivate class CardSection : BaseView {
-    
-    private var rows = [CardView]()
-    
-    override func setup() {
-        super.setup()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        var y: CGFloat = 0
-        rows.forEach({ row in
-            row.frame = CGRect(origin: CGPoint(x: insets.left, y: y),
-                               size: row.sizeThatFits(innerSize))
-            y += row.frame.height
-        })
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let height = rows.map({ $0.sizeThatFits(size).height })
-            .reduce(0, { $0 + $1 })
-        return CGSize(width: size.width, height: height)
-    }
-    
-    func load(endpoint: String, action: (() -> ())?) {
-        func filterByDate(today: Date, from: Date, to: Date) -> Bool {
-            return from <= today && to >= today
-        }
-        
-        MiraikanUtil.http(endpoint: endpoint, success: { [weak self] data in
-            guard let _self = self else { return }
-            if let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self,
-                                           data: data) {
-                let filtered = res.filter({ model in
-                    let start = MiraikanUtil.parseDate(model.start)!
-                    let end = MiraikanUtil.parseDate(model.end)!
-                    return filterByDate(today: Date(), from: start, to: end)
-                })
-                let models = filtered.count > 0 ? filtered : [res.first!]
-                models.forEach({ model in
-                    let row = CardView(model)
-                    _self.rows += [row]
-                    _self.addSubview(row)
-                })
-                
-                if let f = action {
-                    f()
-                }
-            }
-        })
-    }
-    
-}
-
-fileprivate struct MenuItem {
-    let icon: UIImage?
-    let name: String
-    // Default Value for Testing
-    let view: BaseView.Type
-    
-    init(name: String, icon: UIImage? = nil, view: BaseView.Type = BaseView.self) {
-        self.name = name
-        self.icon = icon
-        self.view = view
-    }
-    
-    static public let login = MenuItem(name: "login")
-    static public let callStaff = MenuItem(name: "スタッフを呼ぶ")
-    static public let callSC = MenuItem(name: "SCを呼ぶ")
-    static public let askAI = MenuItem(name: "AIに質問")
-}
-
-// Layout sections
-fileprivate enum MenuSection : CaseIterable {
-    case exitibition
+fileprivate enum MenuItem {
+    case login
+    case miraikanToday
+    case regularExhibition
     case reservation
     case suggestion
-    case map
+    case floorMap
+    case nearestWashroom
     case news
-    case settings
+    case setting
+    case aboutMiraikan
+    case aboutApp
     
-    var items: [MenuItem] {
+    var name : String {
         switch self {
-        case .exitibition:
-            return [
-                MenuItem(name: "今日の未来館", view: TodayView.self),
-                MenuItem(name: "常設展示", view: RegularExhibitionView.self)
-            ]
+        case .login:
+            return "ログイン"
+        case .miraikanToday:
+            return "今日の未来館"
+        case .regularExhibition:
+            return "常設展示"
         case .reservation:
-            return [MenuItem(name: "予約")]
+            return "予約"
         case .suggestion:
-            return [MenuItem(name: "おすすめルート")]
-        case .map:
-            return [
-                MenuItem(name: "館内マップ"),
-                MenuItem(name: "最寄りのトイレ")
-            ]
+            return "おすすめルート"
+        case .floorMap:
+            return "館内マップ"
+        case .nearestWashroom:
+            return "最寄りのトイレ"
         case .news:
-            return [MenuItem(name: "ニュース")]
-        case .settings:
-            return [
-                MenuItem(name: "設定", view: SettingView.self),
-                MenuItem(name: "日本科学未来館について", view: MiraikanAboutView.self),
-                MenuItem(name: "このアプリについて", view: AppAboutView.self),
-            ]
-        }
-    }
-}
-
-// Row for specific Menu item
-fileprivate class MenuRow: BaseView {
-    private let lblLink: ArrowView
-    private let menu: MenuItem
-    
-    //MARK: init
-    init(_ menu: MenuItem) {
-        self.menu = menu
-        lblLink = ArrowView(menu.name)
-        super.init(frame: .zero)
-        addSubview(lblLink)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-//
-    override func setup() {
-        super.setup()
-        
-        isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(rowTapped))
-        let press = UILongPressGestureRecognizer(target: self, action: #selector(rowPressed))
-        addGestureRecognizer(tap)
-        addGestureRecognizer(press)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        lblLink.frame = CGRect(origin: .zero,
-                               size: CGSize(width: frame.width,
-                                            height: lblLink.sizeThatFits(frame.size).height))
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let btmMargin = insets.bottom
-        return CGSize(width: size.width,
-                      height: lblLink.sizeThatFits(size).height + btmMargin)
-    }
-    
-    //MARK: Row tapped actions
-    
-    // Animations
-    @objc private func rowTapped() {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.lblLink.backgroundColor = .lightGray
-        }, completion: { [weak self] _ in
-            guard let _self = self else { return }
-            _self.lblLink.backgroundColor = .clear
-            _self.openView()
-        })
-    }
-    
-    @objc private func rowPressed(_ sender: UILongPressGestureRecognizer) {
-        UIView.animate(withDuration: 0.1, delay: 0.1, options: [], animations: {
-            self.lblLink.backgroundColor = .lightGray
-        }, completion: {[weak self] _ in
-            guard let _self = self else { return }
-            
-            // When released
-            if sender.state == .possible {
-                _self.lblLink.backgroundColor = .clear
-            }
-        })
-    }
-    
-    // Open the view
-    private func openView() {
-        if let nav = self.nav {
-            let view = MiraikanUtil.createView(view: menu.view)
-            nav.show(BaseController(view, title: menu.name), sender: nil)
+            return "ニュース"
+        case .setting:
+            return "設定"
+        case .aboutMiraikan:
+            return "日本科学未来館について"
+        case .aboutApp:
+            return "このアプリについて"
         }
     }
     
+    // Create the UIViewController MenuItem is tapped
+    func createVC() -> UIViewController {
+        switch self {
+        case .login:
+            return createVC(view: LoginView())
+        case .regularExhibition:
+            return RegularExhibitionController(title: self.name)
+        case .miraikanToday:
+            return EventListController(title: self.name)
+        case .setting:
+            return createVC(view: SettingView())
+        case .aboutMiraikan:
+            return createVC(view: MiraikanAboutView())
+        case .aboutApp:
+            return createVC(view: AppAboutView())
+        default:
+            return createVC(view: BaseView())
+        }
+    }
+    
+    // Default method to create a UIViewController
+    private func createVC(view: UIView) -> UIViewController {
+        return BaseController(view, title: self.name)
+    }
 }
 
-// Layout for the menu
-fileprivate class MenuContent: BaseView {
-    
-    private let loginRow = MenuRow(MenuItem(name: "ログイン", view: LoginView.self))
-    private let lblSpex = UILabel()
-    private let lblEvent = UILabel()
-    private let sectionSpex = CardSection()
-    private let sectionEvent = CardSection()
-    
-    private var sections = [MenuSection: [MenuRow]]()
-    private var sectionList : [MenuSection]!
+// Footer for news section
+fileprivate class NewsDetails : BaseView {
     
     private var newsList = [ArrowView]()
     
-    private let margin = CGFloat(20)
-    private let gap = CGFloat(30)
-    private let sectionGap = CGFloat(10)
+    private let paddding: CGFloat = 20
+    private let gap: CGFloat = 5
     
-    var updated : (()->())?
-
     override func setup() {
         super.setup()
         
-        // Show Login option in menu if it's not logged in
-        if !MiraikanUtil.isLoggedIn { addSubview(loginRow) }
-        
-        // Special exhibition and events
-        lblSpex.text = "特別展"
-        lblEvent.text = "イベント"
-        [lblSpex, lblEvent].forEach({
-            $0.font = .boldSystemFont(ofSize: 16)
-            $0.sizeToFit()
-            addSubview($0)
-        })
-        
-        // Getting the event details
-        let year = MiraikanUtil.calendar().component(.year, from: Date())
-        [sectionSpex: "/exhibitions/spexhibition/_assets/json/ja.json",
-         sectionEvent: "/events/_assets/json/\(year)/ja.json"].forEach({
-            let (section, address) = ($0.key, $0.value)
-            section.load(endpoint: address, action: { [weak self] in
-                guard let self = self else { return }
-                // Update the content layout after generating the data
-                if let f = self.updated {
-                    f()
-                }
-            })
-            addSubview(section)
-         })
-        
-        sectionList = MenuSection.allCases
-        sectionList.forEach({ sec in
-            sections[sec] = sec.items.map({ MenuRow($0) })
-        })
-        sections.flatMap({ $0.value }).forEach({ addSubview($0) })
         ["常設展・ドームシアターはオンラインのチケット予約が必要です",
          "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
          "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"].forEach({
@@ -379,91 +209,185 @@ fileprivate class MenuContent: BaseView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        let innerSz = innerSizing(parentSize: frame.size, margin: paddding)
         var y = insets.top
-        
-        loginRow.frame = CGRect(x: insets.left,
-                                y: y,
-                                width: innerSize.width,
-                                height: loginRow.sizeThatFits(innerSize).height)
-        y += loginRow.sizeThatFits(frame.size).height
-        
-        lblSpex.frame.origin = CGPoint(x: insets.left, y: y)
-        y += lblSpex.frame.height
-        
-        sectionSpex.frame = CGRect(origin: CGPoint(x: insets.left, y: y),
-                                   size: sectionSpex.sizeThatFits(innerSize))
-        y += sectionSpex.frame.height + sectionGap
-        
-        lblEvent.frame.origin = CGPoint(x: insets.left, y: y)
-        y += lblEvent.frame.height + sectionGap
-        
-        sectionEvent.frame = CGRect(origin: CGPoint(x: insets.left, y: y),
-                                    size: sectionEvent.sizeThatFits(innerSize))
-        y += sectionEvent.frame.height + sectionGap
-        
-        func layoutRow(_ row: BaseView) {
+        newsList.forEach({ row in
             let sz = row.sizeThatFits(frame.size)
-            row.frame = CGRect(x: insets.left,
+            row.frame = CGRect(x: paddding,
                                y: y,
-                               width: innerSize.width,
-                               height: row.sizeThatFits(innerSize).height)
-            y += sz.height
-        }
-        
-        func layoutMenu(_ row: MenuRow) {
-            layoutRow(row)
-        }
-        
-        func layoutNews(_ row: ArrowView) {
-            layoutRow(row)
-        }
-        
-        sectionList.forEach({ sec in
-            sections[sec]?.forEach({ layoutMenu($0) })
-            
-            if sec == .news {
-                newsList.forEach({ layoutNews($0) })
-            }
-            
-            y += gap
+                               width: innerSz.width,
+                               height: row.sizeThatFits(innerSz).height)
+            y += sz.height + gap
         })
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let paddingY = insets.top + gap
-        let totalGap = gap * CGFloat(sectionList.count - 1)
-        let totalNewsHeight = newsList.reduce(CGFloat(0),
-                                              { $0 + $1.sizeThatFits(size).height })
-        let loginRowHeight = loginRow.sizeThatFits(size).height
-        let totalRowHeight = sections.flatMap({ $0.value })
-            .reduce(CGFloat(0),
-                    { $0 + $1.sizeThatFits(size).height })
-        let spexHeight = [sectionSpex.sizeThatFits(innerSize),
-                          lblSpex.intrinsicContentSize]
-            .map({ $0.height }).reduce(sectionGap, { $0 + $1} )
-        let eventHeight = [sectionEvent.sizeThatFits(innerSize),
-                           lblEvent.intrinsicContentSize]
-             .map({ $0.height }).reduce(sectionGap, { $0 + $1} )
-        let height = [totalGap, loginRowHeight,
-                      spexHeight, eventHeight,
-                      totalNewsHeight, totalRowHeight]
-            .reduce(paddingY, { $0 + $1 })
-        
+        let innerSz = innerSizing(parentSize: size, margin: paddding)
+        let blankHeight = CGFloat(newsList.count - 1) * gap + insets.top + insets.bottom
+        let height = newsList.map({ $0.sizeThatFits(innerSz).height })
+            .reduce(blankHeight, { $0 + $1})
         return CGSize(width: size.width, height: height)
     }
-
+    
 }
 
-class Home: BaseScrollView {
+fileprivate enum MenuSection : CaseIterable {
+    case login
+    case spex
+    case event
+    case exhibition
+    case reservation
+    case suggestion
+    case map
+    case news
+    case settings
     
-    override func setup() {
-        let content = MenuContent()
-        // Asynchronized action for http
-        content.updated = { [weak self] in
-            guard let self = self else { return }
-            self.layoutSubviews()
+    var items: [MenuItem]? {
+        switch self {
+        case .login:
+            return [.login]
+        case .exhibition:
+            return [.miraikanToday, .regularExhibition]
+        case .reservation:
+            return [.reservation]
+        case .suggestion:
+            return [.suggestion]
+        case .map:
+            return [.floorMap, .nearestWashroom]
+        case .news:
+            return [.news]
+        case .settings:
+            return [.setting, .aboutMiraikan, .aboutApp]
+        default:
+            return nil
         }
-        super.setup(content)
+    }
+    
+    var endpoint: String? {
+        switch self {
+        case .spex:
+            return "/exhibitions/spexhibition/_assets/json/ja.json"
+        case .event:
+            let year = MiraikanUtil.calendar().component(.year, from: Date())
+            return "/events/_assets/json/\(year)/ja.json"
+        default:
+            return nil
+        }
+    }
+    
+    var title: String? {
+        switch self {
+        case .spex:
+            return "特別展"
+        case .event:
+            return "イベント"
+        default:
+            return nil
+        }
+    }
+}
+
+class Home : BaseListView {
+    private let menuCellId = "menuCell"
+    private let cardCellId = "cardCell"
+    
+    private let newsFooter = NewsDetails()
+    
+    private var sections : [MenuSection]?
+    
+    override func initTable(isSelectionAllowed: Bool) {
+        super.initTable(isSelectionAllowed: true)
+
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: menuCellId)
+        self.tableView.register(CardRow.self, forCellReuseIdentifier: cardCellId)
+
+        sections = MenuSection.allCases
+        if MiraikanUtil.isLoggedIn {
+            sections?.removeAll(where: { $0 == .login })
+        }
+        
+        guard let _sections = sections?.enumerated() else { return }
+        
+        var menuItems = [Int : [Any]]()
+        for (idx, sec) in _sections {
+            if let _items = sec.items {
+                menuItems[idx] = _items
+            } else if let _endpoint = sec.endpoint {
+                menuItems[idx] = []
+                MiraikanUtil.http(endpoint: _endpoint, success: { [weak self] data in
+                    guard let self = self else { return }
+                    
+                    if let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data) {
+                        let filtered = res.filter({ model in
+                            let now = Date()
+                            let start = MiraikanUtil.parseDate(model.start)!
+                            let end = MiraikanUtil.parseDate(model.end)!
+                            return start <= now && end >= now
+                        })
+                        
+                        let models = filtered.count > 0 ? filtered : [res.first!]
+                        menuItems[idx] = models
+                        self.items = menuItems
+                    }
+                })
+            } else {
+                menuItems[idx] = []
+            }
+        }
+        items = menuItems
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let (sec, row) = (indexPath.section, indexPath.row)
+        let rowItem = items?[sec]?[row]
+        if let menuItem = rowItem as? MenuItem {
+            // Normal Menu Row
+            let cell = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath)
+            let menuTitle = menuItem.name
+            cell.textLabel?.font = .boldSystemFont(ofSize: 16)
+            cell.textLabel?.text = menuTitle
+            return cell
+        } else if let cardModel = rowItem as? CardModel,
+                  let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
+                                                              for: indexPath) as? CardRow {
+            // When HTTP request is finished,
+            // display the data on the row for Special Exhibition or Event
+            cardRow.configure(cardModel)
+            return cardRow
+        }
+        
+        return UITableViewCell()
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let nav = navVC else { return }
+        let (sec, row) = (indexPath.section, indexPath.row)
+        let rowItem = items?[sec]?[row]
+        if let menuItem = rowItem as? MenuItem {
+            let vc = menuItem.createVC()
+            nav.show(vc, sender: nil)
+        } else if let cardModel = rowItem as? CardModel {
+            let view = ExhibitionView(permalink: cardModel.permalink)
+            nav.show(BaseController(view, title: cardModel.title), sender: nil)
+        }
+        super.tableView(tableView, didSelectRowAt: indexPath)
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sections?[section].title
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return sections?[section] == .news ? newsFooter : UIView()
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if sections?[section] == .news {
+            return newsFooter.sizeThatFits(frame.size).height
+        } else if section < items!.count - 1 {
+            return 35
+        }
+        return 20
     }
     
 }

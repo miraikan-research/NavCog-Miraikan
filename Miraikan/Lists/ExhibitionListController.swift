@@ -28,19 +28,25 @@ import Foundation
 import UIKit
 
 // Layout for each exhibition
-fileprivate class ExhibitionRow : BaseView {
+fileprivate class ExhibitionRow : BaseRow {
     
-    private var titleLink : UnderlinedLabel!
+    private let titleLink = UnderlinedLabel()
     private let btnNavi = NaviButton()
     private let lblDescription = AutoWrapLabel()
     
     private let gap = CGFloat(10)
     
-    init(_ model: ExhibitionModel) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addSubview(titleLink)
+        addSubview(btnNavi)
+        addSubview(lblDescription)
+    }
+    
+    public func configure(_ model: ExhibitionModel) {
         lblDescription.text = MiraikanUtil.routeMode == .blind
         ? model.blindModeIntro
         : model.description
-        super.init(frame: .zero)
         btnNavi.setTitle("この展示へナビ", for: .normal)
         btnNavi.sizeToFit()
         btnNavi.tapInside({ [weak self] _ in
@@ -50,9 +56,8 @@ fileprivate class ExhibitionRow : BaseView {
                     n.openMap(nodeId: nodeId)
                 }
                 if let locations = model.locations {
-                    let vc = FloorSelectionController(vals: [0: locations],
-                                                      cellId: "floorCell",
-                                                      title: model.title)
+                    let vc = FloorSelectionController(title: model.title)
+                    vc.items = [0: locations]
                     n.show(vc, sender: nil)
                 }
             }
@@ -60,7 +65,7 @@ fileprivate class ExhibitionRow : BaseView {
         let linkTitle = model.counter != ""
             ? "\(model.counter) \(model.title)"
             : model.title
-        titleLink = UnderlinedLabel(linkTitle)
+        titleLink.title = linkTitle
         titleLink.openView { [weak self] _ in
             guard let _self = self else { return }
             if let n = _self.nav {
@@ -70,10 +75,13 @@ fileprivate class ExhibitionRow : BaseView {
                                       title: model.title), sender: nil)
             }
         }
-        
-        [titleLink, btnNavi, lblDescription].forEach({
-            addSubview($0)
-        })
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLink.title = nil
+        btnNavi.setTitle(nil, for: .normal)
+        lblDescription.text = nil
     }
     
     required init?(coder: NSCoder) {
@@ -121,77 +129,47 @@ fileprivate class ExhibitionRow : BaseView {
     
 }
 
-// Content for exhibitions
-fileprivate class ExhibitionContent: BaseView {
-    
-    private var rows = [String: ExhibitionRow]()
-    private var counters = [String]()
+// 常設展示一覧
+class ExhibitionListController : BaseListController, BaseListDelegate {
     
     private let category: String
     
-    init(_ category: String) {
-        self.category = category
-        super.init(frame: .zero)
+    private let cellId = "exhibitionCell"
+    
+    init(id: String, title: String) {
+        self.category = id
+        super.init(title: title)
+        self.baseDelegate = self
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setup() {
-        super.setup()
+    override func initTable(isSelectionAllowed: Bool) {
+        super.initTable(isSelectionAllowed: isSelectionAllowed)
         
-        if let items = MiraikanUtil.readJSONFile(filename: "exhibition",
-                                         type: [ExhibitionModel].self),
-           let models = (items as? [ExhibitionModel])?.filter({ $0.category == category}) {
-            ExhibitionDataStore.shared.exhibitions = models
-            counters = models.map({$0.counter}).sorted()
-            models.forEach({ model in
-                let row = ExhibitionRow(model)
-                rows[model.counter] = row
-                addSubview(row)
-            })
+        self.tableView.register(ExhibitionRow.self, forCellReuseIdentifier: cellId)
+        if let models = MiraikanUtil.readJSONFile(filename: "exhibition",
+                                                  type: [ExhibitionModel].self) as? [ExhibitionModel] {
+            let sorted = models
+                .filter({ $0.category == category})
+                .sorted(by: { $0.counter < $1.counter })
+            ExhibitionDataStore.shared.exhibitions = sorted
+            items = [0: sorted]
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
+                                                       for: indexPath) as? ExhibitionRow
+        else { return UITableViewCell() }
         
-        var y = insets.top
-        counters.forEach({ counter in
-            let row = rows[counter]!
-            row.frame = CGRect(origin: CGPoint(x: insets.left, y: y),
-                               size: row.sizeThatFits(frame.size))
-            y += row.frame.height
-        })
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let innerSize = innerSizing(parentSize: size)
-        let height = rows.map({ $0.value.sizeThatFits(innerSize).height })
-            .reduce((insets.top + insets.bottom), { $0 + $1 })
-        return CGSize(width: innerSize.width, height: height)
-    }
-    
-}
-
-// UIScrollView for exhibitions
-class ExhibitionListView: BaseScrollView {
-    
-    private let category: String
-    
-    init(_ category: String) {
-        self.category = category
-        super.init(frame: .zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func setup() {
-        let contentView = ExhibitionContent(category)
-        super.setup(contentView)
+        let (sec, row) = (indexPath.section, indexPath.row)
+        if let model = items?[sec]?[row] as? ExhibitionModel {
+            cell.configure(model)
+        }
+        return cell
     }
     
 }

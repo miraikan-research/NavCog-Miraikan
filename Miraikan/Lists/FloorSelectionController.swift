@@ -30,23 +30,29 @@ import UIKit
 // List of floors for those exhibitions with multiple floors
 class FloorSelectionController: BaseListController, BaseListDelegate {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private let cellId = "floorCell"
+    
+    override func initTable(isSelectionAllowed: Bool) {
+        super.initTable(isSelectionAllowed: true)
         
         self.baseDelegate = self
+        self.tableView.separatorStyle = .singleLine
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
     }
     
-    func getCell(_ tableView: UITableView, _ indexPath: IndexPath, _ cellId: String) -> UITableViewCell {
+    func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        if let model = items[indexPath.section]?[indexPath.row] as? ExhibitionLocation {
+        if let model = items?[indexPath.section]?[indexPath.row] as? ExhibitionLocation {
             cell.textLabel?.text = "\(model.floor)階"
         }
         return cell
     }
     
-    func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
+    override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
+        super.onSelect(tableView, indexPath)
+        
         if let nav = self.navigationController as? BaseNavController,
-           let model = items[indexPath.section]?[indexPath.row] as? ExhibitionLocation {
+           let model = items?[indexPath.section]?[indexPath.row] as? ExhibitionLocation {
             nav.openMap(nodeId: model.nodeId)
         }
         tableView.deselectRow(at: indexPath, animated: true)

@@ -41,19 +41,19 @@ class BaseView: UIView {
     }
     
     // MARK: parent ViewControllers
-    var parent : UIViewController? {
+    var parentVC : UIViewController? {
         return getParent()
     }
     
-    var nav : BaseNavController? {
-        if let parent = parent {
+    var navVC : BaseNavController? {
+        if let parent = parentVC {
             return parent.navigationController as? BaseNavController
         }
         return nil
     }
     
-    var tab : TabController? {
-        if let parent = parent {
+    var tabVC : TabController? {
+        if let parent = parentVC {
             return parent.tabBarController as? TabController
         }
         return nil

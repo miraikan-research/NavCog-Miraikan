@@ -44,7 +44,7 @@ class LoginView: BaseView {
             UserDefaults.standard.setValue(true, forKey: "LoggedIn")
             
             // Remove the tab after login
-            if let t = _self.tab,
+            if let t = _self.tabVC,
                var tabs = t.viewControllers {
                 tabs.remove(at: TabItem.login.rawValue)
                 t.viewControllers = tabs
@@ -52,7 +52,7 @@ class LoginView: BaseView {
             }
             
             // Navigate to the Home view
-            if let n = _self.nav {
+            if let n = _self.navVC {
                 n.show(BaseController(Home(), title: TabItem.home.title), sender: nil)
             }
         })

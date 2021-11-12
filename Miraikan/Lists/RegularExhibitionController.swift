@@ -36,32 +36,43 @@ fileprivate struct RegularExhibitionModel : Decodable {
 }
 
 // Layout for each regular exhibition
-fileprivate class RegularExhibitionRow : BaseView {
+fileprivate class RegularExhibitionRow : BaseRow {
     
-    private var titleLink: UnderlinedLabel!
+    private var titleLink = UnderlinedLabel()
     private let lblDescription = AutoWrapLabel()
     
     private let gap = CGFloat(10)
     
-    init(_ model: RegularExhibitionModel) {
-        
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addSubview(titleLink)
+        addSubview(lblDescription)
+    }
+    
+    public func configure(_ model: RegularExhibitionModel) {
         lblDescription.text = model.description
         let title = model.floor != nil
             ? "\(model.floor!)階 \(model.title)"
             : model.title
-        super.init(frame: .zero)
-        titleLink = UnderlinedLabel(title)
+        titleLink.title = title
         titleLink.sizeToFit()
         titleLink.openView { [weak self] _ in
             guard let _self = self else { return }
             if let n = _self.nav {
-                n.show(BaseController(ExhibitionListView(model.id), title: model.title), sender: nil)
+                let vc = ExhibitionListController(id: model.id, title: model.title)
+                n.show(vc, sender: nil)
             }
         }
         
         [titleLink, lblDescription].forEach({
             addSubview($0)
         })
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        lblDescription.text = nil
+        titleLink.title = nil
     }
     
     required init?(coder: NSCoder) {
@@ -92,52 +103,37 @@ fileprivate class RegularExhibitionRow : BaseView {
     
 }
 
-// Content for regular exhibitions
-fileprivate class RegualrExhibitionContent: BaseView {
+// 常設展示
+class RegularExhibitionController : BaseListController, BaseListDelegate {
     
-    private let ids = ["world", "future", "tsunagari"]
-    private var rows = [String: RegularExhibitionRow]()
+    private let cellId = "regularCell"
     
-    override func setup() {
-        super.setup()
+    override func initTable(isSelectionAllowed: Bool) {
+        super.initTable(isSelectionAllowed: isSelectionAllowed)
         
+        self.baseDelegate = self
+        self.tableView.register(RegularExhibitionRow.self, forCellReuseIdentifier: cellId)
         if let models = MiraikanUtil.readJSONFile(filename: "exhibition_category",
-                                      type: [RegularExhibitionModel].self) as? [RegularExhibitionModel] {
-            models.forEach({ model in
-                let row = RegularExhibitionRow(model)
-                rows[model.id] = row
-                addSubview(row)
+                                                  type: [RegularExhibitionModel].self) as? [RegularExhibitionModel] {
+            let sorted = models.sorted(by: { (a, b) in
+                let floorA = a.floor ?? 0
+                let floorB = b.floor ?? 0
+                return floorA > floorB
             })
+            items = [0: sorted]
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
+                                                       for: indexPath) as? RegularExhibitionRow
+        else { return UITableViewCell() }
         
-        var y = insets.top
-        ids.forEach({ id in
-            let row = rows[id]!
-            row.frame = CGRect(origin: CGPoint(x: insets.left, y: y),
-                               size: row.sizeThatFits(frame.size))
-            y += row.frame.height
-        })
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let innerSize = innerSizing(parentSize: size)
-        let height = rows.map({ $0.value.sizeThatFits(innerSize).height })
-            .reduce((insets.top + insets.bottom), { $0 + $1 })
-        return CGSize(width: innerSize.width, height: height)
-    }
-    
-}
-
-// 常設展示
-class RegularExhibitionView: BaseScrollView {
-    
-    override func setup() {
-        let contentView = RegualrExhibitionContent()
-        super.setup(contentView)
+        let (sec, row) = (indexPath.section, indexPath.row)
+        if let model = items?[sec]?[row] as? RegularExhibitionModel {
+            cell.configure(model)
+        }
+        return cell
     }
     
 }

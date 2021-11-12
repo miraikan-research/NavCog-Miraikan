@@ -101,8 +101,26 @@ class UnderlinedLabel: AutoWrapLabel {
     
     private var action: ((UnderlinedLabel) -> ())?
     
-    init(_ text: String) {
+    public var title: String? {
+        didSet {
+            if let title = title {
+                setText(title)
+            }
+        }
+    }
+    
+    init(_ text: String? = nil) {
         super.init(frame: .zero)
+        if let text = text {
+            setText(text)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setText(_ text: String) {
         let attr: [NSAttributedString.Key : Any] = [
             .font: UIFont.boldSystemFont(ofSize: 16),
             .underlineStyle: NSUnderlineStyle.single.rawValue
@@ -110,10 +128,6 @@ class UnderlinedLabel: AutoWrapLabel {
         let str = NSMutableAttributedString(string: text,
                                             attributes: attr)
         self.attributedText = str
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     public func openView(_ action: @escaping ((UnderlinedLabel) -> ())) {
