@@ -54,6 +54,7 @@
 
 /* No comment provided by engineer. */
 "Loading, please wait" = "読み込んでいます、少々お待ちください";
+"Loading preview" = "測位範囲外です。プレビューを起動しています。";
 
 /* label for map */
 "Map" = "地図";

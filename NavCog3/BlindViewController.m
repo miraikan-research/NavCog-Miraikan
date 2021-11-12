@@ -514,7 +514,10 @@
         }
         dialogHelper.helperView.disabled = !(hasCenter && (!isPreviewDisabled || devMode || validLocation));
         if (!isNaviStarted && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading, please wait",@"")];
+            NSString *msg = isPreview
+                ? NSLocalizedString(@"Loading preview",@"")
+                : NSLocalizedString(@"Loading, please wait",@"");
+            [NavUtil showModalWaitingWithMessage:msg];
         }
     } else {
         dialogHelper.helperView.hidden = YES;

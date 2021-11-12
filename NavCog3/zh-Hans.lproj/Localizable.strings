@@ -98,6 +98,7 @@
 
 /* No comment provided by engineer. */
 "Loading, please wait" = "正在读取，请稍候";
+"Loading preview" = "不在指定范围，启动预览模式。";
 
 /* No comment provided by engineer. */
 "LocationNotAllowedMessage" = "想在室内使用定位功能需要允许使用位置信息服务。在隐私设置页面 位置信息服务 → NavCog → 选择只有在使用此应用时允许。";

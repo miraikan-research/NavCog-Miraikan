@@ -45,6 +45,7 @@
 
 /* No comment provided by engineer. */
 "Loading, please wait" = "Loading, please wait";
+"Loading preview" = "Outside of iBeacon area, starting preview";
 
 /* meter distance unit label */
 "Meter" = "Meter";
