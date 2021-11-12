@@ -27,18 +27,31 @@
 import Foundation
 import UIKit
 
-// Temporarily used for rows, make them look like menu items
-// The arrow is set inaccessibly from VoiceOver, temporarily like an icon
+/**
+ Temporarily used for rows, make them look like menu items.
+ The arrow is set inaccessible from VoiceOver, working as an icon.
+ */
 class ArrowView: BaseView {
     private let lblMain = UILabel()
     private let lblArrow = UILabel()
     
-    init(_ text: String) {
-        super.init(frame: .zero)
-        setup(text)
+    public var title: String? {
+        didSet {
+            if let title = title {
+                setText(title)
+            }
+        }
     }
     
-    private func setup(_ text: String) {
+    init(_ text: String? = nil) {
+        super.init(frame: .zero)
+        
+        if let text = text {
+            setText(text)
+        }
+    }
+    
+    private func setText(_ text: String) {
         lblMain.text = text
         lblMain.numberOfLines = 0
         lblMain.lineBreakMode = .byCharWrapping
@@ -81,8 +94,10 @@ class ArrowView: BaseView {
     
 }
 
-// A label that automatically wrap its text to fit the size
 // TODO: byWordWrapping for English version
+/**
+ A label that automatically wrap its text to fit the size
+ */
 class AutoWrapLabel: UILabel {
     
     override init(frame: CGRect) {
@@ -96,7 +111,9 @@ class AutoWrapLabel: UILabel {
     }
 }
 
-// A AutoWrapLabel underlined which looks like a link
+/**
+ A AutoWrapLabel underlined which looks like an HTML link
+ */
 class UnderlinedLabel: AutoWrapLabel {
     
     private var action: ((UnderlinedLabel) -> ())?
@@ -145,7 +162,9 @@ class UnderlinedLabel: AutoWrapLabel {
     
 }
 
-// A button with tap action implemented for easier use
+/**
+ A button with swift style tap action implemented for easier use
+ */
 class BaseButton: UIButton {
     
     private var action: ((UIButton)->())?
@@ -163,7 +182,9 @@ class BaseButton: UIButton {
     
 }
 
-// A BaseButton with the style for Navigation
+/**
+ A BaseButton that styled as Navigation Button
+ */
 class NaviButton: BaseButton {
     
     var paddingX: CGFloat {
@@ -190,7 +211,9 @@ class NaviButton: BaseButton {
     
 }
 
-// A button for HTML style RadioGroup
+/**
+ A button for HTML style RadioGroup
+ */
 class RadioButton: BaseButton {
     
     var isChecked : Bool {

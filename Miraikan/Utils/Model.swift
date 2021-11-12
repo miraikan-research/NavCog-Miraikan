@@ -27,6 +27,9 @@
 import Foundation
 import UIKit
 
+/**
+ This should be accessible for TabController and its related controllers / views
+ */
 enum TabItem: Int, CaseIterable {
     case callStaff
     case callSC
@@ -84,55 +87,9 @@ enum TabItem: Int, CaseIterable {
     
 }
 
-enum Place: String, CaseIterable {
-    case GEO_COSMOS
-    case CO_STUDIO
-    case DOME_THEATER
-    
-    var filename: String {
-        return self.rawValue.lowercased()
-    }
-}
-
-enum Event: String, CaseIterable {
-    // Geo-Cosmos
-    case ASIMO
-    case DIGGING_THE_FUTURE
-    case COVID_19
-    case APOLLO_11
-    // Dome Theater
-    case BIRTHDAY
-    case NINE_DIMENSIONS
-    // Scientist Communicator Talk
-    case CO_STUDIO
-    
-    var filename: String {
-        return self.rawValue.lowercased()
-    }
-    
-    var title: String {
-        switch self {
-        // Geo-Cosmos
-        case .ASIMO:
-            return "ASIMO（アシモ）実演"
-        case .DIGGING_THE_FUTURE:
-            return "未来の地層\nDigging the Future"
-        case .COVID_19:
-            return "COVID-19 Daily Cases\n日々の感染者数"
-        case .APOLLO_11:
-            return "Apollo11“イーグルは着陸した”"
-        // Dome Theater
-        case .BIRTHDAY:
-            return "バースデイ"
-        case .NINE_DIMENSIONS:
-            return "9次元からきた男"
-        default:
-            return "科学コミュニケーター・トーク"
-        }
-    }
-}
-
-// Determine the category and image size
+/**
+ Determine the image size
+ */
 enum ImageType : String {
     case ASIMO
     case GEO_COSMOS

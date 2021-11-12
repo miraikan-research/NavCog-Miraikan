@@ -28,6 +28,10 @@
 import Foundation
 import UIKit
 
+/**
+ The parent UIView which contains a UITableView.
+ This is to be inherited by those screens implemented as UIView and difficult to rewrite as UIViewController
+ */
 class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
     
     let tableView = UITableView()
@@ -38,6 +42,7 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    // MARK: init
     override func setup() {
         super.setup()
         
@@ -59,6 +64,7 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
         tableView.frame = self.frame
     }
     
+    // MARK: UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return items?.count ?? 0
     }
@@ -74,13 +80,14 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
         return UITableViewCell()
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         print("To be implemented by subclasses")
         return nil
+    }
+    
+    // MARK: UITableViewDelegate
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

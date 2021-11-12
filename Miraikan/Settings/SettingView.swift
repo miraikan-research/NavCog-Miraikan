@@ -27,6 +27,9 @@
 import Foundation
 import UIKit
 
+/**
+ Caution: This is related to but not the same as the modes in NavCog3
+ */
 enum RouteMode : String, CaseIterable {
     case general
     case wheelchair
@@ -44,8 +47,10 @@ enum RouteMode : String, CaseIterable {
     }
 }
 
-// Current usage: select navigation mode
 // TODO: Display route histories
+/**
+ Current usage: select navigation mode
+ */
 class SettingView: BaseView {
     
     private var radioGroup = [RouteMode: RadioButton]()

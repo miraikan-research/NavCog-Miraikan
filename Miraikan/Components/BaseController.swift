@@ -27,7 +27,13 @@
 import Foundation
 import UIKit
 
-// Usage: a placeholder for those views opened from UINavigationController
+/**
+ The default UIViewController to be instantiated as the root of BaseNavController
+ 
+ - Parameters:
+ - view: The default UIView
+ - title: The title for NavigationBar
+ */
 class BaseController: UIViewController {
     
     private let sceneView : UIView
@@ -39,6 +45,7 @@ class BaseController: UIViewController {
         return nil
     }
     
+    // MARK: init
     init(_ view: UIView, title: String?) {
         self.sceneView = view
         super.init(nibName: nil, bundle: nil)

@@ -27,7 +27,10 @@
 import Foundation
 import UIKit
 
-// List of floors for those exhibitions with multiple floors
+/**
+ The screen for floor selection before navigation is starting.
+ The location for each floor has its own nodeId (destination id).
+ */
 class FloorSelectionController: BaseListController, BaseListDelegate {
     
     private let cellId = "floorCell"

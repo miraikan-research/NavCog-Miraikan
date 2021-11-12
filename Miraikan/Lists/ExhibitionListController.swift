@@ -27,7 +27,9 @@
 import Foundation
 import UIKit
 
-// Layout for each exhibition
+/**
+ The customized UITableViewCell for each exhibition
+ */
 fileprivate class ExhibitionRow : BaseRow {
     
     private let titleLink = UnderlinedLabel()
@@ -46,7 +48,7 @@ fileprivate class ExhibitionRow : BaseRow {
     public func configure(_ model: ExhibitionModel) {
         lblDescription.text = MiraikanUtil.routeMode == .blind
         ? model.blindModeIntro
-        : model.description
+        : model.intro
         btnNavi.setTitle("この展示へナビ", for: .normal)
         btnNavi.sizeToFit()
         btnNavi.tapInside({ [weak self] _ in
@@ -129,13 +131,20 @@ fileprivate class ExhibitionRow : BaseRow {
     
 }
 
-// 常設展示一覧
+/**
+ The list for Regular Exhibitions
+ 
+ - Parameters:
+ - id: category id
+ - title: The title for NavigationBar
+ */
 class ExhibitionListController : BaseListController, BaseListDelegate {
     
     private let category: String
     
     private let cellId = "exhibitionCell"
     
+    // MARK: init
     init(id: String, title: String) {
         self.category = id
         super.init(title: title)
@@ -147,9 +156,12 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
     }
     
     override func initTable(isSelectionAllowed: Bool) {
+        // init the tableView
         super.initTable(isSelectionAllowed: isSelectionAllowed)
         
         self.tableView.register(ExhibitionRow.self, forCellReuseIdentifier: cellId)
+        
+        // Load the data
         if let models = MiraikanUtil.readJSONFile(filename: "exhibition",
                                                   type: [ExhibitionModel].self) as? [ExhibitionModel] {
             let sorted = models
@@ -160,6 +172,7 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
         }
     }
     
+    // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
                                                        for: indexPath) as? ExhibitionRow

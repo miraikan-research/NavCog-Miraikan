@@ -28,7 +28,13 @@ import Foundation
 import UIKit
 import CoreBluetooth
 
-// A parent layout with common layout functions
+/**
+ The parent UIView with common variables and functions
+ for calculating the size and accessing the parent ViewControllers.
+ 
+ It is suggested to override the setup() function instead of init(),
+ since the required init?() would also be required for init().
+ */
 class BaseView: UIView {
     
     // MARK: padding
@@ -69,7 +75,9 @@ class BaseView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // To be override
+    /**
+     Override it, and add the subviews here
+     */
     func setup() {
         backgroundColor = .white
     }
@@ -93,7 +101,7 @@ class BaseView: UIView {
     }
     
     
-    // MARK: Parent Controllers
+    // MARK: Parent UIViewController
     private func getParent() -> UIViewController? {
         var responder: UIResponder? = self.next
         while responder != nil {

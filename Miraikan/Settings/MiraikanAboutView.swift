@@ -28,6 +28,9 @@ import Foundation
 import UIKit
 import WebKit
 
+/**
+ The WebView retrieved from Miraikan About page
+ */
 class MiraikanAboutView: BaseView, WKNavigationDelegate {
     
     private let btnNavi = NaviButton()

@@ -27,14 +27,18 @@
 import Foundation
 import UIKit
 
-// Data for each row
+/**
+ The model for schedule data
+ */
 fileprivate struct ScheduleRowModel {
     let schedule : ScheduleModel
     let floorMap : FloorMapModel
     let event : EventModel
 }
 
-// Layout for each row
+/**
+ The customized UITableViewCell for schedule item
+ */
 fileprivate class ScheduleRow: BaseRow {
     private let lblTime = UILabel()
     private let lblPlace = UnderlinedLabel()
@@ -44,6 +48,7 @@ fileprivate class ScheduleRow: BaseRow {
     private let gapX = CGFloat(10)
     private let gapY = CGFloat(5)
     
+    // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(lblTime)
@@ -56,6 +61,9 @@ fileprivate class ScheduleRow: BaseRow {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /**
+     Set the data from DataSource
+     */
     public func configure(_ model: ScheduleRowModel) {
         lblTime.text = model.schedule.time
         lblTime.sizeToFit()
@@ -89,6 +97,7 @@ fileprivate class ScheduleRow: BaseRow {
         }
     }
     
+    // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -150,6 +159,9 @@ fileprivate class ScheduleRow: BaseRow {
     
 }
 
+/**
+ The header that displays today's date
+ */
 fileprivate class ScheduleListHeader : BaseView {
     
     private let lblDate = UILabel()
@@ -178,16 +190,21 @@ fileprivate class ScheduleListHeader : BaseView {
     
 }
 
-// 今日の未来館
+/**
+ List of Today's schedule
+ */
 class EventListController: BaseListController, BaseListDelegate {
     
     private let cellId = "eventCell"
     
     override func initTable(isSelectionAllowed: Bool) {
+        // init the tableView
         super.initTable(isSelectionAllowed: isSelectionAllowed)
         
         self.baseDelegate = self
         self.tableView.register(ScheduleRow.self, forCellReuseIdentifier: cellId)
+        
+        // load the data
         var models = [ScheduleRowModel]()
         ExhibitionDataStore.shared.schedules?.forEach({ schedule in
             if let floorMaps = MiraikanUtil.readJSONFile(filename: "floor_map",
@@ -203,6 +220,7 @@ class EventListController: BaseListController, BaseListDelegate {
         items = [0: models]
     }
     
+    // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
                                                        for: indexPath) as? ScheduleRow
@@ -215,6 +233,7 @@ class EventListController: BaseListController, BaseListDelegate {
         return cell
     }
     
+    // MARK: UITableView
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             return ScheduleListHeader()

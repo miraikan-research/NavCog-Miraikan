@@ -27,15 +27,25 @@
 import Foundation
 import UIKit
 
-// Data for regular exhibition
+/**
+ Data model for Regular Exhibition categories
+ 
+ - Parameters:
+ - id: Category id
+ - title: Category name
+ - floor: The floor number; not available for multiple floors
+ - intro: description of this category
+ */
 fileprivate struct RegularExhibitionModel : Decodable {
     let id : String
     let title : String
     let floor : Int?
-    let description : String
+    let intro : String
 }
 
-// Layout for each regular exhibition
+/**
+ The customized UITableViewCell for Regular Exhibition categories
+ */
 fileprivate class RegularExhibitionRow : BaseRow {
     
     private var titleLink = UnderlinedLabel()
@@ -43,14 +53,28 @@ fileprivate class RegularExhibitionRow : BaseRow {
     
     private let gap = CGFloat(10)
     
+    // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(titleLink)
         addSubview(lblDescription)
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        lblDescription.text = nil
+        titleLink.title = nil
+    }
+    
+    /**
+     Set data from DataSource
+     */
     public func configure(_ model: RegularExhibitionModel) {
-        lblDescription.text = model.description
+        lblDescription.text = model.intro
         let title = model.floor != nil
             ? "\(model.floor!)階 \(model.title)"
             : model.title
@@ -67,16 +91,6 @@ fileprivate class RegularExhibitionRow : BaseRow {
         [titleLink, lblDescription].forEach({
             addSubview($0)
         })
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        lblDescription.text = nil
-        titleLink.title = nil
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     override func layoutSubviews() {
@@ -103,16 +117,21 @@ fileprivate class RegularExhibitionRow : BaseRow {
     
 }
 
-// 常設展示
+/**
+ Categories of Regular Exhibition
+ */
 class RegularExhibitionController : BaseListController, BaseListDelegate {
     
     private let cellId = "regularCell"
     
     override func initTable(isSelectionAllowed: Bool) {
+        // init the tableView
         super.initTable(isSelectionAllowed: isSelectionAllowed)
         
         self.baseDelegate = self
         self.tableView.register(RegularExhibitionRow.self, forCellReuseIdentifier: cellId)
+        
+        // Load the data
         if let models = MiraikanUtil.readJSONFile(filename: "exhibition_category",
                                                   type: [RegularExhibitionModel].self) as? [RegularExhibitionModel] {
             let sorted = models.sorted(by: { (a, b) in
@@ -124,6 +143,7 @@ class RegularExhibitionController : BaseListController, BaseListDelegate {
         }
     }
     
+    // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
                                                        for: indexPath) as? RegularExhibitionRow

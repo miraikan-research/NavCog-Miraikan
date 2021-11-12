@@ -27,7 +27,9 @@
 import Foundation
 import UIKit
 
-// Layout for login
+/**
+ Layout for login
+ */
 class LoginView: BaseView {
     
     private let btnLogin = BaseButton()

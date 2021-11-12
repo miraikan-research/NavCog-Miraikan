@@ -27,7 +27,9 @@
 import Foundation
 import UIKit
 
-// Controller for the Home and initial settings
+/**
+ Home and initial settings
+ */
 class MiraikanController: UIViewController {
 
     override func viewDidLoad() {
@@ -95,7 +97,9 @@ class MiraikanController: UIViewController {
 
 }
 
-// Tabs for Home, Login and others
+/**
+ Tabs for Home, Login and others
+ */
 class TabController: UITabBarController {
     
     override func viewDidLoad() {
@@ -117,7 +121,9 @@ class TabController: UITabBarController {
     
 }
 
-// Base UINavigationController to be used or inherited for UI navigation purpose
+/**
+ Base UINavigationController for UI navigation purpose
+ */
 class BaseNavController: UINavigationController {
     
     override func viewDidLoad() {
@@ -128,7 +134,7 @@ class BaseNavController: UINavigationController {
     override func viewWillDisappear(_ animated: Bool) {
         guard let manager = HLPLocationManager.shared() else { return }
         
-        // Start the manager
+        // Start the manager if it is not running
         if !manager.isActive && !manager.isBackground {
             let modalName = UserDefaults.standard.string(forKey: "bleloc_map_data")
             let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
@@ -142,8 +148,12 @@ class BaseNavController: UINavigationController {
         }
     }
     
-    // Open the map and start navigation
-    // nodeId: The destination
+    /**
+     Open the map and start navigation
+     
+     - Parameters:
+     - nodeId: destination id
+     */
     public func openMap(nodeId: String) {
         
         // Select mode

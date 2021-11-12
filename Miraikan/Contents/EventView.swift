@@ -27,7 +27,9 @@
 import Foundation
 import UIKit
 
-// The content inside ScrollView of DetailView
+/**
+ The content of the  UIScrollView of EventView
+ */
 fileprivate class EventContent: BaseView {
     
     private var lblTitle: UILabel!
@@ -42,6 +44,7 @@ fileprivate class EventContent: BaseView {
     private let type: ImageType
     private let gap = CGFloat(15)
     
+    // MARK: init
     init(_ model: EventModel) {
         self.type = ImageType(rawValue: model.imageType.uppercased())!
         let imageCoStudio = "co_studio"
@@ -59,6 +62,7 @@ fileprivate class EventContent: BaseView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -129,10 +133,7 @@ fileprivate class EventContent: BaseView {
         return CGSize(width: size.width, height: height)
     }
     
-    override func setup() {
-        super.setup()
-    }
-    
+    // MARK: Private functions
     private func setup(_ model: EventModel) {
         
         func createLabel(_ txt: String) -> UILabel {
@@ -174,7 +175,9 @@ fileprivate class EventContent: BaseView {
     
 }
 
-// The main view
+/**
+ The UIScrollView of event details
+ */
 class EventView: BaseScrollView {
     init(_ model: EventModel) {
         super.init(frame: .zero)

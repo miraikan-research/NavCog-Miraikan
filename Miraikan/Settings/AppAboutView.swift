@@ -27,6 +27,11 @@
 import Foundation
 import UIKit
 
+/**
+ The about screen for this app.
+ 
+ The copyright references should be placed here.
+ */
 class AppAboutView: BaseView {
     
     private let lblIcon8 = UILabel()

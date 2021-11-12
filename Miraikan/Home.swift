@@ -27,7 +27,17 @@
 import Foundation
 import UIKit
 
-// Data for Event Card
+/**
+ Data model for Special Exhibition and Event
+ 
+ - Parameters
+ - imagePc: URL address for the picture
+ - permalink: URL address to open the WebView
+ - title: The name of exhibition / event
+ - start: The start date
+ - end: The end date
+ - isOnline: Online / inside Miraikan
+ */
 fileprivate struct CardModel : Decodable {
     let imagePc: String
     let permalink: String
@@ -37,7 +47,9 @@ fileprivate struct CardModel : Decodable {
     let isOnline: String?
 }
 
-// Layout for Special Exhibition or Event
+/**
+ Customized UITableViewCell for Special Exhibition or Event
+ */
 fileprivate class CardRow : BaseRow {
     // Default image
     private var img = UIImage(named: "card_loading")!
@@ -53,6 +65,7 @@ fileprivate class CardRow : BaseRow {
     private let gapX = CGFloat(10)
     private let gapY: CGFloat = 5
     
+    // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(imgView)
@@ -60,9 +73,19 @@ fileprivate class CardRow : BaseRow {
         addSubview(lblPlace)
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    /**
+     Set data from DataSource
+     */
     public func configure(_ model: CardModel) {
+        // Prevent it to be reloaded
+        // which can cause glitch
         if isSet { return }
         
+        // Set the data and flag
         if let data = try? Data(contentsOf: URL(string: "\(Host.miraikan.address)\(model.imagePc)")!),
            let image = UIImage(data: data) {
             img = image
@@ -77,10 +100,7 @@ fileprivate class CardRow : BaseRow {
         isSet = true
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -120,6 +140,50 @@ fileprivate class CardRow : BaseRow {
     
 }
 
+/**
+ Customized UITableViewCell for menu items
+ */
+fileprivate class MenuRow : BaseRow {
+    
+    private let lblItem = ArrowView()
+    
+    public var title: String? {
+        didSet {
+            lblItem.title = title
+        }
+    }
+    
+    // MARK: init
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        // The backgroundColor of the label should turn gray when selected
+        lblItem.backgroundColor = .clear
+        addSubview(lblItem)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: layout
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        lblItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
+                               size: lblItem.sizeThatFits(innerSize))
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let innerSz = innerSizing(parentSize: size)
+        let height = insets.top + insets.bottom + lblItem.sizeThatFits(innerSz).height
+        return CGSize(width: size.width, height: height)
+    }
+    
+}
+
+/**
+ The menu items for the home screen
+ */
 fileprivate enum MenuItem {
     case login
     case miraikanToday
@@ -160,7 +224,13 @@ fileprivate enum MenuItem {
         }
     }
     
-    // Create the UIViewController MenuItem is tapped
+    /**
+     Create the UIViewController MenuItem is tapped.
+     By default it ret
+     
+     - Returns:
+     A specific UIViewController, or BaseViewController with BaseView by default
+     */
     func createVC() -> UIViewController {
         switch self {
         case .login:
@@ -186,7 +256,9 @@ fileprivate enum MenuItem {
     }
 }
 
-// Footer for news section
+/**
+ The footer for news section
+ */
 fileprivate class NewsDetails : BaseView {
     
     private var newsList = [ArrowView]()
@@ -194,6 +266,7 @@ fileprivate class NewsDetails : BaseView {
     private let paddding: CGFloat = 20
     private let gap: CGFloat = 5
     
+    // MARK: init
     override func setup() {
         super.setup()
         
@@ -206,6 +279,7 @@ fileprivate class NewsDetails : BaseView {
          })
     }
     
+    // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -231,6 +305,9 @@ fileprivate class NewsDetails : BaseView {
     
 }
 
+/**
+ The menu secitons for the home screen
+ */
 fileprivate enum MenuSection : CaseIterable {
     case login
     case spex
@@ -287,6 +364,9 @@ fileprivate enum MenuSection : CaseIterable {
     }
 }
 
+/**
+ The BaseListView (TableView) for the Home screen
+ */
 class Home : BaseListView {
     private let menuCellId = "menuCell"
     private let cardCellId = "cardCell"
@@ -296,11 +376,13 @@ class Home : BaseListView {
     private var sections : [MenuSection]?
     
     override func initTable(isSelectionAllowed: Bool) {
+        // init the tableView
         super.initTable(isSelectionAllowed: true)
 
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: menuCellId)
+        self.tableView.register(MenuRow.self, forCellReuseIdentifier: menuCellId)
         self.tableView.register(CardRow.self, forCellReuseIdentifier: cardCellId)
 
+        // load the data
         sections = MenuSection.allCases
         if MiraikanUtil.isLoggedIn {
             sections?.removeAll(where: { $0 == .login })
@@ -337,16 +419,15 @@ class Home : BaseListView {
         items = menuItems
     }
     
+    // MARK: UITableViewDataSource
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let (sec, row) = (indexPath.section, indexPath.row)
         let rowItem = items?[sec]?[row]
-        if let menuItem = rowItem as? MenuItem {
+        if let menuItem = rowItem as? MenuItem,
+           let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
             // Normal Menu Row
-            let cell = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath)
-            let menuTitle = menuItem.name
-            cell.textLabel?.font = .boldSystemFont(ofSize: 16)
-            cell.textLabel?.text = menuTitle
-            return cell
+            menuRow.title = menuItem.name
+            return menuRow
         } else if let cardModel = rowItem as? CardModel,
                   let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
                                                               for: indexPath) as? CardRow {
@@ -359,6 +440,11 @@ class Home : BaseListView {
         return UITableViewCell()
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sections?[section].title
+    }
+    
+    // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let nav = navVC else { return }
         let (sec, row) = (indexPath.section, indexPath.row)
@@ -371,10 +457,6 @@ class Home : BaseListView {
             nav.show(BaseController(view, title: cardModel.title), sender: nil)
         }
         super.tableView(tableView, didSelectRowAt: indexPath)
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections?[section].title
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

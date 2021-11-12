@@ -29,10 +29,12 @@ import UIKit
 
 class MiraikanUtil : NSObject {
     
+    // Login status
     static public var isLoggedIn : Bool {
         return UserDefaults.standard.bool(forKey: "LoggedIn")
     }
     
+    // Selected RouteMode
     static public var routeMode : RouteMode {
         let val = UserDefaults.standard.string(forKey: "RouteMode") ?? "unknown"
         let mode = RouteMode(rawValue: val) ?? .general
@@ -121,11 +123,6 @@ class MiraikanUtil : NSObject {
         return min(widthScaleRatio, heightScaleRatio)
     }
     
-    // Dynamically create a specific view
-    static public func createView<T: UIView>(view: T.Type) -> T {
-        return view.init()
-    }
-    
     // MARK: HTTP
     static public func http(host: String = Host.miraikan.address,
                             endpoint: String,
@@ -204,8 +201,7 @@ class MiraikanUtil : NSObject {
         return weekday == 1 || weekday == 7
     }
     
-    //MARK: Objc UI utils
-    
+    //MARK: Objc utils for NavCog3
     // Open the page for Scientist Communicator Talk
     @objc static public func openTalk(eventId: String) {
         if let window = UIApplication.shared.windows.first,

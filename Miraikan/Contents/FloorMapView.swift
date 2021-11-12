@@ -27,6 +27,15 @@
 import Foundation
 import UIKit
 
+/**
+ The data model for FloorMap
+ 
+ - Parameters:
+ - id: The primary index
+ - floor: The floor number
+ - counter: The marker on the FloorMap
+ - title: The place name
+ */
 struct FloorMapModel : Decodable {
     let id: String
     let floor: Int
@@ -34,6 +43,9 @@ struct FloorMapModel : Decodable {
     let title: String
 }
 
+/**
+ The BaseView for the FloorMap
+ */
 class FloorMapView: BaseView {
     
     private var map: UIImageView!
@@ -43,6 +55,7 @@ class FloorMapView: BaseView {
     private let lblPlace = UILabel()
     private let btnNav = BaseButton()
     
+    // MARK: init
     init(_ model: FloorMapModel) {
         super.init(frame: .zero)
         setup(model)
@@ -52,10 +65,7 @@ class FloorMapView: BaseView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setup() {
-        super.setup()
-    }
-    
+    // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -82,6 +92,7 @@ class FloorMapView: BaseView {
         btnNav.frame.size.width += 30
     }
     
+    // MARK: Private Functions
     private func setup(_ model: FloorMapModel) {
         lblTitle.text = model.title
         let floor = model.floor

@@ -28,7 +28,15 @@ import Foundation
 import UIKit
 import WebKit
 
-// Layout for exhibition details
+/**
+ Layout for exhibition details
+ 
+ - Parameters:
+ - category: The URL parameter for category
+ - id: The URL parameter for a specific exhibition
+ - nodeId: The destination id for navigation
+ - permalink: The URL component for a specific event
+ */
 class ExhibitionView: BaseView, WKNavigationDelegate {
     
     private let btnNavi = NaviButton()
@@ -41,6 +49,7 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
     private var nodeId: String?
     private var isPreview: Bool?
     
+    // MARK: init
     init(category: String, id: String, nodeId: String?) {
         self.id = id
         self.nodeId = nodeId
@@ -100,6 +109,7 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
         addSubview(lblLoading)
     }
     
+    // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
         
