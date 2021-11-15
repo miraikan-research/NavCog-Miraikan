@@ -183,7 +183,7 @@
     NavDestination *dest = [self destinationForRowAtIndexPath:indexPath];
     NSString *name = [NSString stringWithFormat:@"%@", dest.name];
     NSString *nodeId = [NSString stringWithFormat:@"%@", dest._id];
-    NSLog(@"%@: %@", nodeId, name);
+    [MiraikanUtil printNodeWithNodeId:nodeId place:name];
 
     cell.accessoryType = UITableViewCellAccessoryNone;
     if (dest.filter) {

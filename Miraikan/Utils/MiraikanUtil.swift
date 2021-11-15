@@ -217,4 +217,9 @@ class MiraikanUtil : NSObject {
         }
     }
     
+    // Print the nodeIds and place names that is easy to copy
+    @objc static public func printNode(nodeId: String, place: String) {
+        print("\(nodeId), \(place)")
+    }
+    
 }
