@@ -24,7 +24,6 @@
 #import <UIKit/UIKit.h>
 #import "NavDataStore.h"
 #import "HLPDirectory.h"
-#import <NavCogMiraikan-Swift.h>
 
 @interface NavTableDataSource: NSObject <UITableViewDataSource>{
     @protected NSDictionary *_filter;

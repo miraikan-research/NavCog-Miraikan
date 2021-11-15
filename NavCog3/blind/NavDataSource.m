@@ -181,9 +181,6 @@
     
     HLPDirectoryItem *item = [self itemForRowAtIndexPath:indexPath];
     NavDestination *dest = [self destinationForRowAtIndexPath:indexPath];
-    NSString *name = [NSString stringWithFormat:@"%@", dest.name];
-    NSString *nodeId = [NSString stringWithFormat:@"%@", dest._id];
-    [MiraikanUtil printNodeWithNodeId:nodeId place:name];
 
     cell.accessoryType = UITableViewCellAccessoryNone;
     if (dest.filter) {
