@@ -93,6 +93,19 @@ class MiraikanController: UIViewController {
                 }
             })
         }
+        
+        // Start HLPLocationManager here
+        guard let manager = HLPLocationManager.shared() else { return }
+        
+        let modalName = UserDefaults.standard.string(forKey: "bleloc_map_data")
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
+        
+        if let name = modalName {
+            manager.setModelPath(path.appendingPathComponent(name))
+            let params = InitViewController.getLocationManagerParams()
+            manager.parameters = params
+            manager.start()
+        }
     }
 
 }
@@ -129,23 +142,6 @@ class BaseNavController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        guard let manager = HLPLocationManager.shared() else { return }
-        
-        // Start the manager if it is not running
-        if !manager.isActive && !manager.isBackground {
-            let modalName = UserDefaults.standard.string(forKey: "bleloc_map_data")
-            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
-            
-            if let name = modalName {
-                manager.setModelPath(path.appendingPathComponent(name))
-                let params = InitViewController.getLocationManagerParams()
-                manager.parameters = params
-                manager.start()
-            }
-        }
     }
     
     /**
