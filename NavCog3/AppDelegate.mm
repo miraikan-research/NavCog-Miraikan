@@ -135,11 +135,12 @@ void NavNSLog(NSString* fmt, ...) {
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     // Completion Actions
     completionHandler();
-    NSString *eventId = response.actionIdentifier;
-    [center removeDeliveredNotificationsWithIdentifiers:@[eventId]];
-
-    // Open the detail view
-    [MiraikanUtil openTalkWithEventId:eventId];
+    NSString *eventId = response.notification.request.identifier;
+    
+    if (eventId) {
+        [center removeDeliveredNotificationsWithIdentifiers:@[eventId]];
+        [MiraikanUtil openTalkWithEventId:eventId];
+    }
 }
 
 - (void)settingChanged:(NSNotification*)note
