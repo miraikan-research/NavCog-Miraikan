@@ -93,30 +93,6 @@
     NSLog(@"dealloc BlindViewController");
 }
 
-- (void)prepareForDealloc
-{
-    _webView.delegate = nil;
-    
-    [navigator stop];
-    navigator.delegate = nil;
-    navigator = nil;
-    
-    commander.delegate = nil;
-    commander = nil;
-    
-    previewer.delegate = nil;
-    previewer = nil;
-    
-    dialogHelper.delegate = nil;
-    dialogHelper = nil;
-    
-    _settingButton = nil;
-    
-    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -180,8 +156,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(manualLocation:) name:MANUAL_LOCATION object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestShowRoute:) name:REQUEST_PROCESS_SHOW_ROUTE object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
     
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
     
@@ -338,6 +312,8 @@
     _settingButton = nil;
     
     [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
 }
 
 - (UILabel*)findLabel:(NSArray*)views
@@ -513,12 +489,6 @@
             [dialogHelper recognize];
         }
         dialogHelper.helperView.disabled = !(hasCenter && (!isPreviewDisabled || devMode || validLocation));
-        if (!isNaviStarted && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            NSString *msg = isPreview
-                ? NSLocalizedString(@"Loading preview",@"")
-                : NSLocalizedString(@"Loading, please wait",@"");
-            [NavUtil showModalWaitingWithMessage:msg];
-        }
     } else {
         dialogHelper.helperView.hidden = YES;
     }
@@ -699,7 +669,6 @@
             return;
         }
         
-        //TODO: Start navigating here within iBeacon environment
         
         NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
         
@@ -749,6 +718,15 @@
         
         lastLocationSent = now;
         [self dialogHelperUpdate];
+        
+        if (![navigator isActive]
+            && !isNaviStarted
+            && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+            NSString *msg = isPreview
+                ? NSLocalizedString(@"Loading preview",@"")
+                : NSLocalizedString(@"Loading, please wait",@"");
+            [NavUtil showModalWaitingWithMessage:msg];
+        }
     });
 }
 
