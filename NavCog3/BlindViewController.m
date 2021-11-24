@@ -216,9 +216,11 @@
                   @"sync": @(YES)
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
-                //TODO: Test this statement under iBeacon environment
-                //Delete it if it affected normal navigation
+                // Start preview outside of iBeacon environment
                 isPreview = YES;
+                if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
+                }
             }
             [self updateView];
             [timer invalidate];
