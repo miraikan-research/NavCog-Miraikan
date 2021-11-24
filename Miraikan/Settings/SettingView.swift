@@ -63,7 +63,7 @@ class SettingView: BaseView {
             btn.setTitle(mode.description, for: .normal)
             btn.setTitleColor(.black, for: .normal)
             btn.isChecked = mode == MiraikanUtil.routeMode
-            btn.tapInside({ [weak self] _ in
+            btn.tapAction({ [weak self] _ in
                 guard let _self = self else { return }
                 if !btn.isChecked {
                     btn.isChecked = true

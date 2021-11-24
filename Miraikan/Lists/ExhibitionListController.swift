@@ -51,7 +51,7 @@ fileprivate class ExhibitionRow : BaseRow {
         : model.intro
         btnNavi.setTitle("この展示へナビ", for: .normal)
         btnNavi.sizeToFit()
-        btnNavi.tapInside({ [weak self] _ in
+        btnNavi.tapAction({ [weak self] _ in
             guard let _self = self else { return }
             if let n = _self.nav {
                 if let nodeId = model.nodeId {

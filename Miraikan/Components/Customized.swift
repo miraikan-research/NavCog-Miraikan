@@ -169,12 +169,12 @@ class BaseButton: UIButton {
     
     private var action: ((UIButton)->())?
 
-    public func tapInside(_ action: @escaping ((UIButton)->())) {
+    public func tapAction(_ action: @escaping ((UIButton)->())) {
         self.action = action
-        self.addTarget(self, action: #selector(tapAction(_:)), for: .touchUpInside)
+        self.addTarget(self, action: #selector(_tapAction(_:)), for: .touchUpInside)
     }
 
-    @objc private func tapAction(_ sender: UIButton) {
+    @objc private func _tapAction(_ sender: UIButton) {
         if let _f = action {
             _f(self)
         }
@@ -186,6 +186,11 @@ class BaseButton: UIButton {
  A BaseButton that styled as Navigation Button
  */
 class NaviButton: BaseButton {
+    
+    private let blue: UIColor = .blue
+    private let white: UIColor = .white
+    
+    private var action: ((UIButton)->())?
     
     var paddingX: CGFloat {
         return self.titleEdgeInsets.left + self.titleEdgeInsets.right
@@ -201,12 +206,37 @@ class NaviButton: BaseButton {
     }
     
     private func setup() {
-        self.setTitleColor(.blue, for: .normal)
+        self.setTitleColor(blue, for: .normal)
+        self.setTitleColor(white, for: .highlighted)
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.blue.cgColor
-        self.layer.backgroundColor = UIColor.white.cgColor
+        self.layer.borderColor = blue.cgColor
+        self.layer.backgroundColor = white.cgColor
         self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
+    }
+    
+    override func tapAction(_ action: @escaping ((UIButton) -> ())) {
+        self.action = action
+        self.addTarget(self, action: #selector(_touchDown), for: .touchDown)
+        self.addTarget(self, action: #selector(_touchUpInside(_:)), for: .touchUpInside)
+    }
+    
+    @objc private func _touchDown() {
+        self.layer.backgroundColor = self.blue.cgColor
+    }
+
+    @objc private func _touchUpInside(_ sender: UIButton) {
+        self.setTitleColor(self.white, for: .normal)
+        self.layer.backgroundColor = self.blue.cgColor
+        UIView.animate(withDuration: 0.1, animations: {
+            self.setTitleColor(self.blue, for: .normal)
+            self.layer.backgroundColor = self.white.cgColor
+        }, completion: { [weak self] finished in
+            guard let self = self else { return }
+            if let _f = self.action {
+                _f(self)
+            }
+        })
     }
     
 }

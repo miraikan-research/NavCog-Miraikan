@@ -40,7 +40,7 @@ class LoginView: BaseView {
         btnLogin.setTitle("Login", for: .normal)
         btnLogin.setTitleColor(.black, for: .normal)
         btnLogin.sizeToFit()
-        btnLogin.tapInside({ [weak self] _ in
+        btnLogin.tapAction({ [weak self] _ in
             guard let _self = self else { return }
             
             UserDefaults.standard.setValue(true, forKey: "LoggedIn")

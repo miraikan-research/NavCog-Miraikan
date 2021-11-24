@@ -127,7 +127,7 @@ class FloorMapView: BaseView {
         btnNav.titleEdgeInsets.left = 15
         btnNav.titleEdgeInsets.right = 15
         btnNav.sizeToFit()
-        btnNav.tapInside { _ in
+        btnNav.tapAction { _ in
             print("Navigation Started")
         }
         addSubview(btnNav)

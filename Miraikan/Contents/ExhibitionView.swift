@@ -88,7 +88,7 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
         super.setup()
         btnNavi.setTitle("この展示へナビ", for: .normal)
         btnNavi.sizeToFit()
-        btnNavi.tapInside({ [weak self] _ in
+        btnNavi.tapAction({ [weak self] _ in
             guard let _self = self else { return }
             if let n = _self.navVC {
                 if let nodeId = _self.nodeId {
