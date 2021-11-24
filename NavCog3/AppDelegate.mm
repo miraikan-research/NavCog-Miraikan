@@ -70,6 +70,9 @@ void NavNSLog(NSString* fmt, ...) {
     // Override point for customization after application launch.
     // [Logging startLog];
     
+    // Start locating here
+    [MiraikanUtil startLocating];
+    
     // Notification
     [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     
@@ -137,6 +140,7 @@ void NavNSLog(NSString* fmt, ...) {
     completionHandler();
     NSString *eventId = response.notification.request.identifier;
     
+    // Remove the notification and open the view
     if (eventId) {
         [center removeDeliveredNotificationsWithIdentifiers:@[eventId]];
         [MiraikanUtil openTalkWithEventId:eventId];

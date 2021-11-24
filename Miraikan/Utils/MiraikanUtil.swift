@@ -222,4 +222,23 @@ class MiraikanUtil : NSObject {
         print("\(nodeId), \(place)")
     }
     
+    /**
+     Configure the HLPLcationManager and start locating
+     */
+    @objc static public func startLocating() {
+        guard let manager = HLPLocationManager.shared() else { return }
+        
+        if !manager.isActive && !manager.isBackground {
+            let modalName = UserDefaults.standard.string(forKey: "bleloc_map_data")
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
+            
+            if let name = modalName {
+                manager.setModelPath(path.appendingPathComponent(name))
+                let params = InitViewController.getLocationManagerParams()
+                manager.parameters = params
+                manager.start()
+            }
+        }
+    }
+    
 }

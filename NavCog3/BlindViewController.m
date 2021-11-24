@@ -312,8 +312,6 @@
     _settingButton = nil;
     
     [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
 }
 
 - (UILabel*)findLabel:(NSArray*)views
@@ -719,9 +717,10 @@
         lastLocationSent = now;
         [self dialogHelperUpdate];
         
-        if (![navigator isActive]
-            && !isNaviStarted
-            && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+        if ([navigator isActive] || isNaviStarted) {
+            return;
+        }
+        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
             NSString *msg = isPreview
                 ? NSLocalizedString(@"Loading preview",@"")
                 : NSLocalizedString(@"Loading, please wait",@"");
@@ -1197,7 +1196,6 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading, please wait",@"")];
-        isNaviStarted = NO;
     });
     [nds requestRerouteFrom:[NavDataStore destinationForCurrentLocation]._id To:nds.to._id withPreferences:prefs complete:^{
         dispatch_async(dispatch_get_main_queue(), ^{

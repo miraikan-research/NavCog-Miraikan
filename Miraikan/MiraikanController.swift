@@ -151,19 +151,6 @@ class BaseNavController: UINavigationController {
             .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
         mapVC.destId = nodeId
         self.show(mapVC, sender: nil)
-        
-        // Start manager here
-        guard let manager = HLPLocationManager.shared() else { return }
-        
-        let modalName = UserDefaults.standard.string(forKey: "bleloc_map_data")
-        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
-        
-        if let name = modalName {
-            manager.setModelPath(path.appendingPathComponent(name))
-            let params = InitViewController.getLocationManagerParams()
-            manager.parameters = params
-            manager.start()
-        }
     }
     
 }
