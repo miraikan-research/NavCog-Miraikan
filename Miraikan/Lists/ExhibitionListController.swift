@@ -27,12 +27,29 @@
 import Foundation
 import UIKit
 
+
+fileprivate struct ExhibitionLinkModel : Decodable {
+    let id : String
+    let category : String
+    let title : String
+    let nodeId : String?
+    let counter : String
+    let locations: [ExhibitionLocation]?
+}
+
+fileprivate struct ExhibitionContentModel : Decodable {
+    let title : String
+    let nodeId : String?
+    let intro : String
+    let blindModeIntro : String
+    let locations: [ExhibitionLocation]?
+}
+
 /**
  The customized UITableViewCell for each exhibition
  */
-fileprivate class ExhibitionRow : BaseRow {
+fileprivate class ContentRow : BaseRow {
     
-    private let titleLink = UnderlinedLabel()
     private let btnNavi = NaviButton()
     private let lblDescription = AutoWrapLabel()
     
@@ -40,12 +57,12 @@ fileprivate class ExhibitionRow : BaseRow {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addSubview(titleLink)
         addSubview(btnNavi)
         addSubview(lblDescription)
+        selectionStyle = .none
     }
     
-    public func configure(_ model: ExhibitionModel) {
+    public func configure(_ model: ExhibitionContentModel) {
         lblDescription.text = MiraikanUtil.routeMode == .blind
         ? model.blindModeIntro
         : model.intro
@@ -64,24 +81,10 @@ fileprivate class ExhibitionRow : BaseRow {
                 }
             }
         })
-        let linkTitle = model.counter != ""
-            ? "\(model.counter) \(model.title)"
-            : model.title
-        titleLink.title = linkTitle
-        titleLink.openView { [weak self] _ in
-            guard let _self = self else { return }
-            if let n = _self.nav {
-                n.show(BaseController(ExhibitionView(category: model.category,
-                                                     id: model.id,
-                                                     nodeId: model.nodeId),
-                                      title: model.title), sender: nil)
-            }
-        }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        titleLink.title = nil
         btnNavi.setTitle(nil, for: .normal)
         lblDescription.text = nil
     }
@@ -94,14 +97,6 @@ fileprivate class ExhibitionRow : BaseRow {
         super.layoutSubviews()
         
         var y = insets.top
-        
-        let linkSize = CGSize(width: innerSize.width,
-                              height: titleLink.intrinsicContentSize.height)
-        titleLink.frame = CGRect(x: insets.left,
-                                 y: insets.top,
-                                 width: innerSize.width,
-                                 height: titleLink.sizeThatFits(linkSize).height)
-        y += titleLink.frame.height + gap
         
         btnNavi.frame = CGRect(x: innerSize.width - btnNavi.frame.width,
                                y: y,
@@ -118,12 +113,9 @@ fileprivate class ExhibitionRow : BaseRow {
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let linkSize = CGSize(width: innerSizing(parentSize: size).width,
-                              height: titleLink.intrinsicContentSize.height)
         let descSize = CGSize(width: innerSizing(parentSize: size).width,
                               height: lblDescription.intrinsicContentSize.height)
-        let height = [titleLink.sizeThatFits(linkSize),
-                      btnNavi.intrinsicContentSize,
+        let height = [btnNavi.intrinsicContentSize,
                       lblDescription.sizeThatFits(descSize)].map({ $0.height })
             .reduce((insets.top + insets.bottom), { $0 + $1 + gap})
         return CGSize(width: size.width, height: height)
@@ -141,8 +133,8 @@ fileprivate class ExhibitionRow : BaseRow {
 class ExhibitionListController : BaseListController, BaseListDelegate {
     
     private let category: String
-    
-    private let cellId = "exhibitionCell"
+    private let linkId = "linkCell"
+    private let contentId = "descCell"
     
     // MARK: init
     init(id: String, title: String) {
@@ -155,34 +147,71 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func initTable(isSelectionAllowed: Bool) {
+    override func initTable() {
         // init the tableView
-        super.initTable(isSelectionAllowed: isSelectionAllowed)
+        super.initTable()
         
-        self.tableView.register(ExhibitionRow.self, forCellReuseIdentifier: cellId)
+        self.tableView.register(LinkRow.self, forCellReuseIdentifier: linkId)
+        self.tableView.register(ContentRow.self, forCellReuseIdentifier: contentId)
         
         // Load the data
-        if let models = MiraikanUtil.readJSONFile(filename: "exhibition",
-                                                  type: [ExhibitionModel].self) as? [ExhibitionModel] {
-            let sorted = models
-                .filter({ $0.category == category})
-                .sorted(by: { $0.counter < $1.counter })
-            ExhibitionDataStore.shared.exhibitions = sorted
-            items = [0: sorted]
-        }
+        guard let models = MiraikanUtil.readJSONFile(filename: "exhibition",
+                                                  type: [ExhibitionModel].self)
+            as? [ExhibitionModel]
+        else { return }
+        let sorted = models
+            .filter({ $0.category == category})
+            .sorted(by: { $0.counter < $1.counter })
+        ExhibitionDataStore.shared.exhibitions = sorted
+        var dividedItems = [Any]()
+        sorted.forEach({ model in
+            let title = model.counter != ""
+                ? "\(model.counter) \(model.title)"
+                : model.title
+            let linkModel = ExhibitionLinkModel(id: model.id,
+                                                category: category,
+                                                title: title,
+                                                nodeId: model.nodeId,
+                                                counter: model.counter,
+                                                locations: model.locations)
+            dividedItems += [linkModel]
+            let contentModel = ExhibitionContentModel(title: model.title,
+                                                      nodeId: model.nodeId,
+                                                      intro: model.intro,
+                                                      blindModeIntro: model.blindModeIntro,
+                                                      locations: model.locations)
+            dividedItems += [contentModel]
+        })
+        items = [0: dividedItems]
     }
     
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
-                                                       for: indexPath) as? ExhibitionRow
-        else { return UITableViewCell() }
-        
         let (sec, row) = (indexPath.section, indexPath.row)
-        if let model = items?[sec]?[row] as? ExhibitionModel {
+        let item = items?[sec]?[row]
+        if let title = (item as? ExhibitionLinkModel)?.title,
+           let cell = tableView.dequeueReusableCell(withIdentifier: linkId, for: indexPath)
+            as? LinkRow {
+            cell.configure(title: title)
+            return cell
+        } else if let model = item as? ExhibitionContentModel,
+                  let cell = tableView.dequeueReusableCell(withIdentifier: contentId, for: indexPath)
+                   as? ContentRow {
             cell.configure(model)
+            return cell
         }
-        return cell
+        return nil
+    }
+    
+    override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
+        // Only the link is clickable
+        if let model = items?[indexPath.section]?[indexPath.row] as? ExhibitionLinkModel {
+            guard let nav = self.navigationController as? BaseNavController else { return }
+            nav.show(BaseController(ExhibitionView(category: category,
+                                                   id: model.id,
+                                                   nodeId: model.nodeId),
+                                    title: model.title), sender: nil)
+        }
     }
     
 }

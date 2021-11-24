@@ -44,20 +44,17 @@ fileprivate struct RegularExhibitionModel : Decodable {
 }
 
 /**
- The customized UITableViewCell for Regular Exhibition categories
+ The customized UITableViewCell for category description
  */
-fileprivate class RegularExhibitionRow : BaseRow {
+fileprivate class DescriptionRow : BaseRow {
     
-    private var titleLink = UnderlinedLabel()
     private let lblDescription = AutoWrapLabel()
-    
-    private let gap = CGFloat(10)
     
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addSubview(titleLink)
         addSubview(lblDescription)
+        selectionStyle = .none
     }
     
     required init?(coder: NSCoder) {
@@ -67,41 +64,15 @@ fileprivate class RegularExhibitionRow : BaseRow {
     override func prepareForReuse() {
         super.prepareForReuse()
         lblDescription.text = nil
-        titleLink.title = nil
-    }
-    
-    /**
-     Set data from DataSource
-     */
-    public func configure(_ model: RegularExhibitionModel) {
-        lblDescription.text = model.intro
-        let title = model.floor != nil
-            ? "\(model.floor!)階 \(model.title)"
-            : model.title
-        titleLink.title = title
-        titleLink.sizeToFit()
-        titleLink.openView { [weak self] _ in
-            guard let _self = self else { return }
-            if let n = _self.nav {
-                let vc = ExhibitionListController(id: model.id, title: model.title)
-                n.show(vc, sender: nil)
-            }
-        }
-        
-        [titleLink, lblDescription].forEach({
-            addSubview($0)
-        })
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        titleLink.frame.origin = CGPoint(x: insets.left, y: insets.top)
-        
         let descSize = CGSize(width: innerSize.width,
                               height: lblDescription.intrinsicContentSize.height)
         lblDescription.frame = CGRect(x: insets.left,
-                                      y: insets.top + titleLink.frame.height + gap,
+                                      y: insets.top,
                                       width: innerSize.width,
                                       height: lblDescription.sizeThatFits(descSize).height)
     }
@@ -109,10 +80,18 @@ fileprivate class RegularExhibitionRow : BaseRow {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let descSize = CGSize(width: innerSizing(parentSize: size).width,
                               height: lblDescription.intrinsicContentSize.height)
-        let height = [titleLink.intrinsicContentSize,
-                      lblDescription.sizeThatFits(descSize)].map({ $0.height })
-            .reduce((insets.top + insets.bottom), { $0 + $1 + gap})
-        return CGSize(width: size.width, height: height)
+        let totalHeight = insets.top
+        + lblDescription.sizeThatFits(descSize).height
+        + insets.bottom
+        return CGSize(width: size.width, height: totalHeight)
+    }
+    
+    /**
+     Set data from DataSource
+     */
+    public func configure(title: String) {
+        lblDescription.text = title
+        lblDescription.sizeToFit()
     }
     
 }
@@ -122,38 +101,67 @@ fileprivate class RegularExhibitionRow : BaseRow {
  */
 class RegularExhibitionController : BaseListController, BaseListDelegate {
     
-    private let cellId = "regularCell"
+    private let linkId = "linkCell"
+    private let descId = "descCell"
     
-    override func initTable(isSelectionAllowed: Bool) {
+    override func initTable() {
         // init the tableView
-        super.initTable(isSelectionAllowed: isSelectionAllowed)
+        super.initTable()
         
         self.baseDelegate = self
-        self.tableView.register(RegularExhibitionRow.self, forCellReuseIdentifier: cellId)
+        self.tableView.register(LinkRow.self, forCellReuseIdentifier: linkId)
+        self.tableView.register(DescriptionRow.self, forCellReuseIdentifier: descId)
         
         // Load the data
-        if let models = MiraikanUtil.readJSONFile(filename: "exhibition_category",
-                                                  type: [RegularExhibitionModel].self) as? [RegularExhibitionModel] {
-            let sorted = models.sorted(by: { (a, b) in
-                let floorA = a.floor ?? 0
-                let floorB = b.floor ?? 0
-                return floorA > floorB
-            })
-            items = [0: sorted]
-        }
+        guard let models = MiraikanUtil.readJSONFile(filename: "exhibition_category",
+                                                  type: [RegularExhibitionModel].self)
+            as? [RegularExhibitionModel]
+        else { return }
+        
+        let sorted = models.sorted(by: { (a, b) in
+            let floorA = a.floor ?? 0
+            let floorB = b.floor ?? 0
+            return floorA > floorB
+        })
+        var dividedItems = [Any]()
+        sorted.forEach({ model in
+            dividedItems += [model]
+            dividedItems += [model.intro]
+        })
+        items = [0: dividedItems]
+        
     }
     
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
-                                                       for: indexPath) as? RegularExhibitionRow
-        else { return UITableViewCell() }
-        
         let (sec, row) = (indexPath.section, indexPath.row)
-        if let model = items?[sec]?[row] as? RegularExhibitionModel {
-            cell.configure(model)
+        let item = items?[sec]?[row]
+        if let model = item as? RegularExhibitionModel,
+           let cell = tableView.dequeueReusableCell(withIdentifier: linkId,
+                                                          for: indexPath)
+            as? LinkRow {
+            let title = model.floor != nil
+                ? "\(model.floor!)階 \(model.title)"
+                : model.title
+            cell.configure(title: title)
+            return cell
+        } else if let title = item as? String,
+                  let cell = tableView.dequeueReusableCell(withIdentifier: descId,
+                                                                 for: indexPath)
+                    as? DescriptionRow {
+            cell.configure(title: title)
+            return cell
         }
-        return cell
+        return nil
+    }
+    
+    override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
+        // Only the link is clickable
+        if let model = items?[indexPath.section]?[indexPath.row] as? RegularExhibitionModel {
+            guard let nav = self.navigationController as? BaseNavController else { return }
+            let vc = ExhibitionListController(id: model.id, title: model.title)
+            nav.show(vc, sender: nil)
+        }
     }
     
 }

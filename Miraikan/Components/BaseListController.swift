@@ -129,13 +129,12 @@ class BaseListController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initTable(isSelectionAllowed: false)
+        initTable()
     }
     
-    func initTable(isSelectionAllowed : Bool) {
+    func initTable() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.allowsSelection = isSelectionAllowed
         self.tableView.separatorStyle = .none
         self.tableView.backgroundColor = .white
     }
@@ -171,6 +170,7 @@ class BaseListController: UITableViewController {
     func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
         print("Selected item at: \(indexPath.section), \(indexPath.row)")
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
 }

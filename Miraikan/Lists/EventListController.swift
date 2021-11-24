@@ -197,9 +197,9 @@ class EventListController: BaseListController, BaseListDelegate {
     
     private let cellId = "eventCell"
     
-    override func initTable(isSelectionAllowed: Bool) {
+    override func initTable() {
         // init the tableView
-        super.initTable(isSelectionAllowed: isSelectionAllowed)
+        super.initTable()
         
         self.baseDelegate = self
         self.tableView.register(ScheduleRow.self, forCellReuseIdentifier: cellId)

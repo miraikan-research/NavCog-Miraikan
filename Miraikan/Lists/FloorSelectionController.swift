@@ -35,8 +35,8 @@ class FloorSelectionController: BaseListController, BaseListDelegate {
     
     private let cellId = "floorCell"
     
-    override func initTable(isSelectionAllowed: Bool) {
-        super.initTable(isSelectionAllowed: true)
+    override func initTable() {
+        super.initTable()
         
         self.baseDelegate = self
         self.tableView.separatorStyle = .singleLine
