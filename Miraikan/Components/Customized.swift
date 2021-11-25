@@ -43,6 +43,15 @@ class ArrowView: BaseView {
         }
     }
     
+    public var titleColor: UIColor? {
+        didSet {
+            if let color = titleColor {
+                lblMain.textColor = color
+                lblArrow.textColor = color
+            }
+        }
+    }
+    
     init(_ text: String? = nil) {
         super.init(frame: .zero)
         
@@ -322,33 +331,22 @@ class LinkRow : BaseRow {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        titleLink.frame.origin = CGPoint(x: insets.left, y: insets.top)
+        let linkSize = CGSize(width: innerSize.width,
+                              height: titleLink.intrinsicContentSize.height)
+        titleLink.frame = CGRect(x: insets.left,
+                                 y: insets.top,
+                                 width: innerSize.width,
+                                 height: titleLink.sizeThatFits(linkSize).height)
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let linkSize = CGSize(width: innerSizing(parentSize: size).width,
+                              height: titleLink.intrinsicContentSize.height)
         let totalHeight = insets.top
-        + titleLink.intrinsicContentSize.height
+        + titleLink.sizeThatFits(linkSize).height
         + insets.bottom
         return CGSize(width: size.width, height: totalHeight)
     }
-    
-//    override func layoutSubviews() {
-//        let linkSize = CGSize(width: innerSize.width,
-//                              height: titleLink.intrinsicContentSize.height)
-//        titleLink.frame = CGRect(x: insets.left,
-//                                 y: insets.top,
-//                                 width: innerSize.width,
-//                                 height: titleLink.sizeThatFits(linkSize).height)
-//    }
-//
-//    override func sizeThatFits(_ size: CGSize) -> CGSize {
-//        let linkSize = CGSize(width: innerSizing(parentSize: size).width,
-//                              height: titleLink.intrinsicContentSize.height)
-//        let totalHeight = insets.top
-//        + titleLink.sizeThatFits(linkSize).height
-//        + insets.bottom
-//        return CGSize(width: size.width, height: totalHeight)
-//    }
     
     /**
      Set data from DataSource

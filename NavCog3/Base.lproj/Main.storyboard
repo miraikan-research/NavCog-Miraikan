@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rPX-gt-o07">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rPX-gt-o07">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment version="4096" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -685,7 +685,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="historycell" selectionStyle="default" indentationWidth="10" reuseIdentifier="historycell" id="58x-Cu-Nkf">
-                                        <rect key="frame" x="0.0" y="24.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="58x-Cu-Nkf" id="LAy-Rq-ier">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -835,7 +835,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="destinationCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="destinationCell" textLabel="V3W-HM-tEd" detailTextLabel="JmH-wi-lih" style="IBUITableViewCellStyleSubtitle" id="ieS-fG-WWA">
-                                <rect key="frame" x="0.0" y="24.5" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="44.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ieS-fG-WWA" id="Zye-9x-q2X">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -862,7 +862,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="destinationCell2" selectionStyle="default" indentationWidth="10" reuseIdentifier="destinationCell2" textLabel="ygY-iz-tJa" detailTextLabel="hia-uJ-SXj" style="IBUITableViewCellStyleSubtitle" id="5ex-Xa-LMb">
-                                <rect key="frame" x="0.0" y="68.5" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="88.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5ex-Xa-LMb" id="ZyX-da-jqr">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -903,7 +903,7 @@
         <!--Dialog View Controller-->
         <scene sceneID="7vw-Hj-Rkg">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="YRz-sv-vaW" customClass="DialogViewController" customModule="HLPDialog" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ai_vc" modalPresentationStyle="fullScreen" id="YRz-sv-vaW" customClass="DialogViewController" customModule="HLPDialog" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CkD-sT-tsx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -996,7 +996,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="server_candidate_cell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="server_candidate_cell" textLabel="lBV-Yb-qEM" detailTextLabel="ceO-aS-gCh" rowHeight="120" style="IBUITableViewCellStyleSubtitle" id="vkh-9Q-ezg">
-                                        <rect key="frame" x="0.0" y="24.5" width="375" height="120"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="375" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vkh-9Q-ezg" id="XOX-n9-DLM">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
@@ -1398,10 +1398,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Kab-D7-zbh"/>
+        <segue reference="XlC-wp-uNx"/>
         <segue reference="Goq-2Z-Z6n"/>
-        <segue reference="y9t-k8-dBv"/>
-        <segue reference="jup-Rk-ibd"/>
+        <segue reference="y91-pz-cNT"/>
+        <segue reference="GK1-dG-XDF"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Menu" width="32" height="32"/>

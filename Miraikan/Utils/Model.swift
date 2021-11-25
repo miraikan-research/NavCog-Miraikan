@@ -26,6 +26,7 @@
 
 import Foundation
 import UIKit
+import HLPDialog
 
 /**
  This should be accessible for TabController and its related controllers / views
@@ -77,6 +78,17 @@ enum TabItem: Int, CaseIterable {
         case .login:
             let baseVC = BaseController(LoginView(), title: self.title)
             nav.viewControllers = [baseVC]
+        case .askAI:
+            let dialogManager = DialogManager.sharedManager()
+            if dialogManager.isAvailable {
+                dialogManager.userMode = "user_\(MiraikanUtil.routeMode)"
+                let baseVC = UIStoryboard(name: "Main", bundle: nil)
+                    .instantiateViewController(withIdentifier: "ai_vc")
+                baseVC.title = self.title
+                nav.viewControllers = [baseVC]
+            } else {
+                nav.viewControllers = [BaseController(BaseView(), title: self.title)]
+            }
         default:
             let baseVC = BaseController(BaseView(), title: self.title)
             nav.viewControllers = [baseVC]

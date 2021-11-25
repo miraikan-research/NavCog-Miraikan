@@ -153,6 +153,12 @@ fileprivate class MenuRow : BaseRow {
         }
     }
     
+    public var titleColor : UIColor? {
+        didSet {
+            lblItem.titleColor = titleColor
+        }
+    }
+    
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -196,6 +202,12 @@ fileprivate enum MenuItem {
     case setting
     case aboutMiraikan
     case aboutApp
+    
+    var isAvailable: Bool {
+        let availableItems : [MenuItem] = [.login, .miraikanToday, .regularExhibition,
+                                           .setting, .aboutMiraikan, .aboutApp]
+        return availableItems.contains(self)
+    }
     
     var name : String {
         switch self {
@@ -274,9 +286,12 @@ fileprivate class NewsDetails : BaseView {
          "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
          "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"].forEach({
             let row = ArrowView("・\($0)")
+            row.backgroundColor = .clear
+            row.titleColor = .lightText
             newsList += [row]
             addSubview(row)
          })
+        backgroundColor = .lightGray
     }
     
     // MARK: layout
@@ -427,6 +442,8 @@ class Home : BaseListView {
            let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
             // Normal Menu Row
             menuRow.title = menuItem.name
+            menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
+            menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
             return menuRow
         } else if let cardModel = rowItem as? CardModel,
                   let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
@@ -449,7 +466,8 @@ class Home : BaseListView {
         guard let nav = navVC else { return }
         let (sec, row) = (indexPath.section, indexPath.row)
         let rowItem = items?[sec]?[row]
-        if let menuItem = rowItem as? MenuItem {
+        if let menuItem = rowItem as? MenuItem,
+            menuItem.isAvailable {
             let vc = menuItem.createVC()
             nav.show(vc, sender: nil)
         } else if let cardModel = rowItem as? CardModel {
