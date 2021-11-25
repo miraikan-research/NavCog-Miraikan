@@ -41,6 +41,22 @@ class MiraikanUtil : NSObject {
         return mode
     }
     
+    static public var location: HLPLocation? {
+        return NavDataStore.shared().currentLocation()
+    }
+    
+    static public var isLocated : Bool {
+        if let loc = location {
+            return !loc.lat.isNaN && !loc.lng.isNaN
+        }
+        
+        return false
+    }
+    
+    @objc static public var isPreview : Bool {
+        return !isLocated || UserDefaults.standard.bool(forKey: "OnPreview")
+    }
+    
     // MARK: JSON
     static private var jsonDecoder: JSONDecoder {
         let decoder = JSONDecoder()

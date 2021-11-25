@@ -41,6 +41,8 @@
 #import "DefaultTTS.h"
 #import <CoreMotion/CoreMotion.h>
 
+#import <NavCogMiraikan-Swift.h>
+
 @import JavaScriptCore;
 @import CoreMotion;
 
@@ -97,7 +99,7 @@
     [super viewDidLoad];
     
     isNaviStarted = NO;
-    isPreview = NO;
+//    isPreview = NO;
     
     initialViewDidAppear = YES;
     
@@ -217,7 +219,7 @@
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
                 // Start preview outside of iBeacon environment
-                isPreview = YES;
+//                isPreview = YES;
                 if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
                     [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
                 }
@@ -724,7 +726,7 @@
             return;
         }
         if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            NSString *msg = isPreview
+            NSString *msg = [MiraikanUtil isPreview]
                 ? NSLocalizedString(@"Loading preview",@"")
                 : NSLocalizedString(@"Loading, please wait",@"");
             [NavUtil showModalWaitingWithMessage:msg];

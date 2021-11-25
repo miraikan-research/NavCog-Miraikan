@@ -35,6 +35,9 @@ class MiraikanController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let btnSetting = UIBarButtonItem(title: "Setting", style: .done, target: self, action: #selector(openNaviSetting))
+        self.navigationItem.rightBarButtonItem = btnSetting
+        
         // Layout and title
         view = Home()
         title = TabItem.home.title
@@ -94,6 +97,11 @@ class MiraikanController: UIViewController {
                 }
             })
         }
+    }
+    
+    @objc private func openNaviSetting() {
+        let vc = NaviSettingController(title: "Navi Setting")
+        self.navigationController?.show(vc, sender: nil)
     }
 
 }

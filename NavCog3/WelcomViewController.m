@@ -115,11 +115,6 @@
                 if (list) { retryCount = 0; }
             }];
         }
-//        else { // show server list
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [self performSegueWithIdentifier:@"show_server_selection" sender:self];
-//            });
-//        }
         return;
     } else {
         if (config.agreementConfig == nil) {
