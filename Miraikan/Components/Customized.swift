@@ -192,6 +192,37 @@ class BaseButton: UIButton {
 }
 
 /**
+ A UIBarButtonItem with easier access to the action
+ */
+class BaseBarButton : UIBarButtonItem {
+    
+    private var _action : (()->())?
+    
+    init(image: UIImage?) {
+        super.init()
+        self.image = image
+        self.target = self
+        self.style = .done
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func tapAction(_ action: @escaping (()->())) {
+        self._action = action
+        self.action = #selector(_tapAction)
+    }
+    
+    @objc private func _tapAction() {
+        if let _f = _action {
+            _f()
+        }
+    }
+    
+}
+
+/**
  A BaseButton that styled as Navigation Button
  */
 class NaviButton: BaseButton {

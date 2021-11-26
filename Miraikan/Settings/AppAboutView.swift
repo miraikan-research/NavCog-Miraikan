@@ -39,7 +39,7 @@ class AppAboutView: BaseView {
     override func setup() {
         super.setup()
         
-        lblIcon8.text = "Free Icons Retreived from: https://icons8.com for TabBar."
+        lblIcon8.text = "Free Icons Retreived from: https://icons8.com for TabBar and NavBar."
         lblIcon8.numberOfLines = 0
         lblIcon8.lineBreakMode = .byWordWrapping
         lblIcon8.sizeToFit()

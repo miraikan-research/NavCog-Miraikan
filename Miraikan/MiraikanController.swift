@@ -35,7 +35,13 @@ class MiraikanController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let btnSetting = UIBarButtonItem(title: "Setting", style: .done, target: self, action: #selector(openNaviSetting))
+        // NavBar
+        let btnSetting = BaseBarButton(image: UIImage(named: "icons8-setting-32"))
+        btnSetting.tapAction { [weak self] in
+            guard let self = self else { return }
+            let vc = NaviSettingController(title: "Navi Setting")
+            self.navigationController?.show(vc, sender: nil)
+        }
         self.navigationItem.rightBarButtonItem = btnSetting
         
         // Layout and title
@@ -97,11 +103,6 @@ class MiraikanController: UIViewController {
                 }
             })
         }
-    }
-    
-    @objc private func openNaviSetting() {
-        let vc = NaviSettingController(title: "Navi Setting")
-        self.navigationController?.show(vc, sender: nil)
     }
 
 }

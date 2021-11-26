@@ -74,6 +74,7 @@ fileprivate class CurrentLocationRow : BaseRow {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let totalHeight = [insets.top,
+                           lblDescription.intrinsicContentSize.height,
                            lblLocation.intrinsicContentSize.height,
                            insets.bottom].reduce(gap, { $0 + $1 })
         return CGSize(width: size.width, height: totalHeight)
@@ -146,18 +147,6 @@ class NaviSettingController : BaseListController, BaseListDelegate {
     private let locationId = "locationCell"
     private let previewId = "previewCell"
     
-//    private var location: HLPLocation? {
-//        return NavDataStore.shared().currentLocation()
-//    }
-//
-//    private var isLocated : Bool {
-//        if let loc = location {
-//            return !loc.lat.isNaN && !loc.lng.isNaN
-//        }
-//
-//        return false
-//    }
-    
     private enum CellType : CaseIterable {
         case location
         case preview
@@ -176,6 +165,7 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         super.initTable()
         
         self.baseDelegate = self
+        self.tableView.separatorStyle = .singleLine
         self.tableView.register(CurrentLocationRow.self, forCellReuseIdentifier: locationId)
         self.tableView.register(PreviewSwitchRow.self, forCellReuseIdentifier: previewId)
         self.items = [0: CellType.allCases]

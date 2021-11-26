@@ -66,19 +66,21 @@ class BaseRow: UITableViewCell {
     }
     
     // MARK: Size calculation
-    private func padding(margin: CGFloat = 10) -> UIEdgeInsets {
+    private func padding() -> UIEdgeInsets {
         return UIEdgeInsets(top: safeAreaInsets.top + 10,
-                            left: margin,
-                            bottom: margin,
-                            right: margin)
+                            left: 20,
+                            bottom: 10,
+                            right: 20)
     }
     
-    func innerSizing(margin: CGFloat = 10) -> CGSize {
-        return innerSizing(parentSize: frame.size, margin: margin)
+    func innerSizing() -> CGSize {
+        let insets = padding()
+        return CGSize(width: frame.width - (insets.left + insets.right),
+                      height: frame.height - (insets.top + insets.bottom))
     }
     
-    func innerSizing(parentSize: CGSize, margin: CGFloat = 10) -> CGSize {
-        let insets = padding(margin: margin)
+    func innerSizing(parentSize: CGSize) -> CGSize {
+        let insets = padding()
         return CGSize(width: parentSize.width - (insets.left + insets.right),
                       height: parentSize.height - (insets.top + insets.bottom))
     }
