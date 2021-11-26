@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		0A9AE0FB45967A7B8CDC33BC /* libPods-NavCogPreview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35160725C7FDA4E6ABCFA139 /* libPods-NavCogPreview.a */; };
 		19514A013A0165766E9AAE2E /* libPods-NavCog3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4434DBB4252C53354B18A48B /* libPods-NavCog3.a */; };
+		300093032750A54900539A0F /* DefaultTTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */; };
 		3008B8B326DDFC42008C27B1 /* HLPDialog in Frameworks */ = {isa = PBXBuildFile; productRef = 3008B8B226DDFC42008C27B1 /* HLPDialog */; };
+		30B0B3BB2750A28A0001E582 /* DefaultTTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */; };
 		341B73DAD151025E2A79374B /* libPods-NavCogFP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA9F07AEB733BB60BE0E8A9 /* libPods-NavCogFP.a */; };
 		35D0F4EE3B343B80AFB2F3EF /* libPods-NavCogMiraikan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D028BF9D3DF5E5BCF988A86C /* libPods-NavCogMiraikan.a */; };
 		7E08DB581DB9F08E00E82161 /* ConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E08DB571DB9F08E00E82161 /* ConfigManager.m */; };
@@ -372,6 +374,7 @@
 /* Begin PBXFileReference section */
 		0D18A95F063007726536010A /* Pods-NavCog3.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.debug.xcconfig"; sourceTree = "<group>"; };
 		236A8A941827481A63E3CAD2 /* Pods-NavCogTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogTool/Pods-NavCogTool.release.xcconfig"; sourceTree = "<group>"; };
+		30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTTS.swift; sourceTree = "<group>"; };
 		35160725C7FDA4E6ABCFA139 /* libPods-NavCogPreview.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NavCogPreview.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AF7CE4FA37DA8CC1D99A442 /* Pods-NavCogFP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogFP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogFP/Pods-NavCogFP.debug.xcconfig"; sourceTree = "<group>"; };
 		40D977CBB37A56EF684BDB52 /* Pods-NavCogFP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogFP.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogFP/Pods-NavCogFP.release.xcconfig"; sourceTree = "<group>"; };
@@ -1123,6 +1126,7 @@
 				D320F5862702B8F600F6AD28 /* exhibition_category.json */,
 				D320F5872702B8F600F6AD28 /* floor_map.json */,
 				D3A575D4270BF05200E9850A /* ExhibitionDataStore.swift */,
+				30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1984,6 +1988,7 @@
 				7E9238E61D5189F100875766 /* HLPSetting.m in Sources */,
 				7E683DF51E42DE8100D04037 /* RatingViewController.m in Sources */,
 				7E8A33BD1D917D5200D20CD5 /* HLPDataUtil.m in Sources */,
+				30B0B3BB2750A28A0001E582 /* DefaultTTS.swift in Sources */,
 				7E1F9F2A1DEEB1D3003E1B23 /* NavDebugHelper.m in Sources */,
 				7E96D9331DACD0C700D57C8C /* SearchViewController.m in Sources */,
 				7EDEDC211D1E0C6800AC111A /* main.mm in Sources */,
@@ -2063,6 +2068,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				300093032750A54900539A0F /* DefaultTTS.swift in Sources */,
 				D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */,
 				D364735B273E0CFD00C110B0 /* BaseListView.swift in Sources */,
 				D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */,

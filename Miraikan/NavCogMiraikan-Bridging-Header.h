@@ -25,6 +25,8 @@
 #import "DownloadViewController.h"
 #import "MiraikanMapController.h"
 #import "ConfigManager.h"
+#import "NavDeviceTTS.h"
+#import "NavSound.h"
 
 // External Libraries
 #import <AVFAudio/AVAudioSession.h>
