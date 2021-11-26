@@ -39,7 +39,7 @@ class MiraikanController: UIViewController {
         let btnSetting = BaseBarButton(image: UIImage(named: "icons8-setting-32"))
         btnSetting.tapAction { [weak self] in
             guard let self = self else { return }
-            let vc = NaviSettingController(title: "Navi Setting")
+            let vc = NaviSettingController(title: NSLocalizedString("Navi Settings", comment: ""))
             self.navigationController?.show(vc, sender: nil)
         }
         self.navigationItem.rightBarButtonItem = btnSetting

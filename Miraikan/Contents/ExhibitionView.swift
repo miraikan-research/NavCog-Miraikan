@@ -54,7 +54,8 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
         self.id = id
         self.nodeId = nodeId
         super.init(frame: .zero)
-        let address = "\(Host.miraikan.address)/exhibitions/\(category)/\(id)/"
+        
+        let address = "\(MiraikanUtil.miraikanHost)/exhibitions/\(category)/\(id)/"
         loadContent(address)
     }
     
@@ -86,7 +87,7 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
     
     override func setup() {
         super.setup()
-        btnNavi.setTitle("この展示へナビ", for: .normal)
+        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
         btnNavi.sizeToFit()
         btnNavi.tapAction({ [weak self] _ in
             guard let _self = self else { return }

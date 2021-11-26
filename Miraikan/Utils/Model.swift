@@ -41,15 +41,15 @@ enum TabItem: Int, CaseIterable {
     var title: String {
         switch self {
         case .callStaff:
-            return "スタッフを呼ぶ"
+            return NSLocalizedString("Call Staff", comment: "")
         case .callSC:
-            return "SCを呼ぶ"
+            return NSLocalizedString("Call SC", comment: "")
         case .home:
-            return "ホーム"
+            return NSLocalizedString("Home", comment: "")
         case .login:
-            return "ログイン "
+            return NSLocalizedString("Login", comment: "")
         case .askAI:
-            return "AIに質問"
+            return NSLocalizedString("Ask AI", comment: "")
         }
     }
     

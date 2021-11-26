@@ -95,7 +95,9 @@ fileprivate class CardRow : BaseRow {
         imgView.image = img
         
         lblTitle.text = model.title
-        lblPlace.text = model.isOnline != nil ? "場所：オンライン" : "場所：xxxxxx"
+        lblPlace.text = model.isOnline != nil
+            ? NSLocalizedString("place_online", comment: "")
+            : NSLocalizedString("place_x", comment: "")
         
         isSet = true
     }
@@ -212,27 +214,27 @@ fileprivate enum MenuItem {
     var name : String {
         switch self {
         case .login:
-            return "ログイン"
+            return NSLocalizedString("Login", comment: "")
         case .miraikanToday:
-            return "今日の未来館"
+            return NSLocalizedString("Miraikan Today", comment: "")
         case .regularExhibition:
-            return "常設展示"
+            return NSLocalizedString("Permanent Exhibitons", comment: "")
         case .reservation:
-            return "予約"
+            return NSLocalizedString("Reservation", comment: "")
         case .suggestion:
-            return "おすすめルート"
+            return NSLocalizedString("Suggested Routes", comment: "")
         case .floorMap:
-            return "館内マップ"
+            return NSLocalizedString("Floor Plan", comment: "")
         case .nearestWashroom:
-            return "最寄りのトイレ"
+            return NSLocalizedString("Neareast Washroom", comment: "")
         case .news:
-            return "ニュース"
+            return NSLocalizedString("News", comment: "")
         case .setting:
-            return "設定"
+            return NSLocalizedString("Settings", comment: "")
         case .aboutMiraikan:
-            return "日本科学未来館について"
+            return NSLocalizedString("About Miraikan", comment: "")
         case .aboutApp:
-            return "このアプリについて"
+            return NSLocalizedString("About This App", comment: "")
         }
     }
     
@@ -356,12 +358,15 @@ fileprivate enum MenuSection : CaseIterable {
     }
     
     var endpoint: String? {
+        let lang = NSLocalizedString("lang", comment: "")
+        // TODO: Remove fileLang when files in all languages are available
+        let fileLang = lang == "ja" ? lang : "en"
         switch self {
         case .spex:
-            return "/exhibitions/spexhibition/_assets/json/ja.json"
+            return "/exhibitions/spexhibition/_assets/json/\(fileLang).json"
         case .event:
             let year = MiraikanUtil.calendar().component(.year, from: Date())
-            return "/events/_assets/json/\(year)/ja.json"
+            return "/events/_assets/json/\(year)/\(fileLang).json"
         default:
             return nil
         }
@@ -370,9 +375,9 @@ fileprivate enum MenuSection : CaseIterable {
     var title: String? {
         switch self {
         case .spex:
-            return "特別展"
+            return NSLocalizedString("spex", comment: "")
         case .event:
-            return "イベント"
+            return NSLocalizedString("Events", comment: "")
         default:
             return nil
         }

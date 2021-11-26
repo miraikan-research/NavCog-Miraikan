@@ -181,3 +181,44 @@ NavCogの設定画面から
 
 /* Show POI detail when users change their heading toward the POI */
 "Show POI with Action" = "向いて音声ガイド";
+
+
+// MARK: Miraikan UI Texts
+// Tabs
+"Call Staff" = "スタッフを呼ぶ";
+"Call SC" = "SCを呼ぶ";
+"Home" = "ホーム";
+"Login" = "ログイン";  // Also used as menu title
+"Ask AI" = "AIに質問";
+
+// Menu Section Titles
+"spex" = "特別展";
+"Events" = "イベント";
+
+// Menu Titles
+"Miraikan Today" = "今日の未来館";
+"Permanent Exhibitons" = "常設展示";
+"Reservation" = "予約";
+"Suggested Routes" = "おすすめルート";
+"Floor Plan" = "館内マップ";
+"Neareast Washroom" = "最寄りのトイレ";
+"News" = "ニュース";
+"Settings" = "設定";
+"About Miraikan" = "日本科学未来館について";
+"About This App" = "このアプリについて";
+
+// Navigation Settings Texts
+"Navi Settings" = "ナビ設定";
+"Current Location" = "現在地";
+"Preview" = "プレビュー";
+"not_located" = "測位範囲外です";
+
+// NaviButton Title
+"navi_button_title" = "この展示へナビ";
+
+// Language Code
+"lang" = "ja";
+
+// Events
+"place_online" = "場所：オンライン";
+"place_x" = "場所：xxxxxx";

@@ -223,3 +223,18 @@
 
 /* Mode title for "General Pedestrian" */
 "user_general" = "一般歩行者";
+
+
+// MARK: Miraikan UI Texts
+// Navigation Settings Texts
+"Navi Settings" = "Navigation Settings";
+"Current Location" = "Current Location";
+"Preview" = "Preview";
+"not_located" = "Outside of iBeacon area";
+
+// Language Code
+"lang" = "zh";
+
+// Events
+"place_online" = "Place: Online";
+"place_x" = "Place: xxxxxx";

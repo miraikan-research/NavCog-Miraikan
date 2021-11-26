@@ -38,11 +38,11 @@ enum RouteMode : String, CaseIterable {
     var description: String {
         switch self {
         case .general:
-            return "一般モード"
+            return NSLocalizedString("user_general", comment: "")
         case .wheelchair:
-            return "車椅子モード"
+            return NSLocalizedString("user_wheelchair", comment: "")
         case .blind:
-            return "視覚障害者モード"
+            return NSLocalizedString("user_blind", comment: "")
         }
     }
 }

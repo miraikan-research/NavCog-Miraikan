@@ -41,6 +41,7 @@ class MiraikanUtil : NSObject {
         return mode
     }
     
+    // HLPLocation
     static public var location: HLPLocation? {
         return NavDataStore.shared().currentLocation()
     }
@@ -53,8 +54,18 @@ class MiraikanUtil : NSObject {
         return false
     }
     
+    // Navigation preview on/off
     @objc static public var isPreview : Bool {
         return !isLocated || UserDefaults.standard.bool(forKey: "OnPreview")
+    }
+    
+    // For WebView in different languages
+    static public var miraikanHost : String {
+        let lang = NSLocalizedString("lang", comment: "")
+        if lang != "ja" {
+            return "\(Host.miraikan.address)/\(lang)"
+        }
+        return Host.miraikan.address
     }
     
     // MARK: JSON

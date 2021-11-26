@@ -42,7 +42,7 @@ class MiraikanAboutView: BaseView, WKNavigationDelegate {
     override func setup() {
         super.setup()
         
-        let url = URL(string: "https://www.miraikan.jst.go.jp/aboutus/")
+        let url = URL(string: "\(MiraikanUtil.miraikanHost)/aboutus/")
         let req = URLRequest(url: url!)
         webView.navigationDelegate = self
         webView.load(req)

@@ -60,7 +60,7 @@ fileprivate class CurrentLocationRow : BaseRow {
             guard let loc = location else { return }
             lblLocation.text = "\(loc.lat), \(loc.lng), \(loc.floor)F"
         } else {
-            lblLocation.text = "Outside of iBeacon area"
+            lblLocation.text = NSLocalizedString("not_located", comment: "")
         }
         lblLocation.sizeToFit()
     }
@@ -154,9 +154,9 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         var title: String {
             switch self {
             case .location:
-                return "Current Location"
+                return NSLocalizedString("Current Location", comment: "")
             case .preview:
-                return "Preview"
+                return NSLocalizedString("Preview", comment: "")
             }
         }
     }

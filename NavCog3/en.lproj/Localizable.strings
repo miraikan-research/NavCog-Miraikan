@@ -164,3 +164,42 @@ Feedback is sending...";
 /* Show POI detail when users change their heading toward the POI */
 "Show POI with Action" = "Show POI with Action";
 
+// MARK: Miraikan UI Texts
+// Tabs
+"Call Staff" = "Call Staff";
+"Call SC" = "Call SC";
+"Home" = "Home";
+"Login" = "Login";  // Also used as menu title
+"Ask AI" = "Ask AI";
+
+// Menu Section Titles
+"spex" = "Special Exhibition";
+"Events" = "Events";
+
+// Menu Titles
+"Miraikan Today" = "Miraikan Today";
+"Permanent Exhibitons" = "Permanent Exhibitons";
+"Reservation" = "Reservation";
+"Suggested Routes" = "Suggested Routes";
+"Floor Plan" = "Floor Plan";
+"Neareast Washroom" = "Neareast Washroom";
+"News" = "News";
+"Settings" = "Settings";
+"About Miraikan" = "About Miraikan";
+"About This App" = "About This App";
+
+// Navigation Settings Texts
+"Navi Settings" = "Navigation Settings";
+"Current Location" = "Current Location";
+"Preview" = "Preview";
+"not_located" = "Outside of iBeacon area";
+
+// NaviButton Title
+"navi_button_title" = "Navigate to this exhibition";
+
+// Language
+"lang" = "en";
+
+// Events
+"place_online" = "Place: Online";
+"place_x" = "Place: xxxxxx";
