@@ -23,10 +23,6 @@ import HLPDialog
 
 class DefaultTTS: TTSProtocol {
 
-    init() {
-        
-    }
-
     func speak(_ text:String?, callback:@escaping ()->(Void)) {
         NavDeviceTTS.shared().speak(text,
                                     withOptions: ["selfspeak": true, "quickAnswer": false],

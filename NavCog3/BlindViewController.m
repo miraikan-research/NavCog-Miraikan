@@ -99,7 +99,6 @@
     [super viewDidLoad];
     
     isNaviStarted = NO;
-//    isPreview = NO;
     
     initialViewDidAppear = YES;
     
