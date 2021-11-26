@@ -82,10 +82,13 @@ enum TabItem: Int, CaseIterable {
             let dialogManager = DialogManager.sharedManager()
             if dialogManager.isAvailable {
                 dialogManager.userMode = "user_\(MiraikanUtil.routeMode)"
-                let baseVC = UIStoryboard(name: "Main", bundle: nil)
-                    .instantiateViewController(withIdentifier: "ai_vc")
-                baseVC.title = self.title
-                nav.viewControllers = [baseVC]
+                if let baseVC = UIStoryboard(name: "Main", bundle: nil)
+                    .instantiateViewController(withIdentifier: "ai_vc") as? DialogViewController {
+                    baseVC.title = self.title
+                    baseVC.tts = DefaultTTS()
+
+                    nav.viewControllers = [baseVC]
+                }
             } else {
                 nav.viewControllers = [BaseController(BaseView(), title: self.title)]
             }
