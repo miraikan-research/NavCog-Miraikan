@@ -69,8 +69,6 @@
     
     // For iBeacon environment
     BOOL isNaviStarted;
-    // For testing
-    BOOL isPreview;
     
     UIColor *defaultColor;
     
@@ -218,7 +216,6 @@
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
                 // Start preview outside of iBeacon environment
-//                isPreview = YES;
                 if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
                     [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
                 }
@@ -760,7 +757,7 @@
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [nds requestRouteFrom:from.singleId
                        To:to._id withPreferences:prefs complete:^{
-        nds.previewMode = isPreview;
+        nds.previewMode = [MiraikanUtil isPreview];
         nds.exerciseMode = NO;
     }];
 }
