@@ -99,7 +99,7 @@ fileprivate class DescriptionRow : BaseRow {
 /**
  Categories of Regular Exhibition
  */
-class RegularExhibitionController : BaseListController, BaseListDelegate {
+class PermanentExhibitionController : BaseListController, BaseListDelegate {
     
     private let linkId = "linkCell"
     private let descId = "descCell"

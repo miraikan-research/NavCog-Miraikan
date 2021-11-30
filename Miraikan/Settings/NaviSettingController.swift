@@ -38,31 +38,25 @@ fileprivate class CurrentLocationRow : BaseRow {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        lblDescription.text = NSLocalizedString("Current Location", comment: "")
         lblDescription.font = .boldSystemFont(ofSize: 16)
+        lblDescription.sizeToFit()
+        if MiraikanUtil.isLocated {
+            guard let loc = MiraikanUtil.location else { return }
+            lblLocation.text = "\(loc.lat), \(loc.lng), \(loc.floor)F"
+        } else {
+            lblLocation.text = NSLocalizedString("not_located", comment: "")
+        }
+        lblLocation.adjustsFontSizeToFitWidth = true
+        lblLocation.numberOfLines = 1
+        lblLocation.lineBreakMode = .byClipping
+        lblLocation.sizeToFit()
         addSubview(lblDescription)
         addSubview(lblLocation)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        lblDescription.text = nil
-        lblLocation.text = nil
-    }
-    
-    public func configure(title: String, isLocated: Bool, location: HLPLocation?) {
-        lblDescription.text = title
-        lblDescription.sizeToFit()
-        if isLocated {
-            guard let loc = location else { return }
-            lblLocation.text = "\(loc.lat), \(loc.lng), \(loc.floor)F"
-        } else {
-            lblLocation.text = NSLocalizedString("not_located", comment: "")
-        }
-        lblLocation.sizeToFit()
     }
     
     override func layoutSubviews() {
@@ -87,15 +81,15 @@ fileprivate class PreviewSwitchRow : BaseRow {
     private let lblDescription = UILabel()
     private let swPreview = UISwitch()
     
-    private let gap: CGFloat = 10
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        lblDescription.text = NSLocalizedString("Preview", comment: "")
         lblDescription.font = .boldSystemFont(ofSize: 16)
         lblDescription.sizeToFit()
         addSubview(lblDescription)
         
         swPreview.isOn = MiraikanUtil.isPreview
+        swPreview.isEnabled = MiraikanUtil.isLocated
         swPreview.addTarget(self, action: #selector(_onSwitch(_:)), for: .touchUpInside)
         swPreview.sizeToFit()
         addSubview(swPreview)
@@ -105,20 +99,8 @@ fileprivate class PreviewSwitchRow : BaseRow {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        lblDescription.text = nil
-    }
-    
     @objc private func _onSwitch(_ sender: UISwitch) {
         UserDefaults.standard.set(sender.isOn, forKey: "OnPreview")
-    }
-    
-    public func configure(title: String, isLocated: Bool) {
-        lblDescription.text = title
-        lblDescription.sizeToFit()
-        swPreview.isOn = !isLocated
-        swPreview.isEnabled = isLocated
     }
     
     override func layoutSubviews() {
@@ -136,7 +118,7 @@ fileprivate class PreviewSwitchRow : BaseRow {
         let totalHeight = [insets.top,
                            max(lblDescription.intrinsicContentSize.height,
                                swPreview.intrinsicContentSize.height),
-                           insets.bottom].reduce(gap, { $0 + $1 })
+                           insets.bottom].reduce(0, { $0 + $1 })
         return CGSize(width: size.width, height: totalHeight)
     }
     
@@ -150,15 +132,6 @@ class NaviSettingController : BaseListController, BaseListDelegate {
     private enum CellType : CaseIterable {
         case location
         case preview
-        
-        var title: String {
-            switch self {
-            case .location:
-                return NSLocalizedString("Current Location", comment: "")
-            case .preview:
-                return NSLocalizedString("Preview", comment: "")
-            }
-        }
     }
     
     override func initTable() {
@@ -182,16 +155,12 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                                                            for: indexPath)
                     as? CurrentLocationRow
             else { return nil }
-            cell.configure(title: item.title,
-                           isLocated: MiraikanUtil.isLocated,
-                           location: MiraikanUtil.location)
             return cell
         case .preview:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: previewId,
                                                            for: indexPath)
                     as? PreviewSwitchRow
             else { return nil }
-            cell.configure(title: item.title, isLocated: MiraikanUtil.isLocated)
             return cell
         }
     }

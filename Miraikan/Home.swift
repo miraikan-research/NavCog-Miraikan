@@ -250,7 +250,7 @@ fileprivate enum MenuItem {
         case .login:
             return createVC(view: LoginView())
         case .regularExhibition:
-            return RegularExhibitionController(title: self.name)
+            return PermanentExhibitionController(title: self.name)
         case .miraikanToday:
             return EventListController(title: self.name)
         case .setting:

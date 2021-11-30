@@ -220,6 +220,7 @@
 		A9799F421F72119900B13FEC /* RestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF45E471E3F42AB00208042 /* RestKit.framework */; };
 		A9799F451F7211D000B13FEC /* HLPLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91D384B1F628107008A34D1 /* HLPLocationManager.framework */; };
 		A9A695C12137CAA000009527 /* Fingerprint.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9A695BF2137CAA000009527 /* Fingerprint.strings */; };
+		D3083C7A275603CA0052ABEE /* PermanentExhibitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3083C79275603CA0052ABEE /* PermanentExhibitionController.swift */; };
 		D31E27C327424A9000755958 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31E27C227424A9000755958 /* BaseListController.swift */; };
 		D320F57C2702B8BB00F6AD28 /* MiraikanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */; };
 		D320F57D2702B8BB00F6AD28 /* MiraikanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */; };
@@ -251,7 +252,6 @@
 		D364735B273E0CFD00C110B0 /* BaseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735A273E0CFD00C110B0 /* BaseListView.swift */; };
 		D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735C273E0D4400C110B0 /* ExhibitionListController.swift */; };
 		D364735F273E0D4400C110B0 /* EventListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735D273E0D4400C110B0 /* EventListController.swift */; };
-		D3647365273E0DAE00C110B0 /* RegularExhibitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3647364273E0DAE00C110B0 /* RegularExhibitionController.swift */; };
 		D364736D273E140C00C110B0 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364736C273E140C00C110B0 /* Home.swift */; };
 		D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E97151D98B80100CF2960 /* NavDataStore.m */; };
 		D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E371E3F1E5600208042 /* ServerConfig.m */; };
@@ -610,6 +610,7 @@
 		A9ED1548213914A4009E1E0C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "SettingUtil/zh-Hans.lproj/HLPSettingView.strings"; sourceTree = "<group>"; };
 		A9ED1549213914A6009E1E0C /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = SettingUtil/ko.lproj/HLPSettingView.strings; sourceTree = "<group>"; };
 		D028BF9D3DF5E5BCF988A86C /* libPods-NavCogMiraikan.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NavCogMiraikan.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3083C79275603CA0052ABEE /* PermanentExhibitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermanentExhibitionController.swift; sourceTree = "<group>"; };
 		D31E27C227424A9000755958 /* BaseListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
 		D320F5792702B8BB00F6AD28 /* NavCogFP-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NavCogFP-Bridging-Header.h"; sourceTree = "<group>"; };
 		D320F57A2702B8BB00F6AD28 /* NavCogPreview-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NavCogPreview-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -637,7 +638,6 @@
 		D364735A273E0CFD00C110B0 /* BaseListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseListView.swift; sourceTree = "<group>"; };
 		D364735C273E0D4400C110B0 /* ExhibitionListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionListController.swift; sourceTree = "<group>"; };
 		D364735D273E0D4400C110B0 /* EventListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListController.swift; sourceTree = "<group>"; };
-		D3647364273E0DAE00C110B0 /* RegularExhibitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularExhibitionController.swift; sourceTree = "<group>"; };
 		D364736C273E140C00C110B0 /* Home.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		D38EF876270406FE00DB9444 /* MiraikanAboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiraikanAboutView.swift; sourceTree = "<group>"; };
 		D38EF87A2704072A00DB9444 /* ExhibitionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionView.swift; sourceTree = "<group>"; };
@@ -1138,7 +1138,7 @@
 			children = (
 				D364735D273E0D4400C110B0 /* EventListController.swift */,
 				D364735C273E0D4400C110B0 /* ExhibitionListController.swift */,
-				D3647364273E0DAE00C110B0 /* RegularExhibitionController.swift */,
+				D3083C79275603CA0052ABEE /* PermanentExhibitionController.swift */,
 				D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */,
 			);
 			path = Lists;
@@ -2098,8 +2098,8 @@
 				D3B1A1A527546AFB00E6CBCB /* AIEmptyView.swift in Sources */,
 				D3A1180327294B0B00BEC1C8 /* BlindViewController.m in Sources */,
 				D3A1180427294B0B00BEC1C8 /* AppAboutView.swift in Sources */,
-				D3647365273E0DAE00C110B0 /* RegularExhibitionController.swift in Sources */,
 				D3A1180527294B0B00BEC1C8 /* NavCommander.m in Sources */,
+				D3083C7A275603CA0052ABEE /* PermanentExhibitionController.swift in Sources */,
 				D3B9D405274F76B1001F4D80 /* NaviSettingController.swift in Sources */,
 				D3A1180627294B0B00BEC1C8 /* AppDelegate.mm in Sources */,
 				D3A1180827294B0B00BEC1C8 /* NavNavigator.m in Sources */,
