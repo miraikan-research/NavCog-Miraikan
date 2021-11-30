@@ -114,7 +114,7 @@ fileprivate class ScheduleRow: BaseRow {
         y += lblPlace.frame.height + gapY
         
         let rightColWidth = innerSize.width - lblTime.frame.width - gapX
-        let eventWidth = min(rightColWidth - insets.right, lblEvent.intrinsicContentSize.width)
+        let eventWidth = min(rightColWidth, lblEvent.intrinsicContentSize.width)
         let szFit = CGSize(width: eventWidth, height: lblEvent.intrinsicContentSize.height)
         lblEvent.frame = CGRect(x: leftColWidth,
                                 y: y,
@@ -152,7 +152,7 @@ fileprivate class ScheduleRow: BaseRow {
             heightList += [lblDescription.intrinsicContentSize.height]
         }
         
-        let height = heightList.reduce(insets.top, {$0 + $1 + gapY})
+        let height = heightList.reduce((insets.top + insets.bottom), {$0 + $1 + gapY})
         
         return CGSize(width: size.width, height: height)
     }
@@ -202,6 +202,7 @@ class EventListController: BaseListController, BaseListDelegate {
         super.initTable()
         
         self.baseDelegate = self
+        self.tableView.allowsSelection = false
         self.tableView.register(ScheduleRow.self, forCellReuseIdentifier: cellId)
         
         // load the data
