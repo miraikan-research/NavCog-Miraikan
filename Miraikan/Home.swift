@@ -161,6 +161,12 @@ fileprivate class MenuRow : BaseRow {
         }
     }
     
+    public var isAccessible : Bool? {
+        didSet {
+            lblItem.isAccessible = isAccessible
+        }
+    }
+    
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -449,6 +455,10 @@ class Home : BaseListView {
             menuRow.title = menuItem.name
             menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
             menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
+            menuRow.isAccessible = menuItem.isAvailable
+            if !menuItem.isAvailable {
+                menuRow.selectionStyle = .none
+            }
             return menuRow
         } else if let cardModel = rowItem as? CardModel,
                   let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,

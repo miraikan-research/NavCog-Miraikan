@@ -80,7 +80,7 @@ enum TabItem: Int, CaseIterable {
         case .askAI:
             nav.viewControllers = [BaseController(AIView(), title: self.title)]
         default:
-            let baseVC = BaseController(BaseView(), title: self.title)
+            let baseVC = BaseController(BlankView(), title: self.title)
             nav.viewControllers = [baseVC]
         }
         

@@ -207,3 +207,7 @@ Feedback is sending...";
 // AI Dialog Availability
 "ai_available" = "Start AI Dialog";
 "ai_not_available" = "AI Dialog Not Available";
+
+// Blank Page
+"blank_description" = "This function is not implemented yet.";
+

@@ -226,3 +226,6 @@ NavCogの設定画面から
 // AI Dialog Availability
 "ai_available" = "AIと対話開始します";
 "ai_not_available" = "AI対話は使えません";
+
+// Blank Page
+"blank_description" = "この機能はまだ実装されていません";
