@@ -203,3 +203,7 @@ Feedback is sending...";
 // Events
 "place_online" = "Place: Online";
 "place_x" = "Place: xxxxxx";
+
+// AI Dialog Availability
+"ai_available" = "Start AI Dialog";
+"ai_not_available" = "AI Dialog Not Available";

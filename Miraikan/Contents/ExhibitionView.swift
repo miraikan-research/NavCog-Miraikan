@@ -39,7 +39,7 @@ import WebKit
  */
 class ExhibitionView: BaseView, WKNavigationDelegate {
     
-    private let btnNavi = NaviButton()
+    private let btnNavi = StyledButton()
     private let webView = WKWebView()
     private let lblLoading = UILabel()
     

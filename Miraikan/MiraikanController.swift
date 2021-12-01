@@ -129,38 +129,9 @@ class TabController: UITabBarController {
             for (i, t) in tabs.enumerated() {
                 items[i].title = t.title
                 items[i].image = UIImage(named: t.imgName)
-                items[i].tag = tabs[i].rawValue
             }
         }
         
-    }
-    
-    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-        if item.tag == TabItem.askAI.rawValue {
-            guard let idx = self.tabBar.items?.firstIndex(of: item) else { return }
-            guard let nav = self.viewControllers?[idx] as? BaseNavController else { return }
-            
-            let dialogManager = DialogManager.sharedManager()
-            if dialogManager.isAvailable {
-                NotificationCenter.default.addObserver(self,
-                                                       selector: #selector(aiNavi(note:)),
-                                                       name: Notification.Name(rawValue:"request_start_navigation"),
-                                                       object: nil)
-                
-                dialogManager.userMode = "user_\(MiraikanUtil.routeMode)"
-                let dialogVC = DialogViewController()
-                dialogVC.tts = DefaultTTS()
-                dialogVC.title = self.title
-                nav.show(dialogVC, sender: nil)
-            }
-        }
-    }
-    
-    @objc func aiNavi(note: Notification) {
-        guard let toID = note.userInfo?["toID"] as? String else { return }
-        guard let nav = self.viewControllers?[self.selectedIndex] as? BaseNavController
-        else { return }
-        nav.openMap(nodeId: toID)
     }
     
 }

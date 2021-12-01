@@ -225,10 +225,7 @@ class BaseBarButton : UIBarButtonItem {
 /**
  A BaseButton that styled as Navigation Button
  */
-class NaviButton: BaseButton {
-    
-    private let blue: UIColor = .blue
-    private let white: UIColor = .white
+class StyledButton: BaseButton {
     
     private var action: ((UIButton)->())?
     
@@ -246,12 +243,12 @@ class NaviButton: BaseButton {
     }
     
     private func setup() {
-        self.setTitleColor(blue, for: .normal)
-        self.setTitleColor(white, for: .highlighted)
+        self.setTitleColor(.blue, for: .normal)
+        self.setTitleColor(.white, for: .highlighted)
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
-        self.layer.borderColor = blue.cgColor
-        self.layer.backgroundColor = white.cgColor
+        self.layer.borderColor = UIColor.blue.cgColor
+        self.layer.backgroundColor = UIColor.white.cgColor
         self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
     }
     
@@ -262,15 +259,15 @@ class NaviButton: BaseButton {
     }
     
     @objc private func _touchDown() {
-        self.layer.backgroundColor = self.blue.cgColor
+        self.layer.backgroundColor = UIColor.blue.cgColor
     }
 
     @objc private func _touchUpInside(_ sender: UIButton) {
-        self.setTitleColor(self.white, for: .normal)
-        self.layer.backgroundColor = self.blue.cgColor
+        self.setTitleColor(.white, for: .normal)
+        self.layer.backgroundColor = UIColor.blue.cgColor
         UIView.animate(withDuration: 0.1, animations: {
-            self.setTitleColor(self.blue, for: .normal)
-            self.layer.backgroundColor = self.white.cgColor
+            self.setTitleColor(UIColor.blue, for: .normal)
+            self.layer.backgroundColor = UIColor.white.cgColor
         }, completion: { [weak self] finished in
             guard let self = self else { return }
             if let _f = self.action {

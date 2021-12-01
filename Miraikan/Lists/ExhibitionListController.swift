@@ -50,7 +50,7 @@ fileprivate struct ExhibitionContentModel : Decodable {
  */
 fileprivate class ContentRow : BaseRow {
     
-    private let btnNavi = NaviButton()
+    private let btnNavi = StyledButton()
     private let lblDescription = AutoWrapLabel()
     
     private let gap = CGFloat(10)

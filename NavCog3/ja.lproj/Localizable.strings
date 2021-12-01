@@ -222,3 +222,7 @@ NavCogの設定画面から
 // Events
 "place_online" = "場所：オンライン";
 "place_x" = "場所：xxxxxx";
+
+// AI Dialog Availability
+"ai_available" = "AIと対話開始します";
+"ai_not_available" = "AI対話は使えません";
