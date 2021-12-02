@@ -221,8 +221,14 @@ NavCogの設定画面から
 
 // Events
 "place_online" = "場所：オンライン";
-"place_x" = "場所：xxxxxx";
 
 // AI Dialog Availability
 "ai_available" = "AIと対話開始します";
 "ai_not_available" = "AI対話は使えません";
+
+// Blank Page
+"blank_description" = "この機能はまだ実装されていません";
+
+// Web Page Loading
+"web_loading" = "ウェブ画面の読み込み中です。しばらくお待ちください。";
+"web_failed" = "ウェブ画面の読み込みは失敗しました。";

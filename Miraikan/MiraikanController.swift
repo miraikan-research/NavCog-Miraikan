@@ -36,6 +36,9 @@ class MiraikanController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Accessibility
+        UIAccessibility.post(notification: .screenChanged, argument: self.navigationItem.titleView)
+        
         // NavBar
         let btnSetting = BaseBarButton(image: UIImage(named: "icons8-setting-32"))
         btnSetting.tapAction { [weak self] in

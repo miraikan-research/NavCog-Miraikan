@@ -253,6 +253,7 @@
 		D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735C273E0D4400C110B0 /* ExhibitionListController.swift */; };
 		D364735F273E0D4400C110B0 /* EventListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735D273E0D4400C110B0 /* EventListController.swift */; };
 		D364736D273E140C00C110B0 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364736C273E140C00C110B0 /* Home.swift */; };
+		D3921C30275760DF00F1DD55 /* BlankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3921C2F275760DF00F1DD55 /* BlankView.swift */; };
 		D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E97151D98B80100CF2960 /* NavDataStore.m */; };
 		D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E371E3F1E5600208042 /* ServerConfig.m */; };
 		D3A117F027294B0B00BEC1C8 /* AgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E2A1E3F1E3700208042 /* AgreementViewController.m */; };
@@ -642,6 +643,7 @@
 		D38EF876270406FE00DB9444 /* MiraikanAboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiraikanAboutView.swift; sourceTree = "<group>"; };
 		D38EF87A2704072A00DB9444 /* ExhibitionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionView.swift; sourceTree = "<group>"; };
 		D38EF87E2704492000DB9444 /* HLPHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLPHelper.h; sourceTree = "<group>"; };
+		D3921C2F275760DF00F1DD55 /* BlankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankView.swift; sourceTree = "<group>"; };
 		D3A1185927294B0B00BEC1C8 /* NavCogMiraikan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavCogMiraikan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3A1185B272950B400BEC1C8 /* Miraikan.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Miraikan.plist; sourceTree = "<group>"; };
 		D3A156EE27200BE300A23B9E /* MiraikanMapController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiraikanMapController.h; sourceTree = "<group>"; };
@@ -1165,6 +1167,7 @@
 				D320F5962702B8F600F6AD28 /* BaseView.swift */,
 				D31E27C227424A9000755958 /* BaseListController.swift */,
 				D364735A273E0CFD00C110B0 /* BaseListView.swift */,
+				D3921C2F275760DF00F1DD55 /* BlankView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2084,6 +2087,7 @@
 				D3A117F627294B0B00BEC1C8 /* HLPSettingHelper.m in Sources */,
 				D31E27C327424A9000755958 /* BaseListController.swift in Sources */,
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
+				D3921C30275760DF00F1DD55 /* BlankView.swift in Sources */,
 				D3A117F827294B0B00BEC1C8 /* NavBlindWebView.m in Sources */,
 				D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */,
 				D3A117F927294B0B00BEC1C8 /* DownloadViewController.m in Sources */,

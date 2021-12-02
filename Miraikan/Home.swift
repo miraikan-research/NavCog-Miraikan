@@ -95,9 +95,10 @@ fileprivate class CardRow : BaseRow {
         imgView.image = img
         
         lblTitle.text = model.title
-        lblPlace.text = model.isOnline != nil
-            ? NSLocalizedString("place_online", comment: "")
-            : NSLocalizedString("place_x", comment: "")
+        
+        if model.isOnline != nil {
+            lblPlace.text = NSLocalizedString("place_online", comment: "")
+        }
         
         isSet = true
     }
@@ -158,6 +159,12 @@ fileprivate class MenuRow : BaseRow {
     public var titleColor : UIColor? {
         didSet {
             lblItem.titleColor = titleColor
+        }
+    }
+    
+    public var isAccessible : Bool? {
+        didSet {
+            lblItem.isAccessible = isAccessible
         }
     }
     
@@ -449,6 +456,10 @@ class Home : BaseListView {
             menuRow.title = menuItem.name
             menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
             menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
+            menuRow.isAccessible = menuItem.isAvailable
+            if !menuItem.isAvailable {
+                menuRow.selectionStyle = .none
+            }
             return menuRow
         } else if let cardModel = rowItem as? CardModel,
                   let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,

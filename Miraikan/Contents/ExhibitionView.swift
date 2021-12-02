@@ -39,7 +39,7 @@ import WebKit
  */
 class ExhibitionView: BaseView, WKNavigationDelegate {
     
-    private let btnNavi = StyledButton()
+    private var btnNavi : StyledButton?
     private let webView = WKWebView()
     private let lblLoading = UILabel()
     
@@ -47,13 +47,34 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
     
     private let id: String?
     private var nodeId: String?
-    private var isPreview: Bool?
+    private var isWebFailed : Bool = false
+
     
     // MARK: init
     init(category: String, id: String, nodeId: String?) {
         self.id = id
         self.nodeId = nodeId
         super.init(frame: .zero)
+        
+        btnNavi = StyledButton()
+        if let btnNavi = btnNavi {
+            btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
+            btnNavi.sizeToFit()
+            btnNavi.tapAction({ [weak self] _ in
+                guard let self = self else { return }
+                guard let nav = self.navVC else { return }
+                if let nodeId = self.nodeId {
+                    nav.openMap(nodeId: nodeId)
+                }
+                if let locations = ExhibitionDataStore.shared.exhibitions?
+                    .first(where: { $0.id == self.id })?.locations {
+                    let vc = FloorSelectionController(title: nav.title)
+                    vc.items = [0: locations]
+                    nav.show(vc, sender: nil)
+                }
+            })
+            addSubview(btnNavi)
+        }
         
         let address = "\(MiraikanUtil.miraikanHost)/exhibitions/\(category)/\(id)/"
         loadContent(address)
@@ -72,7 +93,7 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
     
     private func loadContent(_ address: String) {
         
-        if MiraikanUtil.routeMode == .blind {
+        if id != nil && MiraikanUtil.routeMode == .blind {
             // TODO: Add description for Blind node when available
             return
         }
@@ -87,26 +108,11 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
     
     override func setup() {
         super.setup()
-        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
-        btnNavi.sizeToFit()
-        btnNavi.tapAction({ [weak self] _ in
-            guard let _self = self else { return }
-            if let n = _self.navVC {
-                if let nodeId = _self.nodeId {
-                    n.openMap(nodeId: nodeId)
-                }
-                if let locations = ExhibitionDataStore.shared.exhibitions?
-                    .first(where: { $0.id == _self.id })?.locations {
-                    let vc = FloorSelectionController(title: n.title)
-                    vc.items = [0: locations]
-                    n.show(vc, sender: nil)
-                }
-            }
-        })
-        addSubview(btnNavi)
         
         // Display: Loading
-        lblLoading.sizeToFit()
+        lblLoading.numberOfLines = 0
+        lblLoading.lineBreakMode = .byCharWrapping
+        lblLoading.textAlignment = .center
         addSubview(lblLoading)
     }
     
@@ -115,14 +121,18 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
         super.layoutSubviews()
         
         var y = insets.top
-        btnNavi.frame = CGRect(x: insets.left,
-                               y: y,
-                               width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
-                               height: btnNavi.intrinsicContentSize.height)
-        y += btnNavi.frame.height + gap
+        if let btnNavi = btnNavi {
+            btnNavi.frame = CGRect(x: insets.left,
+                                   y: y,
+                                   width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
+                                   height: btnNavi.intrinsicContentSize.height)
+            y += btnNavi.frame.height + gap
+        }
         
         // Loading
-        lblLoading.center = CGPoint(x: frame.midX, y: frame.midY)
+        lblLoading.frame.origin.x = insets.left
+        lblLoading.center.y = self.center.y
+        lblLoading.frame.size.width = innerSize.width
         
         // Loaded
         webView.frame = CGRect(x: insets.left,
@@ -133,21 +143,41 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
     
     // MARK: WKNavigationDelegate
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        lblLoading.text = "Loading"
+        lblLoading.text = NSLocalizedString("web_loading", comment: "")
         lblLoading.sizeToFit()
     }
     
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        lblLoading.text = NSLocalizedString("web_failed", comment: "")
+        lblLoading.sizeToFit()
+        isWebFailed = true
+        webView.isHidden = true
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        guard let response = navigationResponse.response as? HTTPURLResponse else { return }
+        switch response.statusCode {
+        case 404:
+            decisionHandler(.cancel)
+        default:
+            decisionHandler(.allow)
+        }
+    }
+    
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        lblLoading.text = ""
+        lblLoading.isAccessibilityElement = isWebFailed
+        lblLoading.isHidden = !isWebFailed
         
-        let jsClearHeader = "document.getElementsByTagName('header')[0].innerHTML = '';"
-        let jsClearFooter = "document.getElementsByTagName('footer')[0].innerHTML = '';"
-        let js = "\(jsClearHeader)\(jsClearFooter)"
-        webView.evaluateJavaScript(js, completionHandler: {(html, err) in
-            if let e = err {
-                print(e.localizedDescription)
-            }
-        })
+        if !isWebFailed {
+            let jsClearHeader = "document.getElementsByTagName('header')[0].innerHTML = '';"
+            let jsClearFooter = "document.getElementsByTagName('footer')[0].innerHTML = '';"
+            let js = "\(jsClearHeader)\(jsClearFooter)"
+            webView.evaluateJavaScript(js, completionHandler: {(html, err) in
+                if let e = err {
+                    print(e.localizedDescription)
+                }
+            })
+        }
     }
     
 }

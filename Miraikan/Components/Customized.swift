@@ -52,6 +52,12 @@ class ArrowView: BaseView {
         }
     }
     
+    public var isAccessible : Bool? {
+        didSet {
+            lblMain.isAccessibilityElement = isAccessible ?? true
+        }
+    }
+    
     init(_ text: String? = nil) {
         super.init(frame: .zero)
         
