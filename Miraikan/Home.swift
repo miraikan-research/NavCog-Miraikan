@@ -56,6 +56,9 @@ fileprivate class CardRow : BaseRow {
     // Prevent it from reloading every time
     private var isSet : Bool = false
     
+    // Global variables
+    private var isOnline : Bool! = false
+    
     // Views
     private let imgView = UIImageView()
     private let lblTitle = AutoWrapLabel()
@@ -70,7 +73,7 @@ fileprivate class CardRow : BaseRow {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(imgView)
         addSubview(lblTitle)
-        addSubview(lblPlace)
+//        addSubview(lblPlace)
     }
     
     required init?(coder: NSCoder) {
@@ -95,18 +98,20 @@ fileprivate class CardRow : BaseRow {
         imgView.image = img
         
         lblTitle.text = model.title
-        lblPlace.text = model.isOnline != nil
-            ? NSLocalizedString("place_online", comment: "")
-            : NSLocalizedString("place_x", comment: "")
+        
+        if let _isOnline = model.isOnline {
+            self.isOnline = !_isOnline.isEmpty
+        }
+        
+        if self.isOnline {
+            lblPlace.text = NSLocalizedString("place_online", comment: "")
+        }
         
         isSet = true
     }
     
     // MARK: layout
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        
         let halfWidth = CGFloat(frame.width / 2)
         let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.CARD.size,
                                                     frameWidth: halfWidth - (insets.left + gapX),
@@ -118,12 +123,15 @@ fileprivate class CardRow : BaseRow {
         let szFit = CGSize(width: halfWidth, height: innerSize.height)
         lblTitle.frame = CGRect(x: halfWidth,
                                 y: insets.top,
-                                width: halfWidth,
+                                width: halfWidth - insets.right,
                                 height: lblTitle.sizeThatFits(szFit).height)
-        lblPlace.frame = CGRect(x: halfWidth,
-                                y: insets.top + lblTitle.frame.height + gapY,
-                                width: halfWidth,
-                                height: lblPlace.sizeThatFits(szFit).height)
+        if isOnline {
+            lblPlace.frame = CGRect(x: halfWidth,
+                                    y: insets.top + lblTitle.frame.height + gapY,
+                                    width: halfWidth - insets.right,
+                                    height: lblPlace.sizeThatFits(szFit).height)
+        }
+        
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -132,10 +140,13 @@ fileprivate class CardRow : BaseRow {
                                                     frameWidth: halfWidth - (insets.left + gapX),
                                                     imageSize: img.size)
         let heightLeft = insets.top + img.size.height * scaleFactor
-        let szFit = CGSize(width: halfWidth, height: size.height)
-        let heightRight = [lblTitle.sizeThatFits(szFit).height,
-                           lblPlace.sizeThatFits(szFit).height,
-                           gapY].reduce(insets.top, { $0 + $1 })
+        let szFit = CGSize(width: halfWidth - insets.right, height: size.height)
+        var heightList = [lblTitle.sizeThatFits(szFit).height]
+        if isOnline {
+            heightList += [lblPlace.sizeThatFits(szFit).height,
+                           gapY]
+        }
+        let heightRight = heightList.reduce((insets.top + insets.bottom), { $0 + $1 })
         let height = max(heightLeft, heightRight)
         return CGSize(width: size.width, height: height)
     }
@@ -181,8 +192,6 @@ fileprivate class MenuRow : BaseRow {
     
     // MARK: layout
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
         lblItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
                                size: lblItem.sizeThatFits(innerSize))
     }
@@ -190,6 +199,45 @@ fileprivate class MenuRow : BaseRow {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let innerSz = innerSizing(parentSize: size)
         let height = insets.top + insets.bottom + lblItem.sizeThatFits(innerSz).height
+        return CGSize(width: size.width, height: height)
+    }
+    
+}
+
+fileprivate class NewsRow : BaseRow {
+    
+    private let lblNews = ArrowView()
+    
+    public var title: String? {
+        didSet {
+            lblNews.title = title
+        }
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        lblNews.backgroundColor = .clear
+        // The styles below are applied when news are not ready
+        self.backgroundColor = .lightGray
+        self.selectionStyle = .none
+        lblNews.titleColor = .lightText
+        lblNews.isAccessible = false
+        addSubview(lblNews)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        lblNews.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
+                               size: lblNews.sizeThatFits(innerSize))
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let innerSz = innerSizing(parentSize: size)
+        let height = insets.top + insets.bottom + lblNews.sizeThatFits(innerSz).height
         return CGSize(width: size.width, height: height)
     }
     
@@ -277,58 +325,6 @@ fileprivate enum MenuItem {
 }
 
 /**
- The footer for news section
- */
-fileprivate class NewsDetails : BaseView {
-    
-    private var newsList = [ArrowView]()
-    
-    private let paddding: CGFloat = 20
-    private let gap: CGFloat = 5
-    
-    // MARK: init
-    override func setup() {
-        super.setup()
-        
-        ["常設展・ドームシアターはオンラインのチケット予約が必要です",
-         "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
-         "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"].forEach({
-            let row = ArrowView("・\($0)")
-            row.backgroundColor = .clear
-            row.titleColor = .lightText
-            newsList += [row]
-            addSubview(row)
-         })
-        backgroundColor = .lightGray
-    }
-    
-    // MARK: layout
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let innerSz = innerSizing(parentSize: frame.size, margin: paddding)
-        var y = insets.top
-        newsList.forEach({ row in
-            let sz = row.sizeThatFits(frame.size)
-            row.frame = CGRect(x: paddding,
-                               y: y,
-                               width: innerSz.width,
-                               height: row.sizeThatFits(innerSz).height)
-            y += sz.height + gap
-        })
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let innerSz = innerSizing(parentSize: size, margin: paddding)
-        let blankHeight = CGFloat(newsList.count - 1) * gap + insets.top + insets.bottom
-        let height = newsList.map({ $0.sizeThatFits(innerSz).height })
-            .reduce(blankHeight, { $0 + $1})
-        return CGSize(width: size.width, height: height)
-    }
-    
-}
-
-/**
  The menu secitons for the home screen
  */
 fileprivate enum MenuSection : CaseIterable {
@@ -340,6 +336,7 @@ fileprivate enum MenuSection : CaseIterable {
     case suggestion
     case map
     case news
+    case newsList
     case settings
     
     var items: [MenuItem]? {
@@ -396,8 +393,7 @@ fileprivate enum MenuSection : CaseIterable {
 class Home : BaseListView {
     private let menuCellId = "menuCell"
     private let cardCellId = "cardCell"
-    
-    private let newsFooter = NewsDetails()
+    private let newsCellId = "newsCell"
     
     private var sections : [MenuSection]?
     
@@ -407,6 +403,7 @@ class Home : BaseListView {
 
         self.tableView.register(MenuRow.self, forCellReuseIdentifier: menuCellId)
         self.tableView.register(CardRow.self, forCellReuseIdentifier: cardCellId)
+        self.tableView.register(NewsRow.self, forCellReuseIdentifier: newsCellId)
 
         // load the data
         sections = MenuSection.allCases
@@ -425,19 +422,22 @@ class Home : BaseListView {
                 MiraikanUtil.http(endpoint: _endpoint, success: { [weak self] data in
                     guard let self = self else { return }
                     
-                    if let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data) {
-                        let filtered = res.filter({ model in
-                            let now = Date()
-                            let start = MiraikanUtil.parseDate(model.start)!
-                            let end = MiraikanUtil.parseDate(model.end)!
-                            return start <= now && end >= now
-                        })
-                        
-                        let models = filtered.count > 0 ? filtered : [res.first!]
-                        menuItems[idx] = models
-                        self.items = menuItems
-                    }
+                    guard let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data)
+                    else { return }
+                    let filtered = res.filter({ model in
+                        let now = Date()
+                        let start = MiraikanUtil.parseDate(model.start)!
+                        let end = MiraikanUtil.parseDate(model.end)!
+                        return start <= now && end >= now
+                    })
+                    menuItems[idx] = filtered
+                    self.items = menuItems
+                    
                 })
+            } else if sec == .newsList {
+                menuItems[idx] = ["常設展・ドームシアターはオンラインのチケット予約が必要です",
+                                  "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
+                                  "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"]
             } else {
                 menuItems[idx] = []
             }
@@ -448,25 +448,46 @@ class Home : BaseListView {
     // MARK: UITableViewDataSource
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let (sec, row) = (indexPath.section, indexPath.row)
-        let rowItem = items?[sec]?[row]
-        if let menuItem = rowItem as? MenuItem,
-           let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
-            // Normal Menu Row
-            menuRow.title = menuItem.name
-            menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
-            menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
-            menuRow.isAccessible = menuItem.isAvailable
-            if !menuItem.isAvailable {
-                menuRow.selectionStyle = .none
+        
+        if let items = items?[sec], items.isEmpty {
+            let cell = UITableViewCell()
+            cell.textLabel?.textColor = .lightGray
+            cell.selectionStyle = .none
+            switch sections?[sec] {
+            case .spex:
+                cell.textLabel?.text = NSLocalizedString("no_spex", comment: "")
+            case .event:
+                cell.textLabel?.text = NSLocalizedString("no_event", comment: "")
+            default:
+                print("Empty Section")
             }
-            return menuRow
-        } else if let cardModel = rowItem as? CardModel,
-                  let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
-                                                              for: indexPath) as? CardRow {
-            // When HTTP request is finished,
-            // display the data on the row for Special Exhibition or Event
-            cardRow.configure(cardModel)
-            return cardRow
+            return cell
+        } else {
+            let rowItem = items?[sec]?[row]
+            if let menuItem = rowItem as? MenuItem,
+               let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
+                // Normal Menu Row
+                menuRow.title = menuItem.name
+                menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
+                menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
+                menuRow.isAccessible = menuItem.isAvailable
+                if !menuItem.isAvailable {
+                    menuRow.selectionStyle = .none
+                }
+                return menuRow
+            } else if let cardModel = rowItem as? CardModel,
+                      let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
+                                                                  for: indexPath) as? CardRow {
+                // When HTTP request is finished,
+                // display the data on the row for Special Exhibition or Event
+                cardRow.configure(cardModel)
+                return cardRow
+            } else if let news = rowItem as? String,
+                      let newsRow = tableView.dequeueReusableCell(withIdentifier: newsCellId,
+                                                                  for: indexPath) as? NewsRow {
+                newsRow.title = "・\(news)"
+                return newsRow
+            }
         }
         
         return UITableViewCell()
@@ -476,10 +497,25 @@ class Home : BaseListView {
         return sections?[section].title
     }
     
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if sections?[section] == .spex
+                    || sections?[section] == .event {
+            if let count = sections?[section].items?.count { return count }
+            else { return 1 }
+        } else if let rows = items?[section] {
+            return rows.count
+        }
+        
+        return 0
+    }
+    
     // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let nav = navVC else { return }
         let (sec, row) = (indexPath.section, indexPath.row)
+        
+        if let items = items?[sec], items.isEmpty { return }
+        
         let rowItem = items?[sec]?[row]
         if let menuItem = rowItem as? MenuItem,
             menuItem.isAvailable {
@@ -493,12 +529,12 @@ class Home : BaseListView {
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return sections?[section] == .news ? newsFooter : UIView()
+        return UIView()
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if sections?[section] == .news {
-            return newsFooter.sizeThatFits(frame.size).height
+            return 0
         } else if section < items!.count - 1 {
             return 35
         }

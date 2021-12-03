@@ -37,23 +37,47 @@ import WebKit
  - nodeId: The destination id for navigation
  - permalink: The URL component for a specific event
  */
-class ExhibitionView: BaseView, WKNavigationDelegate {
+class ExhibitionView: BaseWebView {
     
-    private let btnNavi = StyledButton()
-    private let webView = WKWebView()
-    private let lblLoading = UILabel()
-    
+    private var btnNavi : StyledButton?
+
     private let gap = CGFloat(10)
     
     private let id: String?
     private var nodeId: String?
-    private var isPreview: Bool?
+    private var isWebFailed : Bool = false
+
     
     // MARK: init
     init(category: String, id: String, nodeId: String?) {
         self.id = id
         self.nodeId = nodeId
         super.init(frame: .zero)
+        
+        btnNavi = StyledButton()
+        if let btnNavi = btnNavi {
+            btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
+            btnNavi.sizeToFit()
+            btnNavi.tapAction({ [weak self] _ in
+                guard let self = self else { return }
+                guard let nav = self.navVC else { return }
+                if let nodeId = self.nodeId {
+                    nav.openMap(nodeId: nodeId)
+                }
+                if let locations = ExhibitionDataStore.shared.exhibitions?
+                    .first(where: { $0.id == self.id })?.locations {
+                    let vc = FloorSelectionController(title: nav.title)
+                    vc.items = [0: locations]
+                    nav.show(vc, sender: nil)
+                }
+            })
+            addSubview(btnNavi)
+        }
+        
+        if nodeId != nil && MiraikanUtil.routeMode == .blind {
+            // TODO: Add details for Permanent Exhibiton on Blind node when available
+            return
+        }
         
         let address = "\(MiraikanUtil.miraikanHost)/exhibitions/\(category)/\(id)/"
         loadContent(address)
@@ -70,84 +94,24 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func loadContent(_ address: String) {
-        
-        if MiraikanUtil.routeMode == .blind {
-            // TODO: Add description for Blind node when available
-            return
-        }
-        
-        webView.navigationDelegate = self
-        addSubview(webView)
-        
-        let url = URL(string: address)
-        let req = URLRequest(url: url!)
-        webView.load(req)
-    }
-    
-    override func setup() {
-        super.setup()
-        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
-        btnNavi.sizeToFit()
-        btnNavi.tapAction({ [weak self] _ in
-            guard let _self = self else { return }
-            if let n = _self.navVC {
-                if let nodeId = _self.nodeId {
-                    n.openMap(nodeId: nodeId)
-                }
-                if let locations = ExhibitionDataStore.shared.exhibitions?
-                    .first(where: { $0.id == _self.id })?.locations {
-                    let vc = FloorSelectionController(title: n.title)
-                    vc.items = [0: locations]
-                    n.show(vc, sender: nil)
-                }
-            }
-        })
-        addSubview(btnNavi)
-        
-        // Display: Loading
-        lblLoading.sizeToFit()
-        addSubview(lblLoading)
-    }
-    
     // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
         
         var y = insets.top
-        btnNavi.frame = CGRect(x: insets.left,
-                               y: y,
-                               width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
-                               height: btnNavi.intrinsicContentSize.height)
-        y += btnNavi.frame.height + gap
-        
-        // Loading
-        lblLoading.center = CGPoint(x: frame.midX, y: frame.midY)
-        
+        if let btnNavi = btnNavi {
+            btnNavi.frame = CGRect(x: insets.left,
+                                   y: y,
+                                   width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
+                                   height: btnNavi.intrinsicContentSize.height)
+            y += btnNavi.frame.height + gap
+        }
+
         // Loaded
         webView.frame = CGRect(x: insets.left,
                                y: y,
                                width: innerSize.width,
                                height: innerSize.height - y)
-    }
-    
-    // MARK: WKNavigationDelegate
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        lblLoading.text = "Loading"
-        lblLoading.sizeToFit()
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        lblLoading.text = ""
-        
-        let jsClearHeader = "document.getElementsByTagName('header')[0].innerHTML = '';"
-        let jsClearFooter = "document.getElementsByTagName('footer')[0].innerHTML = '';"
-        let js = "\(jsClearHeader)\(jsClearFooter)"
-        webView.evaluateJavaScript(js, completionHandler: {(html, err) in
-            if let e = err {
-                print(e.localizedDescription)
-            }
-        })
     }
     
 }

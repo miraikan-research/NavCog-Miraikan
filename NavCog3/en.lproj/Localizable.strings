@@ -202,7 +202,6 @@ Feedback is sending...";
 
 // Events
 "place_online" = "Place: Online";
-"place_x" = "Place: xxxxxx";
 
 // AI Dialog Availability
 "ai_available" = "Start AI Dialog";
@@ -211,3 +210,10 @@ Feedback is sending...";
 // Blank Page
 "blank_description" = "This function is not implemented yet.";
 
+// Web Page Loading
+"web_loading" = "Loading web page, please wait...";
+"web_failed" = "Failed to load the web page.";
+
+// Home: No Event / Exhibition Today
+"no_spex" = "There is no Special Exhibition for today";
+"no_event" = "There is no event for today";

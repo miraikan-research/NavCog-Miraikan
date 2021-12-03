@@ -235,7 +235,6 @@
 
 // Events
 "place_online" = "Place: Online";
-"place_x" = "Place: xxxxxx";
 
 // AI Dialog Availability
 "ai_available" = "Start AI Dialog";

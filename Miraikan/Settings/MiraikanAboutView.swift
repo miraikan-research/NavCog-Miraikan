@@ -31,59 +31,23 @@ import WebKit
 /**
  The WebView retrieved from Miraikan About page
  */
-class MiraikanAboutView: BaseView, WKNavigationDelegate {
-    
-    private let btnNavi = StyledButton()
-    private let webView = WKWebView()
-    private let lblLoading = UILabel()
-    
-    private let gap = CGFloat(10)
+class MiraikanAboutView : BaseWebView {
     
     override func setup() {
         super.setup()
         
-        let url = URL(string: "\(MiraikanUtil.miraikanHost)/aboutus/")
-        let req = URLRequest(url: url!)
-        webView.navigationDelegate = self
-        webView.load(req)
-        addSubview(webView)
-        
-        // Display: Loading
-        lblLoading.sizeToFit()
-        addSubview(lblLoading)
+        let address = "\(MiraikanUtil.miraikanHost)/aboutus/"
+        loadContent(address)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // Loading
-        lblLoading.center = CGPoint(x: frame.midX, y: frame.midY)
-        
         // Loaded
         webView.frame = CGRect(x: insets.left,
                                y: insets.top,
                                width: innerSize.width,
-                               height: innerSize.height)
+                               height: innerSize.height - insets.top)
     }
-    
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        lblLoading.text = "Loading"
-        lblLoading.sizeToFit()
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        lblLoading.text = ""
-        
-        let jsClearHeader = "document.getElementsByTagName('header')[0].innerHTML = '';"
-        let jsClearFooter = "document.getElementsByTagName('footer')[0].innerHTML = '';"
-        let js = "\(jsClearHeader)\(jsClearFooter)"
-        webView.evaluateJavaScript(js, completionHandler: {(html, err) in
-            if let e = err {
-                print(e.localizedDescription)
-            }
-        })
-    }
-    
-    
     
 }
