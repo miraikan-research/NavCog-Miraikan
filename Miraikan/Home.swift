@@ -105,9 +105,6 @@ fileprivate class CardRow : BaseRow {
     
     // MARK: layout
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        
         let halfWidth = CGFloat(frame.width / 2)
         let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.CARD.size,
                                                     frameWidth: halfWidth - (insets.left + gapX),
@@ -182,8 +179,6 @@ fileprivate class MenuRow : BaseRow {
     
     // MARK: layout
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
         lblItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
                                size: lblItem.sizeThatFits(innerSize))
     }
@@ -191,6 +186,45 @@ fileprivate class MenuRow : BaseRow {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let innerSz = innerSizing(parentSize: size)
         let height = insets.top + insets.bottom + lblItem.sizeThatFits(innerSz).height
+        return CGSize(width: size.width, height: height)
+    }
+    
+}
+
+fileprivate class NewsRow : BaseRow {
+    
+    private let lblNews = ArrowView()
+    
+    public var title: String? {
+        didSet {
+            lblNews.title = title
+        }
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        lblNews.backgroundColor = .clear
+        // The styles below are applied when news are not ready
+        self.backgroundColor = .lightGray
+        self.selectionStyle = .none
+        lblNews.titleColor = .lightText
+        lblNews.isAccessible = false
+        addSubview(lblNews)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        lblNews.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
+                               size: lblNews.sizeThatFits(innerSize))
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let innerSz = innerSizing(parentSize: size)
+        let height = insets.top + insets.bottom + lblNews.sizeThatFits(innerSz).height
         return CGSize(width: size.width, height: height)
     }
     
@@ -278,58 +312,6 @@ fileprivate enum MenuItem {
 }
 
 /**
- The footer for news section
- */
-fileprivate class NewsDetails : BaseView {
-    
-    private var newsList = [ArrowView]()
-    
-    private let paddding: CGFloat = 20
-    private let gap: CGFloat = 5
-    
-    // MARK: init
-    override func setup() {
-        super.setup()
-        
-        ["常設展・ドームシアターはオンラインのチケット予約が必要です",
-         "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
-         "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"].forEach({
-            let row = ArrowView("・\($0)")
-            row.backgroundColor = .clear
-            row.titleColor = .lightText
-            newsList += [row]
-            addSubview(row)
-         })
-        backgroundColor = .lightGray
-    }
-    
-    // MARK: layout
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let innerSz = innerSizing(parentSize: frame.size, margin: paddding)
-        var y = insets.top
-        newsList.forEach({ row in
-            let sz = row.sizeThatFits(frame.size)
-            row.frame = CGRect(x: paddding,
-                               y: y,
-                               width: innerSz.width,
-                               height: row.sizeThatFits(innerSz).height)
-            y += sz.height + gap
-        })
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let innerSz = innerSizing(parentSize: size, margin: paddding)
-        let blankHeight = CGFloat(newsList.count - 1) * gap + insets.top + insets.bottom
-        let height = newsList.map({ $0.sizeThatFits(innerSz).height })
-            .reduce(blankHeight, { $0 + $1})
-        return CGSize(width: size.width, height: height)
-    }
-    
-}
-
-/**
  The menu secitons for the home screen
  */
 fileprivate enum MenuSection : CaseIterable {
@@ -341,6 +323,7 @@ fileprivate enum MenuSection : CaseIterable {
     case suggestion
     case map
     case news
+    case newsList
     case settings
     
     var items: [MenuItem]? {
@@ -397,8 +380,7 @@ fileprivate enum MenuSection : CaseIterable {
 class Home : BaseListView {
     private let menuCellId = "menuCell"
     private let cardCellId = "cardCell"
-    
-    private let newsFooter = NewsDetails()
+    private let newsCellId = "newsCell"
     
     private var sections : [MenuSection]?
     
@@ -408,6 +390,7 @@ class Home : BaseListView {
 
         self.tableView.register(MenuRow.self, forCellReuseIdentifier: menuCellId)
         self.tableView.register(CardRow.self, forCellReuseIdentifier: cardCellId)
+        self.tableView.register(NewsRow.self, forCellReuseIdentifier: newsCellId)
 
         // load the data
         sections = MenuSection.allCases
@@ -439,6 +422,10 @@ class Home : BaseListView {
                         self.items = menuItems
                     }
                 })
+            } else if sec == .newsList {
+                menuItems[idx] = ["常設展・ドームシアターはオンラインのチケット予約が必要です",
+                                  "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
+                                  "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"]
             } else {
                 menuItems[idx] = []
             }
@@ -468,6 +455,11 @@ class Home : BaseListView {
             // display the data on the row for Special Exhibition or Event
             cardRow.configure(cardModel)
             return cardRow
+        } else if let news = rowItem as? String,
+                  let newsRow = tableView.dequeueReusableCell(withIdentifier: newsCellId,
+                                                              for: indexPath) as? NewsRow {
+            newsRow.title = "・\(news)"
+            return newsRow
         }
         
         return UITableViewCell()
@@ -494,12 +486,12 @@ class Home : BaseListView {
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return sections?[section] == .news ? newsFooter : UIView()
+        return UIView()
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if sections?[section] == .news {
-            return newsFooter.sizeThatFits(frame.size).height
+            return 0
         } else if section < items!.count - 1 {
             return 35
         }
