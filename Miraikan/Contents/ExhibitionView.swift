@@ -37,12 +37,10 @@ import WebKit
  - nodeId: The destination id for navigation
  - permalink: The URL component for a specific event
  */
-class ExhibitionView: BaseView, WKNavigationDelegate {
+class ExhibitionView: BaseWebView {
     
     private var btnNavi : StyledButton?
-    private let webView = WKWebView()
-    private let lblLoading = UILabel()
-    
+
     private let gap = CGFloat(10)
     
     private let id: String?
@@ -76,6 +74,11 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
             addSubview(btnNavi)
         }
         
+        if nodeId != nil && MiraikanUtil.routeMode == .blind {
+            // TODO: Add details for Permanent Exhibiton on Blind node when available
+            return
+        }
+        
         let address = "\(MiraikanUtil.miraikanHost)/exhibitions/\(category)/\(id)/"
         loadContent(address)
     }
@@ -91,31 +94,6 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func loadContent(_ address: String) {
-        
-        if id != nil && MiraikanUtil.routeMode == .blind {
-            // TODO: Add description for Blind node when available
-            return
-        }
-        
-        webView.navigationDelegate = self
-        addSubview(webView)
-        
-        let url = URL(string: address)
-        let req = URLRequest(url: url!)
-        webView.load(req)
-    }
-    
-    override func setup() {
-        super.setup()
-        
-        // Display: Loading
-        lblLoading.numberOfLines = 0
-        lblLoading.lineBreakMode = .byCharWrapping
-        lblLoading.textAlignment = .center
-        addSubview(lblLoading)
-    }
-    
     // MARK: layout
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -128,56 +106,12 @@ class ExhibitionView: BaseView, WKNavigationDelegate {
                                    height: btnNavi.intrinsicContentSize.height)
             y += btnNavi.frame.height + gap
         }
-        
-        // Loading
-        lblLoading.frame.origin.x = insets.left
-        lblLoading.center.y = self.center.y
-        lblLoading.frame.size.width = innerSize.width
-        
+
         // Loaded
         webView.frame = CGRect(x: insets.left,
                                y: y,
                                width: innerSize.width,
                                height: innerSize.height - y)
-    }
-    
-    // MARK: WKNavigationDelegate
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        lblLoading.text = NSLocalizedString("web_loading", comment: "")
-        lblLoading.sizeToFit()
-    }
-    
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        lblLoading.text = NSLocalizedString("web_failed", comment: "")
-        lblLoading.sizeToFit()
-        isWebFailed = true
-        webView.isHidden = true
-    }
-    
-    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        guard let response = navigationResponse.response as? HTTPURLResponse else { return }
-        switch response.statusCode {
-        case 404:
-            decisionHandler(.cancel)
-        default:
-            decisionHandler(.allow)
-        }
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        lblLoading.isAccessibilityElement = isWebFailed
-        lblLoading.isHidden = !isWebFailed
-        
-        if !isWebFailed {
-            let jsClearHeader = "document.getElementsByTagName('header')[0].innerHTML = '';"
-            let jsClearFooter = "document.getElementsByTagName('footer')[0].innerHTML = '';"
-            let js = "\(jsClearHeader)\(jsClearFooter)"
-            webView.evaluateJavaScript(js, completionHandler: {(html, err) in
-                if let e = err {
-                    print(e.localizedDescription)
-                }
-            })
-        }
     }
     
 }

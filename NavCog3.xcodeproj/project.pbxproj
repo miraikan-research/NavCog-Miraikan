@@ -353,6 +353,7 @@
 		D3AB5B1C27313A2900E23AF9 /* MiraikanUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5832702B8F600F6AD28 /* MiraikanUtil.swift */; };
 		D3B1A1A527546AFB00E6CBCB /* AIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B1A1A427546AFB00E6CBCB /* AIView.swift */; };
 		D3B9D405274F76B1001F4D80 /* NaviSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */; };
+		D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -652,6 +653,7 @@
 		D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorSelectionController.swift; sourceTree = "<group>"; };
 		D3B1A1A427546AFB00E6CBCB /* AIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIView.swift; sourceTree = "<group>"; };
 		D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviSettingController.swift; sourceTree = "<group>"; };
+		D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWebView.swift; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1167,6 +1169,7 @@
 				D320F5962702B8F600F6AD28 /* BaseView.swift */,
 				D31E27C227424A9000755958 /* BaseListController.swift */,
 				D364735A273E0CFD00C110B0 /* BaseListView.swift */,
+				D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */,
 				D3921C2F275760DF00F1DD55 /* BlankView.swift */,
 			);
 			path = Components;
@@ -2080,6 +2083,7 @@
 				D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */,
 				D3A117F027294B0B00BEC1C8 /* AgreementViewController.m in Sources */,
 				D3A117F127294B0B00BEC1C8 /* InitViewController.mm in Sources */,
+				D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */,
 				D3A117F227294B0B00BEC1C8 /* StarRatingView.m in Sources */,
 				D3A117F327294B0B00BEC1C8 /* MiraikanAboutView.swift in Sources */,
 				D3A117F427294B0B00BEC1C8 /* ServerSelectionViewController.m in Sources */,

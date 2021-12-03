@@ -56,6 +56,9 @@ fileprivate class CardRow : BaseRow {
     // Prevent it from reloading every time
     private var isSet : Bool = false
     
+    // Global variables
+    private var isOnline : Bool! = false
+    
     // Views
     private let imgView = UIImageView()
     private let lblTitle = AutoWrapLabel()
@@ -70,7 +73,7 @@ fileprivate class CardRow : BaseRow {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(imgView)
         addSubview(lblTitle)
-        addSubview(lblPlace)
+//        addSubview(lblPlace)
     }
     
     required init?(coder: NSCoder) {
@@ -96,7 +99,11 @@ fileprivate class CardRow : BaseRow {
         
         lblTitle.text = model.title
         
-        if model.isOnline != nil {
+        if let _isOnline = model.isOnline {
+            self.isOnline = !_isOnline.isEmpty
+        }
+        
+        if self.isOnline {
             lblPlace.text = NSLocalizedString("place_online", comment: "")
         }
         
@@ -116,12 +123,15 @@ fileprivate class CardRow : BaseRow {
         let szFit = CGSize(width: halfWidth, height: innerSize.height)
         lblTitle.frame = CGRect(x: halfWidth,
                                 y: insets.top,
-                                width: halfWidth,
+                                width: halfWidth - insets.right,
                                 height: lblTitle.sizeThatFits(szFit).height)
-        lblPlace.frame = CGRect(x: halfWidth,
-                                y: insets.top + lblTitle.frame.height + gapY,
-                                width: halfWidth,
-                                height: lblPlace.sizeThatFits(szFit).height)
+        if isOnline {
+            lblPlace.frame = CGRect(x: halfWidth,
+                                    y: insets.top + lblTitle.frame.height + gapY,
+                                    width: halfWidth - insets.right,
+                                    height: lblPlace.sizeThatFits(szFit).height)
+        }
+        
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -130,10 +140,13 @@ fileprivate class CardRow : BaseRow {
                                                     frameWidth: halfWidth - (insets.left + gapX),
                                                     imageSize: img.size)
         let heightLeft = insets.top + img.size.height * scaleFactor
-        let szFit = CGSize(width: halfWidth, height: size.height)
-        let heightRight = [lblTitle.sizeThatFits(szFit).height,
-                           lblPlace.sizeThatFits(szFit).height,
-                           gapY].reduce(insets.top, { $0 + $1 })
+        let szFit = CGSize(width: halfWidth - insets.right, height: size.height)
+        var heightList = [lblTitle.sizeThatFits(szFit).height]
+        if isOnline {
+            heightList += [lblPlace.sizeThatFits(szFit).height,
+                           gapY]
+        }
+        let heightRight = heightList.reduce((insets.top + insets.bottom), { $0 + $1 })
         let height = max(heightLeft, heightRight)
         return CGSize(width: size.width, height: height)
     }
@@ -409,18 +422,17 @@ class Home : BaseListView {
                 MiraikanUtil.http(endpoint: _endpoint, success: { [weak self] data in
                     guard let self = self else { return }
                     
-                    if let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data) {
-                        let filtered = res.filter({ model in
-                            let now = Date()
-                            let start = MiraikanUtil.parseDate(model.start)!
-                            let end = MiraikanUtil.parseDate(model.end)!
-                            return start <= now && end >= now
-                        })
-                        
-                        let models = filtered.count > 0 ? filtered : [res.first!]
-                        menuItems[idx] = models
-                        self.items = menuItems
-                    }
+                    guard let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data)
+                    else { return }
+                    let filtered = res.filter({ model in
+                        let now = Date()
+                        let start = MiraikanUtil.parseDate(model.start)!
+                        let end = MiraikanUtil.parseDate(model.end)!
+                        return start <= now && end >= now
+                    })
+                    menuItems[idx] = filtered
+                    self.items = menuItems
+                    
                 })
             } else if sec == .newsList {
                 menuItems[idx] = ["常設展・ドームシアターはオンラインのチケット予約が必要です",
@@ -436,30 +448,46 @@ class Home : BaseListView {
     // MARK: UITableViewDataSource
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let (sec, row) = (indexPath.section, indexPath.row)
-        let rowItem = items?[sec]?[row]
-        if let menuItem = rowItem as? MenuItem,
-           let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
-            // Normal Menu Row
-            menuRow.title = menuItem.name
-            menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
-            menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
-            menuRow.isAccessible = menuItem.isAvailable
-            if !menuItem.isAvailable {
-                menuRow.selectionStyle = .none
+        
+        if let items = items?[sec], items.isEmpty {
+            let cell = UITableViewCell()
+            cell.textLabel?.textColor = .lightGray
+            cell.selectionStyle = .none
+            switch sections?[sec] {
+            case .spex:
+                cell.textLabel?.text = NSLocalizedString("no_spex", comment: "")
+            case .event:
+                cell.textLabel?.text = NSLocalizedString("no_event", comment: "")
+            default:
+                print("Empty Section")
             }
-            return menuRow
-        } else if let cardModel = rowItem as? CardModel,
-                  let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
-                                                              for: indexPath) as? CardRow {
-            // When HTTP request is finished,
-            // display the data on the row for Special Exhibition or Event
-            cardRow.configure(cardModel)
-            return cardRow
-        } else if let news = rowItem as? String,
-                  let newsRow = tableView.dequeueReusableCell(withIdentifier: newsCellId,
-                                                              for: indexPath) as? NewsRow {
-            newsRow.title = "・\(news)"
-            return newsRow
+            return cell
+        } else {
+            let rowItem = items?[sec]?[row]
+            if let menuItem = rowItem as? MenuItem,
+               let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
+                // Normal Menu Row
+                menuRow.title = menuItem.name
+                menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
+                menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
+                menuRow.isAccessible = menuItem.isAvailable
+                if !menuItem.isAvailable {
+                    menuRow.selectionStyle = .none
+                }
+                return menuRow
+            } else if let cardModel = rowItem as? CardModel,
+                      let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
+                                                                  for: indexPath) as? CardRow {
+                // When HTTP request is finished,
+                // display the data on the row for Special Exhibition or Event
+                cardRow.configure(cardModel)
+                return cardRow
+            } else if let news = rowItem as? String,
+                      let newsRow = tableView.dequeueReusableCell(withIdentifier: newsCellId,
+                                                                  for: indexPath) as? NewsRow {
+                newsRow.title = "・\(news)"
+                return newsRow
+            }
         }
         
         return UITableViewCell()
@@ -469,10 +497,25 @@ class Home : BaseListView {
         return sections?[section].title
     }
     
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if sections?[section] == .spex
+                    || sections?[section] == .event {
+            if let count = sections?[section].items?.count { return count }
+            else { return 1 }
+        } else if let rows = items?[section] {
+            return rows.count
+        }
+        
+        return 0
+    }
+    
     // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let nav = navVC else { return }
         let (sec, row) = (indexPath.section, indexPath.row)
+        
+        if let items = items?[sec], items.isEmpty { return }
+        
         let rowItem = items?[sec]?[row]
         if let menuItem = rowItem as? MenuItem,
             menuItem.isAvailable {
