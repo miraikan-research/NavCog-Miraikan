@@ -179,6 +179,7 @@ Feedback is sending...";
 // Menu Titles
 "Miraikan Today" = "Miraikan Today";
 "Permanent Exhibitons" = "Permanent Exhibitons";
+"Current Position" = "Current Position";
 "Reservation" = "Reservation";
 "Suggested Routes" = "Suggested Routes";
 "Floor Plan" = "Floor Plan";
@@ -217,3 +218,8 @@ Feedback is sending...";
 // Home: No Event / Exhibition Today
 "no_spex" = "There is no Special Exhibition for today";
 "no_event" = "There is no event for today";
+
+// Voice Guide
+"Voice Guide" = "Voice Guide";
+"Voice Guide On" = "Voice Guide \nON";
+"Voice Guide Off" = "Voice Guide \nOFF";

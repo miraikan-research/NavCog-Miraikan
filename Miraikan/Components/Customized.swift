@@ -184,15 +184,29 @@ class BaseButton: UIButton {
     
     private var action: ((UIButton)->())?
 
-    public func tapAction(_ action: @escaping ((UIButton)->())) {
+    @objc public func tapAction(_ action: @escaping ((UIButton)->())) {
         self.action = action
+        self.addTarget(self, action: #selector(_pressAction(_:)), for: .touchDown)
         self.addTarget(self, action: #selector(_tapAction(_:)), for: .touchUpInside)
+    }
+    
+    @objc private func _pressAction(_ sender: UIButton) {
+        self.backgroundColor = .lightGray
     }
 
     @objc private func _tapAction(_ sender: UIButton) {
-        if let _f = action {
-            _f(self)
-        }
+        
+        UIView.animate(withDuration: 0.1, animations: { [weak self] in
+            guard let self = self else { return }
+            self.backgroundColor = .lightGray
+        }, completion: { [weak self] finished in
+            guard let self = self else { return }
+            if finished, let _f = self.action {
+                self.backgroundColor = .white
+                _f(self)
+            }
+        })
+        
     }
     
 }
@@ -336,6 +350,23 @@ class RadioButton: BaseButton {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let height = min(radioSize.height, self.titleLabel!.intrinsicContentSize.height)
         return CGSize(width: size.width, height: height)
+    }
+    
+}
+
+class BaseSwitch : UISwitch {
+    
+    private var action: ((UISwitch)->())?
+
+    public func onSwitch(_ action: @escaping ((UISwitch)->())) {
+        self.action = action
+        self.addTarget(self, action: #selector(_switchAction(_:)), for: .touchUpInside)
+    }
+
+    @objc private func _switchAction(_ sender: UIButton) {
+        if let _f = action {
+            _f(self)
+        }
     }
     
 }

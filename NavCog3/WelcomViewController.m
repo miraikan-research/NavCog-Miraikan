@@ -194,9 +194,6 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSString *hostname = config.selected.hostname;
                     [[NSUserDefaults standardUserDefaults] setObject:hostname forKey:@"selected_hokoukukan_server"];
-                    
-                    // Skipe the mode selection: This would be selected from Settings of Miraikan App
-//                    [self performSegueWithIdentifier:@"show_mode_selection" sender:self];
                         
                     [Logging stopLog];
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"logging_to_file"]) {

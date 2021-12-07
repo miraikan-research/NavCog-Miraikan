@@ -33,6 +33,8 @@
 #import "DefaultTTS.h"
 #import <CoreMotion/CoreMotion.h>
 
+#import <NavCogMiraikan-Swift.h>
+
 typedef NS_ENUM(NSInteger, ViewState) {
     ViewStateMap,
     ViewStateSearch,
@@ -69,21 +71,21 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSLog(@"dealloc ViewController");
 }
 
-- (void)prepareForDealloc
-{
-    _webView.delegate = nil;
-    
-    dialogHelper.delegate = nil;
-    dialogHelper = nil;
-    
-    recognizer = nil;
-    
-    _settingButton = nil;
-    
-    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
-}
+//- (void)prepareForDealloc
+//{
+//    _webView.delegate = nil;
+//
+//    dialogHelper.delegate = nil;
+//    dialogHelper = nil;
+//
+//    recognizer = nil;
+//
+//    _settingButton = nil;
+//
+//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+//
+//    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -96,6 +98,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     [self.view addSubview:_webView];
+    [self showVoiceGuide];
     _webView.isDeveloperMode = [ud boolForKey:@"developer_mode"];
     _webView.userMode = [ud stringForKey:@"user_mode"];
     _webView.config = @{
@@ -143,7 +146,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
     
     BOOL checked = [ud boolForKey:@"checked_altimeter"];
     if (!checked && ![CMAltimeter isRelativeAltitudeAvailable]) {
@@ -184,6 +187,19 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    _webView.delegate = nil;
+    
+    dialogHelper.delegate = nil;
+    dialogHelper = nil;
+    
+    recognizer = nil;
+    
+    _settingButton = nil;
+    
+    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+}
+
 - (UIViewController*) topMostController
 {
     UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
@@ -215,15 +231,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
                   @"sync": @(YES)
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
-
+                // Start navigating here within iBeacon environment
+                if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
+                }
             }
             
             [timer invalidate];
-            
-            //TODO: Start navigating here within iBeacon environment
-            if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading, please wait",@"")];
-            }
         }
     }];
 }
@@ -278,7 +292,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [nds requestRouteFrom:from.singleId
                        To:to._id withPreferences:prefs complete:^{
         __weak typeof(self) weakself = self;
-        nds.previewMode = NO;
+        nds.previewMode = [MiraikanUtil isPreview];
         nds.exerciseMode = NO;
         [weakself showRoute];
     }];
@@ -731,11 +745,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
             return;
         }
         
-        if (!isNaviStarted && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            isNaviStarted = YES;
-//            [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading, please wait",@"")];
-        }
-        
         NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
         
         double orientation = -location.orientation / 180 * M_PI;
@@ -783,6 +792,16 @@ typedef NS_ENUM(NSInteger, ViewState) {
                   withName:@"XYZ"];
         
         lastLocationSent = now;
+        
+        if (!self.destId || isNaviStarted) {
+            return;
+        }
+        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+            NSString *msg = [MiraikanUtil isPreview]
+                ? NSLocalizedString(@"Loading preview",@"")
+                : NSLocalizedString(@"Loading, please wait",@"");
+            [NavUtil showModalWaitingWithMessage:msg];
+        }
     });
 }
 

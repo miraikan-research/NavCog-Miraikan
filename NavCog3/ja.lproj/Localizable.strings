@@ -198,6 +198,7 @@ NavCogの設定画面から
 // Menu Titles
 "Miraikan Today" = "今日の未来館";
 "Permanent Exhibitons" = "常設展示";
+"Current Position" = "現在位置";
 "Reservation" = "予約";
 "Suggested Routes" = "おすすめルート";
 "Floor Plan" = "館内マップ";
@@ -236,3 +237,9 @@ NavCogの設定画面から
 // Home: No Event / Exhibition Today
 "no_spex" = "本日は特別展示がございません";
 "no_event" = "本日はイベントがございません";
+
+
+// Voice Guide
+"Voice Guide" = "音声ガイド";
+"Voice Guide On" = "音声ガイド\nON";
+"Voice Guide Off" = "音声ガイド\nOFF";

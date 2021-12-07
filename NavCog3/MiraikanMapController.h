@@ -15,6 +15,8 @@
 
 @property (strong, nonatomic) NSString *destId;
 
+- (void)showVoiceGuide;
+
 @end
 
 #endif /* MiraikanMapDelegate_h */

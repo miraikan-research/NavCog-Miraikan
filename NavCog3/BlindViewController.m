@@ -216,7 +216,7 @@
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
                 // Start preview outside of iBeacon environment
-                if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
                     [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
                 }
             }
@@ -717,7 +717,7 @@
         lastLocationSent = now;
         [self dialogHelperUpdate];
         
-        if ([navigator isActive] || isNaviStarted) {
+        if (!self.destId || [navigator isActive] || isNaviStarted) {
             return;
         }
         if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
