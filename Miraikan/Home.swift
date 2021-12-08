@@ -67,13 +67,13 @@ fileprivate class CardRow : BaseRow {
     // Sizing
     private let gapX = CGFloat(10)
     private let gapY: CGFloat = 5
+    private let imgAdaptor = ImageAdaptor()
     
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(imgView)
         addSubview(lblTitle)
-//        addSubview(lblPlace)
     }
     
     required init?(coder: NSCoder) {
@@ -113,13 +113,14 @@ fileprivate class CardRow : BaseRow {
     // MARK: layout
     override func layoutSubviews() {
         let halfWidth = CGFloat(frame.width / 2)
-        let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.CARD.size,
-                                                    frameWidth: halfWidth - (insets.left + gapX),
-                                                    imageSize: img.size)
+        
+        let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.CARD.size,
+                                               frameWidth: halfWidth - (insets.left + gapX),
+                                               imageSize: img.size)
         imgView.frame = CGRect(x: insets.left,
                                y: insets.top,
-                               width: img.size.width * scaleFactor,
-                               height: img.size.height * scaleFactor)
+                               width: scaledSize.width,
+                               height: scaledSize.height)
         let szFit = CGSize(width: halfWidth, height: innerSize.height)
         lblTitle.frame = CGRect(x: halfWidth,
                                 y: insets.top,
@@ -136,10 +137,10 @@ fileprivate class CardRow : BaseRow {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let halfWidth = CGFloat(size.width / 2)
-        let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.CARD.size,
-                                                    frameWidth: halfWidth - (insets.left + gapX),
-                                                    imageSize: img.size)
-        let heightLeft = insets.top + img.size.height * scaleFactor
+        let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.CARD.size,
+                                               frameWidth: halfWidth - (insets.left + gapX),
+                                               imageSize: img.size)
+        let heightLeft = insets.top + scaledSize.height
         let szFit = CGSize(width: halfWidth - insets.right, height: size.height)
         var heightList = [lblTitle.sizeThatFits(szFit).height]
         if isOnline {
@@ -419,13 +420,14 @@ class Home : BaseListView {
         
         guard let _sections = sections?.enumerated() else { return }
         
+        let httpAdaptor = HTTPAdaptor()
         var menuItems = [Int : [Any]]()
         for (idx, sec) in _sections {
             if let _items = sec.items {
                 menuItems[idx] = _items
             } else if let _endpoint = sec.endpoint {
                 menuItems[idx] = []
-                MiraikanUtil.http(endpoint: _endpoint, success: { [weak self] data in
+                httpAdaptor.http(endpoint: _endpoint, success: { [weak self] data in
                     guard let self = self else { return }
                     
                     guard let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data)
@@ -438,7 +440,6 @@ class Home : BaseListView {
                     })
                     menuItems[idx] = filtered
                     self.items = menuItems
-                    
                 })
             } else if sec == .newsList {
                 menuItems[idx] = ["常設展・ドームシアターはオンラインのチケット予約が必要です",
