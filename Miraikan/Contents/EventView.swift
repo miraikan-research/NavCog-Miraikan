@@ -75,16 +75,14 @@ fileprivate class EventContent: BaseView {
                                 height: lblTitle.sizeThatFits(safeSize).height)
         y += lblTitle.frame.height + gap
         
-        let scaleFactor = MiraikanUtil.calculateScaleFactor(type.size,
-                                                    frameWidth: frame.width,
-                                                    imageSize: image.size)
+        let imgAdaptor = ImageAdaptor(img: image)
+        let scaledSize = imgAdaptor.scaleImage(viewSize: type.size,
+                                               frameWidth: frame.width)
         imgView.frame = CGRect(x: insets.left,
                                y: y,
-                               width: image.size.width * scaleFactor - insets.left * 2,
-                               height: image.size.height * scaleFactor)
+                               width: scaledSize.width - insets.left * 2,
+                               height: scaledSize.height)
         y += imgView.frame.height + gap
-        
-        
         
         scheduleLabels.forEach({
             $0.frame = CGRect(x: insets.left,

@@ -140,57 +140,6 @@ class MiraikanUtil : NSObject {
         }
     }
     
-    // MARK: UI Usage
-    static public func calculateScaleFactor(_ size: CGSize, frameWidth: CGFloat, imageSize: CGSize) -> CGFloat {
-        let targetSize = CGSize(width: frameWidth,
-                                height: frameWidth * (size.height / size.width))
-        
-        let widthScaleRatio = targetSize.width / imageSize.width
-        let heightScaleRatio = targetSize.height / imageSize.height
-        return min(widthScaleRatio, heightScaleRatio)
-    }
-    
-    // MARK: HTTP
-    static public func http(host: String = Host.miraikan.address,
-                            endpoint: String,
-                            params: [URLQueryItem]? = nil,
-                            method: String = HttpMethod.GET.rawValue,
-                            headers: [String: String]? = nil,
-                            body: Data? = nil,
-                            success: ((Data)->())?,
-                            fail: (()->())? = nil) {
-        var url = URLComponents(string: "\(host)\(endpoint)")!
-        var req = URLRequest(url: url.url!)
-        
-        if let items = params {
-            url.queryItems = items
-        }
-          
-        req.httpMethod = method
-          
-        if let b = body {
-            req.httpBody = b
-        }
-          
-        if let h = headers {
-            req.allHTTPHeaderFields = h
-        }
-          
-        URLSession.shared.dataTask(with: req) { (data, res, err) in
-            if let _err = err,
-               let _f = fail {
-                print(_err.localizedDescription)
-                DispatchQueue.main.async { _f() }
-            }
-            
-            if let _data = data,
-               let _f = success {
-                DispatchQueue.main.async { _f(_data) }
-            }
-        }.resume()
-    }
-    
-    
     // MARK: Date and Calendar
     static public func calendar() -> Calendar {
         var calendar = Calendar.current
