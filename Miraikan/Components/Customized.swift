@@ -27,88 +27,6 @@
 import Foundation
 import UIKit
 
-/**
- Temporarily used for rows, make them look like menu items.
- The arrow is set inaccessible from VoiceOver, working as an icon.
- */
-class ArrowView: BaseView {
-    private let lblMain = UILabel()
-    private let lblArrow = UILabel()
-    
-    public var title: String? {
-        didSet {
-            if let title = title {
-                setText(title)
-            }
-        }
-    }
-    
-    public var titleColor: UIColor? {
-        didSet {
-            if let color = titleColor {
-                lblMain.textColor = color
-                lblArrow.textColor = color
-            }
-        }
-    }
-    
-    public var isAccessible : Bool? {
-        didSet {
-            lblMain.isAccessibilityElement = isAccessible ?? true
-        }
-    }
-    
-    init(_ text: String? = nil) {
-        super.init(frame: .zero)
-        
-        if let text = text {
-            setText(text)
-        }
-    }
-    
-    private func setText(_ text: String) {
-        lblMain.text = text
-        lblMain.numberOfLines = 0
-        lblMain.lineBreakMode = .byCharWrapping
-        lblArrow.text = " >"
-        lblArrow.isAccessibilityElement = false
-        lblArrow.sizeToFit()
-        
-        [lblMain, lblArrow].forEach({
-            $0.font = .boldSystemFont(ofSize: 16)
-            addSubview($0)
-        })
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let point: CGPoint = .zero
-        let szMain = lblMain.intrinsicContentSize
-        let wMain = min(szMain.width, frame.width - lblArrow.frame.width)
-        let szMainFit = CGSize(width: wMain, height: szMain.height)
-        lblMain.frame = CGRect(origin: point,
-                               size: CGSize(width: wMain,
-                                            height: lblMain.sizeThatFits(szMainFit).height))
-        lblArrow.frame.origin = CGPoint(x: lblMain.frame.width, y: point.y)
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let sz = innerSizing(parentSize: size)
-        let szMainFit = CGSize(width: sz.width - lblArrow.frame.width,
-                               height: lblMain.intrinsicContentSize.height)
-        let szMain = CGSize(width: sz.width - lblArrow.frame.width,
-                            height: lblMain.sizeThatFits(szMainFit).height)
-        let height = [szMain.height, lblArrow.frame.height].max()!
-        return CGSize(width: sz.width, height: height)
-    }
-    
-}
-
 // TODO: byWordWrapping for English version
 /**
  A label that automatically wrap its text to fit the size
@@ -207,6 +125,52 @@ class BaseButton: UIButton {
             }
         })
         
+    }
+    
+}
+
+/**
+ A BaseButton with chevron.right icon (arrow) for links
+ */
+class ChevronButton: BaseButton {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.backgroundColor = .clear
+        self.setTitleColor(.gray, for: .normal)
+        self.titleLabel?.numberOfLines = 0
+        self.titleLabel?.lineBreakMode = .byCharWrapping
+        self.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        self.imageView?.tintColor = .gray
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let labelWidth = self.frame.width - self.imageView!.frame.width
+        let labelSz = CGSize(width: labelWidth,
+                             height: self.titleLabel!.intrinsicContentSize.height)
+        self.titleLabel?.frame.size = self.titleLabel!.sizeThatFits(labelSz)
+        
+        let midY = max(self.titleLabel!.frame.height, self.imageView!.frame.height) / 2
+        self.titleLabel?.frame.origin.x = self.safeAreaInsets.left
+        self.titleLabel?.center.y = midY
+        self.imageView?.frame.origin.x = self.safeAreaInsets.left + self.titleLabel!.frame.width
+        self.imageView?.center.y = midY
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let labelWidth = size.width - self.imageView!.frame.width 
+        let labelSz = CGSize(width: labelWidth,
+                             height: self.titleLabel!.intrinsicContentSize.height)
+        let height = max(self.titleLabel!.sizeThatFits(labelSz).height,
+                         imageView!.frame.height)
+        return CGSize(width: size.width, height: height)
     }
     
 }
