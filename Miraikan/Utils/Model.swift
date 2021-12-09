@@ -29,6 +29,15 @@ import UIKit
 
 /**
  This should be accessible for TabController and its related controllers / views
+ 
+ - References:
+ 
+ [Icon by](https://icons8.com),
+ [Staff](https://icons8.com/icon/61242/management),
+ [Inquiry](https://icons8.com/icon/20150/inquiry),
+ [Home](https://icons8.com/icon/59809/home),
+ [Login](https://icons8.com/icon/26218/login),
+ [Ask Question](https://icons8.com/icon/7857/ask-question)
  */
 enum TabItem: Int, CaseIterable {
     case callStaff

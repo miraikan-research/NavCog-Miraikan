@@ -155,7 +155,7 @@ class BaseNavController: UINavigationController {
      - Parameters:
      - nodeId: destination id
      */
-    public func openMap(nodeId: String) {
+    public func openMap(nodeId: String?) {
         
         // Select mode
         let mode = MiraikanUtil.routeMode

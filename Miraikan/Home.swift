@@ -249,7 +249,8 @@ fileprivate class NewsRow : BaseRow {
 fileprivate enum MenuItem {
     case login
     case miraikanToday
-    case regularExhibition
+    case permanentExhibition
+    case currentPosition
     case reservation
     case suggestion
     case floorMap
@@ -260,8 +261,8 @@ fileprivate enum MenuItem {
     case aboutApp
     
     var isAvailable: Bool {
-        let availableItems : [MenuItem] = [.login, .miraikanToday, .regularExhibition,
-                                           .setting, .aboutMiraikan, .aboutApp]
+        let availableItems : [MenuItem] = [.login, .miraikanToday, .permanentExhibition,
+                                           .currentPosition, .setting, .aboutMiraikan, .aboutApp]
         return availableItems.contains(self)
     }
     
@@ -271,10 +272,12 @@ fileprivate enum MenuItem {
             return NSLocalizedString("Login", comment: "")
         case .miraikanToday:
             return NSLocalizedString("Miraikan Today", comment: "")
-        case .regularExhibition:
+        case .permanentExhibition:
             return NSLocalizedString("Permanent Exhibitons", comment: "")
         case .reservation:
             return NSLocalizedString("Reservation", comment: "")
+        case .currentPosition:
+            return NSLocalizedString("Current Position", comment: "")
         case .suggestion:
             return NSLocalizedString("Suggested Routes", comment: "")
         case .floorMap:
@@ -303,7 +306,7 @@ fileprivate enum MenuItem {
         switch self {
         case .login:
             return createVC(view: LoginView())
-        case .regularExhibition:
+        case .permanentExhibition:
             return PermanentExhibitionController(title: self.name)
         case .miraikanToday:
             return EventListController(title: self.name)
@@ -332,6 +335,7 @@ fileprivate enum MenuSection : CaseIterable {
     case spex
     case event
     case exhibition
+    case currentLocation
     case reservation
     case suggestion
     case map
@@ -344,7 +348,9 @@ fileprivate enum MenuSection : CaseIterable {
         case .login:
             return [.login]
         case .exhibition:
-            return [.miraikanToday, .regularExhibition]
+            return [.miraikanToday, .permanentExhibition]
+        case .currentLocation:
+            return [.currentPosition]
         case .reservation:
             return [.reservation]
         case .suggestion:
@@ -519,8 +525,13 @@ class Home : BaseListView {
         let rowItem = items?[sec]?[row]
         if let menuItem = rowItem as? MenuItem,
             menuItem.isAvailable {
-            let vc = menuItem.createVC()
-            nav.show(vc, sender: nil)
+            if menuItem == .currentPosition {
+                guard let nav = self.navVC else { return }
+                nav.openMap(nodeId: nil)
+            } else {
+                let vc = menuItem.createVC()
+                nav.show(vc, sender: nil)
+            }
         } else if let cardModel = rowItem as? CardModel {
             let view = ExhibitionView(permalink: cardModel.permalink)
             nav.show(BaseController(view, title: cardModel.title), sender: nil)

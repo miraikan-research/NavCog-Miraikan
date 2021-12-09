@@ -79,7 +79,7 @@ fileprivate class CurrentLocationRow : BaseRow {
 fileprivate class PreviewSwitchRow : BaseRow {
     
     private let lblDescription = UILabel()
-    private let swPreview = UISwitch()
+    private let swPreview = BaseSwitch()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -90,7 +90,9 @@ fileprivate class PreviewSwitchRow : BaseRow {
         
         swPreview.isOn = MiraikanUtil.isPreview
         swPreview.isEnabled = MiraikanUtil.isLocated
-        swPreview.addTarget(self, action: #selector(_onSwitch(_:)), for: .touchUpInside)
+        swPreview.onSwitch({ sw in
+            UserDefaults.standard.set(sw.isOn, forKey: "OnPreview")
+        })
         swPreview.sizeToFit()
         addSubview(swPreview)
     }
@@ -99,13 +101,7 @@ fileprivate class PreviewSwitchRow : BaseRow {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func _onSwitch(_ sender: UISwitch) {
-        UserDefaults.standard.set(sender.isOn, forKey: "OnPreview")
-    }
-    
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
         let midY = max(lblDescription.intrinsicContentSize.height,
                        swPreview.intrinsicContentSize.height) / 2 + insets.top
         lblDescription.frame.origin.x = insets.left
@@ -129,11 +125,6 @@ class NaviSettingController : BaseListController, BaseListDelegate {
     private let locationId = "locationCell"
     private let previewId = "previewCell"
     
-    private enum CellType : CaseIterable {
-        case location
-        case preview
-    }
-    
     override func initTable() {
         super.initTable()
         
@@ -141,28 +132,22 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         self.tableView.separatorStyle = .singleLine
         self.tableView.register(CurrentLocationRow.self, forCellReuseIdentifier: locationId)
         self.tableView.register(PreviewSwitchRow.self, forCellReuseIdentifier: previewId)
-        self.items = [0: CellType.allCases]
+        self.items = [0: [locationId, previewId]]
     }
     
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         
         let (sec, row) = (indexPath.section, indexPath.row)
-        guard let item = items?[sec]?[row] as? CellType else { return nil }
+        guard let cellId = items?[sec]?[row] as? String else { return nil }
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
-        switch item {
-        case .location:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: locationId,
-                                                           for: indexPath)
-                    as? CurrentLocationRow
-            else { return nil }
-            return cell
-        case .preview:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: previewId,
-                                                           for: indexPath)
-                    as? PreviewSwitchRow
-            else { return nil }
-            return cell
+        if let locationCell = cell as? CurrentLocationRow {
+            return locationCell
+        } else if let previewCell = cell as? PreviewSwitchRow {
+            return previewCell
         }
+        
+        return nil
     }
     
 }
