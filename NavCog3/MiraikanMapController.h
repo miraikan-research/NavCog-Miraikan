@@ -14,6 +14,7 @@
 @interface MiraikanMapController : UIViewController
 
 @property (strong, nonatomic) NSString *destId;
+@property (nonatomic) BOOL isVoiceGuideOn;
 
 - (void)showVoiceGuide;
 
