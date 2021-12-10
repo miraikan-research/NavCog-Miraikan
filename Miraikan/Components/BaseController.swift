@@ -46,7 +46,7 @@ class BaseController: UIViewController {
     }
     
     // MARK: init
-    init(_ view: UIView, title: String?) {
+    @objc init(_ view: UIView, title: String?) {
         self.sceneView = view
         super.init(nibName: nil, bundle: nil)
         self.title = title

@@ -15,7 +15,6 @@
     UIEdgeInsets insetsVoiceGuide;
     UIImage *imgVoiceGuide;
     NSString *imgName;
-    BOOL isVoiceGuideOn;
     UILabel *lblDesc;
 }
 
@@ -32,14 +31,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
+    self.isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
     
     lblDesc = [[UILabel alloc] init];
     lblDesc.textColor = UIColor.whiteColor;
     [lblDesc adjustsFontSizeToFitWidth];
     lblDesc.textAlignment = NSTextAlignmentCenter;
     lblDesc.numberOfLines = 2;
-    lblDesc.text = isVoiceGuideOn
+    lblDesc.text = self.isVoiceGuideOn
         ? NSLocalizedString(@"Voice Guide On", @"")
         : NSLocalizedString(@"Voice Guide Off", @"");
     [lblDesc sizeToFit];
@@ -48,7 +47,7 @@
     
     btnVoiceGuide = [[BaseButton alloc] init];
     [btnVoiceGuide setAccessibilityLabel:lblDesc.text];
-    imgName = isVoiceGuideOn ? @"icons8-sound-24" : @"icons8-mute-24";
+    imgName = self.isVoiceGuideOn ? @"icons8-sound-24" : @"icons8-mute-24";
     imgVoiceGuide = [UIImage imageNamed:imgName];
     [btnVoiceGuide setImage:imgVoiceGuide forState:UIControlStateNormal];
     btnVoiceGuide.layer.backgroundColor = UIColor.whiteColor.CGColor;
@@ -56,12 +55,12 @@
     insetsVoiceGuide = UIEdgeInsetsMake(10, 10, 10, 10);
     btnVoiceGuide.imageEdgeInsets = insetsVoiceGuide;
     [btnVoiceGuide tapAction:^(UIButton* _) {
-        isVoiceGuideOn = !isVoiceGuideOn;
-        [NSUserDefaults.standardUserDefaults setBool:isVoiceGuideOn forKey:@"isVoiceGuideOn"];
-        imgName = isVoiceGuideOn ? @"icons8-sound-24" : @"icons8-mute-24";
+        self.isVoiceGuideOn = !self.isVoiceGuideOn;
+        [NSUserDefaults.standardUserDefaults setBool:self.isVoiceGuideOn forKey:@"self.isVoiceGuideOn"];
+        imgName = self.isVoiceGuideOn ? @"icons8-sound-24" : @"icons8-mute-24";
         imgVoiceGuide = [UIImage imageNamed:imgName];
         [btnVoiceGuide setImage:[UIImage imageNamed:imgName] forState:UIControlStateNormal];
-        lblDesc.text = isVoiceGuideOn
+        lblDesc.text = self.isVoiceGuideOn
             ? NSLocalizedString(@"Voice Guide On", @"")
             : NSLocalizedString(@"Voice Guide Off", @"");
         [btnVoiceGuide setAccessibilityLabel:lblDesc.text];

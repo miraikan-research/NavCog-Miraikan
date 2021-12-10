@@ -351,6 +351,7 @@
 		D3A156F127200FB000A23B9E /* MiraikanMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A156EF27200FB000A23B9E /* MiraikanMapController.m */; };
 		D3A156F227200FB000A23B9E /* MiraikanMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A156EF27200FB000A23B9E /* MiraikanMapController.m */; };
 		D3AB5B1C27313A2900E23AF9 /* MiraikanUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5832702B8F600F6AD28 /* MiraikanUtil.swift */; };
+		D3B06195276346BB0006B0DA /* VoiceGuideController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B06194276346BB0006B0DA /* VoiceGuideController.swift */; };
 		D3B1A1A527546AFB00E6CBCB /* AIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B1A1A427546AFB00E6CBCB /* AIView.swift */; };
 		D3B9D405274F76B1001F4D80 /* NaviSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */; };
 		D3C4A43B276092240098CF29 /* HTTPAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */; };
@@ -653,6 +654,7 @@
 		D3A156EF27200FB000A23B9E /* MiraikanMapController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MiraikanMapController.m; sourceTree = "<group>"; };
 		D3A575D4270BF05200E9850A /* ExhibitionDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionDataStore.swift; sourceTree = "<group>"; };
 		D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorSelectionController.swift; sourceTree = "<group>"; };
+		D3B06194276346BB0006B0DA /* VoiceGuideController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceGuideController.swift; sourceTree = "<group>"; };
 		D3B1A1A427546AFB00E6CBCB /* AIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIView.swift; sourceTree = "<group>"; };
 		D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviSettingController.swift; sourceTree = "<group>"; };
 		D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPAdaptor.swift; sourceTree = "<group>"; };
@@ -1188,6 +1190,7 @@
 				D320F5992702B8F600F6AD28 /* EventView.swift */,
 				D320F59A2702B8F600F6AD28 /* FloorMapView.swift */,
 				D3B1A1A427546AFB00E6CBCB /* AIView.swift */,
+				D3B06194276346BB0006B0DA /* VoiceGuideController.swift */,
 			);
 			path = Contents;
 			sourceTree = "<group>";
@@ -2148,6 +2151,7 @@
 				D3A1182227294B0B00BEC1C8 /* main.mm in Sources */,
 				D3A1182327294B0B00BEC1C8 /* HLPSettingViewCell.m in Sources */,
 				D3A1182427294B0B00BEC1C8 /* FloorSelectionController.swift in Sources */,
+				D3B06195276346BB0006B0DA /* VoiceGuideController.swift in Sources */,
 				D3A1182627294B0B00BEC1C8 /* Logging.m in Sources */,
 				D3A1182727294B0B00BEC1C8 /* WebViewController.m in Sources */,
 				D3A1182827294B0B00BEC1C8 /* NavSound.m in Sources */,

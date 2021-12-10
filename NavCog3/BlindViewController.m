@@ -1071,6 +1071,16 @@
     }
     
     [_webView logToServer:@{@"event": @"navigation", @"status": @"finished"}];
+    
+    if (self.isVoiceGuideOn) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
+            NSArray *dummy = @[@"once", @"two", @"three"];
+            [vc setItems:dummy];
+            [self.navigationController showViewController:vc sender:nil];
+        });
+        return;
+    }
 
     [commander didNavigationFinished:properties];
     [previewer didNavigationFinished:properties];
