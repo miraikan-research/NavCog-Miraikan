@@ -114,10 +114,12 @@ class MiraikanController: UIViewController {
 /**
  Tabs for Home, Login and others
  */
-class TabController: UITabBarController {
+class TabController: UITabBarController, UITabBarControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.delegate = self
         
         let tabs = TabItem.allCases.filter({ item in
             if MiraikanUtil.isLoggedIn {
@@ -135,6 +137,11 @@ class TabController: UITabBarController {
             }
         }
         
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        (viewController as? BaseNavController)?.popToRootViewController(animated: true)
+        return true
     }
     
 }
