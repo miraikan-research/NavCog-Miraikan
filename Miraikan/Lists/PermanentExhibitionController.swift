@@ -128,14 +128,12 @@ class PermanentExhibitionController : BaseListController, BaseListDelegate {
             dividedItems += [model]
             dividedItems += [model.intro]
         })
-        items = [0: dividedItems]
-        
+        items = dividedItems
     }
     
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
-        let (sec, row) = (indexPath.section, indexPath.row)
-        let item = items?[sec]?[row]
+        let item = (items as? [Any])?[indexPath.row]
         if let model = item as? RegularExhibitionModel,
            let cell = tableView.dequeueReusableCell(withIdentifier: linkId,
                                                           for: indexPath)
@@ -157,7 +155,8 @@ class PermanentExhibitionController : BaseListController, BaseListDelegate {
     
     override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
         // Only the link is clickable
-        if let model = items?[indexPath.section]?[indexPath.row] as? RegularExhibitionModel {
+//        if let model = items?[indexPath.section]?[indexPath.row] as? RegularExhibitionModel {
+        if let model = (items as? [Any])?[indexPath.row] as? RegularExhibitionModel {
             guard let nav = self.navigationController as? BaseNavController else { return }
             let vc = ExhibitionListController(id: model.id, title: model.title)
             nav.show(vc, sender: nil)

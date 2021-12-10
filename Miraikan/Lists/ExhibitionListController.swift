@@ -76,7 +76,7 @@ fileprivate class ContentRow : BaseRow {
                 }
                 if let locations = model.locations {
                     let vc = FloorSelectionController(title: model.title)
-                    vc.items = [0: locations]
+                    vc.items = locations
                     n.show(vc, sender: nil)
                 }
             }
@@ -182,13 +182,12 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
                                                       locations: model.locations)
             dividedItems += [contentModel]
         })
-        items = [0: dividedItems]
+        items = dividedItems
     }
     
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
-        let (sec, row) = (indexPath.section, indexPath.row)
-        let item = items?[sec]?[row]
+        let item = (items as? [Any])?[indexPath.row]
         if let title = (item as? ExhibitionLinkModel)?.title,
            let cell = tableView.dequeueReusableCell(withIdentifier: linkId, for: indexPath)
             as? LinkRow {
@@ -205,7 +204,7 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
     
     override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
         // Only the link is clickable
-        if let model = items?[indexPath.section]?[indexPath.row] as? ExhibitionLinkModel {
+        if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLinkModel {
             guard let nav = self.navigationController as? BaseNavController else { return }
             nav.show(BaseController(ExhibitionView(category: category,
                                                    id: model.id,

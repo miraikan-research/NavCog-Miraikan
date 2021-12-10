@@ -138,11 +138,9 @@ class ChevronButton: BaseButton {
         super.init(frame: frame)
         
         self.backgroundColor = .clear
-        self.setTitleColor(.gray, for: .normal)
         self.titleLabel?.numberOfLines = 0
         self.titleLabel?.lineBreakMode = .byCharWrapping
         self.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-        self.imageView?.tintColor = .gray
     }
     
     required init?(coder: NSCoder) {

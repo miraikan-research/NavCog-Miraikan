@@ -218,7 +218,7 @@ class EventListController: BaseListController, BaseListDelegate {
                 models += [model]
             }
         })
-        items = [0: models]
+        items = models
     }
     
     // MARK: BaseListDelegate
@@ -227,8 +227,7 @@ class EventListController: BaseListController, BaseListDelegate {
                                                        for: indexPath) as? ScheduleRow
         else { return UITableViewCell() }
         
-        let (sec, row) = (indexPath.section, indexPath.row)
-        if let model = items?[sec]?[row] as? ScheduleRowModel {
+        if let model = (items as? [Any])?[indexPath.row] as? ScheduleRowModel {
             cell.configure(model)
         }
         return cell

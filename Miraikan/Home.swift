@@ -194,6 +194,8 @@ fileprivate class MenuRow : BaseRow {
         btnItem.isEnabled = false
         // "Disabled" would not be read out
         btnItem.accessibilityTraits = .button
+        btnItem.setTitleColor(.gray, for: .normal)
+        btnItem.imageView?.tintColor = .gray
         addSubview(btnItem)
     }
     
@@ -251,6 +253,8 @@ fileprivate class NewsRow : BaseRow {
         
         btnItem.isEnabled = false
         btnItem.accessibilityTraits = .button
+        btnItem.setTitleColor(.gray, for: .normal)
+        btnItem.imageView?.tintColor = .gray
         addSubview(btnItem)
     }
     
@@ -483,7 +487,7 @@ class Home : BaseListView {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let (sec, row) = (indexPath.section, indexPath.row)
         
-        if let items = items?[sec], items.isEmpty {
+        if let items = (items as? [Int: [Any]])?[sec], items.isEmpty {
             let cell = UITableViewCell()
             cell.textLabel?.textColor = .lightGray
             cell.selectionStyle = .none
@@ -497,7 +501,7 @@ class Home : BaseListView {
             }
             return cell
         } else {
-            let rowItem = items?[sec]?[row]
+            let rowItem = (items as? [Int: [Any]])?[sec]?[row]
             if let menuItem = rowItem as? MenuItem,
                let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
                 // Normal Menu Row
@@ -532,7 +536,7 @@ class Home : BaseListView {
                     || sections?[section] == .event {
             if let count = sections?[section].items?.count { return count }
             else { return 1 }
-        } else if let rows = items?[section] {
+        } else if let rows = (items as? [Int: [Any]])?[section] {
             return rows.count
         }
         
@@ -543,10 +547,8 @@ class Home : BaseListView {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let nav = navVC else { return }
         let (sec, row) = (indexPath.section, indexPath.row)
+        let rowItem = (items as? [Int: [Any]])?[sec]?[row]
         
-        if let items = items?[sec], items.isEmpty { return }
-        
-        let rowItem = items?[sec]?[row]
         if let menuItem = rowItem as? MenuItem,
             menuItem.isAvailable {
             if menuItem == .currentPosition {
@@ -570,7 +572,7 @@ class Home : BaseListView {
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if sections?[section] == .news {
             return 0
-        } else if section < items!.count - 1 {
+        } else if section < (items as! [Int : Any]).count - 1 {
             return 35
         }
         return 20

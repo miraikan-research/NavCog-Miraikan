@@ -45,7 +45,7 @@ class FloorSelectionController: BaseListController, BaseListDelegate {
     
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        if let model = items?[indexPath.section]?[indexPath.row] as? ExhibitionLocation {
+        if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLocation {
             cell.textLabel?.text = "\(model.floor)階"
         }
         return cell
@@ -55,7 +55,7 @@ class FloorSelectionController: BaseListController, BaseListDelegate {
         super.onSelect(tableView, indexPath)
         
         if let nav = self.navigationController as? BaseNavController,
-           let model = items?[indexPath.section]?[indexPath.row] as? ExhibitionLocation {
+           let model = (items as? [Any])?[indexPath.row] as? ExhibitionLocation {
             nav.openMap(nodeId: model.nodeId)
         }
         tableView.deselectRow(at: indexPath, animated: true)

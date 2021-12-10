@@ -27,6 +27,7 @@
 #import "ConfigManager.h"
 #import "NavDeviceTTS.h"
 #import "NavSound.h"
+#import "SettingViewController.h"
 
 // External Libraries
 #import <AVFAudio/AVAudioSession.h>

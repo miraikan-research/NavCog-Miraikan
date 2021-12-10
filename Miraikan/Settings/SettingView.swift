@@ -168,12 +168,11 @@ class SettingView : BaseListView {
         self.tableView.register(RouteModeRow.self, forCellReuseIdentifier: routeModeId)
         self.tableView.register(VoiceGuideRow.self, forCellReuseIdentifier: switchId)
         
-        items = [0: [routeModeId, switchId]]
+        items = [routeModeId, switchId]
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let (sec, row) = (indexPath.section, indexPath.row)
-        guard let cellId = items?[sec]?[row] as? String else { return UITableViewCell() }
+        guard let cellId = (items as? [String])?[indexPath.row] else { return UITableViewCell() }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
         if let routeModeCell = cell as? RouteModeRow {
