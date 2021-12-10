@@ -36,7 +36,7 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
     
     let tableView = UITableView()
     
-    public var items : [Int: [Any]]? {
+    public var items : Any? {
         didSet {
             self.tableView.reloadData()
         }
@@ -66,13 +66,22 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
-        return items?.count ?? 0
+        if let _ = items as? [Any] {
+            return 1
+        } else if let items = items as? [Int: [Any]] {
+            return items.count
+        }
+        
+        return 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let rows = items?[section] {
-            return rows.count
+        if let items = items as? [Any] {
+            return items.count
+        } else if let items = items as? [Int: [Any]] {
+            return items[section]?.count ?? 0
         }
+        
         return 0
     }
     

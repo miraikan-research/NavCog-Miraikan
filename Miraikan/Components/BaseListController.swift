@@ -112,7 +112,7 @@ class BaseListController: UITableViewController {
     
     public var baseDelegate : BaseListDelegate?
     
-    public var items : [Int: [Any]]? {
+    public var items : Any? {
         didSet {
             self.tableView.reloadData()
         }
@@ -155,15 +155,20 @@ class BaseListController: UITableViewController {
     
     // MARK: UITableViewDelegate
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if let items = items {
+        if let _ = items as? [Any] {
+            return 1
+        } else if let items = items as? [Int: Any] {
             return items.count
         }
+        
         return 0
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let rows = items?[section] {
-            return rows.count
+        if let items = items as? [Any] {
+            return items.count
+        } else if let items = items as? [Int: [Any]] {
+            return items[section]?.count ?? 0
         }
             
         return 0
