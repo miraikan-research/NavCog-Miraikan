@@ -181,7 +181,7 @@
         <!--Setting View Controller-->
         <scene sceneID="6eY-Gj-biD">
             <objects>
-                <tableViewController modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5By-Wf-lM7" customClass="SettingViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="setting_vc" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5By-Wf-lM7" customClass="SettingViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="dyR-sF-yjs" customClass="HLPSettingTableView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

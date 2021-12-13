@@ -159,32 +159,45 @@ fileprivate class CardRow : BaseRow {
  */
 fileprivate class MenuRow : BaseRow {
     
-    private let lblItem = ArrowView()
+    private let btnItem = ChevronButton()
     
     public var title: String? {
         didSet {
-            lblItem.title = title
+            btnItem.setTitle(title, for: .normal)
+            btnItem.sizeToFit()
         }
     }
     
-    public var titleColor : UIColor? {
+    public var isAvailable : Bool? {
         didSet {
-            lblItem.titleColor = titleColor
-        }
-    }
-    
-    public var isAccessible : Bool? {
-        didSet {
-            lblItem.isAccessible = isAccessible
+            guard let isAvailable = isAvailable else {
+                return
+            }
+            
+            if isAvailable {
+                self.backgroundColor = .clear
+                btnItem.setTitleColor(.gray, for: .normal)
+                btnItem.imageView?.tintColor = .gray
+            } else {
+                self.backgroundColor = .lightGray
+                self.selectionStyle = .none
+                btnItem.setTitleColor(.lightText, for: .normal)
+                btnItem.imageView?.tintColor = .lightText
+                btnItem.accessibilityLabel = NSLocalizedString("blank_description", comment: "")
+            }
         }
     }
     
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        // The backgroundColor of the label should turn gray when selected
-        lblItem.backgroundColor = .clear
-        addSubview(lblItem)
+        // To prevent the button being selected on VoiceOver
+        btnItem.isEnabled = false
+        // "Disabled" would not be read out
+        btnItem.accessibilityTraits = .button
+        btnItem.setTitleColor(.gray, for: .normal)
+        btnItem.imageView?.tintColor = .gray
+        addSubview(btnItem)
     }
     
     required init?(coder: NSCoder) {
@@ -193,13 +206,13 @@ fileprivate class MenuRow : BaseRow {
     
     // MARK: layout
     override func layoutSubviews() {
-        lblItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
-                               size: lblItem.sizeThatFits(innerSize))
+        btnItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
+                               size: btnItem.sizeThatFits(innerSize))
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let innerSz = innerSizing(parentSize: size)
-        let height = insets.top + insets.bottom + lblItem.sizeThatFits(innerSz).height
+        let height = insets.top + insets.bottom + btnItem.sizeThatFits(innerSz).height
         return CGSize(width: size.width, height: height)
     }
     
@@ -207,24 +220,43 @@ fileprivate class MenuRow : BaseRow {
 
 fileprivate class NewsRow : BaseRow {
     
-    private let lblNews = ArrowView()
+    private let btnItem = ChevronButton()
     
     public var title: String? {
         didSet {
-            lblNews.title = title
+            btnItem.setTitle(title, for: .normal)
+            btnItem.sizeToFit()
+        }
+    }
+    
+    public var isAvailable : Bool? {
+        didSet {
+            guard let isAvailable = isAvailable else {
+                return
+            }
+            
+            if isAvailable {
+                self.backgroundColor = .clear
+                btnItem.setTitleColor(.gray, for: .normal)
+                btnItem.imageView?.tintColor = .gray
+            } else {
+                self.backgroundColor = .lightGray
+                self.selectionStyle = .none
+                btnItem.setTitleColor(.lightText, for: .normal)
+                btnItem.imageView?.tintColor = .lightText
+                btnItem.accessibilityLabel = NSLocalizedString("blank_description", comment: "")
+            }
         }
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        lblNews.backgroundColor = .clear
-        // The styles below are applied when news are not ready
-        self.backgroundColor = .lightGray
-        self.selectionStyle = .none
-        lblNews.titleColor = .lightText
-        lblNews.isAccessible = false
-        addSubview(lblNews)
+        btnItem.isEnabled = false
+        btnItem.accessibilityTraits = .button
+        btnItem.setTitleColor(.gray, for: .normal)
+        btnItem.imageView?.tintColor = .gray
+        addSubview(btnItem)
     }
     
     required init?(coder: NSCoder) {
@@ -232,13 +264,13 @@ fileprivate class NewsRow : BaseRow {
     }
     
     override func layoutSubviews() {
-        lblNews.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
-                               size: lblNews.sizeThatFits(innerSize))
+        btnItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
+                               size: btnItem.sizeThatFits(innerSize))
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let innerSz = innerSizing(parentSize: size)
-        let height = insets.top + insets.bottom + lblNews.sizeThatFits(innerSz).height
+        let height = insets.top + insets.bottom + btnItem.sizeThatFits(innerSz).height
         return CGSize(width: size.width, height: height)
     }
     
@@ -436,7 +468,8 @@ class Home : BaseListView {
                         let now = Date()
                         let start = MiraikanUtil.parseDate(model.start)!
                         let end = MiraikanUtil.parseDate(model.end)!
-                        return start <= now && end >= now
+                        let endOfDay = MiraikanUtil.calendar().date(byAdding: .day, value: 1, to: end)!
+                        return start <= now && endOfDay >= now
                     })
                     menuItems[idx] = filtered
                     self.items = menuItems
@@ -456,7 +489,7 @@ class Home : BaseListView {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let (sec, row) = (indexPath.section, indexPath.row)
         
-        if let items = items?[sec], items.isEmpty {
+        if let items = (items as? [Int: [Any]])?[sec], items.isEmpty {
             let cell = UITableViewCell()
             cell.textLabel?.textColor = .lightGray
             cell.selectionStyle = .none
@@ -470,17 +503,12 @@ class Home : BaseListView {
             }
             return cell
         } else {
-            let rowItem = items?[sec]?[row]
+            let rowItem = (items as? [Int: [Any]])?[sec]?[row]
             if let menuItem = rowItem as? MenuItem,
                let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
                 // Normal Menu Row
                 menuRow.title = menuItem.name
-                menuRow.backgroundColor = menuItem.isAvailable ? .clear : .lightGray
-                menuRow.titleColor = menuItem.isAvailable ? .black : .lightText
-                menuRow.isAccessible = menuItem.isAvailable
-                if !menuItem.isAvailable {
-                    menuRow.selectionStyle = .none
-                }
+                menuRow.isAvailable = menuItem.isAvailable
                 return menuRow
             } else if let cardModel = rowItem as? CardModel,
                       let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
@@ -493,6 +521,7 @@ class Home : BaseListView {
                       let newsRow = tableView.dequeueReusableCell(withIdentifier: newsCellId,
                                                                   for: indexPath) as? NewsRow {
                 newsRow.title = "・\(news)"
+                newsRow.isAvailable = false
                 return newsRow
             }
         }
@@ -506,10 +535,10 @@ class Home : BaseListView {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if sections?[section] == .spex
-                    || sections?[section] == .event {
-            if let count = sections?[section].items?.count { return count }
-            else { return 1 }
-        } else if let rows = items?[section] {
+                    || sections?[section] == .event,
+            let items = (items as? [Int : [Any]])?[section] {
+                return items.count > 0 ? items.count : 1
+        } else if let rows = (items as? [Int: [Any]])?[section] {
             return rows.count
         }
         
@@ -520,10 +549,8 @@ class Home : BaseListView {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let nav = navVC else { return }
         let (sec, row) = (indexPath.section, indexPath.row)
+        let rowItem = (items as? [Int: [Any]])?[sec]?[row]
         
-        if let items = items?[sec], items.isEmpty { return }
-        
-        let rowItem = items?[sec]?[row]
         if let menuItem = rowItem as? MenuItem,
             menuItem.isAvailable {
             if menuItem == .currentPosition {
@@ -547,7 +574,7 @@ class Home : BaseListView {
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if sections?[section] == .news {
             return 0
-        } else if section < items!.count - 1 {
+        } else if section < (items as! [Int : Any]).count - 1 {
             return 35
         }
         return 20

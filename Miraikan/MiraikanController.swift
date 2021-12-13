@@ -40,7 +40,7 @@ class MiraikanController: UIViewController {
         UIAccessibility.post(notification: .screenChanged, argument: self.navigationItem.titleView)
         
         // NavBar
-        let btnSetting = BaseBarButton(image: UIImage(named: "icons8-setting-32"))
+        let btnSetting = BaseBarButton(image: UIImage(systemName: "gearshape"))
         btnSetting.tapAction { [weak self] in
             guard let self = self else { return }
             let vc = NaviSettingController(title: NSLocalizedString("Navi Settings", comment: ""))
@@ -114,10 +114,12 @@ class MiraikanController: UIViewController {
 /**
  Tabs for Home, Login and others
  */
-class TabController: UITabBarController {
+class TabController: UITabBarController, UITabBarControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.delegate = self
         
         let tabs = TabItem.allCases.filter({ item in
             if MiraikanUtil.isLoggedIn {
@@ -135,6 +137,11 @@ class TabController: UITabBarController {
             }
         }
         
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        (viewController as? BaseNavController)?.popToRootViewController(animated: true)
+        return true
     }
     
 }

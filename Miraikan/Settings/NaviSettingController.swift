@@ -120,10 +120,47 @@ fileprivate class PreviewSwitchRow : BaseRow {
     
 }
 
+fileprivate class NavCogRow : BaseRow {
+    
+    private let btnItem = ChevronButton()
+    
+    // MARK: init
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        // To prevent the button being selected on VoiceOver
+        btnItem.isEnabled = false
+        // "Disabled" would not be read out
+        btnItem.isAccessibilityElement = false
+        btnItem.setTitle(NSLocalizedString("NavCog Settings", comment: ""), for: .normal)
+        btnItem.setTitleColor(.black, for: .normal)
+        btnItem.imageView?.tintColor = .black
+        btnItem.sizeToFit()
+        addSubview(btnItem)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: layout
+    override func layoutSubviews() {
+        btnItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
+                               size: btnItem.sizeThatFits(innerSize))
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let innerSz = innerSizing(parentSize: size)
+        let height = insets.top + insets.bottom + btnItem.sizeThatFits(innerSz).height
+        return CGSize(width: size.width, height: height)
+    }
+    
+}
+
 class NaviSettingController : BaseListController, BaseListDelegate {
     
     private let locationId = "locationCell"
     private let previewId = "previewCell"
+    private let navCogId = "navCogCell"
     
     override func initTable() {
         super.initTable()
@@ -132,22 +169,34 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         self.tableView.separatorStyle = .singleLine
         self.tableView.register(CurrentLocationRow.self, forCellReuseIdentifier: locationId)
         self.tableView.register(PreviewSwitchRow.self, forCellReuseIdentifier: previewId)
-        self.items = [0: [locationId, previewId]]
+        self.tableView.register(NavCogRow.self, forCellReuseIdentifier: navCogId)
+        self.items = [locationId, previewId, navCogId]
     }
     
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
-        
-        let (sec, row) = (indexPath.section, indexPath.row)
-        guard let cellId = items?[sec]?[row] as? String else { return nil }
+        guard let cellId = (items as? [String])?[indexPath.row] else { return nil }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
         if let locationCell = cell as? CurrentLocationRow {
             return locationCell
         } else if let previewCell = cell as? PreviewSwitchRow {
             return previewCell
+        } else if let navCog3Cell = cell as? NavCogRow {
+            return navCog3Cell
         }
         
         return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cellId = (items as? [String])?[indexPath.row],
+            cellId == navCogId,
+           let navVC = self.navigationController {
+            let vc = UIStoryboard(name: "Main", bundle: nil)
+                .instantiateViewController(withIdentifier: "setting_vc") as! SettingViewController
+            navVC.show(vc, sender: nil)
+        }
+        super.tableView(tableView, didSelectRowAt: indexPath)
     }
     
 }
