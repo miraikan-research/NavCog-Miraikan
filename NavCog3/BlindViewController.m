@@ -215,10 +215,13 @@
                   @"sync": @(YES)
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
-                // Start preview outside of iBeacon environment
-                if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
-                }
+            }
+            // Start preview outside of iBeacon environment
+            if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                NSString *msg = [MiraikanUtil isPreview]
+                    ? NSLocalizedString(@"Loading preview",@"")
+                    : NSLocalizedString(@"Loading, please wait",@"");
+                [NavUtil showModalWaitingWithMessage:msg];
             }
             [self updateView];
             [timer invalidate];
@@ -1029,6 +1032,17 @@
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [NavUtil hideModalWaiting];
+        NSArray *dummy = @[@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                           @"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                           @"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
+            [vc setItems:dummy];
+            
+            // Back to exhibition list instead of map
+            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController pushViewController:vc animated:YES];
+        });
     });
 }
 
@@ -1073,11 +1087,31 @@
     [_webView logToServer:@{@"event": @"navigation", @"status": @"finished"}];
     
     if (self.isVoiceGuideOn) {
+        // Get description texts from pois
+        NSArray *poisArray = properties[@"pois"];
+        NavPOI *pois = poisArray.lastObject;
+        NSString *description;
+        if (pois.longDescription) {
+            description = pois.longDescription;
+        } else {
+            description = pois.text;
+        }
+        NSLog(@"pois: %@", description);
+        NSArray *descriptions = ExhibitionDataStore.shared.descriptions;
+        if (descriptions) {
+            [descriptions arrayByAddingObject:description];
+        } else {
+            descriptions = @[description];
+        }
+        ExhibitionDataStore.shared.descriptions = descriptions;
+        // Display the texts
         dispatch_async(dispatch_get_main_queue(), ^{
             VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
-            NSArray *dummy = @[@"once", @"two", @"three"];
-            [vc setItems:dummy];
-            [self.navigationController showViewController:vc sender:nil];
+            [vc setItems:descriptions];
+            
+            // Back to exhibition list instead of map
+            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController pushViewController:vc animated:YES];
         });
         return;
     }

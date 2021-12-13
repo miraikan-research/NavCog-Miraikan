@@ -401,14 +401,13 @@ fileprivate enum MenuSection : CaseIterable {
     
     var endpoint: String? {
         let lang = NSLocalizedString("lang", comment: "")
-        // TODO: Remove fileLang when files in all languages are available
-        let fileLang = lang == "ja" ? lang : "en"
+        // Caution: data are not fully available for other languages than Japanese.
         switch self {
         case .spex:
-            return "/exhibitions/spexhibition/_assets/json/\(fileLang).json"
+            return "/exhibitions/spexhibition/_assets/json/\(lang).json"
         case .event:
             let year = MiraikanUtil.calendar().component(.year, from: Date())
-            return "/events/_assets/json/\(year)/\(fileLang).json"
+            return "/events/_assets/json/\(year)/\(lang).json"
         default:
             return nil
         }
