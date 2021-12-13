@@ -466,7 +466,8 @@ class Home : BaseListView {
                         let now = Date()
                         let start = MiraikanUtil.parseDate(model.start)!
                         let end = MiraikanUtil.parseDate(model.end)!
-                        return start <= now && end >= now
+                        let endOfDay = MiraikanUtil.calendar().date(byAdding: .day, value: 1, to: end)!
+                        return start <= now && endOfDay >= now
                     })
                     menuItems[idx] = filtered
                     self.items = menuItems
@@ -533,9 +534,9 @@ class Home : BaseListView {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if sections?[section] == .spex
-                    || sections?[section] == .event {
-            if let count = sections?[section].items?.count { return count }
-            else { return 1 }
+                    || sections?[section] == .event,
+            let items = (items as? [Int : [Any]])?[section] {
+                return items.count > 0 ? items.count : 1
         } else if let rows = (items as? [Int: [Any]])?[section] {
             return rows.count
         }
