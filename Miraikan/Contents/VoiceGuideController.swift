@@ -37,6 +37,8 @@ private protocol AudioControlDelegate {
 
 private protocol AudioListDelegate {
     func detectBound(rowNumber: Int)
+    func setPlaying(_ isPlaying: Bool)
+    func checkStatus() -> Bool
 }
 
 fileprivate class VoiceGuideRow : BaseRow {
@@ -83,8 +85,23 @@ fileprivate class VoiceGuideRow : BaseRow {
 fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
     
     private let cellId = "cellId"
+    private let tts = DefaultTTS()
     
     var listDelegate: AudioListDelegate?
+    
+    override var items: Any? {
+        didSet {
+            if let items = items as? [String] {
+                self.tableView.reloadData()
+                let row = items.count - 1
+                self.tableView.selectRow(at: IndexPath(row: row, section: 0),
+                                         animated: true,
+                                         scrollPosition: .bottom)
+                listDelegate?.detectBound(rowNumber: row)
+                play(row: row)
+            }
+        }
+    }
     
     override func initTable(isSelectionAllowed: Bool) {
         super.initTable(isSelectionAllowed: true)
@@ -101,34 +118,45 @@ fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let title = (items as? [String])?[indexPath.row] else { return }
-        print(title)
-        listDelegate?.detectBound(rowNumber: indexPath.row)
-    }
-    
     func play() {
-        let selected = self.tableView.indexPathForSelectedRow
-        guard let title = (items as? [String])?[selected!.row] else { return }
-        print(title)
+        let selected = self.tableView.indexPathForSelectedRow!
+        play(row: selected.row)
     }
     
     func pause() {
-        print("Paused")
+        tts.stop(true)
     }
     
     func playNext() {
+        if let isPlaying = self.listDelegate?.checkStatus() {
+            tts.stop(isPlaying)
+        }
         let selected = self.tableView.indexPathForSelectedRow!
         let next = IndexPath(row: selected.row + 1, section: selected.section)
         self.tableView.selectRow(at: next, animated: true, scrollPosition: .bottom)
         listDelegate?.detectBound(rowNumber: next.row)
+        play(row: next.row)
     }
     
     func playPrevious() {
+        if let isPlaying = self.listDelegate?.checkStatus() {
+            tts.stop(isPlaying)
+        }
         let selected = self.tableView.indexPathForSelectedRow!
         let prev = IndexPath(row: selected.row - 1, section: selected.section)
         self.tableView.selectRow(at: prev, animated: true, scrollPosition: .bottom)
         listDelegate?.detectBound(rowNumber: prev.row)
+        play(row: prev.row)
+    }
+    
+    private func play(row: Int) {
+        guard let title = (items as? [String])?[row] else { return }
+        print(title)
+        self.listDelegate?.setPlaying(true)
+        tts.speak(title, callback: { [weak self] in
+            guard let self = self else { return }
+            self.listDelegate?.setPlaying(false)
+        })
     }
     
 }
@@ -154,7 +182,7 @@ fileprivate class PanelView : BaseView {
     
     private var controls = [AudioControl: BaseButton]()
     
-    private var isPlaying : Bool = false
+    private(set) var isPlaying : Bool = false
     
     var delegate : AudioControlDelegate?
     
@@ -190,9 +218,6 @@ fileprivate class PanelView : BaseView {
             case .main:
                 isPlaying = !isPlaying
                 isPlaying ? delegate?.play() : delegate?.pause()
-                let imgName = isPlaying ? "\(control.imgName)pause.fill" : "\(control.imgName).fill"
-                let img = UIImage(systemName: imgName, withConfiguration: config)
-                btn.setImage(img, for: .normal)
             case .prev:
                 delegate?.playPrevious()
                 print("Previous description")
@@ -227,6 +252,15 @@ fileprivate class PanelView : BaseView {
         guard let btnNext = controls[.next] else { return }
         btnPrev.isEnabled = !isTop
         btnNext.isEnabled = !isBottom
+    }
+    
+    public func setPlaying(_ isPlaying: Bool) {
+        self.isPlaying = isPlaying
+        let config = UIImage.SymbolConfiguration(pointSize: 40)
+        let imgName = isPlaying ? "playpause.fill" : "play.fill"
+        let img = UIImage(systemName: imgName, withConfiguration: config)
+        let btnMain = controls[.main]!
+        btnMain.setImage(img, for: .normal)
     }
     
 }
@@ -265,6 +299,14 @@ class VoiceGuideController: BaseController {
             guard let count = items?.count else { return }
             panelView.updateControl(isTop: rowNumber == 0,
                                     isBottom: rowNumber == count - 1)
+        }
+        
+        func setPlaying(_ isPlaying: Bool) {
+            panelView.setPlaying(isPlaying)
+        }
+        
+        func checkStatus() -> Bool {
+            return panelView.isPlaying
         }
         
     }

@@ -67,9 +67,6 @@
     BOOL initFlag;
     BOOL rerouteFlag;
     
-    // For iBeacon environment
-    BOOL isNaviStarted;
-    
     UIColor *defaultColor;
     
     DialogViewHelper *dialogHelper;
@@ -96,7 +93,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    isNaviStarted = NO;
+    self.isNaviStarted = NO;
+    self.isDestLoaded = NO;
+    self.isRouteRequested = NO;
     
     initialViewDidAppear = YES;
     
@@ -218,6 +217,7 @@
             }
             // Start preview outside of iBeacon environment
             if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                self.isDestLoaded = YES;
                 NSString *msg = [MiraikanUtil isPreview]
                     ? NSLocalizedString(@"Loading preview",@"")
                     : NSLocalizedString(@"Loading, please wait",@"");
@@ -426,12 +426,15 @@
         //self.cover.hidden = devMode || !isActive;
         self.cover.hidden = devMode;
         
-        self.searchButton.enabled = !isNaviStarted;
+        self.searchButton.enabled = !self.isNaviStarted;
         
         self.navigationItem.leftBarButtonItem = nil;
         if ((isActive && !devMode) || previewMode || initFlag) {
         } else {
-//            self.navigationItem.leftBarButtonItem = _settingButton;
+            // Show Setting Button for current location only
+            if (!self.destId) {
+                self.navigationItem.leftBarButtonItem = _settingButton;
+            }
             UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleSettingLongPressGesture:)];
             longPressGesture.minimumPressDuration = 1.0;
             longPressGesture.numberOfTouchesRequired = 1;
@@ -720,7 +723,7 @@
         lastLocationSent = now;
         [self dialogHelperUpdate];
         
-        if (!self.destId || [navigator isActive] || isNaviStarted) {
+        if (!self.destId || self.isDestLoaded || [navigator isActive] || self.isNaviStarted) {
             return;
         }
         if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
@@ -735,6 +738,8 @@
 - (void) destinationChanged: (NSNotification*) note
 {
     [_webView initTarget:[note userInfo][@"destinations"]];
+    
+    if (self.isRouteRequested) { return; }
     
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
@@ -760,6 +765,8 @@
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [nds requestRouteFrom:from.singleId
                        To:to._id withPreferences:prefs complete:^{
+        __weak typeof(self) weakself = self;
+        weakself.isRouteRequested = YES;
         nds.previewMode = [MiraikanUtil isPreview];
         nds.exerciseMode = NO;
     }];
@@ -1048,7 +1055,7 @@
 
 - (void)didNavigationStarted:(NSDictionary *)properties
 {
-    isNaviStarted = YES;
+    self.isNaviStarted = YES;
     if (timerForSimulator) {
         [timerForSimulator invalidate];
         timerForSimulator = nil;
@@ -1097,11 +1104,11 @@
             description = pois.text;
         }
         NSLog(@"pois: %@", description);
-        NSArray *descriptions = ExhibitionDataStore.shared.descriptions;
+        NSMutableArray *descriptions = [(NSArray*) ExhibitionDataStore.shared.descriptions mutableCopy];
         if (descriptions) {
-            [descriptions arrayByAddingObject:description];
+            [descriptions addObject:description];
         } else {
-            descriptions = @[description];
+            descriptions = [@[description] mutableCopy];
         }
         ExhibitionDataStore.shared.descriptions = descriptions;
         // Display the texts
