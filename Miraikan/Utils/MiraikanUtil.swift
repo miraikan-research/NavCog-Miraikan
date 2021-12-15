@@ -54,6 +54,11 @@ class MiraikanUtil : NSObject {
         return false
     }
     
+    static public var wrappingMode : NSLineBreakMode {
+        let lang = NSLocalizedString("lang", comment: "")
+        return lang == "en" ? .byWordWrapping : .byCharWrapping
+    }
+    
     // Navigation preview on/off
     @objc static public var isPreview : Bool {
         return !isLocated || UserDefaults.standard.bool(forKey: "OnPreview")

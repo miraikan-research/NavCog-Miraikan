@@ -56,7 +56,7 @@ fileprivate class VoiceGuideRow : BaseRow {
         
         self.backgroundColor = .clear
         lblDesc.numberOfLines = 0
-        lblDesc.lineBreakMode = .byCharWrapping
+        lblDesc.lineBreakMode = MiraikanUtil.wrappingMode
         lblDesc.textColor = .black
         addSubview(lblDesc)
     }
@@ -66,7 +66,7 @@ fileprivate class VoiceGuideRow : BaseRow {
     }
     
     override func layoutSubviews() {
-        let lblSz = CGSize(width: innerSize.width, height: lblDesc.intrinsicContentSize.height)
+        let lblSz = CGSize(width: innerSize.width, height: 0)
         lblDesc.frame = CGRect(x: insets.left,
                                y: insets.top,
                                width: innerSize.width,
@@ -75,7 +75,7 @@ fileprivate class VoiceGuideRow : BaseRow {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let lblSz = CGSize(width: innerSizing(parentSize: size).width,
-                           height: lblDesc.intrinsicContentSize.height)
+                           height: 0)
         let height = insets.top + insets.bottom + lblDesc.sizeThatFits(lblSz).height
         return CGSize(width: size.width, height: height)
     }
@@ -110,12 +110,13 @@ fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let emptyCell = UITableViewCell()
-        guard let description = (items as? [String])?[indexPath.row] else { return emptyCell }
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-                as? VoiceGuideRow else { return emptyCell }
-        cell.title = description
-        return cell
+        if let description = (items as? [String])?[indexPath.row],
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+            as? VoiceGuideRow {
+            cell.title = description
+            return cell
+        }
+        return UITableViewCell()
     }
     
     func play() {
@@ -193,13 +194,7 @@ fileprivate class PanelView : BaseView {
         AudioControl.allCases.forEach({ control in
             let btn = BaseButton()
             
-            let imgName: String
-            if control == .main {
-                imgName = isPlaying ? "\(control.imgName)pause.fill" : "\(control.imgName).fill"
-            } else {
-                imgName = "\(control.imgName).fill"
-            }
-            
+            let imgName = "\(control.imgName).fill"
             let img = UIImage(systemName: imgName, withConfiguration: config)
             btn.setImage(img, for: .normal)
             btn.imageView?.tintColor = btn.isEnabled ? .systemBlue : .gray
@@ -254,11 +249,11 @@ fileprivate class PanelView : BaseView {
         btnNext.isEnabled = !isBottom
     }
     
-    public func setPlaying(_ isPlaying: Bool) {
+    public func setPlaying(_ isPlaying: Bool, isFinished : Bool = false) {
         self.isPlaying = isPlaying
         let config = UIImage.SymbolConfiguration(pointSize: 40)
-        let imgName = isPlaying ? "playpause.fill" : "play.fill"
-        let img = UIImage(systemName: imgName, withConfiguration: config)
+        let imgName = isPlaying ? "stop" : "play"
+        let img = UIImage(systemName: "\(imgName).fill", withConfiguration: config)
         let btnMain = controls[.main]!
         btnMain.setImage(img, for: .normal)
     }

@@ -428,13 +428,10 @@
         
         self.searchButton.enabled = !self.isNaviStarted;
         
-        self.navigationItem.leftBarButtonItem = nil;
+        // Show Setting Button for current location only
+        self.navigationItem.leftBarButtonItem = !self.destId ? _settingButton : nil;
         if ((isActive && !devMode) || previewMode || initFlag) {
         } else {
-            // Show Setting Button for current location only
-            if (!self.destId) {
-                self.navigationItem.leftBarButtonItem = _settingButton;
-            }
             UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleSettingLongPressGesture:)];
             longPressGesture.minimumPressDuration = 1.0;
             longPressGesture.numberOfTouchesRequired = 1;
@@ -1093,17 +1090,17 @@
     
     [_webView logToServer:@{@"event": @"navigation", @"status": @"finished"}];
     
-    if (self.isVoiceGuideOn) {
+    NSArray *pois = properties[@"pois"];
+    if (pois.count > 0 && self.isVoiceGuideOn) {
         // Get description texts from pois
-        NSArray *poisArray = properties[@"pois"];
-        NavPOI *pois = poisArray.lastObject;
+        NavPOI *poi = pois.lastObject;
         NSString *description;
-        if (pois.longDescription) {
-            description = pois.longDescription;
+        if (poi.longDescription) {
+            description = poi.longDescription;
         } else {
-            description = pois.text;
+            description = poi.text;
         }
-        NSLog(@"pois: %@", description);
+        NSLog(@"poi: %@", description);
         NSMutableArray *descriptions = [(NSArray*) ExhibitionDataStore.shared.descriptions mutableCopy];
         if (descriptions) {
             [descriptions addObject:description];
