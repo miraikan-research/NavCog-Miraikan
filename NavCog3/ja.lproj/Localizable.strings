@@ -213,7 +213,10 @@ NavCogの設定画面から
 "Current Location" = "現在地";
 "Preview" = "プレビュー";
 "not_located" = "測位範囲外です";
-"NavCog Settings" = "NavCog設定";
+"Speech Speed" = "読み上げスピード";
+"Preview Speed" = "プレビュースピード";
+"Speech Speed Description" = "読み上げスピード";
+"Preview Speed Description" = "プレビュースピード";
 
 // NaviButton Title
 "navi_button_title" = "この展示へナビ";

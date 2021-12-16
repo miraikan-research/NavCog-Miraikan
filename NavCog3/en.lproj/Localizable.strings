@@ -194,6 +194,10 @@ Feedback is sending...";
 "Current Location" = "Current Location";
 "Preview" = "Preview";
 "not_located" = "Outside of iBeacon area";
+"Speech Speed" = "";
+"Preview Speed" = "";
+"Speech Speed Description" = "The speech speed is set to";
+"Preview Speed Description" = "The preview speed is set to";
 
 // NaviButton Title
 "navi_button_title" = "Navigate to this exhibition";

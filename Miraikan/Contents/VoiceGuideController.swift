@@ -54,10 +54,12 @@ fileprivate class VoiceGuideRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.isAccessibilityElement = false
         self.backgroundColor = .clear
         lblDesc.numberOfLines = 0
         lblDesc.lineBreakMode = MiraikanUtil.wrappingMode
         lblDesc.textColor = .black
+        lblDesc.isAccessibilityElement = false
         addSubview(lblDesc)
     }
     
