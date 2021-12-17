@@ -43,43 +43,52 @@ private protocol AudioListDelegate {
 
 fileprivate class VoiceGuideRow : BaseRow {
     
-    private let lblDesc = AutoWrapLabel()
+    private let lblDescription = AutoWrapLabel()
     
-    public var title : String? {
-        didSet {
-            lblDesc.text = title
-        }
-    }
-    
+    // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.isAccessibilityElement = false
-        self.backgroundColor = .clear
-        lblDesc.numberOfLines = 0
-        lblDesc.lineBreakMode = MiraikanUtil.wrappingMode
-        lblDesc.textColor = .black
-        lblDesc.isAccessibilityElement = false
-        addSubview(lblDesc)
+        self.accessibilityElementsHidden = true
+        lblDescription.accessibilityElementsHidden = true
+        addSubview(lblDescription)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        lblDescription.text = nil
+    }
+    
     override func layoutSubviews() {
-        let lblSz = CGSize(width: innerSize.width, height: 0)
-        lblDesc.frame = CGRect(x: insets.left,
-                               y: insets.top,
-                               width: innerSize.width,
-                               height: lblDesc.sizeThatFits(lblSz).height)
+        super.layoutSubviews()
+        
+        let descSize = CGSize(width: innerSize.width,
+                              height: lblDescription.intrinsicContentSize.height)
+        lblDescription.frame = CGRect(x: insets.left,
+                                      y: insets.top,
+                                      width: innerSize.width,
+                                      height: lblDescription.sizeThatFits(descSize).height)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let lblSz = CGSize(width: innerSizing(parentSize: size).width,
-                           height: 0)
-        let height = insets.top + insets.bottom + lblDesc.sizeThatFits(lblSz).height
-        return CGSize(width: size.width, height: height)
+        let descSize = CGSize(width: innerSizing(parentSize: size).width,
+                              height: lblDescription.intrinsicContentSize.height)
+        let totalHeight = insets.top
+        + lblDescription.sizeThatFits(descSize).height
+        + insets.bottom
+        return CGSize(width: size.width, height: totalHeight)
+    }
+    
+    /**
+     Set data from DataSource
+     */
+    public func configure(title: String) {
+        lblDescription.text = title
+        lblDescription.sizeToFit()
     }
     
 }
@@ -115,7 +124,7 @@ fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
         if let description = (items as? [String])?[indexPath.row],
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
             as? VoiceGuideRow {
-            cell.title = description
+            cell.configure(title: description)
             return cell
         }
         return UITableViewCell()
@@ -207,6 +216,15 @@ fileprivate class PanelView : BaseView {
             })
             controls[control] = btn
             addSubview(btn)
+            
+            switch control {
+            case .main:
+                btn.accessibilityLabel = NSLocalizedString("btn_play", comment: "")
+            case .prev:
+                btn.accessibilityLabel = NSLocalizedString("btn_prev", comment: "")
+            case .next:
+                btn.accessibilityLabel = NSLocalizedString("btn_next", comment: "")
+            }
         })
         
         func controlAction(_ btn: UIButton) {
@@ -217,10 +235,8 @@ fileprivate class PanelView : BaseView {
                 isPlaying ? delegate?.play() : delegate?.pause()
             case .prev:
                 delegate?.playPrevious()
-                print("Previous description")
             case .next:
                 delegate?.playNext()
-                print("Next description")
             }
         }
         
@@ -251,13 +267,17 @@ fileprivate class PanelView : BaseView {
         btnNext.isEnabled = !isBottom
     }
     
-    public func setPlaying(_ isPlaying: Bool, isFinished : Bool = false) {
+    public func setPlaying(_ isPlaying: Bool) {
         self.isPlaying = isPlaying
         let config = UIImage.SymbolConfiguration(pointSize: 40)
         let imgName = isPlaying ? "stop" : "play"
         let img = UIImage(systemName: "\(imgName).fill", withConfiguration: config)
         let btnMain = controls[.main]!
         btnMain.setImage(img, for: .normal)
+        let desc = isPlaying
+            ? NSLocalizedString("btn_stop", comment: "")
+            : NSLocalizedString("btn_play", comment: "")
+        btnMain.accessibilityLabel = desc
     }
     
 }
@@ -268,12 +288,6 @@ class VoiceGuideController: BaseController {
         
         private let listView = VoiceGuideListView()
         private let panelView = PanelView()
-        
-        public var items: [String]? {
-            didSet {
-                listView.items = items
-            }
-        }
         
         override func setup() {
             super.setup()
@@ -292,8 +306,12 @@ class VoiceGuideController: BaseController {
             listView.frame = CGRect(x: 0, y: 0, width: frame.width, height: listHeight)
         }
         
+        func setItems(_ items: [String]) {
+            listView.items = items
+        }
+        
         func detectBound(rowNumber: Int) {
-            guard let count = items?.count else { return }
+            guard let count = (listView.items as? [String])?.count else { return }
             panelView.updateControl(isTop: rowNumber == 0,
                                     isBottom: rowNumber == count - 1)
         }
@@ -310,12 +328,6 @@ class VoiceGuideController: BaseController {
     
     private let innerView = InnerView()
     
-    public var items : [String]? {
-        didSet {
-            innerView.items = items
-        }
-    }
-    
     @objc init(title: String?) {
         super.init(innerView, title: title)
     }
@@ -324,8 +336,12 @@ class VoiceGuideController: BaseController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc public func setItems(_ items: [String]) {
-        self.items = items
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if let items = ExhibitionDataStore.shared.descriptions {
+            innerView.setItems(items)
+        }
     }
     
 }

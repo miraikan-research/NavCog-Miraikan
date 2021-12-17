@@ -247,3 +247,7 @@ NavCogの設定画面から
 "Voice Guide" = "音声ガイド";
 "Voice Guide On" = "音声ガイド\nON";
 "Voice Guide Off" = "音声ガイド\nOFF";
+"btn_prev" = "前の説明";
+"btn_next" = "次の説明";
+"btn_play" = "説明を読み上げる";
+"btn_stop" = "説明の読み上げを中止する";

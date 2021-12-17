@@ -216,8 +216,7 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
             }
             // Start preview outside of iBeacon environment
-            if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                self.isDestLoaded = YES;
+            if (!self.isNaviStarted && self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
                 NSString *msg = [MiraikanUtil isPreview]
                     ? NSLocalizedString(@"Loading preview",@"")
                     : NSLocalizedString(@"Loading, please wait",@"");
@@ -736,8 +735,6 @@
 {
     [_webView initTarget:[note userInfo][@"destinations"]];
     
-    if (self.isRouteRequested) { return; }
-    
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
     NavDestination *to = [nds destinationByID: self.destId];
@@ -762,10 +759,10 @@
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [nds requestRouteFrom:from.singleId
                        To:to._id withPreferences:prefs complete:^{
-        __weak typeof(self) weakself = self;
-        weakself.isRouteRequested = YES;
-        nds.previewMode = [MiraikanUtil isPreview];
-        nds.exerciseMode = NO;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            nds.previewMode = [MiraikanUtil isPreview];
+            nds.exerciseMode = NO;
+        });
     }];
 }
 
@@ -1033,21 +1030,6 @@
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [NavUtil hideModalWaiting];
-        NSArray *dummy = @[@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                           @"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                           @"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
-            [vc setItems:dummy];
-            
-            // Back to exhibition list instead of map
-            [self.navigationController popViewControllerAnimated:YES];
-            [self.navigationController pushViewController:vc animated:YES];
-        });
-    });
 }
 
 - (void)didNavigationStarted:(NSDictionary *)properties
@@ -1111,8 +1093,6 @@
         // Display the texts
         dispatch_async(dispatch_get_main_queue(), ^{
             VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
-            [vc setItems:descriptions];
-            
             // Back to exhibition list instead of map
             [self.navigationController popViewControllerAnimated:YES];
             [self.navigationController pushViewController:vc animated:YES];

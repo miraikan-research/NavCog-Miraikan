@@ -227,3 +227,7 @@ Feedback is sending...";
 "Voice Guide" = "Voice Guide";
 "Voice Guide On" = "Voice Guide \nON";
 "Voice Guide Off" = "Voice Guide \nOFF";
+"btn_prev" = "Previous description";
+"btn_next" = "Next description";
+"btn_play" = "Read the description";
+"btn_stop" = "Stop reading the description";
