@@ -175,14 +175,13 @@ fileprivate class MenuRow : BaseRow {
             }
             
             if isAvailable {
-                self.backgroundColor = .clear
+                btnItem.setTitleColor(.black, for: .normal)
+                btnItem.imageView?.tintColor = .black
+                btnItem.accessibilityLabel = title
+            } else {
+                self.selectionStyle = .none
                 btnItem.setTitleColor(.gray, for: .normal)
                 btnItem.imageView?.tintColor = .gray
-            } else {
-                self.backgroundColor = .lightGray
-                self.selectionStyle = .none
-                btnItem.setTitleColor(.lightText, for: .normal)
-                btnItem.imageView?.tintColor = .lightText
                 btnItem.accessibilityLabel = NSLocalizedString("blank_description", comment: "")
             }
         }
@@ -192,11 +191,10 @@ fileprivate class MenuRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // To prevent the button being selected on VoiceOver
+        self.backgroundColor = .clear
         btnItem.isEnabled = false
         // "Disabled" would not be read out
         btnItem.accessibilityTraits = .button
-        btnItem.setTitleColor(.gray, for: .normal)
-        btnItem.imageView?.tintColor = .gray
         addSubview(btnItem)
     }
     
@@ -236,14 +234,13 @@ fileprivate class NewsRow : BaseRow {
             }
             
             if isAvailable {
-                self.backgroundColor = .clear
+                btnItem.setTitleColor(.black, for: .normal)
+                btnItem.imageView?.tintColor = .black
+                btnItem.accessibilityLabel = title
+            } else {
+                self.selectionStyle = .none
                 btnItem.setTitleColor(.gray, for: .normal)
                 btnItem.imageView?.tintColor = .gray
-            } else {
-                self.backgroundColor = .lightGray
-                self.selectionStyle = .none
-                btnItem.setTitleColor(.lightText, for: .normal)
-                btnItem.imageView?.tintColor = .lightText
                 btnItem.accessibilityLabel = NSLocalizedString("blank_description", comment: "")
             }
         }
@@ -252,10 +249,9 @@ fileprivate class NewsRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.backgroundColor = .clear
         btnItem.isEnabled = false
         btnItem.accessibilityTraits = .button
-        btnItem.setTitleColor(.gray, for: .normal)
-        btnItem.imageView?.tintColor = .gray
         addSubview(btnItem)
     }
     

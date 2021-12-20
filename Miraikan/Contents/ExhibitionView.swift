@@ -40,6 +40,7 @@ import WebKit
 class ExhibitionView: BaseWebView {
     
     private var btnNavi : StyledButton?
+    private var lblDetail : AutoWrapLabel?
 
     private let gap = CGFloat(10)
     
@@ -49,38 +50,37 @@ class ExhibitionView: BaseWebView {
 
     
     // MARK: init
-    init(category: String, id: String, nodeId: String?) {
+    init(category: String, id: String, nodeId: String?, detail : String?, locations: [ExhibitionLocation]?) {
         self.id = id
         self.nodeId = nodeId
         super.init(frame: .zero)
         
         btnNavi = StyledButton()
-        if let btnNavi = btnNavi {
-            btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
-            btnNavi.sizeToFit()
-            btnNavi.tapAction({ [weak self] _ in
-                guard let self = self else { return }
-                guard let nav = self.navVC else { return }
-                if let nodeId = self.nodeId {
-                    nav.openMap(nodeId: nodeId)
-                }
-                if let locations = ExhibitionDataStore.shared.exhibitions?
-                    .first(where: { $0.id == self.id })?.locations {
-                    let vc = FloorSelectionController(title: nav.title)
-                    vc.items = [0: locations]
-                    nav.show(vc, sender: nil)
-                }
-            })
-            addSubview(btnNavi)
-        }
+        guard let btnNavi = btnNavi else { return }
+        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
+        btnNavi.sizeToFit()
+        btnNavi.tapAction({ [weak self] _ in
+            guard let self = self else { return }
+            guard let nav = self.navVC else { return }
+            if let nodeId = self.nodeId {
+                nav.openMap(nodeId: nodeId)
+            }
+            if let locations = locations {
+                let vc = FloorSelectionController(title: nav.title)
+                vc.items = [0: locations]
+                nav.show(vc, sender: nil)
+            }
+        })
+        addSubview(btnNavi)
         
-        if nodeId != nil && MiraikanUtil.routeMode == .blind {
-            // TODO: Add details for Permanent Exhibiton on Blind node when available
-            return
+        if MiraikanUtil.routeMode == .blind, let detail = detail {
+            let inner = detail.replacingOccurrences(of: "\n", with: "<br/>")
+            let html = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><p sytle='font-size: 18px;'>\(inner)</p>"
+            loadDetail(html: html)
+        } else {
+            let address = "\(MiraikanUtil.miraikanHost)/exhibitions/\(category)/\(id)/"
+            loadContent(address)
         }
-        
-        let address = "\(MiraikanUtil.miraikanHost)/exhibitions/\(category)/\(id)/"
-        loadContent(address)
     }
     
     init(permalink: String) {

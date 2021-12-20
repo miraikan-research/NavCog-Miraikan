@@ -28,6 +28,34 @@ import Foundation
 import UIKit
 
 
+/**
+ Model for ExhibitionList items
+ 
+ - Parameters:
+ - id : The primary index
+ - nodeId: The destination id
+ - title: The name displayed as link title
+ - category: The category
+ - counter: The location on FloorMap
+ - floor: The floor
+ - locations: Used for multiple locations
+ - intro: The description for general and wheelchair mode
+ - blindModeIntro: The description for blind mode
+ */
+private struct ExhibitionModel : Decodable {
+    let id : String
+    let nodeId : String?
+    let title : String
+    let category : String
+    let counter : String
+    let floor : Int?
+    let locations : [ExhibitionLocation]?
+    let intro : String
+    let blindIntro : String
+    let blindOverview : String
+    let blindDetail : String
+}
+
 fileprivate struct ExhibitionLinkModel : Decodable {
     let id : String
     let category : String
@@ -35,13 +63,15 @@ fileprivate struct ExhibitionLinkModel : Decodable {
     let nodeId : String?
     let counter : String
     let locations: [ExhibitionLocation]?
+    let blindDetail : String
 }
 
 fileprivate struct ExhibitionContentModel : Decodable {
     let title : String
     let nodeId : String?
     let intro : String
-    let blindModeIntro : String
+    let blindIntro : String
+    let blindOverview : String
     let locations: [ExhibitionLocation]?
 }
 
@@ -52,6 +82,7 @@ fileprivate class ContentRow : BaseRow {
     
     private let btnNavi = StyledButton()
     private let lblDescription = AutoWrapLabel()
+    private var lblOverview : AutoWrapLabel?
     
     private let gap = CGFloat(10)
     
@@ -63,9 +94,18 @@ fileprivate class ContentRow : BaseRow {
     }
     
     public func configure(_ model: ExhibitionContentModel) {
-        lblDescription.text = MiraikanUtil.routeMode == .blind
-        ? model.blindModeIntro
-        : model.intro
+        if MiraikanUtil.routeMode != .blind {
+            lblDescription.text = model.intro
+        } else {
+            lblDescription.text = model.blindIntro.isEmpty
+            ? model.blindIntro
+            : "＜概要＞\n\(model.blindIntro)\n"
+            lblOverview = AutoWrapLabel()
+            lblOverview?.text = model.blindOverview.isEmpty
+            ? model.blindOverview
+            : "＜概観＞\n\(model.blindOverview)"
+            addSubview(lblOverview!)
+        }
         btnNavi.setTitle("この展示へナビ", for: .normal)
         btnNavi.sizeToFit()
         btnNavi.tapAction({ [weak self] _ in
@@ -87,6 +127,9 @@ fileprivate class ContentRow : BaseRow {
         super.prepareForReuse()
         btnNavi.setTitle(nil, for: .normal)
         lblDescription.text = nil
+        if let lblOverview = lblOverview {
+            lblOverview.text = nil
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -104,19 +147,28 @@ fileprivate class ContentRow : BaseRow {
                                height: btnNavi.intrinsicContentSize.height)
         y += btnNavi.frame.height + gap
         
-        let descSize = CGSize(width: innerSize.width,
-                              height: lblDescription.intrinsicContentSize.height)
         lblDescription.frame = CGRect(x: insets.left,
                                       y: y,
                                       width: innerSize.width,
-                                      height: lblDescription.sizeThatFits(descSize).height)
+                                      height: lblDescription.sizeThatFits(innerSize).height)
+        
+        if let lblOverview = lblOverview {
+            y += lblDescription.frame.height
+            lblOverview.frame = CGRect(x: insets.left,
+                                       y: y,
+                                       width: innerSize.width,
+                                       height: lblOverview.sizeThatFits(innerSize).height)
+        }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let descSize = CGSize(width: innerSizing(parentSize: size).width,
-                              height: lblDescription.intrinsicContentSize.height)
-        let height = [btnNavi.intrinsicContentSize,
-                      lblDescription.sizeThatFits(descSize)].map({ $0.height })
+        let innerSz = innerSizing(parentSize: size)
+        var szList = [btnNavi.intrinsicContentSize,
+                        lblDescription.sizeThatFits(innerSz)]
+        if let lblOverview = lblOverview {
+            szList += [lblOverview.sizeThatFits(innerSz)]
+        }
+        let height = szList.map({ $0.height })
             .reduce((insets.top + insets.bottom), { $0 + $1 + gap})
         return CGSize(width: size.width, height: height)
     }
@@ -160,9 +212,8 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
             as? [ExhibitionModel]
         else { return }
         let sorted = models
-            .filter({ $0.category == category})
+            .filter({ $0.category == category || $0.category == "calendar" })
             .sorted(by: { $0.counter < $1.counter })
-        ExhibitionDataStore.shared.exhibitions = sorted
         var dividedItems = [Any]()
         sorted.forEach({ model in
             let title = model.counter != ""
@@ -173,12 +224,14 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
                                                 title: title,
                                                 nodeId: model.nodeId,
                                                 counter: model.counter,
-                                                locations: model.locations)
+                                                locations: model.locations,
+                                                blindDetail: model.blindDetail)
             dividedItems += [linkModel]
             let contentModel = ExhibitionContentModel(title: model.title,
                                                       nodeId: model.nodeId,
                                                       intro: model.intro,
-                                                      blindModeIntro: model.blindModeIntro,
+                                                      blindIntro: model.blindIntro,
+                                                      blindOverview: model.blindOverview,
                                                       locations: model.locations)
             dividedItems += [contentModel]
         })
@@ -206,9 +259,12 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
         // Only the link is clickable
         if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLinkModel {
             guard let nav = self.navigationController as? BaseNavController else { return }
+            let detail = MiraikanUtil.routeMode == .blind ? model.blindDetail : nil
             nav.show(BaseController(ExhibitionView(category: category,
                                                    id: model.id,
-                                                   nodeId: model.nodeId),
+                                                   nodeId: model.nodeId,
+                                                   detail: detail,
+                                                   locations: model.locations),
                                     title: model.title), sender: nil)
         }
     }
