@@ -284,7 +284,6 @@ fileprivate enum MenuItem {
     case suggestion
     case floorMap
     case nearestWashroom
-    case news
     case setting
     case aboutMiraikan
     case aboutApp
@@ -313,8 +312,6 @@ fileprivate enum MenuItem {
             return NSLocalizedString("Floor Plan", comment: "")
         case .nearestWashroom:
             return NSLocalizedString("Neareast Washroom", comment: "")
-        case .news:
-            return NSLocalizedString("News", comment: "")
         case .setting:
             return NSLocalizedString("Settings", comment: "")
         case .aboutMiraikan:
@@ -368,8 +365,6 @@ fileprivate enum MenuSection : CaseIterable {
     case reservation
     case suggestion
     case map
-    case news
-    case newsList
     case settings
     
     var items: [MenuItem]? {
@@ -386,8 +381,6 @@ fileprivate enum MenuSection : CaseIterable {
             return [.suggestion]
         case .map:
             return [.floorMap, .nearestWashroom]
-        case .news:
-            return [.news]
         case .settings:
             return [.setting, .aboutMiraikan, .aboutApp]
         default:
@@ -416,6 +409,8 @@ fileprivate enum MenuSection : CaseIterable {
             return NSLocalizedString("spex", comment: "")
         case .event:
             return NSLocalizedString("Events", comment: "")
+        case .exhibition:
+            return NSLocalizedString("museum_info", comment: "")
         default:
             return nil
         }
@@ -470,10 +465,6 @@ class Home : BaseListView {
                     menuItems[idx] = filtered
                     self.items = menuItems
                 })
-            } else if sec == .newsList {
-                menuItems[idx] = ["常設展・ドームシアターはオンラインのチケット予約が必要です",
-                                  "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
-                                  "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"]
             } else {
                 menuItems[idx] = []
             }
@@ -568,9 +559,7 @@ class Home : BaseListView {
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if sections?[section] == .news {
-            return 0
-        } else if section < (items as! [Int : Any]).count - 1 {
+        if section < (items as! [Int : Any]).count - 1 {
             return 35
         }
         return 20
