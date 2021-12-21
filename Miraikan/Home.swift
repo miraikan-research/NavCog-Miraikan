@@ -425,7 +425,7 @@ class Home : BaseListView {
     private let cardCellId = "cardCell"
     private let newsCellId = "newsCell"
     
-    private var sections : [MenuSection]?
+    private var sections: [MenuSection]?
     
     override func initTable(isSelectionAllowed: Bool) {
         // init the tableView
