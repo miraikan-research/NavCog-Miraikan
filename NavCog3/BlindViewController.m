@@ -1030,6 +1030,10 @@
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [NavUtil hideModalWaiting];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self.navigationController popViewControllerAnimated:YES];
+    });
 }
 
 - (void)didNavigationStarted:(NSDictionary *)properties

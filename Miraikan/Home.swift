@@ -306,7 +306,7 @@ fileprivate enum MenuItem {
         case .miraikanToday:
             return NSLocalizedString("Miraikan Today", comment: "")
         case .permanentExhibition:
-            return NSLocalizedString("Permanent Exhibitons", comment: "")
+            return NSLocalizedString("Permanent Exhibitions", comment: "")
         case .reservation:
             return NSLocalizedString("Reservation", comment: "")
         case .currentPosition:

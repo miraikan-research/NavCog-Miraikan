@@ -36,7 +36,7 @@ private protocol AudioControlDelegate {
 }
 
 private protocol AudioListDelegate {
-    func detectBound(rowNumber: Int)
+    func checkPosition(rowNumber: Int)
     func setPlaying(_ isPlaying: Bool)
     func checkStatus() -> Bool
 }
@@ -108,7 +108,7 @@ fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
                 self.tableView.selectRow(at: IndexPath(row: row, section: 0),
                                          animated: true,
                                          scrollPosition: .bottom)
-                listDelegate?.detectBound(rowNumber: row)
+                listDelegate?.checkPosition(rowNumber: row)
                 play(row: row)
             }
         }
@@ -146,7 +146,7 @@ fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
         let selected = self.tableView.indexPathForSelectedRow!
         let next = IndexPath(row: selected.row + 1, section: selected.section)
         self.tableView.selectRow(at: next, animated: true, scrollPosition: .bottom)
-        listDelegate?.detectBound(rowNumber: next.row)
+        listDelegate?.checkPosition(rowNumber: next.row)
         play(row: next.row)
     }
     
@@ -157,7 +157,7 @@ fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
         let selected = self.tableView.indexPathForSelectedRow!
         let prev = IndexPath(row: selected.row - 1, section: selected.section)
         self.tableView.selectRow(at: prev, animated: true, scrollPosition: .bottom)
-        listDelegate?.detectBound(rowNumber: prev.row)
+        listDelegate?.checkPosition(rowNumber: prev.row)
         play(row: prev.row)
     }
     
@@ -239,7 +239,6 @@ fileprivate class PanelView : BaseView {
                 delegate?.playNext()
             }
         }
-        
     }
     
     override func layoutSubviews() {
@@ -278,6 +277,7 @@ fileprivate class PanelView : BaseView {
             ? NSLocalizedString("btn_stop", comment: "")
             : NSLocalizedString("btn_play", comment: "")
         btnMain.accessibilityLabel = desc
+        UIAccessibility.post(notification: .screenChanged, argument: btnMain)
     }
     
 }
@@ -310,7 +310,7 @@ class VoiceGuideController: BaseController {
             listView.items = items
         }
         
-        func detectBound(rowNumber: Int) {
+        func checkPosition(rowNumber: Int) {
             guard let count = (listView.items as? [String])?.count else { return }
             panelView.updateControl(isTop: rowNumber == 0,
                                     isBottom: rowNumber == count - 1)
@@ -338,6 +338,8 @@ class VoiceGuideController: BaseController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UIAccessibility.post(notification: .screenChanged, argument: self)
         
         if let items = ExhibitionDataStore.shared.descriptions {
             innerView.setItems(items)
