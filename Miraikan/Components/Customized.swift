@@ -273,6 +273,7 @@ class RadioButton: BaseButton {
     }
     
     private let radioSize = CGSize(width: 24, height: 24)
+    private var img : UIImage?
     
     override init(frame: CGRect) {
         isChecked = false
@@ -286,7 +287,7 @@ class RadioButton: BaseButton {
     
     private func setImage() {
         let imgName = isChecked ? "radio_checked" : "radio_unchecked"
-        let img = UIImage(named: imgName)
+        img = UIImage(named: imgName)
         self.titleLabel?.sizeToFit()
         self.setImage(img, for: .normal)
     }
@@ -294,15 +295,10 @@ class RadioButton: BaseButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let imgSize = CGSize(width: 46, height: 46)
-        let scaleFactor = MiraikanUtil.calculateScaleFactor(radioSize,
-                                                    frameWidth: radioSize.width,
-                                                    imageSize: imgSize)
-    
-        self.imageView?.frame = CGRect(x: 0,
-                                       y: 0,
-                                       width: imgSize.width * scaleFactor,
-                                       height: imgSize.height * scaleFactor)
+        let imageAdaptor = ImageAdaptor(img: img)
+        let rescaledSize = imageAdaptor.scaleImage(viewSize: radioSize,
+                                                   frameWidth: radioSize.width)
+        self.imageView?.frame = CGRect(origin: .zero, size: rescaledSize)
         self.titleLabel?.frame.size = CGSize(width: self.frame.width - radioSize.width,
                                              height: self.titleLabel!.intrinsicContentSize.height)
         self.titleLabel?.frame.origin.x = radioSize.width + CGFloat(10)

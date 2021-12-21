@@ -69,24 +69,23 @@ class FloorMapView: BaseView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.FLOOR_MAP.size,
-                                                    frameWidth: frame.width,
-                                                    imageSize: image.size)
-        
         let gap = CGFloat(10)
         var y = safeAreaInsets.top
         lblTitle.frame.origin = CGPoint(x: 0, y: y)
-        
         y += lblTitle.frame.height + gap
-        lblPlace.frame.origin = CGPoint(x: 0, y: y)
         
+        lblPlace.frame.origin = CGPoint(x: 0, y: y)
         y += lblPlace.frame.height + gap
+        
+        let imgAdaptor = ImageAdaptor(img: image)
+        let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.FLOOR_MAP.size,
+                                               frameWidth: frame.width)
         map.frame = CGRect(x: 0,
                            y: y,
-                           width: image.size.width * scaleFactor,
-                           height: image.size.height * scaleFactor)
-        
+                           width: scaledSize.width,
+                           height: scaledSize.height)
         y += map.frame.height + gap
+        
         btnNav.center.x = center.x
         btnNav.frame.origin.y = y
         btnNav.frame.size.width += 30

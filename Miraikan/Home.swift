@@ -67,13 +67,13 @@ fileprivate class CardRow : BaseRow {
     // Sizing
     private let gapX = CGFloat(10)
     private let gapY: CGFloat = 5
+    private let imgAdaptor = ImageAdaptor()
     
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(imgView)
         addSubview(lblTitle)
-//        addSubview(lblPlace)
     }
     
     required init?(coder: NSCoder) {
@@ -113,13 +113,14 @@ fileprivate class CardRow : BaseRow {
     // MARK: layout
     override func layoutSubviews() {
         let halfWidth = CGFloat(frame.width / 2)
-        let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.CARD.size,
-                                                    frameWidth: halfWidth - (insets.left + gapX),
-                                                    imageSize: img.size)
+        
+        let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.CARD.size,
+                                               frameWidth: halfWidth - (insets.left + gapX),
+                                               imageSize: img.size)
         imgView.frame = CGRect(x: insets.left,
                                y: insets.top,
-                               width: img.size.width * scaleFactor,
-                               height: img.size.height * scaleFactor)
+                               width: scaledSize.width,
+                               height: scaledSize.height)
         let szFit = CGSize(width: halfWidth, height: innerSize.height)
         lblTitle.frame = CGRect(x: halfWidth,
                                 y: insets.top,
@@ -136,10 +137,10 @@ fileprivate class CardRow : BaseRow {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let halfWidth = CGFloat(size.width / 2)
-        let scaleFactor = MiraikanUtil.calculateScaleFactor(ImageType.CARD.size,
-                                                    frameWidth: halfWidth - (insets.left + gapX),
-                                                    imageSize: img.size)
-        let heightLeft = insets.top + img.size.height * scaleFactor
+        let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.CARD.size,
+                                               frameWidth: halfWidth - (insets.left + gapX),
+                                               imageSize: img.size)
+        let heightLeft = insets.top + scaledSize.height
         let szFit = CGSize(width: halfWidth - insets.right, height: size.height)
         var heightList = [lblTitle.sizeThatFits(szFit).height]
         if isOnline {
@@ -174,14 +175,13 @@ fileprivate class MenuRow : BaseRow {
             }
             
             if isAvailable {
-                self.backgroundColor = .clear
+                btnItem.setTitleColor(.black, for: .normal)
+                btnItem.imageView?.tintColor = .black
+                btnItem.accessibilityLabel = title
+            } else {
+                self.selectionStyle = .none
                 btnItem.setTitleColor(.gray, for: .normal)
                 btnItem.imageView?.tintColor = .gray
-            } else {
-                self.backgroundColor = .lightGray
-                self.selectionStyle = .none
-                btnItem.setTitleColor(.lightText, for: .normal)
-                btnItem.imageView?.tintColor = .lightText
                 btnItem.accessibilityLabel = NSLocalizedString("blank_description", comment: "")
             }
         }
@@ -191,11 +191,10 @@ fileprivate class MenuRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // To prevent the button being selected on VoiceOver
+        self.backgroundColor = .clear
         btnItem.isEnabled = false
         // "Disabled" would not be read out
         btnItem.accessibilityTraits = .button
-        btnItem.setTitleColor(.gray, for: .normal)
-        btnItem.imageView?.tintColor = .gray
         addSubview(btnItem)
     }
     
@@ -235,14 +234,13 @@ fileprivate class NewsRow : BaseRow {
             }
             
             if isAvailable {
-                self.backgroundColor = .clear
+                btnItem.setTitleColor(.black, for: .normal)
+                btnItem.imageView?.tintColor = .black
+                btnItem.accessibilityLabel = title
+            } else {
+                self.selectionStyle = .none
                 btnItem.setTitleColor(.gray, for: .normal)
                 btnItem.imageView?.tintColor = .gray
-            } else {
-                self.backgroundColor = .lightGray
-                self.selectionStyle = .none
-                btnItem.setTitleColor(.lightText, for: .normal)
-                btnItem.imageView?.tintColor = .lightText
                 btnItem.accessibilityLabel = NSLocalizedString("blank_description", comment: "")
             }
         }
@@ -251,10 +249,9 @@ fileprivate class NewsRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.backgroundColor = .clear
         btnItem.isEnabled = false
         btnItem.accessibilityTraits = .button
-        btnItem.setTitleColor(.gray, for: .normal)
-        btnItem.imageView?.tintColor = .gray
         addSubview(btnItem)
     }
     
@@ -287,7 +284,6 @@ fileprivate enum MenuItem {
     case suggestion
     case floorMap
     case nearestWashroom
-    case news
     case setting
     case aboutMiraikan
     case aboutApp
@@ -305,7 +301,7 @@ fileprivate enum MenuItem {
         case .miraikanToday:
             return NSLocalizedString("Miraikan Today", comment: "")
         case .permanentExhibition:
-            return NSLocalizedString("Permanent Exhibitons", comment: "")
+            return NSLocalizedString("Permanent Exhibitions", comment: "")
         case .reservation:
             return NSLocalizedString("Reservation", comment: "")
         case .currentPosition:
@@ -316,8 +312,6 @@ fileprivate enum MenuItem {
             return NSLocalizedString("Floor Plan", comment: "")
         case .nearestWashroom:
             return NSLocalizedString("Neareast Washroom", comment: "")
-        case .news:
-            return NSLocalizedString("News", comment: "")
         case .setting:
             return NSLocalizedString("Settings", comment: "")
         case .aboutMiraikan:
@@ -371,8 +365,6 @@ fileprivate enum MenuSection : CaseIterable {
     case reservation
     case suggestion
     case map
-    case news
-    case newsList
     case settings
     
     var items: [MenuItem]? {
@@ -389,8 +381,6 @@ fileprivate enum MenuSection : CaseIterable {
             return [.suggestion]
         case .map:
             return [.floorMap, .nearestWashroom]
-        case .news:
-            return [.news]
         case .settings:
             return [.setting, .aboutMiraikan, .aboutApp]
         default:
@@ -400,14 +390,13 @@ fileprivate enum MenuSection : CaseIterable {
     
     var endpoint: String? {
         let lang = NSLocalizedString("lang", comment: "")
-        // TODO: Remove fileLang when files in all languages are available
-        let fileLang = lang == "ja" ? lang : "en"
+        // Caution: data are not fully available for other languages than Japanese.
         switch self {
         case .spex:
-            return "/exhibitions/spexhibition/_assets/json/\(fileLang).json"
+            return "/exhibitions/spexhibition/_assets/json/\(lang).json"
         case .event:
             let year = MiraikanUtil.calendar().component(.year, from: Date())
-            return "/events/_assets/json/\(year)/\(fileLang).json"
+            return "/events/_assets/json/\(year)/\(lang).json"
         default:
             return nil
         }
@@ -419,6 +408,8 @@ fileprivate enum MenuSection : CaseIterable {
             return NSLocalizedString("spex", comment: "")
         case .event:
             return NSLocalizedString("Events", comment: "")
+        case .exhibition:
+            return NSLocalizedString("museum_info", comment: "")
         default:
             return nil
         }
@@ -433,7 +424,7 @@ class Home : BaseListView {
     private let cardCellId = "cardCell"
     private let newsCellId = "newsCell"
     
-    private var sections : [MenuSection]?
+    private var sections: [MenuSection]?
     
     override func initTable(isSelectionAllowed: Bool) {
         // init the tableView
@@ -451,13 +442,14 @@ class Home : BaseListView {
         
         guard let _sections = sections?.enumerated() else { return }
         
+        let httpAdaptor = HTTPAdaptor()
         var menuItems = [Int : [Any]]()
         for (idx, sec) in _sections {
             if let _items = sec.items {
                 menuItems[idx] = _items
             } else if let _endpoint = sec.endpoint {
                 menuItems[idx] = []
-                MiraikanUtil.http(endpoint: _endpoint, success: { [weak self] data in
+                httpAdaptor.http(endpoint: _endpoint, success: { [weak self] data in
                     guard let self = self else { return }
                     
                     guard let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data)
@@ -471,12 +463,7 @@ class Home : BaseListView {
                     })
                     menuItems[idx] = filtered
                     self.items = menuItems
-                    
                 })
-            } else if sec == .newsList {
-                menuItems[idx] = ["常設展・ドームシアターはオンラインのチケット予約が必要です",
-                                  "9月11日(土)18：00からニコニコ生放送　イグノーベル賞を科学コミュニケーターと楽しもう",
-                                  "10月5日(火)から「ジオ・コスモス」の公開を一時休止します"]
             } else {
                 menuItems[idx] = []
             }
@@ -571,9 +558,7 @@ class Home : BaseListView {
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if sections?[section] == .news {
-            return 0
-        } else if section < (items as! [Int : Any]).count - 1 {
+        if section < (items as! [Int : Any]).count - 1 {
             return 35
         }
         return 20

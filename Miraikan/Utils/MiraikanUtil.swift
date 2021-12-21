@@ -54,6 +54,29 @@ class MiraikanUtil : NSObject {
         return false
     }
     
+    static public var wrappingMode : NSLineBreakMode {
+        let lang = NSLocalizedString("lang", comment: "")
+        return lang == "en" ? .byWordWrapping : .byCharWrapping
+    }
+    
+    static public var speechSpeed : Float {
+        var val = UserDefaults.standard.float(forKey: "speech_speed")
+        if val == 0 {
+            val = 0.55
+            UserDefaults.standard.set(val, forKey: "speech_speed")
+        }
+        return val
+    }
+    
+    static public var previewSpeed : Float {
+        var val = UserDefaults.standard.float(forKey: "preview_speed")
+        if val == 0 {
+            val = 5
+            UserDefaults.standard.set(val, forKey: "preview_speed")
+        }
+        return val
+    }
+    
     // Navigation preview on/off
     @objc static public var isPreview : Bool {
         return !isLocated || UserDefaults.standard.bool(forKey: "OnPreview")
@@ -139,57 +162,6 @@ class MiraikanUtil : NSObject {
             return nil
         }
     }
-    
-    // MARK: UI Usage
-    static public func calculateScaleFactor(_ size: CGSize, frameWidth: CGFloat, imageSize: CGSize) -> CGFloat {
-        let targetSize = CGSize(width: frameWidth,
-                                height: frameWidth * (size.height / size.width))
-        
-        let widthScaleRatio = targetSize.width / imageSize.width
-        let heightScaleRatio = targetSize.height / imageSize.height
-        return min(widthScaleRatio, heightScaleRatio)
-    }
-    
-    // MARK: HTTP
-    static public func http(host: String = Host.miraikan.address,
-                            endpoint: String,
-                            params: [URLQueryItem]? = nil,
-                            method: String = HttpMethod.GET.rawValue,
-                            headers: [String: String]? = nil,
-                            body: Data? = nil,
-                            success: ((Data)->())?,
-                            fail: (()->())? = nil) {
-        var url = URLComponents(string: "\(host)\(endpoint)")!
-        var req = URLRequest(url: url.url!)
-        
-        if let items = params {
-            url.queryItems = items
-        }
-          
-        req.httpMethod = method
-          
-        if let b = body {
-            req.httpBody = b
-        }
-          
-        if let h = headers {
-            req.allHTTPHeaderFields = h
-        }
-          
-        URLSession.shared.dataTask(with: req) { (data, res, err) in
-            if let _err = err,
-               let _f = fail {
-                print(_err.localizedDescription)
-                DispatchQueue.main.async { _f() }
-            }
-            
-            if let _data = data,
-               let _f = success {
-                DispatchQueue.main.async { _f(_data) }
-            }
-        }.resume()
-    }
-    
     
     // MARK: Date and Calendar
     static public func calendar() -> Calendar {

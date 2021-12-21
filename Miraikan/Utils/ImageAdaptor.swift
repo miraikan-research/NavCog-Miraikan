@@ -1,9 +1,10 @@
 //
-//  ListController.swift
+//
+//  ImageAdaptor.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
- * Copyright (c) 2021 © Miraikan - The National Museum of Emerging Science and Innovation
+ * Copyright (c) 2021 © Miraikan - The National Museum of Emerging Science and Innovation  
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,39 +26,37 @@
  *******************************************************************************/
 
 import Foundation
-import UIKit
 
 /**
- The default UIViewController to be instantiated as the root of BaseNavController
- 
- - Parameters:
- - view: The default UIView
- - title: The title for NavigationBar
+ Instantiate it for UIImage usage
  */
-class BaseController: UIViewController {
+class ImageAdaptor {
     
-    private let sceneView : UIView
+    private let img : UIImage?
     
-    var nav : BaseNavController? {
-        if let nav = self.navigationController as? BaseNavController {
-            return nav
-        }
-        return nil
+    init(img: UIImage? = nil) {
+        self.img = img
     }
     
-    // MARK: init
-    @objc init(_ view: UIView, title: String?) {
-        self.sceneView = view
-        super.init(nibName: nil, bundle: nil)
-        self.title = title
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func loadView() {
-        self.view = sceneView
+    /**
+     Adjust the size the fit the screen
+     
+     - Parameters:
+     - viewSize: Size of the UIView that uses the UIImage
+     - frameWidth: Width of the outter frame
+     - imageSize: Size of the UIImage
+     */
+    public func scaleImage(viewSize: CGSize, frameWidth: CGFloat, imageSize: CGSize? = nil) -> CGSize {
+        guard let imgSize = img?.size ?? imageSize else { return .zero }
+        
+        let targetSize = CGSize(width: frameWidth,
+                                height: frameWidth * (viewSize.height / viewSize.width))
+        
+        let widthScaleRatio = targetSize.width / imgSize.width
+        let heightScaleRatio = targetSize.height / imgSize.height
+        let factor = min(widthScaleRatio, heightScaleRatio)
+        return CGSize(width: imgSize.width * factor,
+                      height: imgSize.height * factor)
     }
     
 }

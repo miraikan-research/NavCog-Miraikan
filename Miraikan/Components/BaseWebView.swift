@@ -68,6 +68,10 @@ class BaseWebView: BaseView, WKNavigationDelegate {
         webView.load(req)
     }
     
+    public func loadDetail(html: String) {
+        webView.loadHTMLString(html, baseURL: nil)
+    }
+    
     // MARK: WKNavigationDelegate
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         lblLoading.text = NSLocalizedString("web_loading", comment: "")

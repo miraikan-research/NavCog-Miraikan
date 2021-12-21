@@ -15,7 +15,6 @@
     UIEdgeInsets insetsVoiceGuide;
     UIImage *imgVoiceGuide;
     NSString *imgName;
-    BOOL isVoiceGuideOn;
     UILabel *lblDesc;
 }
 
@@ -32,40 +31,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
+    self.isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
     
     lblDesc = [[UILabel alloc] init];
     lblDesc.textColor = UIColor.whiteColor;
     [lblDesc adjustsFontSizeToFitWidth];
     lblDesc.textAlignment = NSTextAlignmentCenter;
     lblDesc.numberOfLines = 2;
-    lblDesc.text = isVoiceGuideOn
-        ? NSLocalizedString(@"Voice Guide On", @"")
-        : NSLocalizedString(@"Voice Guide Off", @"");
-    [lblDesc sizeToFit];
     lblDesc.isAccessibilityElement = NO;
     [self.view addSubview:lblDesc];
     
     btnVoiceGuide = [[BaseButton alloc] init];
-    [btnVoiceGuide setAccessibilityLabel:lblDesc.text];
-    imgName = isVoiceGuideOn ? @"icons8-sound-24" : @"icons8-mute-24";
-    imgVoiceGuide = [UIImage imageNamed:imgName];
-    [btnVoiceGuide setImage:imgVoiceGuide forState:UIControlStateNormal];
     btnVoiceGuide.layer.backgroundColor = UIColor.whiteColor.CGColor;
     btnVoiceGuide.layer.cornerRadius = 10;
     insetsVoiceGuide = UIEdgeInsetsMake(10, 10, 10, 10);
     btnVoiceGuide.imageEdgeInsets = insetsVoiceGuide;
+    [self updateButton:self.isVoiceGuideOn];
     [btnVoiceGuide tapAction:^(UIButton* _) {
-        isVoiceGuideOn = !isVoiceGuideOn;
-        [NSUserDefaults.standardUserDefaults setBool:isVoiceGuideOn forKey:@"isVoiceGuideOn"];
-        imgName = isVoiceGuideOn ? @"icons8-sound-24" : @"icons8-mute-24";
-        imgVoiceGuide = [UIImage imageNamed:imgName];
-        [btnVoiceGuide setImage:[UIImage imageNamed:imgName] forState:UIControlStateNormal];
-        lblDesc.text = isVoiceGuideOn
-            ? NSLocalizedString(@"Voice Guide On", @"")
-            : NSLocalizedString(@"Voice Guide Off", @"");
-        [btnVoiceGuide setAccessibilityLabel:lblDesc.text];
-        [lblDesc sizeToFit];
+        self.isVoiceGuideOn = !self.isVoiceGuideOn;
+        [NSUserDefaults.standardUserDefaults setBool:self.isVoiceGuideOn forKey:@"isVoiceGuideOn"];
+        [self updateButton:self.isVoiceGuideOn];
     }];
     
     [self.view addSubview:btnVoiceGuide];
@@ -82,6 +67,17 @@
                                      imgVoiceGuide.size.height + insetsVoiceGuide.top + insetsVoiceGuide.bottom);
     [btnVoiceGuide setFrame:CGRectMake(0, 0, szVoiceGuide.width, szVoiceGuide.height)];
     [btnVoiceGuide setCenter:CGPointMake(lblDesc.center.x, lblDesc.frame.origin.y - 5 - szVoiceGuide.height / 2)];
+}
+
+- (void)updateButton:(BOOL)isOn {
+    lblDesc.text = isOn
+        ? NSLocalizedString(@"Voice Guide On", @"")
+        : NSLocalizedString(@"Voice Guide Off", @"");
+    [lblDesc sizeToFit];
+    [btnVoiceGuide setAccessibilityLabel:lblDesc.text];
+    imgName = isOn ? @"icons8-sound-24" : @"icons8-mute-24";
+    imgVoiceGuide = [UIImage imageNamed:imgName];
+    [btnVoiceGuide setImage:imgVoiceGuide forState:UIControlStateNormal];
 }
 
 - (void)showVoiceGuide {

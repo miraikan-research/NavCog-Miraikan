@@ -60,8 +60,6 @@ fileprivate class CurrentLocationRow : BaseRow {
     }
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        
         lblDescription.frame.origin = CGPoint(x: insets.left, y: insets.top)
         lblLocation.frame.origin = CGPoint(x: insets.left, y: insets.top + lblDescription.frame.height + gap)
     }
@@ -120,37 +118,106 @@ fileprivate class PreviewSwitchRow : BaseRow {
     
 }
 
-fileprivate class NavCogRow : BaseRow {
+fileprivate struct SliderModel {
+    let min : Float
+    let max : Float
+    let defaultValue : Float
+    let step: Float
+    let format: String
+    let title: String
+    let name: String
+    let desc: String
+}
+
+fileprivate class SliderRow : BaseRow {
     
-    private let btnItem = ChevronButton()
+    private let lblDescription = UILabel()
+    private let lblValue = UILabel()
+    private let slider = UISlider()
     
-    // MARK: init
+    private var model : SliderModel?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        // To prevent the button being selected on VoiceOver
-        btnItem.isEnabled = false
-        // "Disabled" would not be read out
-        btnItem.isAccessibilityElement = false
-        btnItem.setTitle(NSLocalizedString("NavCog Settings", comment: ""), for: .normal)
-        btnItem.setTitleColor(.black, for: .normal)
-        btnItem.imageView?.tintColor = .black
-        btnItem.sizeToFit()
-        addSubview(btnItem)
+        
+        lblDescription.font = .boldSystemFont(ofSize: 16)
+        addSubview(lblDescription)
+        lblValue.textAlignment = .left
+        addSubview(lblValue)
+        slider.addTarget(self, action: #selector(valueChanged(_:)), for: .valueChanged)
+        addSubview(slider)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: layout
+    public func configure(_ model: SliderModel) {
+        lblDescription.text = model.title
+        lblDescription.sizeToFit()
+        let val = model.defaultValue
+        lblValue.text = String(format: model.format,
+                               round(val) == val ? Int(val) : val)
+        let txtVal = "\(model.desc) \(lblValue.text!)"
+        lblValue.accessibilityLabel = "label: \(txtVal)"
+        self.model = model
+        slider.minimumValue = model.min
+        slider.maximumValue = model.max
+        slider.value = model.defaultValue
+        slider.accessibilityValue = txtVal
+    }
+    
+    @objc private func valueChanged(_ sender: UISlider) {
+        if let step = model?.step,
+            let fmt = model?.format,
+            let name = model?.name,
+            let desc = model?.desc {
+            let val = round(sender.value / step) * step
+            print("\(sender.value), \(val)")
+            sender.value = val
+            let updated = String(format: fmt, round(step) == step ? Int(val) : val)
+            let current = lblValue.text
+            if updated != current {
+                lblValue.text = updated
+                let txtVal = "\(desc) \(updated)"
+                lblValue.accessibilityLabel = "label: \(txtVal)"
+                UserDefaults.standard.set(val, forKey: name)
+                if name == NSLocalizedString("Speech Speed", comment: "") {
+                    slider.accessibilityValue = ""
+                    let tts = DefaultTTS()
+                    tts.speak(txtVal, callback: { [weak self] in
+                        guard let self = self else { return }
+                        self.slider.accessibilityValue = txtVal
+                    })
+                } else {
+                    self.slider.accessibilityValue = txtVal
+                }
+            }
+        }
+        
+    }
+    
     override func layoutSubviews() {
-        btnItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
-                               size: btnItem.sizeThatFits(innerSize))
+        var y = insets.top
+        lblDescription.frame.origin = CGPoint(x: insets.left, y: insets.top)
+        y += lblDescription.frame.height
+        
+        let colLeftWidth: CGFloat = innerSize.width / 5
+        let colRightWidth: CGFloat = colLeftWidth * 4
+        
+        lblValue.frame = CGRect(x: insets.left,
+                                y: y,
+                                width: colLeftWidth,
+                                height: lblValue.intrinsicContentSize.height)
+        slider.center.y = lblValue.center.y
+        slider.frame.origin.x = insets.left + colLeftWidth
+        slider.frame.size.width = colRightWidth
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let innerSz = innerSizing(parentSize: size)
-        let height = insets.top + insets.bottom + btnItem.sizeThatFits(innerSz).height
+        let height = [lblValue, lblDescription]
+            .map({ $0.intrinsicContentSize.height })
+            .reduce((insets.top + insets.bottom), { $0 + $1 })
         return CGSize(width: size.width, height: height)
     }
     
@@ -160,7 +227,12 @@ class NaviSettingController : BaseListController, BaseListDelegate {
     
     private let locationId = "locationCell"
     private let previewId = "previewCell"
-    private let navCogId = "navCogCell"
+    private let sliderId = "sliderCell"
+    
+    private struct CellModel {
+        let cellId : String
+        let model : Any?
+    }
     
     override func initTable() {
         super.initTable()
@@ -169,33 +241,52 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         self.tableView.separatorStyle = .singleLine
         self.tableView.register(CurrentLocationRow.self, forCellReuseIdentifier: locationId)
         self.tableView.register(PreviewSwitchRow.self, forCellReuseIdentifier: previewId)
-        self.tableView.register(NavCogRow.self, forCellReuseIdentifier: navCogId)
-        self.items = [locationId, previewId, navCogId]
+        self.tableView.register(SliderRow.self, forCellReuseIdentifier: sliderId)
+        
+        self.items = [CellModel(cellId: locationId, model: nil),
+                      CellModel(cellId: previewId, model: nil),
+                      CellModel(cellId: sliderId,
+                                model: SliderModel(min: 0.1,
+                                                   max: 1,
+                                                   defaultValue: MiraikanUtil.speechSpeed,
+                                                   step: 0.05,
+                                                   format: "%.2f",
+                                                   title: NSLocalizedString("Speech Speed", comment: "Name of the label"),
+                                                   name: "speech_speed",
+                                                   desc: NSLocalizedString("Speech Speed Description",
+                                                                           comment: "Description for VoiceOver"))),
+                      CellModel(cellId: sliderId,
+                                model: SliderModel(min: 1,
+                                                   max: 10,
+                                                   defaultValue: MiraikanUtil.previewSpeed,
+                                                   step: 1,
+                                                   format: "%d",
+                                                   title: NSLocalizedString("Preview Speed", comment: "Name of the label"),
+                                                   name: "preview_speed",
+                                                   desc: NSLocalizedString("Preview Speed Description",
+                                                                           comment: "Description for VoiceOver")))
+        ]
     }
     
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
-        guard let cellId = (items as? [String])?[indexPath.row] else { return nil }
+        let item = (items as? [CellModel])?[indexPath.row]
+        guard let cellId = item?.cellId else { return nil }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
         if let locationCell = cell as? CurrentLocationRow {
             return locationCell
         } else if let previewCell = cell as? PreviewSwitchRow {
             return previewCell
-        } else if let navCog3Cell = cell as? NavCogRow {
-            return navCog3Cell
+        } else if let sliderCell = cell as? SliderRow,
+                    let model = item?.model as? SliderModel {
+            sliderCell.configure(model)
+            return sliderCell
         }
         
         return nil
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cellId = (items as? [String])?[indexPath.row],
-            cellId == navCogId,
-           let navVC = self.navigationController {
-            let vc = UIStoryboard(name: "Main", bundle: nil)
-                .instantiateViewController(withIdentifier: "setting_vc") as! SettingViewController
-            navVC.show(vc, sender: nil)
-        }
         super.tableView(tableView, didSelectRowAt: indexPath)
     }
     

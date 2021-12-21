@@ -194,10 +194,11 @@ NavCogの設定画面から
 // Menu Section Titles
 "spex" = "特別展";
 "Events" = "イベント";
+"museum_info" = "来館者情報";
 
 // Menu Titles
 "Miraikan Today" = "今日の未来館";
-"Permanent Exhibitons" = "常設展示";
+"Permanent Exhibitions" = "常設展示";
 "Current Position" = "現在位置";
 "Reservation" = "予約";
 "Suggested Routes" = "おすすめルート";
@@ -213,7 +214,10 @@ NavCogの設定画面から
 "Current Location" = "現在地";
 "Preview" = "プレビュー";
 "not_located" = "測位範囲外です";
-"NavCog Settings" = "NavCog設定";
+"Speech Speed" = "読み上げスピード";
+"Preview Speed" = "プレビュースピード";
+"Speech Speed Description" = "読み上げスピード";
+"Preview Speed Description" = "プレビュースピード";
 
 // NaviButton Title
 "navi_button_title" = "この展示へナビ";
@@ -244,3 +248,7 @@ NavCogの設定画面から
 "Voice Guide" = "音声ガイド";
 "Voice Guide On" = "音声ガイド\nON";
 "Voice Guide Off" = "音声ガイド\nOFF";
+"btn_prev" = "前の説明";
+"btn_next" = "次の説明";
+"btn_play" = "説明を読み上げる";
+"btn_stop" = "説明の読み上げを中止する";

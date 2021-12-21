@@ -67,9 +67,6 @@
     BOOL initFlag;
     BOOL rerouteFlag;
     
-    // For iBeacon environment
-    BOOL isNaviStarted;
-    
     UIColor *defaultColor;
     
     DialogViewHelper *dialogHelper;
@@ -96,7 +93,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    isNaviStarted = NO;
+    self.isNaviStarted = NO;
+    self.isDestLoaded = NO;
+    self.isRouteRequested = NO;
     
     initialViewDidAppear = YES;
     
@@ -215,10 +214,13 @@
                   @"sync": @(YES)
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
-                // Start preview outside of iBeacon environment
-                if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
-                }
+            }
+            // Start preview outside of iBeacon environment
+            if (!self.isNaviStarted && self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                NSString *msg = [MiraikanUtil isPreview]
+                    ? NSLocalizedString(@"Loading preview",@"")
+                    : NSLocalizedString(@"Loading, please wait",@"");
+                [NavUtil showModalWaitingWithMessage:msg];
             }
             [self updateView];
             [timer invalidate];
@@ -423,12 +425,12 @@
         //self.cover.hidden = devMode || !isActive;
         self.cover.hidden = devMode;
         
-        self.searchButton.enabled = !isNaviStarted;
+        self.searchButton.enabled = !self.isNaviStarted;
         
-        self.navigationItem.leftBarButtonItem = nil;
+        // Show Setting Button for current location only
+        self.navigationItem.leftBarButtonItem = !self.destId ? _settingButton : nil;
         if ((isActive && !devMode) || previewMode || initFlag) {
         } else {
-//            self.navigationItem.leftBarButtonItem = _settingButton;
             UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleSettingLongPressGesture:)];
             longPressGesture.minimumPressDuration = 1.0;
             longPressGesture.numberOfTouchesRequired = 1;
@@ -717,7 +719,7 @@
         lastLocationSent = now;
         [self dialogHelperUpdate];
         
-        if (!self.destId || [navigator isActive] || isNaviStarted) {
+        if (!self.destId || self.isDestLoaded || [navigator isActive] || self.isNaviStarted) {
             return;
         }
         if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
@@ -757,8 +759,10 @@
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [nds requestRouteFrom:from.singleId
                        To:to._id withPreferences:prefs complete:^{
-        nds.previewMode = [MiraikanUtil isPreview];
-        nds.exerciseMode = NO;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            nds.previewMode = [MiraikanUtil isPreview];
+            nds.exerciseMode = NO;
+        });
     }];
 }
 
@@ -1026,15 +1030,15 @@
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [NavUtil hideModalWaiting];
+    [NavUtil hideModalWaiting];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self.navigationController popViewControllerAnimated:YES];
     });
 }
 
 - (void)didNavigationStarted:(NSDictionary *)properties
 {
-    isNaviStarted = YES;
+    self.isNaviStarted = YES;
     if (timerForSimulator) {
         [timerForSimulator invalidate];
         timerForSimulator = nil;
@@ -1071,6 +1075,34 @@
     }
     
     [_webView logToServer:@{@"event": @"navigation", @"status": @"finished"}];
+    
+    NSArray *pois = properties[@"pois"];
+    if (pois.count > 0 && self.isVoiceGuideOn) {
+        // Get description texts from pois
+        NavPOI *poi = pois.lastObject;
+        NSString *description;
+        if (poi.longDescription) {
+            description = poi.longDescription;
+        } else {
+            description = poi.text;
+        }
+        NSLog(@"poi: %@", description);
+        NSMutableArray *descriptions = [(NSArray*) ExhibitionDataStore.shared.descriptions mutableCopy];
+        if (descriptions) {
+            [descriptions addObject:description];
+        } else {
+            descriptions = [@[description] mutableCopy];
+        }
+        ExhibitionDataStore.shared.descriptions = descriptions;
+        // Display the texts
+        dispatch_async(dispatch_get_main_queue(), ^{
+            VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
+            // Back to exhibition list instead of map
+            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController pushViewController:vc animated:YES];
+        });
+        return;
+    }
 
     [commander didNavigationFinished:properties];
     [previewer didNavigationFinished:properties];
