@@ -41,6 +41,7 @@ class MiraikanController: UIViewController {
         
         // NavBar
         let btnSetting = BaseBarButton(image: UIImage(systemName: "gearshape"))
+        btnSetting.accessibilityLabel = NSLocalizedString("Navi Settings", comment: "")
         btnSetting.tapAction { [weak self] in
             guard let self = self else { return }
             let vc = NaviSettingController(title: NSLocalizedString("Navi Settings", comment: ""))

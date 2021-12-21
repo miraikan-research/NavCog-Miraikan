@@ -83,14 +83,16 @@ struct EventModel : Decodable {
 /**
  Singleton for exhibition data transfer between different views
  */
-class ExhibitionDataStore {
+@objc class ExhibitionDataStore: NSObject {
     
-    static let shared = ExhibitionDataStore()
+    @objc static let shared = ExhibitionDataStore()
     
 //    var exhibitions: [ExhibitionModel]?
     
     var schedules: [ScheduleModel]?
     
     var events: [EventModel]?
+    
+    @objc var descriptions: [String]?
     
 }

@@ -179,7 +179,7 @@ Feedback is sending...";
 
 // Menu Titles
 "Miraikan Today" = "Miraikan Today";
-"Permanent Exhibitons" = "Permanent Exhibitons";
+"Permanent Exhibitions" = "Permanent Exhibitions";
 "Current Position" = "Current Position";
 "Reservation" = "Reservation";
 "Suggested Routes" = "Suggested Routes";
@@ -195,6 +195,10 @@ Feedback is sending...";
 "Current Location" = "Current Location";
 "Preview" = "Preview";
 "not_located" = "Outside of iBeacon area";
+"Speech Speed" = "";
+"Preview Speed" = "";
+"Speech Speed Description" = "The speech speed is set to";
+"Preview Speed Description" = "The preview speed is set to";
 
 // NaviButton Title
 "navi_button_title" = "Navigate to this exhibition";
@@ -224,3 +228,7 @@ Feedback is sending...";
 "Voice Guide" = "Voice Guide";
 "Voice Guide On" = "Voice Guide \nON";
 "Voice Guide Off" = "Voice Guide \nOFF";
+"btn_prev" = "Previous description";
+"btn_next" = "Next description";
+"btn_play" = "Read the description";
+"btn_stop" = "Stop reading the description";
