@@ -471,6 +471,15 @@ class Home : BaseListView {
         items = menuItems
     }
     
+    override func layoutSubviews() {
+        guard let tabBar = self.tabVC else { return }
+        let tableHeight = innerSize.height - tabBar.tabBar.frame.height - insets.bottom
+        tableView.frame = CGRect(x: insets.left,
+                                 y: insets.top,
+                                 width: innerSize.width,
+                                 height: tableHeight)
+    }
+    
     // MARK: UITableViewDataSource
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let (sec, row) = (indexPath.section, indexPath.row)

@@ -254,6 +254,7 @@
 		D364735F273E0D4400C110B0 /* EventListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364735D273E0D4400C110B0 /* EventListController.swift */; };
 		D364736D273E140C00C110B0 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364736C273E140C00C110B0 /* Home.swift */; };
 		D3921C30275760DF00F1DD55 /* BlankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3921C2F275760DF00F1DD55 /* BlankView.swift */; };
+		D39F3C2E27730ACD0014F1CE /* BlindExhibitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39F3C2D27730ACD0014F1CE /* BlindExhibitionController.swift */; };
 		D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E97151D98B80100CF2960 /* NavDataStore.m */; };
 		D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E371E3F1E5600208042 /* ServerConfig.m */; };
 		D3A117F027294B0B00BEC1C8 /* AgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E2A1E3F1E3700208042 /* AgreementViewController.m */; };
@@ -648,6 +649,7 @@
 		D38EF87A2704072A00DB9444 /* ExhibitionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitionView.swift; sourceTree = "<group>"; };
 		D38EF87E2704492000DB9444 /* HLPHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLPHelper.h; sourceTree = "<group>"; };
 		D3921C2F275760DF00F1DD55 /* BlankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankView.swift; sourceTree = "<group>"; };
+		D39F3C2D27730ACD0014F1CE /* BlindExhibitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlindExhibitionController.swift; sourceTree = "<group>"; };
 		D3A1185927294B0B00BEC1C8 /* NavCogMiraikan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavCogMiraikan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3A1185B272950B400BEC1C8 /* Miraikan.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Miraikan.plist; sourceTree = "<group>"; };
 		D3A156EE27200BE300A23B9E /* MiraikanMapController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiraikanMapController.h; sourceTree = "<group>"; };
@@ -1150,6 +1152,7 @@
 			children = (
 				D364735D273E0D4400C110B0 /* EventListController.swift */,
 				D364735C273E0D4400C110B0 /* ExhibitionListController.swift */,
+				D39F3C2D27730ACD0014F1CE /* BlindExhibitionController.swift */,
 				D3083C79275603CA0052ABEE /* PermanentExhibitionController.swift */,
 				D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */,
 			);
@@ -2126,6 +2129,7 @@
 				D3A1180B27294B0B00BEC1C8 /* NavPreviewer.m in Sources */,
 				D364736D273E140C00C110B0 /* Home.swift in Sources */,
 				D3A1180C27294B0B00BEC1C8 /* FloorMapView.swift in Sources */,
+				D39F3C2E27730ACD0014F1CE /* BlindExhibitionController.swift in Sources */,
 				D3A1180D27294B0B00BEC1C8 /* ScreenshotHelper.m in Sources */,
 				D3A1180E27294B0B00BEC1C8 /* WelcomViewController.m in Sources */,
 				D3A1180F27294B0B00BEC1C8 /* HLPSettingTableView.m in Sources */,
