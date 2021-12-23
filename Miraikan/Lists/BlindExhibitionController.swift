@@ -124,27 +124,54 @@ fileprivate class NavButtonRow : BaseRow {
     
 }
 
-fileprivate class ExhibitionHeader : BaseView {
+fileprivate class LinkingHeader : BaseView {
     
-    private let lblTitle = AutoWrapLabel()
+    private let titleLink = UnderlinedLabel()
+    
+    var model : ExhibitionLinkModel? {
+        didSet {
+            guard let model = model else { return }
+            titleLink.title = model.title
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
+            self.isUserInteractionEnabled = true
+            self.addGestureRecognizer(tap)
+        }
+    }
+    
+    var isFirst : Bool = false
     
     override func setup() {
         super.setup()
         
-        addSubview(lblTitle)
+        titleLink.accessibilityTraits = .header
+        addSubview(titleLink)
+    }
+    
+    @objc private func tapAction(_ sender: UIView) {
+        guard let model = model else { return }
+        guard let nav = self.navVC else { return }
+        nav.show(BaseController(ExhibitionView(category: model.category,
+                                               id: model.id,
+                                               nodeId: model.nodeId,
+                                               detail: model.blindDetail,
+                                               locations: model.locations),
+                                title: model.title), sender: nil)
     }
     
     override func layoutSubviews() {
-        let lblSz = CGSize(width: innerSize.width, height: 0)
-        lblTitle.frame = CGRect(x: insets.top,
-                                y: insets.left,
-                                width: innerSize.width,
-                                height: lblTitle.sizeThatFits(lblSz).height)
+        let topMargin = isFirst ? (insets.top + 20) : insets.top
+        let linkSz = CGSize(width: innerSize.width, height: 0)
+        titleLink.frame = CGRect(x: insets.left,
+                                 y: topMargin,
+                                 width: innerSize.width,
+                                 height: titleLink.sizeThatFits(linkSz).height)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let lblSz = CGSize(width: innerSizing(parentSize: size).width, height: 0)
-        let height = insets.top + insets.bottom + lblTitle.sizeThatFits(lblSz).height
+        let linkSz = CGSize(width: innerSizing(parentSize: size).width, height: 0)
+        let topMargin = isFirst ? (insets.top + 20) : insets.top
+        let height = topMargin + insets.bottom + titleLink.sizeThatFits(linkSz).height
         return CGSize(width: size.width, height: height)
     }
     
@@ -233,15 +260,16 @@ class BlindExhibitionController : BaseListController, BaseListDelegate {
     
     private let category: String
     
-    private let linkId = "linkCell"
     private let navId = "navCell"
     private let contentId = "descCell"
     
-    private var cells = [String]()
+    private let cells : [String]!
+    private var headers = [ExhibitionLinkModel]()
     
     // MARK: init
     init(id: String, title: String) {
         self.category = id
+        self.cells = [navId, contentId]
         super.init(title: title)
         self.baseDelegate = self
     }
@@ -254,7 +282,6 @@ class BlindExhibitionController : BaseListController, BaseListDelegate {
         // init the tableView
         super.initTable()
         
-        self.tableView.register(LinkRow.self, forCellReuseIdentifier: linkId)
         self.tableView.register(NavButtonRow.self, forCellReuseIdentifier: navId)
         self.tableView.register(ContentRow.self, forCellReuseIdentifier: contentId)
         
@@ -264,9 +291,14 @@ class BlindExhibitionController : BaseListController, BaseListDelegate {
             as? [ExhibitionModel]
         else { return }
         let sorted = models
-            .filter({ $0.category == category || $0.category == "calendar" })
+            .filter({ model in
+                if category == "world" {
+                    return model.category == category || model.category == "calendar"
+                }
+                return model.category == category
+            })
             .sorted(by: { $0.counter < $1.counter })
-        var dividedItems = [Any]()
+        var sections = [(NavButtonModel, ExhibitionContentModel)]()
         sorted.forEach({ model in
             let title = model.counter != ""
                 ? "\(model.counter) \(model.title)"
@@ -278,39 +310,32 @@ class BlindExhibitionController : BaseListController, BaseListDelegate {
                                                 counter: model.counter,
                                                 locations: model.locations,
                                                 blindDetail: model.blindDetail)
-            dividedItems += [linkModel]
-            cells += [linkId]
+            headers += [linkModel]
             let navModel = NavButtonModel(nodeId: model.nodeId,
                                           locations: model.locations,
                                           title: model.title)
-            dividedItems += [navModel]
-            cells += [navId]
             let contentModel = ExhibitionContentModel(title: model.title,
                                                       blindIntro: model.blindIntro,
                                                       blindOverview: model.blindOverview)
-            dividedItems += [contentModel]
-            cells += [contentId]
+            sections += [(navModel, contentModel)]
         })
-        items = dividedItems
+        items = sections
     }
     
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
+        let item = (items as? [(NavButtonModel, ExhibitionContentModel)])?[indexPath.section]
         let cellId = cells[indexPath.row]
-        let item = (items as? [Any])?[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        if let title = (item as? ExhibitionLinkModel)?.title,
-           let cell = cell as? LinkRow {
-            cell.configure(title: title)
-            return cell
-        } else if let model = item as? NavButtonModel, let cell = cell as? NavButtonRow {
+        
+        if let model = item?.0, let cell = cell as? NavButtonRow {
             if let nodeId = model.nodeId {
                 cell.configure(nodeId: nodeId)
             } else if let locations = model.locations, let title = model.title {
                 cell.configure(locations: locations, title: title)
             }
             return cell
-        } else if let model = item as? ExhibitionContentModel,
+        } else if let model = item?.1,
                   let cell = cell as? ContentRow {
             cell.configure(model)
             return cell
@@ -318,17 +343,21 @@ class BlindExhibitionController : BaseListController, BaseListDelegate {
         return nil
     }
     
-    override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
-        // Only the link is clickable
-        if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLinkModel {
-            guard let nav = self.navigationController as? BaseNavController else { return }
-            nav.show(BaseController(ExhibitionView(category: category,
-                                                   id: model.id,
-                                                   nodeId: model.nodeId,
-                                                   detail: model.blindDetail,
-                                                   locations: model.locations),
-                                    title: model.title), sender: nil)
-        }
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = LinkingHeader()
+        header.model = headers[section]
+        header.isFirst = section == 0
+        return header
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        guard let sections = items as? [Any] else { return 0 }
+        return sections.count
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let items = items as? [(Any, Any)] else { return 0 }
+        return Mirror(reflecting: items[section]).children.count
     }
     
 }
