@@ -28,6 +28,10 @@
 import Foundation
 import UIKit
 
+protocol WebAccessibilityDelegate {
+    func onFinished()
+}
+
 /**
  The parent view implemented with WKNavigationDelegate
  */
@@ -39,6 +43,8 @@ class BaseWebView: BaseView, WKNavigationDelegate {
     private let gap = CGFloat(10)
     
     private var isLoadingFailed : Bool = false
+    
+    var accessibilityDelegate: WebAccessibilityDelegate?
     
     override func setup() {
         super.setup()
@@ -106,8 +112,9 @@ class BaseWebView: BaseView, WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        lblLoading.isAccessibilityElement = isLoadingFailed
         lblLoading.isHidden = !isLoadingFailed
+        lblLoading.accessibilityElementsHidden = !isLoadingFailed
+        accessibilityDelegate?.onFinished()
     }
     
 }

@@ -50,7 +50,9 @@ private struct ExhibitionModel : Decodable {
     let counter : String
     let floor : Int?
     let locations : [ExhibitionLocation]?
-    let intro : String
+    let blindIntro : String
+    let blindOverview : String
+    let blindDetail : String
 }
 
 fileprivate struct ExhibitionLinkModel {
@@ -60,6 +62,7 @@ fileprivate struct ExhibitionLinkModel {
     let nodeId : String?
     let counter : String
     let locations: [ExhibitionLocation]?
+    let blindDetail : String
 }
 
 fileprivate struct NavButtonModel {
@@ -70,7 +73,8 @@ fileprivate struct NavButtonModel {
 
 fileprivate struct ExhibitionContentModel {
     let title : String
-    let intro : String
+    let blindIntro : String
+    let blindOverview : String
 }
 
 fileprivate class NavButtonRow : BaseRow {
@@ -120,6 +124,32 @@ fileprivate class NavButtonRow : BaseRow {
     
 }
 
+fileprivate class ExhibitionHeader : BaseView {
+    
+    private let lblTitle = AutoWrapLabel()
+    
+    override func setup() {
+        super.setup()
+        
+        addSubview(lblTitle)
+    }
+    
+    override func layoutSubviews() {
+        let lblSz = CGSize(width: innerSize.width, height: 0)
+        lblTitle.frame = CGRect(x: insets.top,
+                                y: insets.left,
+                                width: innerSize.width,
+                                height: lblTitle.sizeThatFits(lblSz).height)
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let lblSz = CGSize(width: innerSizing(parentSize: size).width, height: 0)
+        let height = insets.top + insets.bottom + lblTitle.sizeThatFits(lblSz).height
+        return CGSize(width: size.width, height: height)
+    }
+    
+}
+
 /**
  The customized UITableViewCell for each exhibition
  */
@@ -138,12 +168,23 @@ fileprivate class ContentRow : BaseRow {
     }
     
     public func configure(_ model: ExhibitionContentModel) {
-        lblDescription.text = model.intro
+        lblDescription.text = model.blindIntro.isEmpty
+        ? model.blindIntro
+        : "概要\n\n\(model.blindIntro)\n"
+        lblOverview = AutoWrapLabel()
+        lblOverview?.text = model.blindOverview.isEmpty
+        ? model.blindOverview
+        : "概観\n\n\(model.blindOverview)"
+        lblOverview?.isAccessibilityElement = true
+        addSubview(lblOverview!)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         lblDescription.text = nil
+        if let lblOverview = lblOverview {
+            lblOverview.text = nil
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -153,15 +194,29 @@ fileprivate class ContentRow : BaseRow {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        var y = insets.top
         lblDescription.frame = CGRect(x: insets.left,
-                                      y: insets.top,
+                                      y: y,
                                       width: innerSize.width,
                                       height: lblDescription.sizeThatFits(innerSize).height)
+        
+        if let lblOverview = lblOverview {
+            y += lblDescription.frame.height
+            lblOverview.frame = CGRect(x: insets.left,
+                                       y: y,
+                                       width: innerSize.width,
+                                       height: lblOverview.sizeThatFits(innerSize).height)
+        }
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let innerSz = innerSizing(parentSize: size)
-        let height = insets.top + insets.bottom + lblDescription.sizeThatFits(innerSz).height
+        var szList = [lblDescription.sizeThatFits(innerSz)]
+        if let lblOverview = lblOverview {
+            szList += [lblOverview.sizeThatFits(innerSz)]
+        }
+        let height = szList.map({ $0.height })
+            .reduce((insets.top + insets.bottom), { $0 + $1 + gap})
         return CGSize(width: size.width, height: height)
     }
     
@@ -174,7 +229,7 @@ fileprivate class ContentRow : BaseRow {
  - id: category id
  - title: The title for NavigationBar
  */
-class ExhibitionListController : BaseListController, BaseListDelegate {
+class BlindExhibitionController : BaseListController, BaseListDelegate {
     
     private let category: String
     
@@ -221,7 +276,8 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
                                                 title: title,
                                                 nodeId: model.nodeId,
                                                 counter: model.counter,
-                                                locations: model.locations)
+                                                locations: model.locations,
+                                                blindDetail: model.blindDetail)
             dividedItems += [linkModel]
             cells += [linkId]
             let navModel = NavButtonModel(nodeId: model.nodeId,
@@ -230,7 +286,8 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
             dividedItems += [navModel]
             cells += [navId]
             let contentModel = ExhibitionContentModel(title: model.title,
-                                                      intro: model.intro)
+                                                      blindIntro: model.blindIntro,
+                                                      blindOverview: model.blindOverview)
             dividedItems += [contentModel]
             cells += [contentId]
         })
@@ -268,6 +325,7 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
             nav.show(BaseController(ExhibitionView(category: category,
                                                    id: model.id,
                                                    nodeId: model.nodeId,
+                                                   detail: model.blindDetail,
                                                    locations: model.locations),
                                     title: model.title), sender: nil)
         }

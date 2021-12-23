@@ -37,8 +37,7 @@ import WebKit
  - nodeId: The destination id for navigation
  - permalink: The URL component for a specific event
  */
-class ExhibitionView: BaseWebView {
-    
+class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
     private var btnNavi : StyledButton?
     private var lblDetail : AutoWrapLabel?
 
@@ -50,10 +49,12 @@ class ExhibitionView: BaseWebView {
 
     
     // MARK: init
-    init(category: String, id: String, nodeId: String?, detail : String?, locations: [ExhibitionLocation]?) {
+    init(category: String, id: String, nodeId: String?, detail : String? = nil, locations: [ExhibitionLocation]?) {
         self.id = id
         self.nodeId = nodeId
         super.init(frame: .zero)
+        
+        self.accessibilityDelegate = self
         
         btnNavi = StyledButton()
         guard let btnNavi = btnNavi else { return }
@@ -86,6 +87,7 @@ class ExhibitionView: BaseWebView {
     init(permalink: String) {
         self.id = nil
         super.init(frame: .zero)
+        self.accessibilityDelegate = self
         let address = "\(Host.miraikan.address)/\(permalink)"
         loadContent(address)
     }
@@ -112,6 +114,14 @@ class ExhibitionView: BaseWebView {
                                y: y,
                                width: innerSize.width,
                                height: innerSize.height - y)
+    }
+    
+    func onFinished() {
+        if let btnNavi = btnNavi {
+            UIAccessibility.post(notification: .screenChanged, argument: btnNavi)
+        } else {
+            UIAccessibility.post(notification: .screenChanged, argument: self.parentVC?.title)
+        }
     }
     
 }
