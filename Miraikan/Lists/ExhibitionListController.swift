@@ -209,7 +209,12 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
             as? [ExhibitionModel]
         else { return }
         let sorted = models
-            .filter({ $0.category == category || $0.category == "calendar" })
+            .filter({ model in
+                if category == "world" {
+                    return model.category == category || model.category == "calendar"
+                }
+                return model.category == category
+            })
             .sorted(by: { $0.counter < $1.counter })
         var dividedItems = [Any]()
         sorted.forEach({ model in
