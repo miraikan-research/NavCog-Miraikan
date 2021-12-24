@@ -56,8 +56,6 @@ private struct ExhibitionModel : Decodable {
 }
 
 fileprivate struct ExhibitionLinkModel {
-    let id : String
-    let category : String
     let title : String
     let nodeId : String?
     let counter : String
@@ -151,9 +149,7 @@ fileprivate class LinkingHeader : BaseView {
     @objc private func tapAction(_ sender: UIView) {
         guard let model = model else { return }
         guard let nav = self.navVC else { return }
-        nav.show(BaseController(ExhibitionView(category: model.category,
-                                               id: model.id,
-                                               nodeId: model.nodeId,
+        nav.show(BaseController(ExhibitionView(nodeId: model.nodeId,
                                                detail: model.blindDetail,
                                                locations: model.locations),
                                 title: model.title), sender: nil)
@@ -183,35 +179,33 @@ fileprivate class LinkingHeader : BaseView {
 fileprivate class ContentRow : BaseRow {
     
     private let lblDescription = AutoWrapLabel()
-    private var lblOverview : AutoWrapLabel?
+    private var lblOverview = AutoWrapLabel()
     
     private let gap = CGFloat(10)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addSubview(lblDescription)
-        lblDescription.isAccessibilityElement = true
         selectionStyle = .none
+        [lblDescription, lblOverview].forEach({
+            $0.isAccessibilityElement = true
+            addSubview($0)
+        })
     }
     
     public func configure(_ model: ExhibitionContentModel) {
         lblDescription.text = model.blindIntro.isEmpty
         ? model.blindIntro
         : "概要\n\n\(model.blindIntro)\n"
-        lblOverview = AutoWrapLabel()
-        lblOverview?.text = model.blindOverview.isEmpty
+        lblOverview.text = model.blindOverview.isEmpty
         ? model.blindOverview
         : "概観\n\n\(model.blindOverview)"
-        lblOverview?.isAccessibilityElement = true
-        addSubview(lblOverview!)
+        addSubview(lblOverview)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         lblDescription.text = nil
-        if let lblOverview = lblOverview {
-            lblOverview.text = nil
-        }
+        lblOverview.text = nil
     }
     
     required init?(coder: NSCoder) {
@@ -227,22 +221,17 @@ fileprivate class ContentRow : BaseRow {
                                       width: innerSize.width,
                                       height: lblDescription.sizeThatFits(innerSize).height)
         
-        if let lblOverview = lblOverview {
-            y += lblDescription.frame.height
-            lblOverview.frame = CGRect(x: insets.left,
-                                       y: y,
-                                       width: innerSize.width,
-                                       height: lblOverview.sizeThatFits(innerSize).height)
-        }
+        y += lblDescription.frame.height
+        lblOverview.frame = CGRect(x: insets.left,
+                                   y: y,
+                                   width: innerSize.width,
+                                   height: lblOverview.sizeThatFits(innerSize).height)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let innerSz = innerSizing(parentSize: size)
-        var szList = [lblDescription.sizeThatFits(innerSz)]
-        if let lblOverview = lblOverview {
-            szList += [lblOverview.sizeThatFits(innerSz)]
-        }
-        let height = szList.map({ $0.height })
+        let height = [lblDescription, lblOverview]
+            .map({ $0.sizeThatFits(innerSz).height })
             .reduce((insets.top + insets.bottom), { $0 + $1 + gap})
         return CGSize(width: size.width, height: height)
     }
@@ -303,9 +292,7 @@ class BlindExhibitionController : BaseListController, BaseListDelegate {
             let title = model.counter != ""
                 ? "\(model.counter) \(model.title)"
                 : model.title
-            let linkModel = ExhibitionLinkModel(id: model.id,
-                                                category: category,
-                                                title: title,
+            let linkModel = ExhibitionLinkModel(title: title,
                                                 nodeId: model.nodeId,
                                                 counter: model.counter,
                                                 locations: model.locations,

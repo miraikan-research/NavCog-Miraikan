@@ -222,7 +222,7 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
                 ? "\(model.counter) \(model.title)"
                 : model.title
             let linkModel = ExhibitionLinkModel(id: model.id,
-                                                category: category,
+                                                category: model.category,
                                                 title: title,
                                                 nodeId: model.nodeId,
                                                 counter: model.counter,
@@ -270,7 +270,7 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
         // Only the link is clickable
         if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLinkModel {
             guard let nav = self.navigationController as? BaseNavController else { return }
-            nav.show(BaseController(ExhibitionView(category: category,
+            nav.show(BaseController(ExhibitionView(category: model.category,
                                                    id: model.id,
                                                    nodeId: model.nodeId,
                                                    locations: model.locations),

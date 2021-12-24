@@ -49,7 +49,7 @@ class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
 
     
     // MARK: init
-    init(category: String, id: String, nodeId: String?, detail : String? = nil, locations: [ExhibitionLocation]?) {
+    init(category: String? = nil, id: String? = nil, nodeId: String?, detail : String? = nil, locations: [ExhibitionLocation]?) {
         self.id = id
         self.nodeId = nodeId
         super.init(frame: .zero)
@@ -78,8 +78,9 @@ class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
             let inner = detail.replacingOccurrences(of: "\n", with: "<br/>")
             let html = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><p sytle='font-size: 18px;'>\(inner)</p>"
             loadDetail(html: html)
-        } else {
-            let address = "\(MiraikanUtil.miraikanHost)/exhibitions/\(category)/\(id)/"
+        } else if let category = category, let id = id {
+            let mid = category == "calendar" ? category : "exhibitions/\(category)"
+            let address = "\(MiraikanUtil.miraikanHost)/\(mid)/\(id)/"
             loadContent(address)
         }
     }
