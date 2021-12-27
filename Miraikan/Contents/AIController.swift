@@ -46,6 +46,7 @@ class AIView : BaseView {
             btnStart.isEnabled = isAvailable
             if isAvailable {
                 btnStart.setTitle(NSLocalizedString("ai_available", comment: ""), for: .normal)
+                btnStart.setTitleColor(.systemBlue, for: .normal)
             } else {
                 btnStart.setTitle(NSLocalizedString("ai_not_available", comment: ""), for: .disabled)
                 btnStart.setTitleColor(.lightText, for: .disabled)
@@ -106,36 +107,41 @@ class AIController : BaseController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        loadDialog()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let dialogManager = DialogManager.sharedManager()
         aiView.isAvailable = dialogManager.isAvailable
-        
-        if !dialogManager.isAvailable { return }
-        
-        aiView.openAction = {
-            loadDialog()
+        aiView.openAction = { [weak self] in
+            guard let self = self else { return }
+            self.loadDialog(manager: dialogManager)
         }
-        loadDialog()
+    }
+    
+    private func loadDialog(manager : DialogManager? = nil) {
+        let manager = manager != nil ? manager! : DialogManager.sharedManager()
         
-        func loadDialog() {
-            dialogManager.userMode = "user_\(MiraikanUtil.routeMode)"
-            let dialogVC = DialogViewController()
-            dialogVC.tts = DefaultTTS()
-            dialogVC.title = self.title
-            if let nav = self.navigationController as? BaseNavController {
-                nav.show(dialogVC, sender: nil)
-            }
-            
-            if self.isObserved { return }
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.aiNavi(note:)),
-                                                   name: Notification.Name(rawValue:"request_start_navigation"),
-                                                   object: nil)
-            self.isObserved = true
-            
+        if !manager.isAvailable { return }
+        
+        manager.userMode = "user_\(MiraikanUtil.routeMode)"
+        let dialogVC = DialogViewController()
+        dialogVC.tts = DefaultTTS()
+        dialogVC.title = self.title
+        if let nav = self.navigationController as? BaseNavController {
+            nav.show(dialogVC, sender: nil)
         }
+        
+        if self.isObserved { return }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.aiNavi(note:)),
+                                               name: Notification.Name(rawValue:"request_start_navigation"),
+                                               object: nil)
+        self.isObserved = true
+        
     }
     
     @objc func aiNavi(note: Notification) {

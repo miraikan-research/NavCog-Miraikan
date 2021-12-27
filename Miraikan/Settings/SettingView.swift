@@ -109,50 +109,6 @@ fileprivate class RouteModeRow: BaseRow {
     
 }
 
-fileprivate class VoiceGuideRow : BaseRow {
-    
-    private let lblDescription = UILabel()
-    private let swVoiceGuide = BaseSwitch()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        lblDescription.text = NSLocalizedString("Voice Guide", comment: "")
-        lblDescription.font = .boldSystemFont(ofSize: 16)
-        lblDescription.sizeToFit()
-        addSubview(lblDescription)
-        
-        swVoiceGuide.isOn = UserDefaults.standard.bool(forKey: "isVoiceGuideOn")
-        swVoiceGuide.onSwitch({ sw in
-            UserDefaults.standard.set(sw.isOn, forKey: "isVoiceGuideOn")
-        })
-        swVoiceGuide.sizeToFit()
-        addSubview(swVoiceGuide)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        let midY = max(lblDescription.intrinsicContentSize.height,
-                       swVoiceGuide.intrinsicContentSize.height) / 2 + insets.top
-        lblDescription.frame.origin.x = insets.left
-        lblDescription.center.y = midY
-        swVoiceGuide.frame.origin.x = frame.width - insets.right - swVoiceGuide.frame.width
-        swVoiceGuide.center.y = midY
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let totalHeight = [insets.top,
-                           max(lblDescription.intrinsicContentSize.height,
-                               swVoiceGuide.intrinsicContentSize.height),
-                           insets.bottom].reduce(0, { $0 + $1 })
-        return CGSize(width: size.width, height: totalHeight)
-    }
-    
-}
-
 // TODO: Display route histories
 /**
  Current usage: select navigation mode
@@ -160,15 +116,13 @@ fileprivate class VoiceGuideRow : BaseRow {
 class SettingView : BaseListView {
     
     private let routeModeId = "routeModeCell"
-    private let switchId = "switchCell"
     
     override func initTable(isSelectionAllowed: Bool) {
         super.initTable(isSelectionAllowed: isSelectionAllowed)
         
         self.tableView.register(RouteModeRow.self, forCellReuseIdentifier: routeModeId)
-        self.tableView.register(VoiceGuideRow.self, forCellReuseIdentifier: switchId)
         
-        items = [routeModeId, switchId]
+        items = [routeModeId]
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -177,8 +131,6 @@ class SettingView : BaseListView {
         
         if let routeModeCell = cell as? RouteModeRow {
             return routeModeCell
-        } else if let voiceGuideCell = cell as? VoiceGuideRow {
-            return voiceGuideCell
         }
         
         return UITableViewCell()

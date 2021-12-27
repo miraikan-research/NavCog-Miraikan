@@ -74,44 +74,58 @@ fileprivate class CurrentLocationRow : BaseRow {
     
 }
 
-fileprivate class PreviewSwitchRow : BaseRow {
+fileprivate struct SwitchModel {
+    let desc: String
+    let key: String
+    let isOn : Bool
+    let isEnabled : Bool?
+}
+
+fileprivate class SwitchRow : BaseRow {
     
     private let lblDescription = UILabel()
-    private let swPreview = BaseSwitch()
+    private let sw = BaseSwitch()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        lblDescription.text = NSLocalizedString("Preview", comment: "")
         lblDescription.font = .boldSystemFont(ofSize: 16)
-        lblDescription.sizeToFit()
         addSubview(lblDescription)
-        
-        swPreview.isOn = MiraikanUtil.isPreview
-        swPreview.isEnabled = MiraikanUtil.isLocated
-        swPreview.onSwitch({ sw in
-            UserDefaults.standard.set(sw.isOn, forKey: "OnPreview")
-        })
-        swPreview.sizeToFit()
-        addSubview(swPreview)
+        sw.sizeToFit()
+        addSubview(sw)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func configure(_ model : SwitchModel) {
+        lblDescription.text = model.desc
+        lblDescription.sizeToFit()
+        
+        sw.isOn = model.isOn
+        if let isEnabled = model.isEnabled {
+            sw.isEnabled = isEnabled
+        }
+        sw.onSwitch({ sw in
+            UserDefaults.standard.set(sw.isOn, forKey: model.key)
+        })
+    }
+    
     override func layoutSubviews() {
+//        let maxHeight = max(lblDescription.intrinsicContentSize.height,
+//                            sw.intrinsicContentSize.height)
         let midY = max(lblDescription.intrinsicContentSize.height,
-                       swPreview.intrinsicContentSize.height) / 2 + insets.top
+                       sw.intrinsicContentSize.height) / 2 + insets.top
         lblDescription.frame.origin.x = insets.left
         lblDescription.center.y = midY
-        swPreview.frame.origin.x = frame.width - insets.right - swPreview.frame.width
-        swPreview.center.y = midY
+        sw.frame.origin.x = frame.width - insets.right - sw.frame.width
+        sw.center.y = midY
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let totalHeight = [insets.top,
                            max(lblDescription.intrinsicContentSize.height,
-                               swPreview.intrinsicContentSize.height),
+                               sw.intrinsicContentSize.height),
                            insets.bottom].reduce(0, { $0 + $1 })
         return CGSize(width: size.width, height: totalHeight)
     }
@@ -226,7 +240,7 @@ fileprivate class SliderRow : BaseRow {
 class NaviSettingController : BaseListController, BaseListDelegate {
     
     private let locationId = "locationCell"
-    private let previewId = "previewCell"
+    private let switchId = "switchCell"
     private let sliderId = "sliderCell"
     
     private struct CellModel {
@@ -238,23 +252,16 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         super.initTable()
         
         self.baseDelegate = self
-        self.tableView.separatorStyle = .singleLine
         self.tableView.register(CurrentLocationRow.self, forCellReuseIdentifier: locationId)
-        self.tableView.register(PreviewSwitchRow.self, forCellReuseIdentifier: previewId)
+        self.tableView.register(SwitchRow.self, forCellReuseIdentifier: switchId)
         self.tableView.register(SliderRow.self, forCellReuseIdentifier: sliderId)
         
         self.items = [CellModel(cellId: locationId, model: nil),
-                      CellModel(cellId: previewId, model: nil),
-                      CellModel(cellId: sliderId,
-                                model: SliderModel(min: 0.1,
-                                                   max: 1,
-                                                   defaultValue: MiraikanUtil.speechSpeed,
-                                                   step: 0.05,
-                                                   format: "%.2f",
-                                                   title: NSLocalizedString("Speech Speed", comment: "Name of the label"),
-                                                   name: "speech_speed",
-                                                   desc: NSLocalizedString("Speech Speed Description",
-                                                                           comment: "Description for VoiceOver"))),
+                      CellModel(cellId: switchId,
+                                model: SwitchModel(desc: NSLocalizedString("Preview", comment: ""),
+                                                   key: "OnPreview",
+                                                   isOn: MiraikanUtil.isPreview,
+                                                   isEnabled: MiraikanUtil.isLocated)),
                       CellModel(cellId: sliderId,
                                 model: SliderModel(min: 1,
                                                    max: 10,
@@ -264,8 +271,22 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                                                    title: NSLocalizedString("Preview Speed", comment: "Name of the label"),
                                                    name: "preview_speed",
                                                    desc: NSLocalizedString("Preview Speed Description",
-                                                                           comment: "Description for VoiceOver")))
-        ]
+                                                                           comment: "Description for VoiceOver"))),
+                      CellModel(cellId: switchId,
+                                model: SwitchModel(desc: NSLocalizedString("Voice Guide", comment: ""),
+                                                   key: "isVoiceGuideOn",
+                                                   isOn: UserDefaults.standard.bool(forKey: "isVoiceGuideOn"),
+                                                   isEnabled: nil)),
+                      CellModel(cellId: sliderId,
+                                model: SliderModel(min: 0.1,
+                                                   max: 1,
+                                                   defaultValue: MiraikanUtil.speechSpeed,
+                                                   step: 0.05,
+                                                   format: "%.2f",
+                                                   title: NSLocalizedString("Speech Speed", comment: "Name of the label"),
+                                                   name: "speech_speed",
+                                                   desc: NSLocalizedString("Speech Speed Description",
+                                                                           comment: "Description for VoiceOver")))]
     }
     
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
@@ -275,8 +296,9 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         
         if let locationCell = cell as? CurrentLocationRow {
             return locationCell
-        } else if let previewCell = cell as? PreviewSwitchRow {
-            return previewCell
+        } else if let swCell = cell as? SwitchRow, let model = item?.model as? SwitchModel {
+            swCell.configure(model)
+            return swCell
         } else if let sliderCell = cell as? SliderRow,
                     let model = item?.model as? SliderModel {
             sliderCell.configure(model)
