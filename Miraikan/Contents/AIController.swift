@@ -96,6 +96,7 @@ class AIController : BaseController {
     
     private let aiView = AIView()
     
+    private var isLoaded : Bool = false
     private var isObserved : Bool = false
     
     init(title: String) {
@@ -106,36 +107,44 @@ class AIController : BaseController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        loadDialog()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        aiView.openAction = { [weak self] in
+            guard let self = self else { return }
+            self.loadDialog()
+        }
+    }
+    
+    private func loadDialog() {
+        if self.isLoaded { return }
         
         let dialogManager = DialogManager.sharedManager()
         aiView.isAvailable = dialogManager.isAvailable
         
         if !dialogManager.isAvailable { return }
         
-        aiView.openAction = {
-            loadDialog()
-        }
-        loadDialog()
         
-        func loadDialog() {
-            dialogManager.userMode = "user_\(MiraikanUtil.routeMode)"
-            let dialogVC = DialogViewController()
-            dialogVC.tts = DefaultTTS()
-            dialogVC.title = self.title
-            if let nav = self.navigationController as? BaseNavController {
-                nav.show(dialogVC, sender: nil)
-            }
-            
-            if self.isObserved { return }
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.aiNavi(note:)),
-                                                   name: Notification.Name(rawValue:"request_start_navigation"),
-                                                   object: nil)
-            self.isObserved = true
-            
+        dialogManager.userMode = "user_\(MiraikanUtil.routeMode)"
+        let dialogVC = DialogViewController()
+        dialogVC.tts = DefaultTTS()
+        dialogVC.title = self.title
+        if let nav = self.navigationController as? BaseNavController {
+            nav.show(dialogVC, sender: nil)
+            self.isLoaded = true
         }
+        
+        if self.isObserved { return }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.aiNavi(note:)),
+                                               name: Notification.Name(rawValue:"request_start_navigation"),
+                                               object: nil)
+        self.isObserved = true
+        
     }
     
     @objc func aiNavi(note: Notification) {
