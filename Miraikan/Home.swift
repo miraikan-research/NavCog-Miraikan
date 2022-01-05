@@ -99,7 +99,8 @@ fileprivate class CardRow : BaseRow {
         }
         imgView.image = img
         
-        lblTitle.text = model.title
+        //takagi quick hack
+        lblTitle.text = model.title + "\n" + model.start + "から" + model.end
         
         if let _isOnline = model.isOnline {
             self.isOnline = !_isOnline.isEmpty
@@ -278,6 +279,8 @@ fileprivate class NewsRow : BaseRow {
  The menu items for the home screen
  */
 fileprivate enum MenuItem {
+
+    case mastmedia
     case login
     case miraikanToday
     case permanentExhibition
@@ -291,13 +294,16 @@ fileprivate enum MenuItem {
     case aboutApp
     
     var isAvailable: Bool {
-        let availableItems : [MenuItem] = [.login, .miraikanToday, .permanentExhibition,
+        let availableItems : [MenuItem] = [.mastmedia, .login,   .miraikanToday, .permanentExhibition,
                                            .currentPosition, .setting, .aboutMiraikan, .aboutApp]
+
         return availableItems.contains(self)
     }
     
     var name : String {
         switch self {
+        case .mastmedia:
+            return NSLocalizedString("Mast Media", comment: "")
         case .login:
             return NSLocalizedString("Login", comment: "")
         case .miraikanToday:
@@ -359,6 +365,7 @@ fileprivate enum MenuItem {
  The menu secitons for the home screen
  */
 fileprivate enum MenuSection : CaseIterable {
+    case mastmedia
     case login
     case spex
     case event
@@ -371,10 +378,15 @@ fileprivate enum MenuSection : CaseIterable {
     
     var items: [MenuItem]? {
         switch self {
+        case .mastmedia:
+            return [.mastmedia]
+
         case .login:
             return [.login]
+
         case .exhibition:
             return [.miraikanToday, .permanentExhibition]
+
         case .currentLocation:
             return [.currentPosition]
         case .reservation:
@@ -383,6 +395,7 @@ fileprivate enum MenuSection : CaseIterable {
             return [.suggestion]
         case .map:
             return [.floorMap, .nearestWashroom]
+             
         case .settings:
             return [.setting, .aboutMiraikan, .aboutApp]
         default:
@@ -437,12 +450,19 @@ class Home : BaseListView {
         self.tableView.register(NewsRow.self, forCellReuseIdentifier: newsCellId)
 
         // load the data
-        sections = MenuSection.allCases
+        //このsectionsのenumがホームの画面表示内容を定義している
+        sections = MenuSection.allCases //all menuitems by using allCases
+        
         if MiraikanUtil.isLoggedIn {
             sections?.removeAll(where: { $0 == .login })
         }
         
+        //半透明にしているがこれが適切な場所かわからない (Takagi)
+        self.tableView.alpha = 0.8
+        
+        //ここでホームのリストに表示する情報を列挙
         guard let _sections = sections?.enumerated() else { return }
+        print(_sections)
         
         let httpAdaptor = HTTPAdaptor()
         var menuItems = [Int : [Any]]()
@@ -450,6 +470,7 @@ class Home : BaseListView {
             if let _items = sec.items {
                 menuItems[idx] = _items
             } else if let _endpoint = sec.endpoint {
+                //print("takagi> json: " + _endpoint)
                 menuItems[idx] = []
                 httpAdaptor.http(endpoint: _endpoint, success: { [weak self] data in
                     guard let self = self else { return }
@@ -461,7 +482,9 @@ class Home : BaseListView {
                         let start = MiraikanUtil.parseDate(model.start)!
                         let end = MiraikanUtil.parseDate(model.end)!
                         let endOfDay = MiraikanUtil.calendar().date(byAdding: .day, value: 1, to: end)!
-                        return start <= now && endOfDay >= now
+                        //takagi: 始まっていないイベントも表示
+                        return endOfDay >= now
+                        //return start <= now && endOfDay >= now
                     })
                     menuItems[idx] = filtered
                     self.items = menuItems
@@ -487,6 +510,7 @@ class Home : BaseListView {
         let (sec, row) = (indexPath.section, indexPath.row)
         
         if let items = (items as? [Int: [Any]])?[sec], items.isEmpty {
+            //takagi: ホームのセクションタイトルはここで設定
             let cell = UITableViewCell()
             cell.textLabel?.textColor = .lightGray
             cell.selectionStyle = .none
@@ -500,6 +524,7 @@ class Home : BaseListView {
             }
             return cell
         } else {
+
             let rowItem = (items as? [Int: [Any]])?[sec]?[row]
             if let menuItem = rowItem as? MenuItem,
                let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {

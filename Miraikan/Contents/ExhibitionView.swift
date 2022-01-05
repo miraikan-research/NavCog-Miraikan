@@ -83,6 +83,7 @@ class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
             let address = "\(MiraikanUtil.miraikanHost)/\(mid)/\(id)/"
             loadContent(address)
         }
+
     }
     
     init(permalink: String) {

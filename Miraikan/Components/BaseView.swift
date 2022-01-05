@@ -88,22 +88,29 @@ class BaseView: UIView {
      Override it, and add the subviews here
      */
     func setup() {
-        backgroundColor = .white
+        //backgroundColor = .white
+        backgroundColor = UIColor(patternImage: UIImage(named: "apollo_11")!)
     }
     
     // MARK: Size calculation
-    private func padding(margin: CGFloat = 10) -> UIEdgeInsets {
-        return UIEdgeInsets(top: safeAreaInsets.top + 10,
+    //private func padding(margin: CGFloat = 10) -> UIEdgeInsets {
+    //    return UIEdgeInsets(top: safeAreaInsets.top + 10,
+    private func padding(margin: CGFloat = 0) -> UIEdgeInsets {
+        return UIEdgeInsets(top: safeAreaInsets.top + 0,
+
                             left: margin,
                             bottom: margin,
                             right: margin)
     }
     
-    func innerSizing(margin: CGFloat = 10) -> CGSize {
+    //func innerSizing(margin: CGFloat = 10) -> CGSize {
+    func innerSizing(margin: CGFloat = 0) -> CGSize {
+
         return innerSizing(parentSize: frame.size, margin: margin)
     }
     
     func innerSizing(parentSize: CGSize, margin: CGFloat = 10) -> CGSize {
+    //func innerSizing(parentSize: CGSize, margin: CGFloat = 0) -> CGSize {
         let insets = padding(margin: margin)
         return CGSize(width: parentSize.width - (insets.left + insets.right),
                       height: parentSize.height - (insets.top + insets.bottom))

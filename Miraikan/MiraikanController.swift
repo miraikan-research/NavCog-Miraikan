@@ -138,6 +138,8 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
             }
         }
         
+        //タブバーの色を設定
+        self.tabBar.backgroundColor = .white
     }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
@@ -154,7 +156,10 @@ class BaseNavController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
+        //navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
+        //navigationBar.barTintColor = .red
+        navigationBar.backgroundColor = .white
+        //navigationBar.
     }
     
     /**

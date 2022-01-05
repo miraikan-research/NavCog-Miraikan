@@ -45,7 +45,6 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
     // MARK: init
     override func setup() {
         super.setup()
-        
         initTable(isSelectionAllowed: false)
         addSubview(tableView)
     }
@@ -55,7 +54,7 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
         self.tableView.dataSource = self
         self.tableView.allowsSelection = isSelectionAllowed
         self.tableView.separatorStyle = .none
-        self.tableView.backgroundColor = .white
+        //self.tableView.backgroundColor = .red
     }
     
     override func layoutSubviews() {

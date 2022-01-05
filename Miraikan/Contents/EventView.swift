@@ -179,7 +179,7 @@ fileprivate class EventContent: BaseView {
 class EventView: BaseScrollView {
     init(_ model: EventModel) {
         super.init(frame: .zero)
-        
+
         contentView = EventContent(model)
         scrollView.addSubview(contentView)
         addSubview(scrollView)
