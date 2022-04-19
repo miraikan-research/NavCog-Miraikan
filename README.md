@@ -45,10 +45,11 @@ By making a contribution to this project, I certify that:
 ## Build
 1. install [Carthage](https://github.com/Carthage/Carthage): `brew install carthage`
 2. In the project directory, run `carthage update --platform iOS`.
-3. install [Cocoapods](https://cocoapods.org/): `sudo gem install cocoapods`
-4. In the project directory, run `pod install`
-5. Open NavCog3.xcworkspace
-6. Build NavCog3 target with Xcode.
+3. install for OpenCV, run `brew install cmake`.
+4. install [Cocoapods](https://cocoapods.org/): `sudo gem install cocoapods`
+5. In the project directory, run `pod install`
+6. Open NavCog3.xcworkspace
+7. Build NavCog3 target with Xcode.
 
 **Additional configuration**
 
