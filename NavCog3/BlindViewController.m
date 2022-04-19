@@ -76,6 +76,8 @@
     NSTimeInterval lastLocationSent;
     NSTimeInterval lastOrientationSent;
     
+    NSTimer *checkMapCenterTimer;
+
     BOOL initialViewDidAppear;
     BOOL needVOFocus;
     WebViewController *showingPage;
@@ -143,7 +145,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestRating:) name:REQUEST_RATING object:nil];
 
 
-    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
+    checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationChanged:) name:NAV_LOCATION_CHANGED_NOTIFICATION object:nil];
@@ -388,6 +390,8 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:DISABLE_ACCELEARATION object:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:ENABLE_STABILIZE_LOCALIZE object:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AccessibilityElementDidBecomeFocused object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+    [checkMapCenterTimer invalidate];
 }
 
 - (void)debugPeerStateChanged:(NSNotification*)note
@@ -446,7 +450,7 @@
         titleView.accessibilityTraits = UIAccessibilityTraitStaticText;
         self.navigationItem.titleView = titleView;
         
-        if (debugFollower || initFlag) {    
+        if (debugFollower || initFlag) {
             self.navigationItem.rightBarButtonItem = nil;
         } else {
             self.navigationItem.rightBarButtonItem = _searchButton;
@@ -541,7 +545,7 @@
                 break;
             default:
                 [NavUtil hideWaitingForView:self.view];
-        }        
+        }
     });
 }
 
@@ -877,7 +881,7 @@
 
 - (void)stopAction
 {
-    [motionManager stopDeviceMotionUpdates];    
+    [motionManager stopDeviceMotionUpdates];
 }
 
 - (void)startAction
@@ -1222,7 +1226,7 @@
                             @"stairs":[ud boolForKey:@"route_use_stairs"]?@"9":@"1",
                             @"esc":[ud boolForKey:@"route_use_escalator"]?@"9":@"1",
                             @"elv":[ud boolForKey:@"route_use_elevator"]?@"9":@"1",
-                            @"mvw":[ud boolForKey:@"route_use_moving_walkway"]?@"9":@"1",    
+                            @"mvw":[ud boolForKey:@"route_use_moving_walkway"]?@"9":@"1",
                             @"tactile_paving":[ud boolForKey:@"route_tactile_paving"]?@"1":@"",
                             };
     
@@ -1262,7 +1266,7 @@
 }
 
 - (void)executeCommand:(NSString *)command
-{    
+{
     JSContext *ctx = [[JSContext alloc] init];
     ctx[@"speak"] = ^(NSString *message) {
         [self speak:message withOptions:@{} completionHandler:^{
