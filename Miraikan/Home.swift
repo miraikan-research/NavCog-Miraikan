@@ -529,7 +529,14 @@ class Home : BaseListView {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sections?[section].title
     }
-    
+
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = .systemGray
+        if let header = view as? UITableViewHeaderFooterView {
+            header.textLabel?.textColor = .white
+        }
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if sections?[section] == .spex
                     || sections?[section] == .event,

@@ -93,9 +93,9 @@ class BaseView: UIView {
     
     // MARK: Size calculation
     private func padding(margin: CGFloat = 10) -> UIEdgeInsets {
-        return UIEdgeInsets(top: safeAreaInsets.top + 10,
+        return UIEdgeInsets(top: safeAreaInsets.top,
                             left: margin,
-                            bottom: margin,
+                            bottom: 0,
                             right: margin)
     }
     
