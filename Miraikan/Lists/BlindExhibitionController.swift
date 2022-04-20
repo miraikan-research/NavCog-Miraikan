@@ -200,6 +200,9 @@ fileprivate class ContentRow : BaseRow {
         ? model.blindOverview
         : "概観\n\n\(model.blindOverview)"
         addSubview(lblOverview)
+
+        lblDescription.isHidden = lblDescription.text?.isEmpty ?? true
+        lblOverview.isHidden = lblOverview.text?.isEmpty ?? true
     }
     
     override func prepareForReuse() {
