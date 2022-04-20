@@ -79,7 +79,7 @@ fileprivate class NavButtonRow : BaseRow {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        btnNavi.setTitle("この展示へナビ", for: .normal)
+        btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", tableName: "Miraikan", comment: ""), for: .normal)
         btnNavi.sizeToFit()
         addSubview(btnNavi)
     }

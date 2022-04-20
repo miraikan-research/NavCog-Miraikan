@@ -81,7 +81,7 @@ fileprivate class NavButtonRow : BaseRow {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        btnNavi.setTitle("この展示へナビ", for: .normal)
+        btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", tableName: "Miraikan", comment: ""), for: .normal)
         btnNavi.sizeToFit()
         addSubview(btnNavi)
     }
@@ -195,10 +195,12 @@ fileprivate class ContentRow : BaseRow {
     public func configure(_ model: ExhibitionContentModel) {
         lblDescription.text = model.blindIntro.isEmpty
         ? model.blindIntro
-        : "概要\n\n\(model.blindIntro)\n"
+        : NSLocalizedString("Description", tableName: "Miraikan", comment: "") + "\n\n\(model.blindIntro)\n"
+
         lblOverview.text = model.blindOverview.isEmpty
         ? model.blindOverview
-        : "概観\n\n\(model.blindOverview)"
+        : NSLocalizedString("Overview", tableName: "Miraikan", comment: "") + "\n\n\(model.blindOverview)"
+
         addSubview(lblOverview)
 
         lblDescription.isHidden = lblDescription.text?.isEmpty ?? true
