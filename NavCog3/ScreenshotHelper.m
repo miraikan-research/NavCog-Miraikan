@@ -95,7 +95,7 @@ static ScreenshotHelper *instance;
                 
                 UIImage *image = [self screenshotImage];
             
-                [queue addOperationWithBlock:^{
+                NSOperation *operation = [NSBlockOperation blockOperationWithBlock: ^{
                     
                     static NSDateFormatter *formatter;
                     if (!formatter) {
@@ -115,6 +115,7 @@ static ScreenshotHelper *instance;
                     }
                     [self checkLimit];
                 }];
+                [queue  addOperation:operation];
             });
         }];
     }

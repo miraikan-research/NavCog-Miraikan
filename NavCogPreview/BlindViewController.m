@@ -150,10 +150,11 @@
 
 - (void) resetMotionAverage
 {
-    [motionQueue addOperationWithBlock:^{
+    NSOperation *operation = [NSBlockOperation blockOperationWithBlock: ^{
         yawsIndex = 0;
         lastGyroCommand = 0;
     }];
+    [motionQueue  addOperation:operation];
 }
 
 double average(double array[], long count) {
