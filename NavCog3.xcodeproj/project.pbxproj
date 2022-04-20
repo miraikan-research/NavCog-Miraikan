@@ -359,6 +359,7 @@
 		D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */; };
 		D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
+		E5A716F6280FEC8900CF5757 /* Miraikan.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5A716F8280FEC8900CF5757 /* Miraikan.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -665,6 +666,10 @@
 		D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWebView.swift; sourceTree = "<group>"; };
 		E5A716E6280F8EF600CF5757 /* SettingDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingDataManager.m; sourceTree = "<group>"; };
 		E5A716E8280F8F0200CF5757 /* SettingDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingDataManager.h; sourceTree = "<group>"; };
+		E5A716F7280FEC8900CF5757 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Miraikan.strings; sourceTree = "<group>"; };
+		E5A716FA280FEC9500CF5757 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Miraikan.strings; sourceTree = "<group>"; };
+		E5A71704280FF66400CF5757 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Miraikan.strings"; sourceTree = "<group>"; };
+		E5A71705280FF66B00CF5757 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Miraikan.strings; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1148,6 +1153,7 @@
 				30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */,
 				D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */,
 				D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */,
+				E5A716F8280FEC8900CF5757 /* Miraikan.strings */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1495,6 +1501,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A716F6280FEC8900CF5757 /* Miraikan.strings in Resources */,
 				D3A1183727294B0B00BEC1C8 /* nosound.aiff in Resources */,
 				D3A1183827294B0B00BEC1C8 /* miraikan_serverlist.json in Resources */,
 				D3A1183927294B0B00BEC1C8 /* HLPSettingViewPickerCell.xib in Resources */,
@@ -1998,7 +2005,6 @@
 				7EDEDC271D1E0C6800AC111A /* ViewController.m in Sources */,
 				7E433DCF1D6E846300C6C993 /* NavDeviceTTS.m in Sources */,
 				7E6E42E91D90FD1B006B6899 /* BlindViewController.m in Sources */,
-				E5A716E7280F8EF600CF5757 /* SettingDataManager.m in Sources */,
 				7EF7F7A81DD17D4A000A625A /* NavCommander.m in Sources */,
 				7EDEDC241D1E0C6800AC111A /* AppDelegate.mm in Sources */,
 				7E5150A41D8BF32800ED25FB /* NavNavigator.m in Sources */,
@@ -2270,6 +2276,17 @@
 				A9A695C02137CAA000009527 /* zh-Hans */,
 			);
 			name = Fingerprint.strings;
+			sourceTree = "<group>";
+		};
+		E5A716F8280FEC8900CF5757 /* Miraikan.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E5A716F7280FEC8900CF5757 /* ja */,
+				E5A716FA280FEC9500CF5757 /* en */,
+				E5A71704280FF66400CF5757 /* zh-Hans */,
+				E5A71705280FF66B00CF5757 /* ko */,
+			);
+			name = Miraikan.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
