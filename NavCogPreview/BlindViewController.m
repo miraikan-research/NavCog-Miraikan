@@ -74,6 +74,8 @@
     int activeCount;
     NSString *logFile;
     NSTimer *timeout;
+
+    NSTimer *checkMapCenterTimer;
 }
 
 - (void)dealloc
@@ -121,7 +123,7 @@
     _indicator.accessibilityLabel = NSLocalizedString(@"Loading, please wait", @"");
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _indicator);
     
-    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
+    checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(routeChanged:) name:ROUTE_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voiceOverStatusChanged:) name:UIAccessibilityVoiceOverStatusChanged object:nil];
@@ -319,6 +321,7 @@ double stdev(double array[], long count) {
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [checkMapCenterTimer invalidate];
 }
 
 #pragma mark - HLPPreivewCommanderDelegate
@@ -928,7 +931,7 @@ double stdev(double array[], long count) {
                 if (routes.count > 0) { // with route
                     vc = [[UIStoryboard storyboardWithName:@"Preview" bundle:nil] instantiateViewControllerWithIdentifier:@"setting_view"];
                     vc.restorationIdentifier = @"exp_settings";
-                } else { // no route                    
+                } else { // no route
                     vc = [[UIStoryboard storyboardWithName:@"Preview" bundle:nil] instantiateViewControllerWithIdentifier:@"search_view"];
                 }
             }

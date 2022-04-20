@@ -55,7 +55,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     NSTimeInterval lastLocationSent;
     NSTimeInterval lastOrientationSent;
-    
+
+    NSTimer *checkMapCenterTimer;
+    NSTimer *checkStateTimer;
+
     BOOL isNaviStarted;
 }
 
@@ -136,11 +139,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openURL:) name: REQUEST_OPEN_URL object:nil];
     
-    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
+    checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
     
     [self updateView];
     
-    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
+    checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestRating:) name:REQUEST_RATING object:nil];
     
@@ -169,7 +172,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 }
 
 - (void)viewDidAppear:(BOOL)animated
-{    
+{
     if (!dialogHelper) {
         dialogHelper = [[DialogViewHelper alloc] init];
         double scale = 0.75;
@@ -198,6 +201,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
     _settingButton = nil;
     
     [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+    [checkMapCenterTimer invalidate];
+    [checkStateTimer invalidate];
 }
 
 - (UIViewController*) topMostController
