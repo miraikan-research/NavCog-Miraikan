@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MiraikanMapController.h"
 #import <NavCogMiraikan-Swift.h>
+#import "SettingDataManager.h"
 
 @interface MiraikanMapController() {
     BaseButton *btnVoiceGuide;
@@ -30,7 +31,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[SettingDataManager sharedManager] setPresetId: _presetId];
+
     self.isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
     
     lblDesc = [[UILabel alloc] init];

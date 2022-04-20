@@ -41,8 +41,23 @@ enum RouteMode : String, CaseIterable {
             return NSLocalizedString("user_general", comment: "")
         case .wheelchair:
             return NSLocalizedString("user_wheelchair", comment: "")
+//        case .stroller:
+//            return NSLocalizedString("user_stroller", comment: "")
         case .blind:
             return NSLocalizedString("user_blind", comment: "")
+        }
+    }
+
+    var rawInt: Int {
+        switch self {
+        case .general:
+            return 1
+        case .wheelchair:
+            return 2
+//        case .stroller:
+//            return 3
+        case .blind:
+            return 9
         }
     }
 }

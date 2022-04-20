@@ -40,7 +40,13 @@ class MiraikanUtil : NSObject {
         let mode = RouteMode(rawValue: val) ?? .general
         return mode
     }
-    
+
+    static public var presetId : Int {
+        let val = UserDefaults.standard.string(forKey: "RouteMode") ?? "unknown"
+        let mode = RouteMode(rawValue: val) ?? .general
+        return mode.rawInt
+    }
+
     // HLPLocation
     static public var location: HLPLocation? {
         return NavDataStore.shared().currentLocation()
