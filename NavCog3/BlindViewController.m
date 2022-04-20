@@ -752,21 +752,8 @@
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
     NavDestination *to = [nds destinationByID: self.destId];
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     
-    __block NSMutableDictionary *prefs = [@{
-                            @"dist":@"500",
-                            @"preset":@"9",
-                            @"min_width":@"8",
-                            @"slope":@"9",
-                            @"road_condition":@"9",
-                            @"deff_LV":@"9",
-                            @"stairs":[ud boolForKey:@"route_use_stairs"]?@"9":@"1",
-                            @"esc":[ud boolForKey:@"route_use_escalator"]?@"9":@"1",
-                            @"elv":[ud boolForKey:@"route_use_elevator"]?@"9":@"1",
-                            @"mvw":[ud boolForKey:@"route_use_moving_walkway"]?@"9":@"1",
-                            @"tactile_paving":[ud boolForKey:@"route_tactile_paving"]?@"1":@"",
-                            } mutableCopy];
+    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
                                      withOptions:AVAudioSessionCategoryOptionAllowBluetooth
                                            error:nil];
@@ -1225,21 +1212,7 @@
     NavDataStore *nds = [NavDataStore sharedDataStore];
     [nds clearRoute];
     
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSDictionary *prefs = @{
-                            @"dist":@"500",
-                            @"preset":@"9",
-                            @"min_width":@"8",
-                            @"slope":@"9",
-                            @"road_condition":@"9",
-                            @"deff_LV":@"9",
-                            @"stairs":[ud boolForKey:@"route_use_stairs"]?@"9":@"1",
-                            @"esc":[ud boolForKey:@"route_use_escalator"]?@"9":@"1",
-                            @"elv":[ud boolForKey:@"route_use_elevator"]?@"9":@"1",
-                            @"mvw":[ud boolForKey:@"route_use_moving_walkway"]?@"9":@"1",
-                            @"tactile_paving":[ud boolForKey:@"route_tactile_paving"]?@"1":@"",
-                            };
-    
+    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
     dispatch_async(dispatch_get_main_queue(), ^{
         [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading, please wait",@"")];
     });
