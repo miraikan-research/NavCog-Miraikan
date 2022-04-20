@@ -14,6 +14,7 @@
 @interface MiraikanMapController : UIViewController
 
 @property (strong, nonatomic) NSString *destId;
+@property (nonatomic) int presetId;
 @property (nonatomic) BOOL isNaviStarted;
 @property (nonatomic) BOOL isDestLoaded;
 @property (nonatomic) BOOL isRouteRequested;

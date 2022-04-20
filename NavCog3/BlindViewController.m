@@ -34,6 +34,7 @@
 #import "RatingViewController.h"
 
 #import "SettingViewController.h"
+#import "SettingDataManager.h"
 
 #import "ServerConfig.h"
 

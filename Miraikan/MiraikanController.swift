@@ -175,6 +175,7 @@ class BaseNavController: UINavigationController {
         let mapVC = UIStoryboard(name: "Main", bundle: nil)
             .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
         mapVC.destId = nodeId
+        mapVC.presetId = Int32(MiraikanUtil.presetId)
         self.show(mapVC, sender: nil)
     }
     

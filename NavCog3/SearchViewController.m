@@ -26,6 +26,8 @@
 #import "LocationEvent.h"
 #import "DestinationTableViewController.h"
 #import "ServerConfig.h"
+#import "SettingDataManager.h"
+
 @import AVFoundation;
 
 @interface SearchViewController () {

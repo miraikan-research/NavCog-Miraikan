@@ -358,6 +358,7 @@
 		D3C4A43B276092240098CF29 /* HTTPAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */; };
 		D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */; };
 		D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */; };
+		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -662,6 +663,8 @@
 		D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPAdaptor.swift; sourceTree = "<group>"; };
 		D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAdaptor.swift; sourceTree = "<group>"; };
 		D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWebView.swift; sourceTree = "<group>"; };
+		E5A716E6280F8EF600CF5757 /* SettingDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingDataManager.m; sourceTree = "<group>"; };
+		E5A716E8280F8F0200CF5757 /* SettingDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingDataManager.h; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -938,6 +941,8 @@
 				7E1F9F291DEEB1D3003E1B23 /* NavDebugHelper.m */,
 				7E7ED5A31F5E67BC0033814B /* ScreenshotHelper.h */,
 				7E7ED5A41F5E67BC0033814B /* ScreenshotHelper.m */,
+				E5A716E8280F8F0200CF5757 /* SettingDataManager.h */,
+				E5A716E6280F8EF600CF5757 /* SettingDataManager.m */,
 				D38EF87E2704492000DB9444 /* HLPHelper.h */,
 			);
 			name = helper;
@@ -1993,6 +1998,7 @@
 				7EDEDC271D1E0C6800AC111A /* ViewController.m in Sources */,
 				7E433DCF1D6E846300C6C993 /* NavDeviceTTS.m in Sources */,
 				7E6E42E91D90FD1B006B6899 /* BlindViewController.m in Sources */,
+				E5A716E7280F8EF600CF5757 /* SettingDataManager.m in Sources */,
 				7EF7F7A81DD17D4A000A625A /* NavCommander.m in Sources */,
 				7EDEDC241D1E0C6800AC111A /* AppDelegate.mm in Sources */,
 				7E5150A41D8BF32800ED25FB /* NavNavigator.m in Sources */,
@@ -2089,6 +2095,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */,
 				300093032750A54900539A0F /* DefaultTTS.swift in Sources */,
 				D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */,
 				D364735B273E0CFD00C110B0 /* BaseListView.swift in Sources */,
