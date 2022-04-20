@@ -79,6 +79,8 @@
     
     NSTimer *checkMapCenterTimer;
 
+    long locationChangedTime;
+
     BOOL initialViewDidAppear;
     BOOL needVOFocus;
     WebViewController *showingPage;
@@ -101,7 +103,8 @@
     self.isRouteRequested = NO;
     
     initialViewDidAppear = YES;
-    
+    locationChangedTime = 0;
+
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[NavBlindWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     _webView.isDeveloperMode = [ud boolForKey:@"developer_mode"];
@@ -738,6 +741,12 @@
 
 - (void) destinationChanged: (NSNotification*) note
 {
+    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
+    if (locationChangedTime + 5000 > now) {
+        return;
+    }
+    locationChangedTime = now;
+
     [_webView initTarget:[note userInfo][@"destinations"]];
     
     NavDataStore *nds = [NavDataStore sharedDataStore];

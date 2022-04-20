@@ -60,6 +60,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSTimer *checkMapCenterTimer;
     NSTimer *checkStateTimer;
 
+    long locationChangedTime;
     BOOL isNaviStarted;
 }
 
@@ -98,7 +99,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     isNaviStarted = NO;
     state = ViewStateLoading;
-    
+    locationChangedTime = 0;
+
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     [self.view addSubview:_webView];
@@ -273,6 +275,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void) destinationChanged: (NSNotification*) note
 {
+    
+    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
+    if (locationChangedTime + 5000 > now) {
+        return;
+    }
+    locationChangedTime = now;
+
     [self initTarget:[note userInfo][@"destinations"]];
     
     NavDataStore *nds = [NavDataStore sharedDataStore];

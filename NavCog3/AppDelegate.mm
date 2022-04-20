@@ -59,6 +59,7 @@ void NavNSLog(NSString* fmt, ...) {
     CBCentralManager *bluetoothManager;
     BOOL secondOrLater;
     NSTimeInterval lastActiveTime;
+    long locationChangedTime;
 }
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -69,7 +70,8 @@ void NavNSLog(NSString* fmt, ...) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     // [Logging startLog];
-    
+    locationChangedTime = 0;
+
     // Start locating here
     [MiraikanUtil startLocating];
     
@@ -327,6 +329,17 @@ void uncaughtExceptionHandler(NSException *exception)
 
 - (void)locationManager:(HLPLocationManager *)manager didLocationUpdate:(HLPLocation *)location
 {
+    if (isnan(location.lat) || isnan(location.lng)) {
+        // handle location information nan here
+        return;
+    }
+
+    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
+    if (locationChangedTime + 200 > now) {
+        return;
+    }
+    locationChangedTime = now;
+
     NSMutableDictionary *data =
     [@{
        //@"x": @(refPose.x()),
