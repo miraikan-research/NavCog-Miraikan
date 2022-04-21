@@ -21,19 +21,18 @@
  *******************************************************************************/
 
 #import "ViewController.h"
+#import "DefaultTTS.h"
 #import "LocationEvent.h"
-#import "NavDebugHelper.h"
-#import "NavUtil.h"
 #import "NavDataStore.h"
+#import "NavDebugHelper.h"
+#import "NavDeviceTTS.h"
+#import "NavUtil.h"
 #import "RatingViewController.h"
 #import "SettingViewController.h"
 #import "SettingDataManager.h"
 #import "ServerConfig.h"
-#import "NavDeviceTTS.h"
 #import <HLPLocationManager/HLPLocationManager.h>
-#import "DefaultTTS.h"
 #import <CoreMotion/CoreMotion.h>
-
 #import <NavCogMiraikan-Swift.h>
 
 typedef NS_ENUM(NSInteger, ViewState) {
@@ -73,24 +72,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)dealloc
 {
-    NSLog(@"dealloc ViewController");
+    NSLog(@"%s: %d" , __func__, __LINE__);
 }
-
-//- (void)prepareForDealloc
-//{
-//    _webView.delegate = nil;
-//
-//    dialogHelper.delegate = nil;
-//    dialogHelper = nil;
-//
-//    recognizer = nil;
-//
-//    _settingButton = nil;
-//
-//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
-//
-//    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
-//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -129,31 +112,20 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [self.webView addGestureRecognizer:recognizer];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestStartNavigation:) name:REQUEST_START_NAVIGATION object:nil];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uiStateChanged:) name:WCUI_STATE_CHANGED_NOTIFICATION object:nil];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dialogStateChanged:) name:DialogManager.DIALOG_AVAILABILITY_CHANGED_NOTIFICATION object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationStatusChanged:) name:NAV_LOCATION_STATUS_CHANGE object:nil];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationChanged:) name:NAV_LOCATION_CHANGED_NOTIFICATION object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(destinationChanged:) name:DESTINATIONS_CHANGED_NOTIFICATION object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openURL:) name: REQUEST_OPEN_URL object:nil];
-    
-    checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
-    
-    [self updateView];
-    
-    checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestRating:) name:REQUEST_RATING object:nil];
-    
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
-    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
-    
+
+    checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
+    checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
+    [self updateView];
+
     BOOL checked = [ud boolForKey:@"checked_altimeter"];
     if (!checked && ![CMAltimeter isRelativeAltitudeAvailable]) {
         NSString *title = NSLocalizedString(@"NoAltimeterAlertTitle", @"");
@@ -193,7 +165,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
     _webView.delegate = nil;
     
     dialogHelper.delegate = nil;
@@ -204,9 +177,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
     _settingButton = nil;
     
     [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
+- (void)viewDidDisappear:(BOOL)animated
+{
     [NSNotificationCenter.defaultCenter removeObserver:self];
     [checkMapCenterTimer invalidate];
     [checkStateTimer invalidate];
@@ -254,7 +229,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }];
 }
 
-- (void) startNavi: (HLPLocation*) center {
+- (void)startNavi: (HLPLocation*) center {
     NSDictionary *target =
     @{
       @"action": @"start",
@@ -271,37 +246,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     dispatch_async(dispatch_get_main_queue(), ^{
         [_webView evaluateJavaScript:script completionHandler:nil];
     });
-}
-
-- (void) destinationChanged: (NSNotification*) note
-{
-    
-    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
-    if (locationChangedTime + 5000 > now) {
-        return;
-    }
-    locationChangedTime = now;
-
-    [self initTarget:[note userInfo][@"destinations"]];
-    
-    NavDataStore *nds = [NavDataStore sharedDataStore];
-    NavDestination *from = [NavDataStore destinationForCurrentLocation];
-    NavDestination *to = [nds destinationByID:[self destId]];
-    
-    [self startNavi:from.location];
-    
-    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
-                                     withOptions:AVAudioSessionCategoryOptionAllowBluetooth
-                                           error:nil];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [nds requestRouteFrom:from.singleId
-                       To:to._id withPreferences:prefs complete:^{
-        __weak typeof(self) weakself = self;
-        nds.previewMode = [MiraikanUtil isPreview];
-        nds.exerciseMode = NO;
-        [weakself showRoute];
-    }];
 }
 
 - (void)initTarget:(NSArray *)landmarks
@@ -352,17 +296,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     });
 }
 
-- (void) requestRating:(NSNotification*)note
-{
-    if ([[ServerConfig sharedConfig] shouldAskRating]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            ratingInfo = [note userInfo];
-            [self performSegueWithIdentifier:@"show_rating" sender:self];
-        });
-    }
-}
-
-- (void) checkState:(NSTimer*)timer
+- (void)checkState:(NSTimer*)timer
 {
     if (state != ViewStateLoading) {
         [timer invalidate];
@@ -374,12 +308,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }];
 }
 
-- (void) openURL:(NSNotification*)note
-{
-    [NavUtil openURL:[note userInfo][@"url"] onViewController:self];
-}
-
-
 - (void)dialogViewTapped
 {
     [dialogHelper inactive];
@@ -387,83 +315,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [self performSegueWithIdentifier:@"show_dialog_wc" sender:self];
     
 }
-
-- (void)dialogStateChanged:(NSNotification*)note
-{
-    [self updateView];
-}
-
-- (void)uiStateChanged:(NSNotification*)note
-{
-    uiState = [note userInfo];
-
-    NSString *page = uiState[@"page"];
-    BOOL inNavigation = [uiState[@"navigation"] boolValue];
-
-    if (page) {
-        if ([page isEqualToString:@"control"]) {
-            state = ViewStateSearch;
-        }
-        else if ([page isEqualToString:@"settings"]) {
-            state = ViewStateSearchSetting;
-        }
-        else if ([page isEqualToString:@"confirm"]) {
-            state = ViewStateRouteConfirm;
-        }
-        else if ([page hasPrefix:@"map-page"]) {
-            if (inNavigation) {
-                state = ViewStateNavigation;
-            } else {
-                state = ViewStateMap;
-            }
-        }
-        else if ([page hasPrefix:@"ui-id-"]) {
-            state = ViewStateSearchDetail;
-        }
-        else if ([page isEqualToString:@"confirm_floor"]) {
-            state = ViewStateRouteCheck;
-        }
-        else {
-            NSLog(@"unmanaged state: %@", page);
-        }
-    }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateView];
-    });
-}
-
-- (IBAction)doSearch:(id)sender {
-    state = ViewStateTransition;
-    [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlRouteSearchButton];
-}
-
-- (IBAction)stopNavigation:(id)sender {
-    state = ViewStateTransition;
-    [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlNone];
-}
-
-- (IBAction)doCancel:(id)sender {
-    state = ViewStateTransition;
-    [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlNone];
-}
-
-- (IBAction)doDone:(id)sender {
-    state = ViewStateTransition;
-    [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlDoneButton];
-}
-
-- (IBAction)doBack:(id)sender {
-    if (state == ViewStateSearchDetail) {
-        //state = ViewStateTransition;
-        //[self updateView];
-        [_webView triggerWebviewControl:HLPWebviewControlBackToControl];
-    }
-}
-
 
 - (void)updateView
 {
@@ -561,7 +412,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     _errorMessage.hidden = NO;
     _retryButton.hidden = NO;
-    
 }
 
 - (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
@@ -598,12 +448,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)webView:(HLPWebView *)webView didChangeUIPage:(NSString *)page inNavigation:(BOOL)inNavigation
 {
-    NSDictionary *uiState_ =
+    NSDictionary *uiState =
     @{
       @"page": page,
       @"navigation": @(inNavigation),
       };
-    [[NSNotificationCenter defaultCenter] postNotificationName:WCUI_STATE_CHANGED_NOTIFICATION object:self userInfo:uiState_];
+    [[NSNotificationCenter defaultCenter] postNotificationName:WCUI_STATE_CHANGED_NOTIFICATION object:self userInfo:uiState];
 }
 
 - (void)webView:(HLPWebView *)webView didFinishNavigationStart:(NSTimeInterval)start end:(NSTimeInterval)end from:(NSString *)from to:(NSString *)to
@@ -625,7 +475,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 #pragma mark -
 
-- (void) touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     NSLog(@"%@", touches);
     NSLog(@"%@", event);
@@ -650,6 +500,67 @@ typedef NS_ENUM(NSInteger, ViewState) {
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - notification handlers
+
+
+- (void)openURL:(NSNotification*)note
+{
+    [NavUtil openURL:[note userInfo][@"url"] onViewController:self];
+}
+
+- (void)dialogStateChanged:(NSNotification*)note
+{
+    [self updateView];
+}
+
+- (void)requestRating:(NSNotification*)note
+{
+    if ([[ServerConfig sharedConfig] shouldAskRating]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            ratingInfo = [note userInfo];
+            [self performSegueWithIdentifier:@"show_rating" sender:self];
+        });
+    }
+}
+
+- (void)uiStateChanged:(NSNotification*)note
+{
+    uiState = [note userInfo];
+
+    NSString *page = uiState[@"page"];
+    BOOL inNavigation = [uiState[@"navigation"] boolValue];
+
+    if (page) {
+        if ([page isEqualToString:@"control"]) {
+            state = ViewStateSearch;
+        }
+        else if ([page isEqualToString:@"settings"]) {
+            state = ViewStateSearchSetting;
+        }
+        else if ([page isEqualToString:@"confirm"]) {
+            state = ViewStateRouteConfirm;
+        }
+        else if ([page hasPrefix:@"map-page"]) {
+            if (inNavigation) {
+                state = ViewStateNavigation;
+            } else {
+                state = ViewStateMap;
+            }
+        }
+        else if ([page hasPrefix:@"ui-id-"]) {
+            state = ViewStateSearchDetail;
+        }
+        else if ([page isEqualToString:@"confirm_floor"]) {
+            state = ViewStateRouteCheck;
+        }
+        else {
+            NSLog(@"unmanaged state: %@", page);
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateView];
+    });
+}
 
 - (void)requestStartNavigation:(NSNotification*)note
 {
@@ -673,6 +584,163 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@", options[@"toID"],
                       [[NSDate date] timeIntervalSince1970], elv, stairs, esc];
     [_webView setLocationHash:hash];
+}
+
+
+- (void)locationStatusChanged:(NSNotification*)note
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HLPLocationStatus status = [[note userInfo][@"status"] unsignedIntegerValue];
+        
+        switch(status) {
+            case HLPLocationStatusLocating:
+                [NavUtil showWaitingForView:self.view withMessage:NSLocalizedStringFromTable(@"Locating...", @"BlindView", @"")];
+                break;
+            default:
+                [NavUtil hideWaitingForView:self.view];
+        }
+    });
+}
+
+- (void)locationChanged: (NSNotification*) note
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
+        if (appState == UIApplicationStateBackground || appState == UIApplicationStateInactive) {
+            return;
+        }
+        
+        NSDictionary *locations = [note userInfo];
+        if (!locations) {
+            return;
+        }
+        HLPLocation *location = locations[@"current"];
+        if (!location || [location isEqual:[NSNull null]]) {
+            return;
+        }
+        
+        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+        
+        double orientation = -location.orientation / 180 * M_PI;
+        
+        if (lastOrientationSent + 0.2 < now) {
+            [_webView sendData:@[@{
+                                @"type":@"ORIENTATION",
+                                @"z":@(orientation)
+                                }]
+                      withName:@"Sensor"];
+            lastOrientationSent = now;
+        }
+        
+        
+        location = locations[@"actual"];
+        if (!location || [location isEqual:[NSNull null]]) {
+            return;
+        }
+        
+        /*
+         if (isnan(location.lat) || isnan(location.lng)) {
+         return;
+         }
+         */
+        
+        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey:@"webview_update_min_interval"]) {
+            if (!location.params) {
+                return;
+            }
+            //return; // prevent too much send location info
+        }
+        
+        double floor = location.floor;
+        
+        [_webView sendData:@{
+                            @"lat":@(location.lat),
+                            @"lng":@(location.lng),
+                            @"floor":@(floor),
+                            @"accuracy":@(location.accuracy),
+                            @"rotate":@(0), // dummy
+                            @"orientation":@(999), //dummy
+                            @"debug_info":location.params?location.params[@"debug_info"]:[NSNull null],
+                            @"debug_latlng":location.params?location.params[@"debug_latlng"]:[NSNull null]
+                            }
+                  withName:@"XYZ"];
+
+        lastLocationSent = now;
+        
+        if (!self.destId || isNaviStarted) {
+            return;
+        }
+        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+            NSString *msg = [MiraikanUtil isPreview]
+                ? NSLocalizedString(@"Loading preview",@"")
+                : NSLocalizedString(@"Loading, please wait",@"");
+            [NavUtil showModalWaitingWithMessage:msg];
+        }
+    });
+}
+
+- (void)destinationChanged: (NSNotification*) note
+{
+    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
+    if (locationChangedTime + 5000 > now) {
+        return;
+    }
+    locationChangedTime = now;
+
+    [self initTarget:[note userInfo][@"destinations"]];
+    
+    NavDataStore *nds = [NavDataStore sharedDataStore];
+    NavDestination *from = [NavDataStore destinationForCurrentLocation];
+    NavDestination *to = [nds destinationByID:[self destId]];
+    
+    [self startNavi:from.location];
+    
+    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
+                                     withOptions:AVAudioSessionCategoryOptionAllowBluetooth
+                                           error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [nds requestRouteFrom:from.singleId
+                       To:to._id withPreferences:prefs complete:^{
+        __weak typeof(self) weakself = self;
+        nds.previewMode = [MiraikanUtil isPreview];
+        nds.exerciseMode = NO;
+        [weakself showRoute];
+    }];
+}
+
+#pragma mark - IBActions
+
+- (IBAction)doSearch:(id)sender {
+    state = ViewStateTransition;
+    [self updateView];
+    [_webView triggerWebviewControl:HLPWebviewControlRouteSearchButton];
+}
+
+- (IBAction)stopNavigation:(id)sender {
+    state = ViewStateTransition;
+    [self updateView];
+    [_webView triggerWebviewControl:HLPWebviewControlNone];
+}
+
+- (IBAction)doCancel:(id)sender {
+    state = ViewStateTransition;
+    [self updateView];
+    [_webView triggerWebviewControl:HLPWebviewControlNone];
+}
+
+- (IBAction)doDone:(id)sender {
+    state = ViewStateTransition;
+    [self updateView];
+    [_webView triggerWebviewControl:HLPWebviewControlDoneButton];
+}
+
+- (IBAction)doBack:(id)sender {
+    if (state == ViewStateSearchDetail) {
+        //state = ViewStateTransition;
+        //[self updateView];
+        [_webView triggerWebviewControl:HLPWebviewControlBackToControl];
+    }
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
@@ -717,98 +785,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [_webView reload];
     _errorMessage.hidden = YES;
     _retryButton.hidden = YES;
-}
-
-- (void)locationStatusChanged:(NSNotification*)note
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        HLPLocationStatus status = [[note userInfo][@"status"] unsignedIntegerValue];
-        
-        switch(status) {
-            case HLPLocationStatusLocating:
-                [NavUtil showWaitingForView:self.view withMessage:NSLocalizedStringFromTable(@"Locating...", @"BlindView", @"")];
-                break;
-            default:
-                [NavUtil hideWaitingForView:self.view];
-        }
-    });
-}
-
-- (void) locationChanged: (NSNotification*) note
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
-        if (appState == UIApplicationStateBackground || appState == UIApplicationStateInactive) {
-            return;
-        }
-        
-        NSDictionary *locations = [note userInfo];
-        if (!locations) {
-            return;
-        }
-        HLPLocation *location = locations[@"current"];
-        if (!location || [location isEqual:[NSNull null]]) {
-            return;
-        }
-        
-        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-        
-        double orientation = -location.orientation / 180 * M_PI;
-        
-        if (lastOrientationSent + 0.2 < now) {
-            [_webView sendData:@[@{
-                                     @"type":@"ORIENTATION",
-                                     @"z":@(orientation)
-                                     }]
-                      withName:@"Sensor"];
-            lastOrientationSent = now;
-        }
-        
-        
-        location = locations[@"actual"];
-        if (!location || [location isEqual:[NSNull null]]) {
-            return;
-        }
-        
-        /*
-         if (isnan(location.lat) || isnan(location.lng)) {
-         return;
-         }
-         */
-        
-        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey:@"webview_update_min_interval"]) {
-            if (!location.params) {
-                return;
-            }
-            //return; // prevent too much send location info
-        }
-        
-        double floor = location.floor;
-        
-        [_webView sendData:@{
-                             @"lat":@(location.lat),
-                             @"lng":@(location.lng),
-                             @"floor":@(floor),
-                             @"accuracy":@(location.accuracy),
-                             @"rotate":@(0), // dummy
-                             @"orientation":@(999), //dummy
-                             @"debug_info":location.params?location.params[@"debug_info"]:[NSNull null],
-                             @"debug_latlng":location.params?location.params[@"debug_latlng"]:[NSNull null]
-                             }
-                  withName:@"XYZ"];
-        
-        lastLocationSent = now;
-        
-        if (!self.destId || isNaviStarted) {
-            return;
-        }
-        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            NSString *msg = [MiraikanUtil isPreview]
-                ? NSLocalizedString(@"Loading preview",@"")
-                : NSLocalizedString(@"Loading, please wait",@"");
-            [NavUtil showModalWaitingWithMessage:msg];
-        }
-    });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
