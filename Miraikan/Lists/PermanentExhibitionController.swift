@@ -138,9 +138,10 @@ class PermanentExhibitionController : BaseListController, BaseListDelegate {
            let cell = tableView.dequeueReusableCell(withIdentifier: linkId,
                                                           for: indexPath)
             as? LinkRow {
-            let title = model.floor != nil
-                ? "\(model.floor!)階 \(model.title)"
-                : model.title
+            var title = model.title
+            if let floor = model.floor {
+                title = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), String(floor)) + " " + title
+            }
             cell.configure(title: title)
             return cell
         } else if let title = item as? String,
