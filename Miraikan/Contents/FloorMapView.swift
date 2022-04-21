@@ -95,8 +95,8 @@ class FloorMapView: BaseView {
     private func setup(_ model: FloorMapModel) {
         lblTitle.text = model.title
         let floor = model.floor
-        var floorText = "\(floor)階 "
-        
+        var floorText = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), floor)
+
         if let counter = model.counter {
             // If the map exists, use it.
             floorText += counter.uppercased()

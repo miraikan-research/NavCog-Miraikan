@@ -46,7 +46,7 @@ class FloorSelectionController: BaseListController, BaseListDelegate {
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLocation {
-            cell.textLabel?.text = "\(model.floor)階"
+            cell.textLabel?.text = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), String(model.floor))
         }
         return cell
     }
