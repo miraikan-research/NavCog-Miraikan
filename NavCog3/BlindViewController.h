@@ -32,7 +32,16 @@
 #import "MiraikanMapController.h"
 
 
-@interface BlindViewController : MiraikanMapController <HLPWebViewDelegate, HLPTTSProtocol, NavNavigatorDelegate, NavCommanderDelegate, NavPreviewerDelegate, MCBrowserViewControllerDelegate, DialogViewDelegate, WebViewControllerDelegate>
+@interface BlindViewController: MiraikanMapController <
+    HLPWebViewDelegate,
+    HLPTTSProtocol,
+    NavNavigatorDelegate,
+    NavCommanderDelegate,
+    NavPreviewerDelegate,
+    MCBrowserViewControllerDelegate,
+    DialogViewDelegate,
+    WebViewControllerDelegate
+>
 
 @property (nonatomic) IBOutlet NavBlindWebView *webView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
