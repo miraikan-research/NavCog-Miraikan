@@ -130,6 +130,10 @@ While Using the App";
 "THANKYOU_SENDING" = "Thank you for your feedback!
 Feedback is sending...";
 
+"NoRouteAlertTitle" = "Error";
+"NoRouteAlertMessage" = "can't guide you to the route";
+"OK" = "OK";
+
 "Help" = "Help";
 "Instructions" = "Instructions";
 "OpenHelp" = "Open help page";

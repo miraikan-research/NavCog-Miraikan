@@ -81,6 +81,10 @@
 /* (No Comment) */
 "FOR_MALERESTROOM" = "남자 화장실";
 
+"NoRouteAlertTitle" = "Error";
+"NoRouteAlertMessage" = "can't guide you to the route";
+"OK" = "OK";
+
 /* No comment provided by engineer. */
 "Help" = "도움말";
 
