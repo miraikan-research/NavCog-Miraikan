@@ -1028,7 +1028,17 @@
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [NavUtil hideModalWaiting];
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [self.navigationController popViewControllerAnimated:YES];
+        NSString *title = NSLocalizedString(@"NoRouteAlertTitle", @"");
+        NSString *message = NSLocalizedString(@"NoRouteAlertMessage", @"");
+        NSString *ok = NSLocalizedString(@"OK", @"");
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:ok
+                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                                                    [self.navigationController popViewControllerAnimated:YES];
+        }]];
+        [[self topMostController] presentViewController:alert animated:YES completion:nil];
     });
 }
 

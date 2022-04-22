@@ -147,6 +147,10 @@ NavCogの設定画面から
 "THANKYOU_SENDING" = "アンケートにご協力ありがとうございます。
 データを送信中です...";
 
+"NoRouteAlertTitle" = "エラー";
+"NoRouteAlertMessage" = "ルートが案内できません";
+"OK" = "OK";
+
 "Help" = "ヘルプ";
 "Instructions" = "はじめに";
 "OpenHelp" = "ヘルプページを開く";
