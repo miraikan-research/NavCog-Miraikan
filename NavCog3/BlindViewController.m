@@ -455,18 +455,36 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOG_REPLAY_STOP object:self];
 }
 
+- (void)webFooterHidden
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_webView evaluateJavaScript: @"document.getElementById('map-footer').style.display ='none';" completionHandler: nil];
+    });
+}
+
 #pragma mark - MKWebViewDelegate
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
     [_indicator startAnimating];
     _indicator.hidden = NO;
+    _webView.alpha = 0;
+    [self webFooterHidden];
+}
+
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
+    
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [_indicator stopAnimating];
     _indicator.hidden = YES;
+
+    [self webFooterHidden];
+    [UIView animateWithDuration:0.3 animations: ^{
+        _webView.alpha = 1;
+    }];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
