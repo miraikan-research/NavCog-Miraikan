@@ -778,6 +778,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     if ([segue.identifier isEqualToString:@"show_dialog_wc"]){
         DialogViewController* dView = (DialogViewController*)segue.destinationViewController;
         dView.tts = [DefaultTTS new];
+        dView.root = self;
     }
 }
 
