@@ -111,6 +111,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     recognizer.delegate = self;
     [self.webView addGestureRecognizer:recognizer];
     
+    [NSNotificationCenter.defaultCenter removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestStartNavigation:) name:REQUEST_START_NAVIGATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uiStateChanged:) name:WCUI_STATE_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dialogStateChanged:) name:DialogManager.DIALOG_AVAILABILITY_CHANGED_NOTIFICATION object:nil];
@@ -182,7 +183,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    [NSNotificationCenter.defaultCenter removeObserver:self];
     [checkMapCenterTimer invalidate];
     [checkStateTimer invalidate];
 }

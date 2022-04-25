@@ -129,6 +129,7 @@
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _indicator);
     
     self.searchButton.enabled = NO;
+    [NSNotificationCenter.defaultCenter removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logReplay:) name:REQUEST_LOG_REPLAY object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugPeerStateChanged:) name:DEBUG_PEER_STATE_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestDialogStart:) name:REQUEST_DIALOG_START object:nil];
@@ -229,7 +230,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:DISABLE_ACCELEARATION object:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:ENABLE_STABILIZE_LOCALIZE object:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AccessibilityElementDidBecomeFocused object:nil];
-    [NSNotificationCenter.defaultCenter removeObserver:self];
     [checkMapCenterTimer invalidate];
 }
 
