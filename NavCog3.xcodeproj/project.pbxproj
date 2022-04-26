@@ -222,9 +222,6 @@
 		A9A695C12137CAA000009527 /* Fingerprint.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9A695BF2137CAA000009527 /* Fingerprint.strings */; };
 		D3083C7A275603CA0052ABEE /* PermanentExhibitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3083C79275603CA0052ABEE /* PermanentExhibitionController.swift */; };
 		D31E27C327424A9000755958 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31E27C227424A9000755958 /* BaseListController.swift */; };
-		D320F57C2702B8BB00F6AD28 /* MiraikanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */; };
-		D320F57D2702B8BB00F6AD28 /* MiraikanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */; };
-		D320F57E2702B8BB00F6AD28 /* MiraikanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */; };
 		D320F59F2702B8F600F6AD28 /* exhibition.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5812702B8F600F6AD28 /* exhibition.json */; };
 		D320F5A02702B8F600F6AD28 /* exhibition.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5812702B8F600F6AD28 /* exhibition.json */; };
 		D320F5A12702B8F600F6AD28 /* exhibition.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5812702B8F600F6AD28 /* exhibition.json */; };
@@ -365,6 +362,8 @@
 		E5DC79802817C78700EFF12F /* LoginTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797F2817C78700EFF12F /* LoginTabController.swift */; };
 		E5DC79822817C79300EFF12F /* SCTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79812817C79300EFF12F /* SCTabController.swift */; };
 		E5DC79842817C7A000EFF12F /* StaffTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79832817C7A000EFF12F /* StaffTabController.swift */; };
+		E5DC79882817E4D500EFF12F /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79872817E4D500EFF12F /* TabController.swift */; };
+		E5DC798A2817E4F100EFF12F /* BaseNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79892817E4F100EFF12F /* BaseNavController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -680,6 +679,8 @@
 		E5DC797F2817C78700EFF12F /* LoginTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTabController.swift; sourceTree = "<group>"; };
 		E5DC79812817C79300EFF12F /* SCTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCTabController.swift; sourceTree = "<group>"; };
 		E5DC79832817C7A000EFF12F /* StaffTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffTabController.swift; sourceTree = "<group>"; };
+		E5DC79872817E4D500EFF12F /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
+		E5DC79892817E4F100EFF12F /* BaseNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavController.swift; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1140,8 +1141,6 @@
 				D320F58D2702B8F600F6AD28 /* Settings */,
 				E5DC797C2817C75800EFF12F /* Tabs */,
 				D320F57F2702B8F600F6AD28 /* Utils */,
-				D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */,
-				D364736C273E140C00C110B0 /* Home.swift */,
 				D320F5792702B8BB00F6AD28 /* NavCogFP-Bridging-Header.h */,
 				D320F57A2702B8BB00F6AD28 /* NavCogPreview-Bridging-Header.h */,
 				D320F5E42702B94500F6AD28 /* NavCogMiraikan-Bridging-Header.h */,
@@ -1172,6 +1171,7 @@
 		D320F5882702B8F600F6AD28 /* Lists */ = {
 			isa = PBXGroup;
 			children = (
+				D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */,
 				D364735D273E0D4400C110B0 /* EventListController.swift */,
 				D364735C273E0D4400C110B0 /* ExhibitionListController.swift */,
 				D39F3C2D27730ACD0014F1CE /* BlindExhibitionController.swift */,
@@ -1205,6 +1205,8 @@
 				D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */,
 				D3921C2F275760DF00F1DD55 /* BlankView.swift */,
 				E5DC797A2817C72800EFF12F /* BaseTabController.swift */,
+				E5DC79872817E4D500EFF12F /* TabController.swift */,
+				E5DC79892817E4F100EFF12F /* BaseNavController.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1212,6 +1214,7 @@
 		D320F5972702B8F600F6AD28 /* Contents */ = {
 			isa = PBXGroup;
 			children = (
+				D364736C273E140C00C110B0 /* Home.swift */,
 				D38EF87A2704072A00DB9444 /* ExhibitionView.swift */,
 				D320F5992702B8F600F6AD28 /* EventView.swift */,
 				D320F59A2702B8F600F6AD28 /* FloorMapView.swift */,
@@ -1992,7 +1995,6 @@
 				7E30F9B11E813FFC00D542E5 /* AppDelegate.m in Sources */,
 				7EE8E5E71EE94857006EE7C3 /* WelcomViewController.m in Sources */,
 				7EBE397A1E8298C5002A7BF9 /* HLPBeaconSample.m in Sources */,
-				D320F57D2702B8BB00F6AD28 /* MiraikanController.swift in Sources */,
 				7E30FA081E814A9E00D542E5 /* SettingViewController.m in Sources */,
 				7EF562CA1EE6356B004053DA /* POIManager.m in Sources */,
 				7E30FA401E81564000D542E5 /* FingerprintManager.m in Sources */,
@@ -2031,7 +2033,6 @@
 				7EF7F7A81DD17D4A000A625A /* NavCommander.m in Sources */,
 				7EDEDC241D1E0C6800AC111A /* AppDelegate.mm in Sources */,
 				7E5150A41D8BF32800ED25FB /* NavNavigator.m in Sources */,
-				D320F57C2702B8BB00F6AD28 /* MiraikanController.swift in Sources */,
 				7E08DB581DB9F08E00E82161 /* ConfigManager.m in Sources */,
 				7EF7F7AB1DD189B0000A625A /* NavPreviewer.m in Sources */,
 				7E7ED5A51F5E67BC0033814B /* ScreenshotHelper.m in Sources */,
@@ -2078,7 +2079,6 @@
 				7E27F9001EFA608500FB3309 /* HLPSetting.m in Sources */,
 				D3A156F227200FB000A23B9E /* MiraikanMapController.m in Sources */,
 				7E27F9921EFBA92800FB3309 /* HLPPreviewer.m in Sources */,
-				D320F57E2702B8BB00F6AD28 /* MiraikanController.swift in Sources */,
 				7E27F9011EFA608500FB3309 /* HLPSettingHelper.m in Sources */,
 				7E27F9021EFA608500FB3309 /* HLPSettingTableView.m in Sources */,
 				7E27F9031EFA608500FB3309 /* HLPSettingViewCell.m in Sources */,
@@ -2137,6 +2137,7 @@
 				D3A117F427294B0B00BEC1C8 /* ServerSelectionViewController.m in Sources */,
 				D3A117F527294B0B00BEC1C8 /* MiraikanMapController.m in Sources */,
 				D3A117F627294B0B00BEC1C8 /* HLPSettingHelper.m in Sources */,
+				E5DC79882817E4D500EFF12F /* TabController.swift in Sources */,
 				D31E27C327424A9000755958 /* BaseListController.swift in Sources */,
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
 				D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */,
@@ -2155,6 +2156,7 @@
 				D3B1A1A527546AFB00E6CBCB /* AIController.swift in Sources */,
 				D3A1180327294B0B00BEC1C8 /* BlindViewController.m in Sources */,
 				D3A1180427294B0B00BEC1C8 /* AppAboutView.swift in Sources */,
+				E5DC798A2817E4F100EFF12F /* BaseNavController.swift in Sources */,
 				D3A1180527294B0B00BEC1C8 /* NavCommander.m in Sources */,
 				D3083C7A275603CA0052ABEE /* PermanentExhibitionController.swift in Sources */,
 				D3B9D405274F76B1001F4D80 /* NaviSettingController.swift in Sources */,
