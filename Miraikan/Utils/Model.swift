@@ -77,23 +77,21 @@ enum TabItem: Int, CaseIterable {
     }
     
     var vc : UIViewController {
-        let nav = BaseNavController()
         switch self {
+        case .callStaff:
+            return StaffTabController()
+        case .callSC:
+            return SCTabController()
         case .home:
+            let nav = BaseNavController()
             nav.viewControllers = [MiraikanController()]
             nav.title = self.title
             return nav
         case .login:
-            let baseVC = BaseController(LoginView(), title: self.title)
-            nav.viewControllers = [baseVC]
+            return LoginTabController()
         case .askAI:
-            nav.viewControllers = [AIController(title: self.title)]
-        default:
-            let baseVC = BaseController(BlankView(), title: self.title)
-            nav.viewControllers = [baseVC]
+            return AITabController()
         }
-        
-        return nav
     }
     
 }

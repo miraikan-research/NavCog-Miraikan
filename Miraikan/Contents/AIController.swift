@@ -4,7 +4,7 @@
 //  NavCogMiraikan
 //
 /*******************************************************************************
- * Copyright (c) 2021 © Miraikan - The National Museum of Emerging Science and Innovation  
+ * Copyright (c) 2021 © Miraikan - The National Museum of Emerging Science and Innovation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -131,6 +131,12 @@ class AIController : BaseController {
         let dialogVC = DialogViewController()
         dialogVC.tts = DefaultTTS()
         dialogVC.title = self.title
+        dialogVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - 50)
+        dialogVC.dialogViewHelper.removeFromSuperview()
+        dialogVC.dialogViewHelper.setup(dialogVC.view,
+                                        position: CGPoint(x: self.view.frame.width / 2,
+                                                          y: self.view.frame.height - 120))
+
         if let nav = self.navigationController as? BaseNavController {
             nav.show(dialogVC, sender: nil)
         }
