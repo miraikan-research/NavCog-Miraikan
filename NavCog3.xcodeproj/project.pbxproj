@@ -360,6 +360,11 @@
 		D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
 		E5A716F6280FEC8900CF5757 /* Miraikan.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5A716F8280FEC8900CF5757 /* Miraikan.strings */; };
+		E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797A2817C72800EFF12F /* BaseTabController.swift */; };
+		E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797D2817C77600EFF12F /* AITabController.swift */; };
+		E5DC79802817C78700EFF12F /* LoginTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797F2817C78700EFF12F /* LoginTabController.swift */; };
+		E5DC79822817C79300EFF12F /* SCTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79812817C79300EFF12F /* SCTabController.swift */; };
+		E5DC79842817C7A000EFF12F /* StaffTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79832817C7A000EFF12F /* StaffTabController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -670,6 +675,11 @@
 		E5A716FA280FEC9500CF5757 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Miraikan.strings; sourceTree = "<group>"; };
 		E5A71704280FF66400CF5757 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Miraikan.strings"; sourceTree = "<group>"; };
 		E5A71705280FF66B00CF5757 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Miraikan.strings; sourceTree = "<group>"; };
+		E5DC797A2817C72800EFF12F /* BaseTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabController.swift; sourceTree = "<group>"; };
+		E5DC797D2817C77600EFF12F /* AITabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITabController.swift; sourceTree = "<group>"; };
+		E5DC797F2817C78700EFF12F /* LoginTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTabController.swift; sourceTree = "<group>"; };
+		E5DC79812817C79300EFF12F /* SCTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCTabController.swift; sourceTree = "<group>"; };
+		E5DC79832817C7A000EFF12F /* StaffTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaffTabController.swift; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1128,6 +1138,7 @@
 				D320F5972702B8F600F6AD28 /* Contents */,
 				D320F5882702B8F600F6AD28 /* Lists */,
 				D320F58D2702B8F600F6AD28 /* Settings */,
+				E5DC797C2817C75800EFF12F /* Tabs */,
 				D320F57F2702B8F600F6AD28 /* Utils */,
 				D320F57B2702B8BB00F6AD28 /* MiraikanController.swift */,
 				D364736C273E140C00C110B0 /* Home.swift */,
@@ -1193,6 +1204,7 @@
 				D364735A273E0CFD00C110B0 /* BaseListView.swift */,
 				D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */,
 				D3921C2F275760DF00F1DD55 /* BlankView.swift */,
+				E5DC797A2817C72800EFF12F /* BaseTabController.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1207,6 +1219,17 @@
 				D3B06194276346BB0006B0DA /* VoiceGuideController.swift */,
 			);
 			path = Contents;
+			sourceTree = "<group>";
+		};
+		E5DC797C2817C75800EFF12F /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				E5DC797D2817C77600EFF12F /* AITabController.swift */,
+				E5DC797F2817C78700EFF12F /* LoginTabController.swift */,
+				E5DC79812817C79300EFF12F /* SCTabController.swift */,
+				E5DC79832817C7A000EFF12F /* StaffTabController.swift */,
+			);
+			path = Tabs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2139,9 +2162,11 @@
 				D3A1180827294B0B00BEC1C8 /* NavNavigator.m in Sources */,
 				D3A1180927294B0B00BEC1C8 /* MiraikanController.swift in Sources */,
 				D3A1180A27294B0B00BEC1C8 /* ConfigManager.m in Sources */,
+				E5DC79842817C7A000EFF12F /* StaffTabController.swift in Sources */,
 				D3A1180B27294B0B00BEC1C8 /* NavPreviewer.m in Sources */,
 				D364736D273E140C00C110B0 /* Home.swift in Sources */,
 				D3A1180C27294B0B00BEC1C8 /* FloorMapView.swift in Sources */,
+				E5DC79822817C79300EFF12F /* SCTabController.swift in Sources */,
 				D39F3C2E27730ACD0014F1CE /* BlindExhibitionController.swift in Sources */,
 				D3A1180D27294B0B00BEC1C8 /* ScreenshotHelper.m in Sources */,
 				D3A1180E27294B0B00BEC1C8 /* WelcomViewController.m in Sources */,
@@ -2150,6 +2175,7 @@
 				D3A1181127294B0B00BEC1C8 /* Customized.swift in Sources */,
 				D3A1181227294B0B00BEC1C8 /* HLPDirectory.m in Sources */,
 				D3A1181327294B0B00BEC1C8 /* HLPGeoJSON.m in Sources */,
+				E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */,
 				D3A1181427294B0B00BEC1C8 /* BaseView.swift in Sources */,
 				D3C4A43B276092240098CF29 /* HTTPAdaptor.swift in Sources */,
 				D3A1181527294B0B00BEC1C8 /* SettingView.swift in Sources */,
@@ -2162,6 +2188,7 @@
 				D3A1181C27294B0B00BEC1C8 /* Model.swift in Sources */,
 				D3A1181D27294B0B00BEC1C8 /* RatingViewController.m in Sources */,
 				D3A1181E27294B0B00BEC1C8 /* HLPDataUtil.m in Sources */,
+				E5DC79802817C78700EFF12F /* LoginTabController.swift in Sources */,
 				D3A1182027294B0B00BEC1C8 /* NavDebugHelper.m in Sources */,
 				D364735F273E0D4400C110B0 /* EventListController.swift in Sources */,
 				D3A1182127294B0B00BEC1C8 /* SearchViewController.m in Sources */,
@@ -2173,6 +2200,7 @@
 				D3A1182727294B0B00BEC1C8 /* WebViewController.m in Sources */,
 				D3A1182827294B0B00BEC1C8 /* NavSound.m in Sources */,
 				D3A1182927294B0B00BEC1C8 /* AuthManager.m in Sources */,
+				E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
