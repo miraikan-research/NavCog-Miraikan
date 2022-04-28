@@ -21,6 +21,7 @@
 @property (nonatomic) BOOL isVoiceGuideOn;
 
 - (void)showVoiceGuide;
+- (void)hiddenVoiceGuide;
 
 @end
 

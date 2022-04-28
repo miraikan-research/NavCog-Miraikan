@@ -543,8 +543,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
         else if ([page hasPrefix:@"map-page"]) {
             if (inNavigation) {
                 state = ViewStateNavigation;
+                [self hiddenVoiceGuide];
             } else {
                 state = ViewStateMap;
+                [self showVoiceGuide];
             }
         }
         else if ([page hasPrefix:@"ui-id-"]) {
@@ -583,6 +585,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@", options[@"toID"],
                       [[NSDate date] timeIntervalSince1970], elv, stairs, esc];
+    state = ViewStateNavigation;
+    dialogHelper.helperView.hidden = YES;
+    [self hiddenVoiceGuide];
     [_webView setLocationHash:hash];
 }
 

@@ -47,12 +47,7 @@ class BaseView: UIView {
     }
     
     var paddingAboveTab : CGFloat {
-        let paddingBottom: CGFloat = 35
-        let tabHeight = self.tabVC?.tabBar.frame.height
-        let padding = tabHeight != nil
-            ? tabHeight! + paddingBottom
-            : paddingBottom
-        return padding
+        return 0.0
     }
     
     // MARK: parent ViewControllers

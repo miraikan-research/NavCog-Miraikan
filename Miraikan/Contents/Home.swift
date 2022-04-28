@@ -474,12 +474,10 @@ class Home : BaseListView {
     }
     
     override func layoutSubviews() {
-        guard let tabBar = self.tabVC else { return }
-        let tableHeight = innerSize.height - tabBar.tabBar.frame.height - insets.bottom
         tableView.frame = CGRect(x: insets.left,
                                  y: insets.top,
                                  width: innerSize.width,
-                                 height: tableHeight)
+                                 height: innerSize.height)
     }
     
     // MARK: UITableViewDataSource
@@ -577,7 +575,7 @@ class Home : BaseListView {
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section < (items as! [Int : Any]).count - 1 {
-            return 35
+            return 30
         }
         return 20
     }

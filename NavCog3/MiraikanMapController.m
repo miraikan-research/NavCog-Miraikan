@@ -62,7 +62,7 @@
     CGSize sz = self.view.frame.size;
     CGSize szDesc = lblDesc.frame.size;
     CGRect frameDesc = CGRectMake(sz.width - szDesc.width - 16,
-                                  sz.height - 125,
+                                  sz.height - 45,
                                   szDesc.width, szDesc.height);
     [lblDesc setFrame:frameDesc];
     CGSize szVoiceGuide = CGSizeMake(imgVoiceGuide.size.width + insetsVoiceGuide.left + insetsVoiceGuide.right,
@@ -83,8 +83,15 @@
 }
 
 - (void)showVoiceGuide {
+    lblDesc.hidden = false;
+    btnVoiceGuide.hidden = false;
     [self.view bringSubviewToFront:lblDesc];
     [self.view bringSubviewToFront:btnVoiceGuide];
+}
+
+- (void)hiddenVoiceGuide {
+    lblDesc.hidden = true;
+    btnVoiceGuide.hidden = true;
 }
 
 @end

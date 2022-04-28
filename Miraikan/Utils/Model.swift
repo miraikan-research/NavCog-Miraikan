@@ -83,10 +83,7 @@ enum TabItem: Int, CaseIterable {
         case .callSC:
             return SCTabController()
         case .home:
-            let nav = BaseNavController()
-            nav.viewControllers = [MiraikanController()]
-            nav.title = self.title
-            return nav
+            return HomeTabController()
         case .login:
             return LoginTabController()
         case .askAI:
