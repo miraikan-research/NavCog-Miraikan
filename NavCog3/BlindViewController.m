@@ -114,7 +114,8 @@
     _webView.delegate = self;
     _webView.tts = self;
     [_webView setFullScreenForView:self.view];
-    
+    [self hiddenVoiceGuide];
+
     navigator = [[NavNavigator alloc] init];
     commander = [[NavCommander alloc] init];
     previewer = [[NavPreviewer alloc] init];
@@ -130,6 +131,7 @@
     
     self.searchButton.enabled = NO;
     [NSNotificationCenter.defaultCenter removeObserver:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestStartNavigation:) name:REQUEST_START_NAVIGATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logReplay:) name:REQUEST_LOG_REPLAY object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugPeerStateChanged:) name:DEBUG_PEER_STATE_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestDialogStart:) name:REQUEST_DIALOG_START object:nil];
@@ -771,6 +773,33 @@
 {
     NSArray *route = [note userInfo][@"route"];
     [_webView showRoute:route];
+}
+
+- (void)requestStartNavigation:(NSNotification*)note
+{
+    NSDictionary *options = [note userInfo];
+    if (options[@"toID"] == nil) {
+        return;
+    }
+    self.destId = options[@"toID"];
+    [self hiddenVoiceGuide];
+    
+    NavDataStore *nds = [NavDataStore sharedDataStore];
+    NavDestination *from = [NavDataStore destinationForCurrentLocation];
+    NavDestination *to = [nds destinationByID: self.destId];
+    
+    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
+                                     withOptions:AVAudioSessionCategoryOptionAllowBluetooth
+                                           error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [nds requestRouteFrom:from.singleId
+                       To:to._id withPreferences:prefs complete:^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            nds.previewMode = [MiraikanUtil isPreview];
+            nds.exerciseMode = NO;
+        });
+    }];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context

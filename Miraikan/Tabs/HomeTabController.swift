@@ -1,9 +1,10 @@
 //
-//  ExhibitionView.swift
+//
+//  HomeTabController.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
- * Copyright (c) 2021 © Miraikan - The National Museum of Emerging Science and Innovation
+ * Copyright (c) 2022 © Miraikan - The National Museum of Emerging Science and Innovation  
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,29 +26,20 @@
  *******************************************************************************/
 
 import Foundation
-import UIKit
-import WebKit
 
-/**
- The WebView retrieved from Miraikan About page
- */
-class MiraikanAboutView : BaseWebView {
+class HomeTabController: BaseTabController {
     
-    override func setup() {
-        super.setup()
+    @objc override init() {
+        super.init()
+        tabLayout()
         
-        let address = "\(MiraikanUtil.miraikanHost)/aboutus/"
-        loadContent(address)
+        let title = NSLocalizedString("Home", comment: "")
+        self.title = title
+
+        nav.viewControllers = [MiraikanController(title: title)]
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        // Loaded
-        webView.frame = CGRect(x: insets.left,
-                               y: insets.top,
-                               width: innerSize.width,
-                               height: innerSize.height)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-    
 }

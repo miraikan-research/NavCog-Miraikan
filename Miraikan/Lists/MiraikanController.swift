@@ -26,12 +26,25 @@
 
 import Foundation
 import UIKit
-import HLPDialog
 
 /**
  Home and initial settings
  */
-class MiraikanController: UIViewController {
+class MiraikanController: BaseController {
+
+    private let home = Home()
+
+    init(title: String) {
+        super.init(home, title: title)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,10 +61,6 @@ class MiraikanController: UIViewController {
             self.navigationController?.show(vc, sender: nil)
         }
         self.navigationItem.rightBarButtonItem = btnSetting
-        
-        // Layout and title
-        view = Home()
-        title = TabItem.home.title
         
         // Request local notification permission
         UNUserNotificationCenter.current()
