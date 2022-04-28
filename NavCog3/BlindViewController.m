@@ -89,6 +89,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setDelegate:self];
     self.isNaviStarted = NO;
     self.isDestLoaded = NO;
     self.isRouteRequested = NO;
@@ -115,6 +116,7 @@
     _webView.tts = self;
     [_webView setFullScreenForView:self.view];
     [self hiddenVoiceGuide];
+    [self showVoice];
 
     navigator = [[NavNavigator alloc] init];
     commander = [[NavCommander alloc] init];
@@ -183,21 +185,22 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:DISABLE_STABILIZE_LOCALIZE object:self];
     [self becomeFirstResponder];
     
-    if (!dialogHelper) {
-        dialogHelper = [[DialogViewHelper alloc] init];
-        double scale = 0.75;
-        double size = (113*scale)/2;
-        double x = size+8;
-        double y = self.view.bounds.size.height + self.view.bounds.origin.y - (size+8);
-        if (@available(iOS 11.0, *)) {
-            y -= self.view.safeAreaInsets.bottom;
-        }
-        dialogHelper.scale = scale;
-        [dialogHelper inactive];
-        [dialogHelper setup:self.view position:CGPointMake(x, y)];
-        dialogHelper.delegate = self;
-        dialogHelper.helperView.hidden = YES;
-    }
+//    if (!dialogHelper) {
+//        dialogHelper = [[DialogViewHelper alloc] init];
+//        double scale = 0.75;
+//        double size = (113*scale)/2;
+//        double x = size+8;
+//        double y = self.view.bounds.size.height + self.view.bounds.origin.y - (size+8);
+//        if (@available(iOS 11.0, *)) {
+//            y -= self.view.safeAreaInsets.bottom;
+//        }
+//        dialogHelper.scale = scale;
+//        [dialogHelper inactive];
+//        [dialogHelper setup:self.view position:CGPointMake(x, y)];
+//        dialogHelper.delegate = self;
+//        dialogHelper.helperView.hidden = YES;
+//    }
+    [self hiddenVoice];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -277,8 +280,9 @@
 
 - (void)dialogViewTapped
 {
-    [dialogHelper inactive];
-    dialogHelper.helperView.disabled = YES;
+//    [dialogHelper inactive];
+//    dialogHelper.helperView.disabled = YES;
+    [self hiddenVoice];
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_DIALOG_START object:self];
 }
 
@@ -442,13 +446,15 @@
     BOOL isActive = [navigator isActive];
 
     if ([[DialogManager sharedManager] isAvailable] && !isActive) {
-        if (dialogHelper.helperView.hidden) {
-            dialogHelper.helperView.hidden = NO;
-            [dialogHelper recognize];
-        }
-        dialogHelper.helperView.disabled = !(hasCenter && (!isPreviewDisabled || devMode || validLocation));
+//        if (dialogHelper.helperView.hidden) {
+//            dialogHelper.helperView.hidden = NO;
+//            [dialogHelper recognize];
+//        }
+//        dialogHelper.helperView.disabled = !(hasCenter && (!isPreviewDisabled || devMode || validLocation));
+        [self showVoice];
     } else {
-        dialogHelper.helperView.hidden = YES;
+//        dialogHelper.helperView.hidden = YES;
+        [self hiddenVoice];
     }
 }
 
@@ -1373,7 +1379,8 @@
         return;
     }
     [[NavSound sharedInstance] playVoiceRecoEnd];
-    [self performSegueWithIdentifier:@"show_search" sender:@[@"toDestinations", @"show_dialog"]];
+//    [self performSegueWithIdentifier:@"show_search" sender:@[@"toDestinations", @"show_dialog"]];
+    [self performSegueWithIdentifier:@"show_dialog_wc" sender:self];
 }
 
 - (void)handleLocaionUnknown:(NSNotification*)note

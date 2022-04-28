@@ -11,6 +11,10 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol MiraikanMapControllerDelegate
+- (void)dialogViewTapped;
+@end
+
 @interface MiraikanMapController : UIViewController
 
 @property (strong, nonatomic) NSString *destId;
@@ -19,9 +23,13 @@
 @property (nonatomic) BOOL isDestLoaded;
 @property (nonatomic) BOOL isRouteRequested;
 @property (nonatomic) BOOL isVoiceGuideOn;
+@property id<MiraikanMapControllerDelegate> delegate;
 
+//- (void)setMiraikanMapDelegate:id;
 - (void)showVoiceGuide;
 - (void)hiddenVoiceGuide;
+- (void)showVoice;
+- (void)hiddenVoice;
 
 @end
 

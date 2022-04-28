@@ -78,6 +78,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setDelegate:self];
     defaultColor = self.navigationController.navigationBar.barTintColor;
     
     isNaviStarted = NO;
@@ -88,6 +89,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     [self.view addSubview:_webView];
     [self showVoiceGuide];
+    [self showVoice];
     _webView.isDeveloperMode = [ud boolForKey:@"developer_mode"];
     _webView.userMode = [ud stringForKey:@"user_mode"];
     _webView.config = @{
@@ -164,6 +166,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         dialogHelper.delegate = self;
         dialogHelper.helperView.hidden = YES;
     }
+    [self hiddenVoice];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -310,8 +313,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)dialogViewTapped
 {
-    [dialogHelper inactive];
-    dialogHelper.helperView.hidden = YES;
+//    [dialogHelper inactive];
+//    dialogHelper.helperView.hidden = YES;
+    [self hiddenVoice];
     [self performSegueWithIdentifier:@"show_dialog_wc" sender:self];
     
 }
@@ -371,15 +375,18 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     if (state == ViewStateMap) {
         if ([[DialogManager sharedManager] isAvailable]  && (!isPreviewDisabled || devMode || validLocation)) {
-            if (dialogHelper.helperView.hidden) {
-                dialogHelper.helperView.hidden = NO;
-                [dialogHelper recognize];
-            }
+//            if (dialogHelper.helperView.hidden) {
+//                dialogHelper.helperView.hidden = NO;
+//                [dialogHelper recognize];
+//            }
+            [self showVoice];
         } else {
-            dialogHelper.helperView.hidden = YES;
+//            dialogHelper.helperView.hidden = YES;
+            [self hiddenVoice];
         }
     } else {
-        dialogHelper.helperView.hidden = YES;
+//        dialogHelper.helperView.hidden = YES;
+        [self hiddenVoice];
     }
     
     self.navigationItem.title = NSLocalizedStringFromTable(@"NavCog", @"BlindView", @"");
@@ -586,7 +593,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@", options[@"toID"],
                       [[NSDate date] timeIntervalSince1970], elv, stairs, esc];
     state = ViewStateNavigation;
-    dialogHelper.helperView.hidden = YES;
+//    dialogHelper.helperView.hidden = YES;
+    [self hiddenVoice];
     [self hiddenVoiceGuide];
     [_webView setLocationHash:hash];
 }

@@ -40,6 +40,7 @@
     NavPreviewerDelegate,
     MCBrowserViewControllerDelegate,
     DialogViewDelegate,
+    MiraikanMapControllerDelegate,
     WebViewControllerDelegate
 >
 

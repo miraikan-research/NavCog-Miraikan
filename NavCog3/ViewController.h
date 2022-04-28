@@ -30,7 +30,8 @@
     UIGestureRecognizerDelegate,
     HLPWebViewDelegate,
     HLPTTSProtocol,
-    DialogViewDelegate
+    DialogViewDelegate,
+    MiraikanMapControllerDelegate
 >
 
 @property (strong, nonatomic) IBOutlet HLPWebView *webView;

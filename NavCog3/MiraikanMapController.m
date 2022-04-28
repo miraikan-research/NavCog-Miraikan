@@ -12,10 +12,12 @@
 #import "SettingDataManager.h"
 
 @interface MiraikanMapController() {
+    UIView *btnVoiceBase;
+    BaseButton *btnVoice;
+    UIEdgeInsets insetsVoice;
     BaseButton *btnVoiceGuide;
     UIEdgeInsets insetsVoiceGuide;
     UIImage *imgVoiceGuide;
-    NSString *imgName;
     UILabel *lblDesc;
 }
 
@@ -25,7 +27,8 @@
  @remark
  Icon by: https://icons8.com,
  Sound: https://icons8.com/icon/41562/sound,
- Mute: https://icons8.com/icon/644/mute
+ Mute: https://icons8.com/icon/644/mute,
+ Mic: https://icons8.com/icon/gHHbmX5R7BJo/mic
  */
 @implementation MiraikanMapController : UIViewController
 
@@ -34,7 +37,12 @@
     [[SettingDataManager sharedManager] setPresetId: _presetId];
 
     self.isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
-    
+
+    [self setupVoiceGuideButton];
+    [self setupVoiceButton];
+}
+
+- (void)setupVoiceGuideButton {
     lblDesc = [[UILabel alloc] init];
     lblDesc.textColor = UIColor.whiteColor;
     [lblDesc adjustsFontSizeToFitWidth];
@@ -58,6 +66,32 @@
     [self.view addSubview:btnVoiceGuide];
 }
 
+- (void)setupVoiceButton {
+
+    UIColor * mainColor = [UIColor colorWithRed: 22.0/255.0 green:94.0/255.0 blue:131.0/255.0 alpha:1.0];
+
+    btnVoiceBase = [[UIView alloc] init];
+    btnVoiceBase.layer.cornerRadius = 40;
+    btnVoiceBase.backgroundColor = mainColor;
+
+    UIImage *img = [UIImage imageNamed:@"icons8-mic-64.png"];
+
+    btnVoice = [[BaseButton alloc] init];
+    btnVoice.backgroundColor = UIColor.whiteColor;
+    btnVoice.layer.cornerRadius = 32;
+    insetsVoice = UIEdgeInsetsMake(10, 10, 10, 10);
+    btnVoice.imageEdgeInsets = insetsVoice;
+    [btnVoice setImage:img forState:UIControlStateNormal];
+    btnVoice.tintColor = mainColor;
+
+    [btnVoice tapAction:^(UIButton* _) {
+        self.delegate.dialogViewTapped;
+    }];
+    
+    [self.view addSubview:btnVoiceBase];
+    [btnVoiceBase addSubview:btnVoice];
+}
+
 - (void)viewDidLayoutSubviews {
     CGSize sz = self.view.frame.size;
     CGSize szDesc = lblDesc.frame.size;
@@ -69,6 +103,9 @@
                                      imgVoiceGuide.size.height + insetsVoiceGuide.top + insetsVoiceGuide.bottom);
     [btnVoiceGuide setFrame:CGRectMake(0, 0, szVoiceGuide.width, szVoiceGuide.height)];
     [btnVoiceGuide setCenter:CGPointMake(lblDesc.center.x, lblDesc.frame.origin.y - 5 - szVoiceGuide.height / 2)];
+
+    [btnVoiceBase setFrame:CGRectMake(10, sz.height - 90, 80, 80)];
+    [btnVoice setFrame:CGRectMake(8, 8, 64, 64)];
 }
 
 - (void)updateButton:(BOOL)isOn {
@@ -77,7 +114,7 @@
         : NSLocalizedString(@"Voice Guide Off", @"");
     [lblDesc sizeToFit];
     [btnVoiceGuide setAccessibilityLabel:lblDesc.text];
-    imgName = isOn ? @"icons8-sound-24" : @"icons8-mute-24";
+    NSString *imgName = isOn ? @"icons8-sound-24" : @"icons8-mute-24";
     imgVoiceGuide = [UIImage imageNamed:imgName];
     [btnVoiceGuide setImage:imgVoiceGuide forState:UIControlStateNormal];
 }
@@ -92,6 +129,15 @@
 - (void)hiddenVoiceGuide {
     lblDesc.hidden = true;
     btnVoiceGuide.hidden = true;
+}
+
+- (void)showVoice {
+    [self.view bringSubviewToFront:btnVoiceBase];
+    btnVoiceBase.hidden = false;
+}
+
+- (void)hiddenVoice {
+    btnVoiceBase.hidden = true;
 }
 
 @end
