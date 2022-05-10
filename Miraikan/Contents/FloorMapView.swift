@@ -94,7 +94,7 @@ class FloorMapView: BaseView {
     // MARK: Private Functions
     private func setup(_ model: FloorMapModel) {
         lblTitle.text = model.title
-        let floor = model.floor
+        let floor = String(model.floor)
         var floorText = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), floor)
 
         if let counter = model.counter {
