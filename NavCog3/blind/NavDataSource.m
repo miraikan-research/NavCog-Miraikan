@@ -41,6 +41,7 @@
 
 - (instancetype) init {
     self = [super init];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update:) name:DESTINATIONS_CHANGED_NOTIFICATION object:nil];
     return self;
 }
@@ -222,6 +223,7 @@
 - (instancetype) init {
     self = [super init];
     _defaultFilter = @{};
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(update:) name:DESTINATIONS_CHANGED_NOTIFICATION object:nil];
     return self;
 }

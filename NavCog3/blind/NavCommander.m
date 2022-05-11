@@ -36,6 +36,7 @@
 - (instancetype) init
 {
     self = [super self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestNearestPOI:) name:REQUEST_NEAREST_POI object:nil];
     approachingPOIs = [@[] mutableCopy];
     return self;

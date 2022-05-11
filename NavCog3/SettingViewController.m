@@ -82,6 +82,7 @@ static HLPSetting *poiLabel, *ignoreFacility, *showPOI;
         [SettingViewController setupUserSettings];
         helper = userSettingHelper;
         
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
         [[NSUserDefaults standardUserDefaults] addObserver:self
                                                 forKeyPath:@"speech_speed"
                                                    options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld

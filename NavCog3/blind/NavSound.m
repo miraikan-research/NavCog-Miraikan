@@ -51,6 +51,7 @@ static NavSound *instance;
     self = [super init];
     
     [self loadAudio];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"for_bone_conduction_headset"
                                                options:NSKeyValueObservingOptionNew context:nil];

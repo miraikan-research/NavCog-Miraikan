@@ -914,6 +914,7 @@ static NavNavigatorConstants *_instance;
     _isPaused = NO;
     [self reset];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(routeChanged:) name:ROUTE_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(routeCleared:) name:ROUTE_CLEARED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_locationChanged:) name:NAV_LOCATION_CHANGED_NOTIFICATION object:nil];
