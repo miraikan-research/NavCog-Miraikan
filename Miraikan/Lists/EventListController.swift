@@ -72,7 +72,7 @@ fileprivate class ScheduleRow: BaseRow {
         lblPlace.openView({ [weak self] _ in
             guard let self = self else { return }
             if let nav = self.nav {
-                nav.show(BaseController(FloorMapView(model.floorMap), title: model.floorMap.title), sender: nil)
+                nav.show(FloorMapViewController(model: model.floorMap, title: model.floorMap.title), sender: nil)
             }
         })
         addSubview(lblPlace)
