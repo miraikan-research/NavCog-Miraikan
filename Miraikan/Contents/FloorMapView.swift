@@ -41,6 +41,8 @@ struct FloorMapModel : Decodable {
     let floor: Int
     let counter: String?
     let title: String
+    let exhibitionId: String
+    let nodeId: String
 }
 
 /**
@@ -55,6 +57,9 @@ class FloorMapView: BaseView {
     private let lblPlace = UILabel()
     private let btnNav = BaseButton()
     
+    var navigationAction: (()->())?
+    var notificationAction: (()->())?
+
     // MARK: init
     init(_ model: FloorMapModel) {
         super.init(frame: .zero)
@@ -126,8 +131,11 @@ class FloorMapView: BaseView {
         btnNav.titleEdgeInsets.left = 15
         btnNav.titleEdgeInsets.right = 15
         btnNav.sizeToFit()
-        btnNav.tapAction { _ in
-            print("Navigation Started")
+        btnNav.tapAction { [weak self] _ in
+            guard let self = self else { return }
+            if let _f = self.navigationAction {
+                _f()
+            }
         }
         addSubview(btnNav)
     }

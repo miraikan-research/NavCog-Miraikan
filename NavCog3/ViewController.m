@@ -61,6 +61,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
     long locationChangedTime;
     BOOL isNaviStarted;
+    BOOL isRouteNavi;
 }
 
 @end
@@ -80,6 +81,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     defaultColor = self.navigationController.navigationBar.barTintColor;
     
+    isRouteNavi = YES;
     isNaviStarted = NO;
     state = ViewStateLoading;
     locationChangedTime = 0;
@@ -230,6 +232,30 @@ typedef NS_ENUM(NSInteger, ViewState) {
 }
 
 - (void)startNavi: (HLPLocation*) center {
+    
+    if (lastLocationSent < 0) {
+        return;
+    }
+
+    if (isRouteNavi) {
+        if ([self destId] != nil) {
+            if (!isNaviStarted) {
+                __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+                NSString *elv = [NSString stringWithFormat:@"&elv=%@", prefs[@"elv"]];
+                NSString *stairs = [NSString stringWithFormat:@"&stairs=%@", prefs[@"stairs"]];
+                NSString *esc = [NSString stringWithFormat:@"&esc=%@", prefs[@"esc"]];
+                NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@&dist=1000", [self destId],
+                                  [[NSDate date] timeIntervalSince1970], elv, stairs, esc];
+                state = ViewStateNavigation;
+                dialogHelper.helperView.hidden = YES;
+                [self hiddenVoiceGuide];
+                [_webView setLocationHash:hash];
+                isNaviStarted = YES;
+                return;
+            }
+        }
+    }
+
     NSDictionary *target =
     @{
       @"action": @"start",
@@ -416,7 +442,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
 {
-    [[NavDeviceTTS sharedTTS] speak:text withOptions:@{@"force": @(isForce)} completionHandler:handler];
+    BOOL isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
+    [[NavDeviceTTS sharedTTS] speak:isVoiceGuideOn ? text : @"" withOptions:@{@"force": @(isForce)} completionHandler:handler];
 }
 
 - (BOOL)isSpeaking
@@ -570,20 +597,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
     if (options[@"toID"] == nil) {
         return;
     }
-    NSString *elv = @"";
-    if (options[@"use_elevator"]) {
-        elv = [options[@"use_elevator"] boolValue]?@"&elv=9":@"&elv=1";
-    }
-    NSString *stairs = @"";
-    if (options[@"use_stair"]) {
-        stairs = [options[@"use_stair"] boolValue]?@"&stairs=9":@"&stairs=1";
-    }
-    NSString *esc = @"";
-    if (options[@"use_escalator"]) {
-        esc = [options[@"use_escalator"] boolValue]?@"&esc=9":@"&esc=1";
-    }
     
-    NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@", options[@"toID"],
+    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+    NSString *elv = [NSString stringWithFormat:@"&elv=%@", prefs[@"elv"]];
+    NSString *stairs = [NSString stringWithFormat:@"&stairs=%@", prefs[@"stairs"]];
+    NSString *esc = [NSString stringWithFormat:@"&esc=%@", prefs[@"esc"]];
+    NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@&dist=1000", options[@"toID"],
                       [[NSDate date] timeIntervalSince1970], elv, stairs, esc];
     state = ViewStateNavigation;
     dialogHelper.helperView.hidden = YES;

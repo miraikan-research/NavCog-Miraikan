@@ -72,13 +72,6 @@ class AIView : BaseView {
         
         btnStart.center = self.center
     }
-    
-    @objc func aiNavi(note: Notification) {
-        guard let toID = note.userInfo?["toID"] as? String else { return }
-        guard let nav = self.navVC else { return }
-        nav.openMap(nodeId: toID)
-    }
-    
 }
 
 
@@ -142,6 +135,7 @@ class AIController : BaseController {
         }
         
         if self.isObserved { return }
+        NotificationCenter.default.removeObserver(self)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.aiNavi(note:)),
                                                name: Notification.Name(rawValue:"request_start_navigation"),
