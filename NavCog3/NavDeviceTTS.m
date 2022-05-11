@@ -49,6 +49,7 @@ static NavDeviceTTS *instance = nil;
     
     expire = NAN;
 
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     /*
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(routeChanged)

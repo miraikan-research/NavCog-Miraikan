@@ -41,6 +41,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeFocused:) name:AccessibilityElementDidBecomeFocused object:nil];
     return self;
 }

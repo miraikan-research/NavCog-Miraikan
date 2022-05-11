@@ -47,6 +47,8 @@ static NavDebugHelper* instance;
     _peers = [@[] mutableCopy];
     _lastSent = [@{} mutableCopy];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processData:) name:NAV_LOCATION_CHANGED_NOTIFICATION object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processData:) name:REQUEST_PROCESS_SHOW_ROUTE object:nil];

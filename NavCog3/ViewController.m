@@ -179,7 +179,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     _settingButton = nil;
     
-    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
 //    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
 }
 
@@ -308,6 +308,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     if ([temp count] == 0) {
         NSLog(@"No Route %@", route);
+        [NavUtil hideModalWaiting];
         return;
     }
     
