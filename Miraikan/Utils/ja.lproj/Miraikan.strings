@@ -9,6 +9,9 @@
 /* Button for navigation */
 "Guide to this exhibition" = "この展示へナビ";
 
+/* Button for navigation */
+"Guide to" = "%@へナビ";
+
 /* Exhibition explanation */
 "Description" = "概要";
 
