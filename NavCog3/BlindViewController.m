@@ -1374,6 +1374,11 @@
     }
     [[NavSound sharedInstance] playVoiceRecoEnd];
     [self performSegueWithIdentifier:@"show_search" sender:@[@"toDestinations", @"show_dialog"]];
+    
+    // TODO: Screen transition Test
+//    [dialogHelper inactive];
+//    dialogHelper.helperView.hidden = YES;
+//    [self performSegueWithIdentifier:@"show_dialog_blind_wc" sender:self];
 }
 
 - (void)handleLocaionUnknown:(NSNotification*)note
@@ -1424,6 +1429,16 @@
         if (![[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
             [_webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
         }
+    }
+    if ([segue.identifier isEqualToString:@"show_dialog_blind_wc"]){
+        DialogViewController* dView = (DialogViewController*)segue.destinationViewController;
+        dView.tts = [DefaultTTS new];
+        dView.root = self;
+        dView.title = @"Ask AI";
+        dView.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 50);
+        [dView.dialogViewHelper removeFromSuperview];
+        [dView.dialogViewHelper setup: dView.view
+                             position: CGPointMake(self.view.frame.size.width / 2, self.view.frame.size.height - 40)];
     }
 }
 

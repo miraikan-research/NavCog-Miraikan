@@ -804,6 +804,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
         DialogViewController* dView = (DialogViewController*)segue.destinationViewController;
         dView.tts = [DefaultTTS new];
         dView.root = self;
+        dView.title = @"Ask AI";
+        dView.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 50);
+        [dView.dialogViewHelper removeFromSuperview];
+        [dView.dialogViewHelper setup: dView.view
+                             position: CGPointMake(self.view.frame.size.width / 2, self.view.frame.size.height - 40)];
     }
 }
 

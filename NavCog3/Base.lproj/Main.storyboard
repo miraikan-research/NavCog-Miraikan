@@ -616,6 +616,7 @@
                         <outlet property="settingButton" destination="ATn-7d-y1j" id="IdR-7G-Xa9"/>
                         <segue destination="hk9-wr-WOW" kind="show" identifier="show_rating" id="XlC-wp-uNx"/>
                         <segue destination="ime-J0-f14" kind="show" identifier="show_help" id="eGf-KW-tIa"/>
+                        <segue destination="YRz-sv-vaW" kind="show" identifier="show_dialog_blind_wc" id="ygM-39-psy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Egf-ai-ccT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1399,7 +1400,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="XlC-wp-uNx"/>
-        <segue reference="Goq-2Z-Z6n"/>
+        <segue reference="ygM-39-psy"/>
         <segue reference="y91-pz-cNT"/>
         <segue reference="BKg-hP-LrX"/>
     </inferredMetricsTieBreakers>
