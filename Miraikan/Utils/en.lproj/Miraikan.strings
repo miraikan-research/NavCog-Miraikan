@@ -9,6 +9,9 @@
 /* Button for navigation */
 "Guide to this exhibition" = "Guide to this exhibition";
 
+/* Button for navigation */
+"Guide to" = "Guide to %@";
+
 /* Exhibition explanation */
 "Description" = "Description";
 

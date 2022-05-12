@@ -9,6 +9,9 @@
 /* Button for navigation */
 "Guide to this exhibition" = "이 전시에 안내한다";
 
+/* Button for navigation */
+"Guide to" = "%@ 안내한다";
+
 /* Exhibition explanation */
 "Description" = "설명";
 

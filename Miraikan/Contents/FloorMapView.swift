@@ -55,7 +55,7 @@ class FloorMapView: BaseView {
     
     private let lblTitle = UILabel()
     private let lblPlace = UILabel()
-    private let btnNav = BaseButton()
+    private let btnNav = StyledButton()
     
     var navigationAction: (()->())?
     var notificationAction: (()->())?
@@ -76,10 +76,10 @@ class FloorMapView: BaseView {
         
         let gap = CGFloat(10)
         var y = safeAreaInsets.top
-        lblTitle.frame.origin = CGPoint(x: 0, y: y)
+        lblTitle.frame.origin = CGPoint(x: gap, y: y)
         y += lblTitle.frame.height + gap
         
-        lblPlace.frame.origin = CGPoint(x: 0, y: y)
+        lblPlace.frame.origin = CGPoint(x: gap, y: y)
         y += lblPlace.frame.height + gap
         
         let imgAdaptor = ImageAdaptor(img: image)
@@ -93,7 +93,6 @@ class FloorMapView: BaseView {
         
         btnNav.center.x = center.x
         btnNav.frame.origin.y = y
-        btnNav.frame.size.width += 30
     }
     
     // MARK: Private Functions
@@ -122,14 +121,7 @@ class FloorMapView: BaseView {
         
         addSubview(map)
         
-        btnNav.setTitle("\(model.title)へナビ", for: .normal)
-        btnNav.setTitleColor(.black, for: .normal)
-        btnNav.backgroundColor = .cyan
-        btnNav.layer.cornerRadius = 5
-        btnNav.layer.borderWidth = 1
-        btnNav.layer.borderColor = UIColor.black.cgColor
-        btnNav.titleEdgeInsets.left = 15
-        btnNav.titleEdgeInsets.right = 15
+        btnNav.setTitle(String(format: NSLocalizedString("Guide to", tableName: "Miraikan", comment: ""), (model.title)), for: .normal)
         btnNav.sizeToFit()
         btnNav.tapAction { [weak self] _ in
             guard let self = self else { return }
