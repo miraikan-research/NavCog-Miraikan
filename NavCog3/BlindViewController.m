@@ -98,7 +98,11 @@
 
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[NavBlindWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
-    _webView.isDeveloperMode = [ud boolForKey:@"developer_mode"];
+    BOOL devMode = NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+        devMode = [ud boolForKey:@"developer_mode"];
+    }
+    _webView.isDeveloperMode = devMode;
     [self.view addSubview:_webView];
     for(UIView *v in self.view.subviews) {
         if (v != _webView) {
@@ -224,7 +228,7 @@
     
     _settingButton = nil;
     
-    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -359,7 +363,10 @@
         self.searchButton.title = NSLocalizedStringFromTable([navigator isActive]?@"Stop":@"Search", @"BlindView", @"");
         [self.searchButton setAccessibilityLabel:NSLocalizedStringFromTable([navigator isActive]?@"Stop Navigation":@"Search Route", @"BlindView", @"")];
         
-        BOOL devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+        BOOL devMode = NO;
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+            devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+        }
         BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey:@"p2p_debug_follower"];
         BOOL hasCenter = [[NavDataStore sharedDataStore] mapCenter] != nil;
         BOOL previewMode = [NavDataStore sharedDataStore].previewMode;
@@ -437,7 +444,10 @@
     HLPLocation *loc = [nds currentLocation];
     BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
     BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
-    BOOL devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+    BOOL devMode = NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+        devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+    }
     BOOL hasCenter = [[NavDataStore sharedDataStore] mapCenter] != nil;
     BOOL isActive = [navigator isActive];
 

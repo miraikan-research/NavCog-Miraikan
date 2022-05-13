@@ -551,7 +551,10 @@ static HLPSetting *poiLabel, *ignoreFacility, *showPOI;
     
     if (userSettingHelper) {
         BOOL blindMode = [[[NSUserDefaults standardUserDefaults] stringForKey:@"user_mode"] isEqualToString:@"user_blind"];
-        BOOL devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+        BOOL devMode = NO;
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+            devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+        }
         BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
         //[speechLabel setVisible:blindMode];
         //[speechSpeedSetting setVisible:blindMode];

@@ -90,7 +90,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     [self.view addSubview:_webView];
     [self showVoiceGuide];
-    _webView.isDeveloperMode = [ud boolForKey:@"developer_mode"];
+    BOOL devMode = NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+        devMode = [ud boolForKey:@"developer_mode"];
+    }
+    _webView.isDeveloperMode = devMode;
     _webView.userMode = [ud stringForKey:@"user_mode"];
     _webView.config = @{
                         @"serverHost":[ud stringForKey:@"selected_hokoukukan_server"],
@@ -348,7 +352,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NavDataStore *nds = [NavDataStore sharedDataStore];
     HLPLocation *loc = [nds currentLocation];
     BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
-    BOOL devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+    BOOL devMode = NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+        devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+    }
     BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
     BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey:@"p2p_debug_follower"];
     BOOL peerExists = [[[NavDebugHelper sharedHelper] peers] count] > 0;
