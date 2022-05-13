@@ -202,7 +202,10 @@
         
         NavDataStore *nds = [NavDataStore sharedDataStore];
         HLPLocation *loc = [nds currentLocation];
-        BOOL isDevMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+        BOOL isDevMode = NO;
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+            isDevMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+        }
         BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
         BOOL isNotManual = ![nds isManualLocation] || isDevMode;
         BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);

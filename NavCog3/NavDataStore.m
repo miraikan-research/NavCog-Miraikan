@@ -482,7 +482,10 @@ static NavDataStore* instance_ = nil;
         [currentLocation updateParams:obj];
     }
     
-    BOOL devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+    BOOL devMode = NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+        devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+    }
     if (!(isManualLocation && devMode)) {
         [self postLocationNotification];
     }
