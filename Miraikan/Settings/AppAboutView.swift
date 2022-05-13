@@ -35,7 +35,8 @@ import UIKit
 class AppAboutView: BaseView {
     
     private let lblIcon8 = UILabel()
-    
+    private let lblVersion = UILabel()
+
     override func setup() {
         super.setup()
         
@@ -44,16 +45,31 @@ class AppAboutView: BaseView {
         lblIcon8.lineBreakMode = .byWordWrapping
         lblIcon8.sizeToFit()
         addSubview(lblIcon8)
+
+        if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
+            let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
+            lblVersion.text = "Version: \(version)    Buld: \(build)"
+            lblVersion.numberOfLines = 0
+            lblVersion.lineBreakMode = .byWordWrapping
+            lblVersion.sizeToFit()
+            addSubview(lblVersion)
+        }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let szFit = CGSize(width: innerSize.width, height: lblIcon8.intrinsicContentSize.height)
+        var szFit = CGSize(width: innerSize.width, height: lblIcon8.intrinsicContentSize.height)
         lblIcon8.frame = CGRect(x: insets.left,
-                                y: insets.top,
+                                y: insets.top + 8,
                                 width: innerSize.width,
                                 height: lblIcon8.sizeThatFits(szFit).height)
+
+        szFit = CGSize(width: innerSize.width, height: lblVersion.intrinsicContentSize.height)
+        lblVersion.frame = CGRect(x: insets.left,
+                                y: insets.top + 8 + lblIcon8.frame.height + 20,
+                                width: innerSize.width,
+                                height: lblVersion.sizeThatFits(szFit).height)
     }
     
 }
