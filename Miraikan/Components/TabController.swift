@@ -56,7 +56,11 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
     }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        (viewController as? BaseNavController)?.popToRootViewController(animated: true)
+        if let navigationController = viewController as? UINavigationController {
+            navigationController.popToRootViewController(animated: true)
+        } else if let navigationController = viewController as? BaseTabController {
+            navigationController.popToRootViewController(animated: true)
+        }
         return true
     }
     

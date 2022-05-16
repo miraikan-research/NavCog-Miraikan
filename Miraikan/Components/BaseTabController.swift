@@ -87,4 +87,8 @@ class BaseTabController: UIViewController {
         let bottom = nav.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -(bottomPadding + tabHeight))
         NSLayoutConstraint.activate([leading, trailing, top, bottom])
     }
+
+    func popToRootViewController(animated: Bool) {
+        nav.popToRootViewController(animated: animated)
+    }
 }
