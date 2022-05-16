@@ -585,11 +585,18 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="NavCog" id="hf2-Dc-ViP">
-                        <barButtonItem key="leftBarButtonItem" title="Setting" id="ATn-7d-y1j">
-                            <connections>
-                                <segue destination="5By-Wf-lM7" kind="show" identifier="blind_settings" id="GK1-dG-XDF"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem title="Setting" id="ATn-7d-y1j">
+                                <connections>
+                                    <segue destination="5By-Wf-lM7" kind="show" identifier="blind_settings" id="GK1-dG-XDF"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Back" id="MaH-XF-NBI" userLabel="Back">
+                                <connections>
+                                    <action selector="doBack:" destination="1gp-c3-Yyi" id="MRo-pV-zFu"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" title="Search" id="yBn-Ni-tgc">
                             <connections>
                                 <segue destination="M0g-Fg-mUv" kind="show" identifier="show_search" id="cks-JY-QxH"/>
@@ -597,6 +604,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backButton" destination="MaH-XF-NBI" id="PE1-Uf-1lC"/>
                         <outlet property="commitLabel" destination="Y9o-wo-eu0" id="hvi-o7-Dwf"/>
                         <outlet property="cover" destination="aGM-ZR-uTt" id="nW2-Rw-1xj"/>
                         <outlet property="devAuto" destination="ckT-Tm-n01" id="81r-QU-h0h"/>
@@ -1402,7 +1410,7 @@
         <segue reference="XlC-wp-uNx"/>
         <segue reference="ygM-39-psy"/>
         <segue reference="y91-pz-cNT"/>
-        <segue reference="BKg-hP-LrX"/>
+        <segue reference="GK1-dG-XDF"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Menu" width="32" height="32"/>

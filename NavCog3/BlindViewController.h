@@ -45,6 +45,7 @@
 
 @property (nonatomic) IBOutlet NavBlindWebView *webView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *backButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *settingButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *micButton;
