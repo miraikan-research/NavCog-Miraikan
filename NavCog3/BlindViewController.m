@@ -86,6 +86,30 @@
     NSLog(@"%s: %d" , __func__, __LINE__);
 }
 
+- (void)prepareForDealloc
+{
+    [_webView triggerWebviewControl:HLPWebviewControlEndNavigation];
+
+    _webView.delegate = nil;
+    
+//    [navigator stop];
+    navigator.delegate = nil;
+    navigator = nil;
+    
+    commander.delegate = nil;
+    commander = nil;
+    
+    previewer.delegate = nil;
+    previewer = nil;
+    
+    dialogHelper.delegate = nil;
+    dialogHelper = nil;
+    
+    _settingButton = nil;
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -98,17 +122,17 @@
 
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[NavBlindWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
-    BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-        devMode = [ud boolForKey:@"developer_mode"];
-    }
-    _webView.isDeveloperMode = devMode;
     [self.view addSubview:_webView];
     for(UIView *v in self.view.subviews) {
         if (v != _webView) {
             [self.view bringSubviewToFront:v];
         }
     }
+    BOOL devMode = NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
+        devMode = [ud boolForKey:@"developer_mode"];
+    }
+    _webView.isDeveloperMode = devMode;
     _webView.userMode = [ud stringForKey:@"user_mode"];
     _webView.config = @{
                         @"serverHost":[ud stringForKey:@"selected_hokoukukan_server"],
@@ -149,8 +173,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(routeCleared:) name:ROUTE_CLEARED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(manualLocation:) name:MANUAL_LOCATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestShowRoute:) name:REQUEST_PROCESS_SHOW_ROUTE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
-    
+
     checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
     [self updateView];
 
@@ -213,7 +238,7 @@
 {
     _webView.delegate = nil;
     
-    [navigator stop];
+//    [navigator stop];
     navigator.delegate = nil;
     navigator = nil;
     
@@ -233,10 +258,15 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [checkMapCenterTimer invalidate];
     [[NSNotificationCenter defaultCenter] postNotificationName:DISABLE_ACCELEARATION object:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:ENABLE_STABILIZE_LOCALIZE object:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AccessibilityElementDidBecomeFocused object:nil];
-    [checkMapCenterTimer invalidate];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 - (UIViewController*) topMostController
@@ -393,7 +423,7 @@
         self.searchButton.enabled = !self.isNaviStarted;
         
         // Show Setting Button for current location only
-        self.navigationItem.leftBarButtonItem = !self.destId ? _settingButton : nil;
+        self.navigationItem.leftBarButtonItems = !self.destId ? @[self.settingButton] : @[self.backButton];
         if ((isActive && !devMode) || previewMode || initFlag) {
         } else {
             UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleSettingLongPressGesture:)];
@@ -758,7 +788,7 @@
     
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
-    NavDestination *to = [nds destinationByID: self.destId];
+    NavDestination *to = [nds destinationByID: [self destId]];
     
     __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
@@ -817,12 +847,6 @@
     if ([keyPath isEqualToString:@"developer_mode"]) {
         _webView.isDeveloperMode = @([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]);
     }
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - IBActions
@@ -886,6 +910,11 @@
 
 - (IBAction)restartLocalization:(id)sender {
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_RESTART object:self];
+}
+
+- (IBAction)doBack:(id)sender {
+    [self prepareForDealloc];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)retry:(id)sender {
@@ -1402,7 +1431,8 @@
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     [segue destinationViewController].restorationIdentifier = segue.identifier;

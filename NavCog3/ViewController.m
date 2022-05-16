@@ -76,6 +76,22 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSLog(@"%s: %d" , __func__, __LINE__);
 }
 
+- (void)prepareForDealloc
+{
+    [_webView triggerWebviewControl:HLPWebviewControlEndNavigation];
+
+    _webView.delegate = nil;
+    
+    dialogHelper.delegate = nil;
+    dialogHelper = nil;
+    
+    recognizer = nil;
+    
+    _settingButton = nil;
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -126,8 +142,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(destinationChanged:) name:DESTINATIONS_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openURL:) name: REQUEST_OPEN_URL object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestRating:) name:REQUEST_RATING object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
 
     checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
     checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
@@ -191,6 +207,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     [checkMapCenterTimer invalidate];
     [checkStateTimer invalidate];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 - (UIViewController*) topMostController
@@ -362,44 +383,40 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
     switch(state) {
         case ViewStateMap:
-//            self.navigationItem.rightBarButtonItems = debugFollower ? @[] : @[self.searchButton];
-//            self.navigationItem.leftBarButtonItems = @[self.settingButton];
-            self.navigationItem.rightBarButtonItems = @[self.stopButton];
-            self.navigationItem.leftBarButtonItems = @[];
+            self.navigationItem.rightBarButtonItems = debugFollower ? @[] : @[self.searchButton];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateSearch:
-            self.navigationItem.rightBarButtonItems = @[self.settingButton];
-            self.navigationItem.leftBarButtonItems = @[self.cancelButton];
+            self.navigationItem.rightBarButtonItems = @[self.cancelButton];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateSearchDetail:
-            self.navigationItem.rightBarButtonItems = @[self.backButton];
-            self.navigationItem.leftBarButtonItems = @[self.cancelButton];
+            self.navigationItem.rightBarButtonItems = @[self.cancelButton];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateSearchSetting:
             self.navigationItem.rightBarButtonItems = @[self.searchButton];
-            self.navigationItem.leftBarButtonItems = @[];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateNavigation:
-//            self.navigationItem.rightBarButtonItems = @[];
-//            self.navigationItem.leftBarButtonItems = @[self.stopButton];
             self.navigationItem.rightBarButtonItems = @[self.stopButton];
-            self.navigationItem.leftBarButtonItems = @[];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateRouteConfirm:
             self.navigationItem.rightBarButtonItems = @[self.cancelButton];
-            self.navigationItem.leftBarButtonItems = @[];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateRouteCheck:
-            self.navigationItem.rightBarButtonItems = @[self.doneButton];
-            self.navigationItem.leftBarButtonItems = @[];
+            self.navigationItem.rightBarButtonItems = @[];
+            self.navigationItem.leftBarButtonItems = @[self.doneButton];
             break;
         case ViewStateTransition:
             self.navigationItem.rightBarButtonItems = @[];
-            self.navigationItem.leftBarButtonItems = @[];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateLoading:
             self.navigationItem.rightBarButtonItems = @[];
-            self.navigationItem.leftBarButtonItems = @[self.settingButton];
+            self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
     }
     
@@ -527,12 +544,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     CGPoint p = [sender locationInView:self.webView];
     NSLog(@"%f %f", p.x, p.y);
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - notification handlers
@@ -768,11 +779,14 @@ typedef NS_ENUM(NSInteger, ViewState) {
 }
 
 - (IBAction)doBack:(id)sender {
-    if (state == ViewStateSearchDetail) {
-        //state = ViewStateTransition;
-        //[self updateView];
-        [_webView triggerWebviewControl:HLPWebviewControlBackToControl];
-    }
+    [self prepareForDealloc];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)retry:(id)sender {
+    [_webView reload];
+    _retryButton.hidden = YES;
+    _errorMessage.hidden = YES;
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
@@ -817,12 +831,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [dView.dialogViewHelper setup: dView.view
                              position: CGPointMake(self.view.frame.size.width / 2, self.view.frame.size.height - 40)];
     }
-}
-
-- (IBAction)retry:(id)sender {
-    [_webView reload];
-    _errorMessage.hidden = YES;
-    _retryButton.hidden = YES;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
