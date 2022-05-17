@@ -89,6 +89,11 @@
 - (void)prepareForDealloc
 {
     [_webView triggerWebviewControl:HLPWebviewControlEndNavigation];
+    
+    [_webView logToServer:@{@"event": @"navigation", @"status": @"canceled"}];
+    [NavDataStore sharedDataStore].previewMode = NO;
+    [NavDataStore sharedDataStore].exerciseMode = NO;
+    [previewer setAutoProceed:NO];
 
     _webView.delegate = nil;
     
@@ -107,6 +112,8 @@
     
     _settingButton = nil;
 
+    self.destId = nil;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -173,7 +180,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(routeCleared:) name:ROUTE_CLEARED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(manualLocation:) name:MANUAL_LOCATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestShowRoute:) name:REQUEST_PROCESS_SHOW_ROUTE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
 
     checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
@@ -236,22 +243,22 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    _webView.delegate = nil;
-    
-//    [navigator stop];
-    navigator.delegate = nil;
-    navigator = nil;
-    
-    commander.delegate = nil;
-    commander = nil;
-    
-    previewer.delegate = nil;
-    previewer = nil;
-    
-    dialogHelper.delegate = nil;
-    dialogHelper = nil;
-    
-    _settingButton = nil;
+//    _webView.delegate = nil;
+//
+////    [navigator stop];
+//    navigator.delegate = nil;
+//    navigator = nil;
+//
+//    commander.delegate = nil;
+//    commander = nil;
+//
+//    previewer.delegate = nil;
+//    previewer = nil;
+//
+//    dialogHelper.delegate = nil;
+//    dialogHelper = nil;
+//
+//    _settingButton = nil;
     
 //    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
 }
@@ -422,8 +429,7 @@
         
         self.searchButton.enabled = !self.isNaviStarted;
         
-        // Show Setting Button for current location only
-        self.navigationItem.leftBarButtonItems = !self.destId ? @[self.settingButton] : @[self.backButton];
+        self.navigationItem.leftBarButtonItems = @[self.backButton];
         if ((isActive && !devMode) || previewMode || initFlag) {
         } else {
             UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleSettingLongPressGesture:)];
@@ -441,10 +447,19 @@
         titleView.accessibilityTraits = UIAccessibilityTraitStaticText;
         self.navigationItem.titleView = titleView;
         
+        // Show Setting Button for current location only
         if (debugFollower || initFlag) {
-            self.navigationItem.rightBarButtonItem = nil;
+            if (!self.destId) {
+                self.navigationItem.rightBarButtonItems = @[self.settingButton];
+            } else {
+                self.navigationItem.rightBarButtonItems = @[];
+            }
         } else {
-            self.navigationItem.rightBarButtonItem = _searchButton;
+            if (!self.destId) {
+                self.navigationItem.rightBarButtonItems = @[self.settingButton, _searchButton];
+            } else {
+                self.navigationItem.rightBarButtonItems = @[_searchButton];
+            }
         }
         
         if (peerExists) {
@@ -1095,9 +1110,11 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [NavUtil hideModalWaiting];
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    
+    [self speak:NSLocalizedString(@"Pathfinding failed", @"") withOptions:@{@"force":@(YES)} completionHandler:^{
+        [self prepareForDealloc];
         [self.navigationController popViewControllerAnimated:YES];
-    });
+    }];
 }
 
 - (void)didNavigationStarted:(NSDictionary *)properties
@@ -1491,6 +1508,7 @@
         [NavDataStore sharedDataStore].previewMode = NO;
         [NavDataStore sharedDataStore].exerciseMode = NO;
         [previewer setAutoProceed:NO];
+        self.isNaviStarted = NO;
 
         return NO;
     }

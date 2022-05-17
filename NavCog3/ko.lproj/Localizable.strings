@@ -229,6 +229,7 @@
 "Current Location" = "Current Location";
 "Preview" = "Preview";
 "not_located" = "Outside of iBeacon area";
+"Pathfinding failed" = "Pathfinding failed";
 
 // Language Code
 "lang" = "ko";

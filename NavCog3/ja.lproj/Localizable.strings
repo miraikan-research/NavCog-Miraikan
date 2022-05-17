@@ -218,6 +218,7 @@ NavCogの設定画面から
 "Preview Speed" = "プレビュースピード";
 "Speech Speed Description" = "読み上げスピード";
 "Preview Speed Description" = "プレビュースピード";
+"Pathfinding failed" = "経路探索に失敗しました";
 
 // NaviButton Title
 "navi_button_title" = "この展示へナビ";
