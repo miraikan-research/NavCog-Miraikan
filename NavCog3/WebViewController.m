@@ -186,7 +186,7 @@
                                 cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                             timeoutInterval:60.0];
 
-        NSLog(@"Requesting %@", url);
+        NSLog(@"%s: %d, Requesting %@", __func__, __LINE__, url);
 
         NSURLSession *session = [NSURLSession sharedSession];
         [[session dataTaskWithRequest:request

@@ -251,20 +251,20 @@
                 NSLog(@"%@", error);
                 NSLog(@"%@", [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding]);
                 callback(nil);
-            }
-            
-            NSMutableArray *array = [@[] mutableCopy];
-            for(NSString *key in json) {
-                NSError *error;
-                HLPObject *obj = [MTLJSONAdapter modelOfClass:HLPObject.class fromJSONDictionary:json[key] error:&error];
-                if (error) {
-                    NSLog(@"%@", error);
-                    NSLog(@"%@", json[key]);
-                } else {
-                    [array addObject:obj];
+            } else {
+                NSMutableArray *array = [@[] mutableCopy];
+                for(NSString *key in json) {
+                    NSError *error;
+                    HLPObject *obj = [MTLJSONAdapter modelOfClass:HLPObject.class fromJSONDictionary:json[key] error:&error];
+                    if (error) {
+                        NSLog(@"%@", error);
+                        NSLog(@"%@", json[key]);
+                    } else {
+                        [array addObject:obj];
+                    }
                 }
+                callback(array);
             }
-            callback(array);
         }
     }];
 }
@@ -347,8 +347,8 @@
                                              cachePolicy: NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                              timeoutInterval: 60.0];
 
-        NSLog(@"Requesting %@", url);
-        
+        NSLog(@"%s: %d, Requesting %@, %@" , __func__, __LINE__, url, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+
         [request setHTTPMethod: method];
         [request setValue:type forHTTPHeaderField: @"Content-Type"];
         [request setValue:[NSString stringWithFormat: @"%lu", (unsigned long)[data length]]  forHTTPHeaderField: @"Content-Length"];
