@@ -26,6 +26,7 @@
 
 import Foundation
 import UIKit
+import HLPDialog
 
 /**
  Home and initial settings
@@ -49,6 +50,12 @@ class MiraikanController: BaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.getDestinations(note:)),
+                                               name: Notification.Name(rawValue:"location_changed_notification"),
+                                               object: nil)
+
         // Accessibility
         UIAccessibility.post(notification: .screenChanged, argument: self.navigationItem.titleView)
         
@@ -117,5 +124,17 @@ class MiraikanController: BaseController {
                 }
             })
         }
+    }
+
+    @objc func getDestinations(note: Notification) {
+
+        guard let navDataStore = NavDataStore.shared(),
+            let currentLocation = navDataStore.currentLocation() else { return }
+
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"location_changed_notification"), object: nil)
+        navDataStore.reloadDestinations(atLat: currentLocation.lat,
+                                        lng: currentLocation.lng,
+                                        forUser: navDataStore.userID,
+                                        withUserLang: navDataStore.userLanguage())
     }
 }

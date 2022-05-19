@@ -804,6 +804,7 @@
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
     NavDestination *to = [nds destinationByID: [self destId]];
+    [NavDataStore sharedDataStore].to = to;
     
     __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
@@ -811,7 +812,8 @@
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [nds requestRouteFrom:from.singleId
-                       To:to._id withPreferences:prefs complete:^{
+                       To:to._id
+          withPreferences:prefs complete:^{
         dispatch_sync(dispatch_get_main_queue(), ^{
             nds.previewMode = [MiraikanUtil isPreview];
             nds.exerciseMode = NO;
@@ -841,7 +843,8 @@
     
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
-    NavDestination *to = [nds destinationByID: self.destId];
+    NavDestination *to = [nds destinationByID: [self destId]];
+    [NavDataStore sharedDataStore].to = to;
     
     __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
@@ -849,7 +852,8 @@
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [nds requestRouteFrom:from.singleId
-                       To:to._id withPreferences:prefs complete:^{
+                       To:to._id
+          withPreferences:prefs complete:^{
         dispatch_sync(dispatch_get_main_queue(), ^{
             nds.previewMode = [MiraikanUtil isPreview];
             nds.exerciseMode = NO;
@@ -1156,6 +1160,7 @@
     }
     
     [_webView logToServer:@{@"event": @"navigation", @"status": @"finished"}];
+    self.isNaviStarted = NO;
     
     NSArray *pois = properties[@"pois"];
     if (pois.count > 0 && self.isVoiceGuideOn) {
@@ -1179,6 +1184,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
             // Back to exhibition list instead of map
+            [self prepareForDealloc];
             [self.navigationController popViewControllerAnimated:YES];
             [self.navigationController pushViewController:vc animated:YES];
         });
@@ -1502,8 +1508,9 @@
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
     if ([identifier isEqualToString:@"show_search"] && [navigator isActive]) {
+        self.destId = nil;
+        [NavDataStore sharedDataStore].to = nil;
         [[NavDataStore sharedDataStore] clearRoute];
-        
         [_webView logToServer:@{@"event": @"navigation", @"status": @"canceled"}];
         [NavDataStore sharedDataStore].previewMode = NO;
         [NavDataStore sharedDataStore].exerciseMode = NO;
