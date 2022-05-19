@@ -31,7 +31,7 @@ import UIKit
  The content of the  UIScrollView of EventView
  */
 fileprivate class EventContent: BaseView {
-    
+    private var btnNavi : StyledButton?
     private var lblTitle: UILabel!
     private var lblSubtitle: UILabel?
     private var scheduleLabels = [UILabel]()
@@ -44,8 +44,11 @@ fileprivate class EventContent: BaseView {
     private let type: ImageType
     private let gap = CGFloat(15)
     
+    private let facilityId: String?
+
     // MARK: init
-    init(_ model: EventModel) {
+    init(_ model: EventModel, facilityId: String?) {
+        self.facilityId = facilityId
         self.type = ImageType(rawValue: model.imageType.uppercased())!
         let imageCoStudio = "co_studio"
         let imageName = model.id.contains(imageCoStudio)
@@ -69,6 +72,13 @@ fileprivate class EventContent: BaseView {
         let safeSize = CGSize(width: innerSize.width, height: frame.height)
         
         var y = insets.top
+        if let btnNavi = btnNavi {
+            btnNavi.frame = CGRect(x: insets.left,
+                                   y: y + gap,
+                                   width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
+                                   height: btnNavi.intrinsicContentSize.height)
+            y += btnNavi.frame.height + gap * 2
+        }
         lblTitle.frame = CGRect(x: insets.left,
                                 y: y,
                                 width: innerSize.width,
@@ -134,6 +144,24 @@ fileprivate class EventContent: BaseView {
     // MARK: Private functions
     private func setup(_ model: EventModel) {
         
+        btnNavi = StyledButton()
+        guard let btnNavi = btnNavi else { return }
+        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
+        btnNavi.sizeToFit()
+        
+        var nodeId: String?
+        if let floorMaps = MiraikanUtil.readJSONFile(filename: "floor_map",
+                                     type: [FloorMapModel].self) as? [FloorMapModel],
+           let floorMap = floorMaps.first(where: {$0.id == facilityId}) {
+            nodeId = floorMap.nodeId
+            btnNavi.tapAction({ [weak self] _ in
+                guard let self = self else { return }
+                guard let nav = self.navVC else { return }
+                nav.openMap(nodeId: nodeId)
+            })
+        }
+        addSubview(btnNavi)
+
         func createLabel(_ txt: String) -> UILabel {
             let lbl = UILabel()
             lbl.text = txt
@@ -177,10 +205,10 @@ fileprivate class EventContent: BaseView {
  The UIScrollView of event details
  */
 class EventView: BaseScrollView {
-    init(_ model: EventModel) {
+    init(_ model: EventModel, facilityId: String?) {
         super.init(frame: .zero)
         
-        contentView = EventContent(model)
+        contentView = EventContent(model, facilityId: facilityId)
         scrollView.addSubview(contentView)
         addSubview(scrollView)
     }

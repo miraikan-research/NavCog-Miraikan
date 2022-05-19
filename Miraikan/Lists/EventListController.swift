@@ -87,7 +87,7 @@ fileprivate class ScheduleRow: BaseRow {
         lblEvent.openView({ [weak self] _ in
             guard let self = self else { return }
             if let nav = self.nav {
-                nav.show(BaseController(EventView(model.event), title: model.event.title), sender: nil)
+                nav.show(BaseController(EventView(model.event, facilityId: model.schedule.place), title: model.event.title), sender: nil)
             }
         })
         

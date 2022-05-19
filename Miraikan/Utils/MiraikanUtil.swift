@@ -208,15 +208,16 @@ class MiraikanUtil : NSObject {
     
     //MARK: Objc utils for NavCog3
     // Open the page for Scientist Communicator Talk
-    @objc static public func openTalk(eventId: String) {
+    @objc static public func openTalk(eventId: String, nodeId: String, facilityId: String?) {
         if let window = UIApplication.shared.windows.first,
-           let tab = window.rootViewController as? TabController,
-           let nav = tab.viewControllers?[tab.selectedIndex] as? BaseNavController {
+           let tab = window.rootViewController as? TabController {
+            tab.selectedIndex = 2
             
-            // At this moment, there is no detail for each specific topic
-            // Thus, this action is temporarily opening the overview page
-            if let event = ExhibitionDataStore.shared.events?.first(where: { $0.id == eventId}) {
-                nav.show(BaseController(EventView(event), title: event.title), sender: nil)
+            if let baseTab = tab.selectedViewController as? BaseTabController {
+                baseTab.popToRootViewController(animated: false)
+                if let event = ExhibitionDataStore.shared.events?.first(where: { $0.id == eventId}) {
+                    baseTab.nav.show(BaseController(EventView(event, facilityId: facilityId), title: event.title), sender: nil)
+                }
             }
             
         }

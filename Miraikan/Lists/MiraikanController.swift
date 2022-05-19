@@ -111,6 +111,18 @@ class MiraikanController: BaseController {
                     else { return }
                     content.body = "\(talkTitle)"
                     
+                    let calendar = Calendar(identifier: .gregorian)
+                    let date = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: Date())
+                    var title: String?
+                    var nodeId: String?
+                    if let floorMaps = MiraikanUtil.readJSONFile(filename: "floor_map",
+                                                 type: [FloorMapModel].self) as? [FloorMapModel],
+                       let floorMap = floorMaps.first(where: {$0.id == schedule.place }) {
+                        title = floorMap.title
+                        nodeId = floorMap.nodeId
+                    }
+                    content.userInfo = ["year": date, "eventId": schedule.event, "nodeId": nodeId, "facilityId": schedule.place, "title": title]
+
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components,
                                                                 repeats: false)
                     let request = UNNotificationRequest(identifier: schedule.event,
