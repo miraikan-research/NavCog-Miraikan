@@ -141,11 +141,14 @@ void NavNSLog(NSString* fmt, ...) {
     // Completion Actions
     completionHandler();
     NSString *eventId = response.notification.request.identifier;
-    
+    NSDictionary *userInfo = response.notification.request.content.userInfo;
+    NSString *nodeId = userInfo[@"nodeId"];
+    NSString *facilityId = userInfo[@"facilityId"];
+
     // Remove the notification and open the view
     if (eventId) {
         [center removeDeliveredNotificationsWithIdentifiers:@[eventId]];
-        [MiraikanUtil openTalkWithEventId:eventId];
+        [MiraikanUtil openTalkWithEventId:eventId nodeId:nodeId facilityId:facilityId];
     }
 }
 

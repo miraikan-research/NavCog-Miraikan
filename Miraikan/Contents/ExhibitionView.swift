@@ -104,17 +104,17 @@ class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
         var y = insets.top
         if let btnNavi = btnNavi {
             btnNavi.frame = CGRect(x: insets.left,
-                                   y: y,
+                                   y: y + gap,
                                    width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
                                    height: btnNavi.intrinsicContentSize.height)
-            y += btnNavi.frame.height + gap
+            y += btnNavi.frame.height + gap * 2
         }
 
         // Loaded
         webView.frame = CGRect(x: insets.left,
                                y: y,
                                width: innerSize.width,
-                               height: innerSize.height - y)
+                               height: innerSize.height - y + insets.top - gap)
     }
     
     func onFinished() {
