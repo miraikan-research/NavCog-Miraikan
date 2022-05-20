@@ -121,16 +121,8 @@ fileprivate class ScheduleRow: BaseRow {
                                 width: eventWidth,
                                 height: lblEvent.sizeThatFits(szFit).height)
         
-        let totalWidth = lblEvent.frame.width + lblDescription.frame.width + insets.right
-
-        // Place the description label in a new line when totalWidth beyonds the column width
-        if totalWidth < rightColWidth {
-            lblDescription.frame.origin.x = leftColWidth + lblEvent.frame.width
-            lblDescription.center.y = lblEvent.center.y
-        } else {
-            y += lblEvent.frame.height + CGFloat(5)
-            lblDescription.frame.origin = CGPoint(x: leftColWidth, y: y)
-        }
+        y += lblEvent.frame.height + CGFloat(5)
+        lblDescription.frame.origin = CGPoint(x: leftColWidth, y: y)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -143,12 +135,9 @@ fileprivate class ScheduleRow: BaseRow {
         let eventHeight = lblEvent.sizeThatFits(szFit).height
         heightList += [eventHeight]
         
-        let indentation = lblTime.frame.width + gapX
-        let totalWidth = indentation + eventWidth + lblDescription.frame.width
-        
         // In order to display the description label
         // Add the height of it when totalWidth beyonds the inner width
-        if totalWidth >= innerSz.width {
+        if lblDescription.frame.width > 0 {
             heightList += [lblDescription.intrinsicContentSize.height]
         }
         
@@ -240,5 +229,12 @@ class EventListController: BaseListController, BaseListDelegate {
         }
         return nil
     }
-    
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (indexPath.row % 2 == 0) {
+            cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
+        } else {
+            cell.backgroundColor = UIColor.white
+        }
+    }
 }

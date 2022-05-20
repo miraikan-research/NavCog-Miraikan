@@ -3,9 +3,9 @@
     "place": "geo_cosmos",
     "event": "asimo"
 }, {
-    "time": "10:30",
+    "time": "10:20",
     "place": "dome_theater",
-    "event": "birthday",
+    "event": "inherit",
     "description": "要予約"
 }, {
     "time": "10:45",
@@ -18,9 +18,9 @@
     "event": "digging_the_future",
     "description": "（約4分）"
 }, {
-    "time": "11:30",
+    "time": "11:20",
     "place": "dome_theater",
-    "event": "nine_dimensions",
+    "event": "inherit",
     "description": "要予約"
 }, {
     "time": "11:30",
@@ -38,10 +38,11 @@
     "event": "covid_19",
     "description": ""
 }, {
-    "time": "12:30",
+    "time": "12:20",
     "place": "dome_theater",
     "event": "birthday",
-    "description": "要予約"
+    "description": "要予約",
+    "on_holiday": true
 }, {
     "time": "12:30",
     "place": "geo_cosmos",
@@ -53,7 +54,7 @@
     "event": "digging_the_future",
     "description": "（約4分）"
 }, {
-    "time": "13:30",
+    "time": "13:20",
     "place": "dome_theater",
     "event": "birthday",
     "description": "要予約"
@@ -73,9 +74,9 @@
     "event": "covid_19",
     "description": "（約3分）"
 }, {
-    "time": "14:30",
+    "time": "14:20",
     "place": "dome_theater",
-    "event": "nine_dimensions",
+    "event": "inherit",
     "description": "要予約"
 }, {
     "time": "14:30",
@@ -87,9 +88,9 @@
     "event": "digging_the_future",
     "description": "（約4分）"
 }, {
-    "time": "15:30",
+    "time": "15:20",
     "place": "dome_theater",
-    "event": "birthday",
+    "event": "inherit",
     "description": "要予約"
 }, {
     "time": "15:30",
@@ -107,9 +108,9 @@
     "event": "apollo_11",
     "description": "（約3分）"
 }, {
-    "time": "16:30",
+    "time": "16:20",
     "place": "dome_theater",
-    "event": "birthday",
+    "event": "nine_dimensions",
     "description": "要予約"
 }, {
     "time": "16:30",
