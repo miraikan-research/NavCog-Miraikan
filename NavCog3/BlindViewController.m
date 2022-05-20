@@ -397,8 +397,8 @@
 - (void)updateView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.searchButton.title = NSLocalizedStringFromTable([navigator isActive]?@"Stop":@"Search", @"BlindView", @"");
-        [self.searchButton setAccessibilityLabel:NSLocalizedStringFromTable([navigator isActive]?@"Stop Navigation":@"Search Route", @"BlindView", @"")];
+        self.searchButton.title = NSLocalizedStringFromTable(!self.isNaviStarted ? @"Stop" : @"Search", @"BlindView", @"");
+        [self.searchButton setAccessibilityLabel:NSLocalizedStringFromTable(!self.isNaviStarted ? @"Stop Navigation" : @"Search Route", @"BlindView", @"")];
         
         BOOL devMode = NO;
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
