@@ -401,4 +401,21 @@
         }
     }];
 }
+
++ (void)saveToPlistWithArray:(NSArray *)array fileName:(NSString *)file
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *directory = [paths objectAtIndex:0];
+    NSString *filePath = [directory stringByAppendingPathComponent: file];
+    [array writeToFile:filePath atomically:NO];
+}
+
++ (void)saveToPlistWithDictionary:(NSDictionary*)dic fileName:(NSString*)file
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *directory = [paths objectAtIndex:0];
+    NSString *filePath = [directory stringByAppendingPathComponent: file];
+    [dic writeToFile:filePath atomically:NO];
+}
+
 @end

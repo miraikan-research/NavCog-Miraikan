@@ -44,4 +44,7 @@
 +(void)postRequest:(NSURL*) url contentType:(NSString*)type withData:(NSData*) data callback:(void(^)(NSData* response))callback;
 +(void)deleteRequest:(NSURL*) url withData:(NSDictionary*) data callback:(void(^)(NSData* response))callback;
 
++ (void)saveToPlistWithArray:(NSArray *)array fileName:(NSString *)file;
++ (void)saveToPlistWithDictionary:(NSDictionary*)dic fileName:(NSString*)file;
+
 @end

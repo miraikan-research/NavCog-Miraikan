@@ -60,6 +60,8 @@ void NavNSLog(NSString* fmt, ...) {
     BOOL secondOrLater;
     NSTimeInterval lastActiveTime;
     long locationChangedTime;
+    NSString *locationFilePath;
+    NSFileHandle *locationFileHandle;
 }
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -70,6 +72,10 @@ void NavNSLog(NSString* fmt, ...) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     // [Logging startLog];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DebugMode"]) {
+        [self setFilePath];
+    }
     locationChangedTime = 0;
 
     // Start locating here
@@ -361,6 +367,16 @@ void uncaughtExceptionHandler(NSException *exception)
        //},
        //@"rotate":anchor[@"rotate"]
        } mutableCopy];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DebugMode"]) {
+        NSDateFormatter* dateFormatte = [[NSDateFormatter alloc] init];
+        NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier: NSCalendarIdentifierGregorian];
+        [dateFormatte setCalendar: calendar];
+        [dateFormatte setLocale:[NSLocale systemLocale]];
+        [dateFormatte setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        NSString* dateString = [dateFormatte stringFromDate:[NSDate date]];
+        [self writeLocation: [NSString stringWithFormat: @"%@,%@\n", dateString, location]];
+    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:LOCATION_CHANGED_NOTIFICATION object:self userInfo:data];
 }
@@ -540,6 +556,50 @@ void uncaughtExceptionHandler(NSException *exception)
     } else {
         [[HLPLocationManager sharedManager] invalidate];
     }
+}
+
+- (void)setFilePath
+{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"ja_JP"]];
+    [df setDateFormat:@"yyyyMMddHHmm"];
+    NSDate *now = [NSDate date];
+    NSString *strNow = [df stringFromDate:now];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *directory = [paths objectAtIndex:0];
+    locationFilePath = [directory stringByAppendingPathComponent:  [NSString stringWithFormat: @"%@.csv", strNow]];
+    
+    BOOL isNew = false;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL result = [fileManager fileExistsAtPath: locationFilePath];
+    if (!result) {
+        result = [self createFile: locationFilePath];
+        if (!result) {
+            return;
+        }
+        isNew = true;
+    }
+    locationFileHandle = [NSFileHandle fileHandleForWritingAtPath: locationFilePath];
+    
+    if (isNew) {
+        [self writeLocation: @"date,lat,lng,accuracy,floor,speed,orientation,orientationAccuracy\n"];
+    }
+}
+
+- (BOOL)writeLocation:(NSString *)writeLine
+{
+    if (!locationFilePath) {
+      return NO;
+    }
+    NSData *data = [writeLine dataUsingEncoding: NSUTF8StringEncoding];
+    [locationFileHandle writeData:data];
+    return YES;
+}
+
+- (BOOL)createFile:(NSString *)filePath
+{
+  return [[NSFileManager defaultManager] createFileAtPath:filePath contents:[NSData data] attributes:nil];
 }
 
 @end
