@@ -337,11 +337,11 @@ void uncaughtExceptionHandler(NSException *exception)
         return;
     }
 
-    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
-    if (locationChangedTime + 200 > now) {
-        return;
-    }
-    locationChangedTime = now;
+//    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
+//    if (locationChangedTime + 200 > now) {
+//        return;
+//    }
+//    locationChangedTime = now;
 
     NSMutableDictionary *data =
     [@{
