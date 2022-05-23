@@ -794,7 +794,7 @@
 - (void)destinationChanged: (NSNotification*) note
 {
     long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
-    if (locationChangedTime + 5000 > now) {
+    if (locationChangedTime + 500 > now) {
         return;
     }
     locationChangedTime = now;

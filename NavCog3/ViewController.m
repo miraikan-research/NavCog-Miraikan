@@ -281,22 +281,26 @@ typedef NS_ENUM(NSInteger, ViewState) {
         }
     }
 
-    NSDictionary *target =
-    @{
-      @"action": @"start",
-      @"lat": @(center.lat),
-      @"lng": @(center.lng),
-      @"dist": @(YES)
-      };
-    
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:target requiringSecureCoding:NO error:nil];
-    NSString *dataStr = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
-    
-    NSString *script = [NSString stringWithFormat:@"$hulop.route.callService(%@, null)", dataStr];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_webView evaluateJavaScript:script completionHandler:nil];
-    });
+//    if (!isNaviStarted) {
+        NSDictionary *target =
+        @{
+          @"action": @"start",
+          @"lat": @(center.lat),
+          @"lng": @(center.lng),
+          @"dist": @(YES)
+          };
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:target requiringSecureCoding:NO error:nil];
+        NSString *dataStr = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
+        
+        NSString *script = [NSString stringWithFormat:@"$hulop.route.callService(%@, null)", dataStr];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_webView evaluateJavaScript:script completionHandler:nil];
+        });
+        isNaviStarted = YES;
+//    }
+
 }
 
 - (void)initTarget:(NSArray *)landmarks
@@ -627,6 +631,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     dialogHelper.helperView.hidden = YES;
     [self hiddenVoiceGuide];
     [_webView setLocationHash:hash];
+    isNaviStarted = YES;
 }
 
 
@@ -725,7 +730,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 - (void)destinationChanged: (NSNotification*) note
 {
     long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
-    if (locationChangedTime + 5000 > now) {
+    if (locationChangedTime + 500 > now) {
         return;
     }
     locationChangedTime = now;

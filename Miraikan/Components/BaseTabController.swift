@@ -78,6 +78,9 @@ class BaseTabController: UIViewController {
         if let window = UIApplication.shared.windows.first {
             bottomPadding = window.safeAreaInsets.bottom
         }
+        
+        nav.navigationBar.barTintColor = UIColor.white
+        nav.navigationBar.isTranslucent = false
 
         nav.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(nav.view)
