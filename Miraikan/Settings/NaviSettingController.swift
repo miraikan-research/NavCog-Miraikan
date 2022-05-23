@@ -43,12 +43,12 @@ fileprivate class CurrentLocationRow : BaseRow {
         lblDescription.sizeToFit()
         if MiraikanUtil.isLocated {
             guard let loc = MiraikanUtil.location else { return }
-            lblLocation.text = "\(loc.lat), \(loc.lng), \(loc.floor)F"
+            lblLocation.text = " \(loc.lat)\n \(loc.lng)\n \(loc.floor)F\n speed: \(loc.speed)\n accuracy: \(loc.accuracy)\n orientation: \(loc.orientation)\n orientationAccuracy: \(loc.orientationAccuracy)"
         } else {
             lblLocation.text = NSLocalizedString("not_located", comment: "")
         }
         lblLocation.adjustsFontSizeToFitWidth = true
-        lblLocation.numberOfLines = 1
+        lblLocation.numberOfLines = 0
         lblLocation.lineBreakMode = .byClipping
         lblLocation.sizeToFit()
         addSubview(lblDescription)
@@ -286,7 +286,13 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                                                    title: NSLocalizedString("Speech Speed", comment: "Name of the label"),
                                                    name: "speech_speed",
                                                    desc: NSLocalizedString("Speech Speed Description",
-                                                                           comment: "Description for VoiceOver")))]
+                                                                           comment: "Description for VoiceOver"))),
+                      CellModel(cellId: switchId,
+                                model: SwitchModel(desc: "Debug",
+                                                   key: "DebugMode",
+                                                   isOn: UserDefaults.standard.bool(forKey: "DebugMode"),
+                                                   isEnabled: nil))
+        ]
     }
     
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
