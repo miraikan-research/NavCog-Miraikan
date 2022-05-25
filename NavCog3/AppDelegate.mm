@@ -79,6 +79,7 @@ void NavNSLog(NSString* fmt, ...) {
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DebugMode"]) {
         [self setFilePath];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"LoggedIn"];
     }
     locationChangedTime = 0;
 

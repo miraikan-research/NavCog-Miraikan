@@ -149,4 +149,9 @@ class MiraikanController: BaseController {
                                         forUser: navDataStore.userID,
                                         withUserLang: navDataStore.userLanguage())
     }
+
+    func reload() {
+        home.setSection()
+        home.tableView.reloadData()
+    }
 }

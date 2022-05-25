@@ -37,9 +37,23 @@ class LoginTabController: BaseTabController {
         self.title = title
 
         nav.viewControllers = [BaseController(LoginView(), title: title)]
+
+        setHideKeyboardTapped()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension LoginTabController {
+    func setHideKeyboardTapped() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginTabController.hideKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func hideKeyboard() {
+        view.endEditing(true)
     }
 }
