@@ -191,6 +191,13 @@ NavCogの設定画面から
 "Login" = "ログイン";  // Also used as menu title
 "Ask AI" = "AIに質問";
 
+// pronunciation
+"Call Staff pron" = "スタッフヲヨブ";
+"Call SC pron" = "エスシーヲヨブ";
+"Home pron" = "ホーム";
+"Login pron" = "ログイン";  // Also used as menu title
+"Ask AI pron" = "エーアイニシツモン";
+
 // Menu Section Titles
 "spex" = "特別展";
 "Events" = "イベント";

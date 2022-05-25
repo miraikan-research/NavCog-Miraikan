@@ -1,7 +1,10 @@
 [{
     "id": "neutrino",
     "nodeId": "EDITOR_node_1616500013756",
+    "latitude": "35.61906032214752",
+    "longitude": "139.7762247920173",
     "title": "ニュートリノから探る宇宙",
+    "title_pron": "ニュートリノカラサグルウチュウ",
     "title_en": "Understanding the Universe through Neutrinos",
     "category": "world",
     "floor": 5,
@@ -13,7 +16,10 @@
 }, {
     "id": "particle",
     "nodeId": "EDITOR_node_1616500012223",
+    "latitude": "35.61909339133831",
+    "longitude": "139.776294529438",
     "title": "加速器で探る素粒子と宇宙",
+    "title_pron": "カソクキデサグルソリュウシトウチュウ",
     "title_en": "Study of Elementary Particles and the Universe with a Particle Accelerator",
     "category": "world",
     "floor": 5,
@@ -25,7 +31,10 @@
 }, {
     "id": "station",
     "nodeId": "EDITOR_node_1637131387938",
+    "latitude": "35.61926491482252",
+    "longitude": "139.776935130385",
     "title": "こちら、国際宇宙ステーション",
+    "title_pron": "コチラコクサイウチュウステーション",
     "title_en": "This is ISS, go ahead",
     "category": "world",
     "floor": 5,
@@ -37,7 +46,10 @@
 }, {
     "id": "missionsurvival",
     "nodeId": "EDITOR_node_1616590850268",
+    "latitude": "35.61904020348366",
+    "longitude": "139.7764277205716",
     "title": "100億人でサバイバル",
+    "title_pron": "ヒャクオクニンデサバイバル",
     "title_en": "Mission Survival",
     "category": "world",
     "floor": 5,
@@ -49,7 +61,10 @@
 }, {
     "id": "globalenv",
     "nodeId": "EDITOR_node_1616499943135",
+    "latitude": "35.61908575998224",
+    "longitude": "139.7765479982036",
     "title": "地球環境とわたし",
+    "title_pron": "チキュウカンキョウトワタシ",
     "title_en": "Earth Environment and Me",
     "category": "world",
     "floor": 5,
@@ -61,7 +76,10 @@
 }, {
     "id": "cells",
     "nodeId": "EDITOR_node_1637131463094",
+    "latitude": "35.61912064615279",
+    "longitude": "139.7767165303094",
     "title": "細胞たち研究開発中",
+    "title_pron": "サイボウタチケンキュウカイハツチュウ",
     "title_en": "",
     "category": "world",
     "floor": 5,
@@ -73,7 +91,10 @@
 }, {
     "id": "humannature",
     "nodeId": "EDITOR_node_1616499914775",
+    "latitude": "35.6193299628371",
+    "longitude": "139.7767509520327",
     "title": "ぼくとみんなとそしてきみー未来をつくりだすちから",
+    "title_pron": "ボクトミンナトソシテキミ ミライヲツクリダスチカラ",
     "title_en": "Stories of One, Everyone, and You",
     "category": "world",
     "floor": 5,
@@ -85,7 +106,10 @@
 }, {
     "id": "medical",
     "nodeId": "EDITOR_node_1616499860282",
+    "latitude": "35.61927945070616",
+    "longitude": "139.7767478227752",
     "title": "ともに進める医療",
+    "title_pron": "トモニススメルイリョウ",
     "title_en": "Promoting Medicine Together",
     "category": "world",
     "floor": 5,
@@ -97,7 +121,10 @@
 }, {
     "id": "frontier",
     "nodeId": "EDITOR_node_1616590887663",
+    "latitude": "35.61913699904146",
+    "longitude": "139.776383489384",
     "title": "“ちり”も積もれば世界をかえる– 宇宙・地球・生命の探求",
+    "title_pron": "チリモツモレバセカイヲカエル　ウチュウ チキュウ セイメイノタンキュウ",
     "title_en": "Many Small Insights = Major Discoveries",
     "category": "world",
     "floor": 5,
@@ -109,7 +136,10 @@
 }, {
     "id": "opinionbank",
     "nodeId": "EDITOR_node_1616590803342",
+    "latitude": "35.6190570515564",
+    "longitude": "139.7765086591516",
     "title": "オピニオン・バンク",
+    "title_pron": "オピニオンバンク",
     "title_en": "Opinion Bank",
     "category": "world",
     "floor": 5,
@@ -121,7 +151,10 @@
 }, {
     "id": "communication-program",
     "nodeId": "EDITOR_node_1616590658573",
+    "latitude": "35.61926564162178",
+    "longitude": "139.7765810787678",
     "title": "コ・スタジオ",
+    "title_pron": "コスタジオ",
     "title_en": "Co-Studio",
     "category": "calendar",
     "floor": 5,
@@ -133,7 +166,10 @@
 }, {
     "id": "nobelq",
     "nodeId": "EDITOR_node_1616499507890",
+    "latitude": "35.61936902795952",
+    "longitude": "139.7767522931167",
     "title": "ノーベルQ― 人間って、なんだ？",
+    "title_pron": "ノーベルキュー ニンゲンッテナンダ",
     "title_en": "Nobel Q",
     "category": "future",
     "floor": 3,
@@ -145,7 +181,10 @@
 }, {
     "id": "backward",
     "nodeId": "EDITOR_node_1616499580608",
+    "latitude": "35.61917333875377",
+    "longitude": "139.7767665982792",
     "title": "未来逆算思考",
+    "title_pron": "ミライギャクサンシコウ",
     "title_en": "Backward from the Future",
     "category": "future",
     "floor": 3,
@@ -157,7 +196,10 @@
 }, {
     "id": "robotworld",
     "nodeId": "EDITOR_node_1616588692646",
+    "latitude": "35.61930005391892",
+    "longitude": "139.7771006102672",
     "title": "ロボットとくらし",
+    "title_pron": "ロボットトクラシ",
     "title_en": "Robots in Your Life",
     "category": "future",
     "floor": 3,
@@ -169,7 +211,10 @@
 }, {
     "id": "android",
     "nodeId": "EDITOR_node_1616499642047",
+    "latitude": "35.61929271423946",
+    "longitude": "139.7766363415632",
     "title": "アンドロイド― 人間って、なんだ？",
+    "title_pron": "アンドロイド ニンゲンッテナンダ",
     "title_en": "Android",
     "category": "future",
     "floor": 3,
@@ -181,7 +226,10 @@
 }, {
     "id": "internet",
     "nodeId": "EDITOR_node_1616507321882",
+    "latitude": "35.61909266453748",
+    "longitude": "139.7766235470772",
     "title": "インターネット物理モデル",
+    "title_pron": "インターネットブツリモデル",
     "title_en": "A Hands-On Model of the Internet",
     "category": "future",
     "floor": 3,
@@ -193,7 +241,10 @@
 }, {
     "id": "anagura",
     "nodeId": "EDITOR_node_1616499443774",
+    "latitude": "35.61919441579222",
+    "longitude": "139.7764876485417",
     "title": "アナグラのうた―消えた博士と残された装置",
+    "title_pron": "アナグラノウタ キエタハカセトノコサレタソウチ",
     "title_en": "Songs of ANAGURA",
     "category": "future",
     "floor": 3,
@@ -205,7 +256,10 @@
 }, {
     "id": "zeroone",
     "nodeId": "EDITOR_node_1616499440112",
+    "latitude": "35.61912609710681",
+    "longitude": "139.7763589023998",
     "title": "零壱庵（ゼロイチアン）",
+    "title_pron": "ゼロイチアン",
     "title_en": "The tearoom going from zero to one",
     "category": "future",
     "floor": 3,
@@ -217,7 +271,10 @@
 }, {
     "id": "digitallynatural",
     "nodeId": "EDITOR_node_1616499576386",
+    "latitude": "35.61925837366795",
+    "longitude": "139.7769355773653",
     "title": "計算機と自然、計算機の自然",
+    "title_pron": "ケイサンキトシゼンケイサンキノシゼン",
     "title_en": "Digitally Natural - Naturally Digital",
     "category": "future",
     "floor": 3,
@@ -229,7 +286,10 @@
 }, {
     "id": "visionarieslab",
     "nodeId": "EDITOR_node_1616507298602",
+    "latitude": "35.61901889478483",
+    "longitude": "139.7764822840827",
     "title": "ビジョナリーラボ",
+    "title_pron": "ビジョナリーラボ",
     "title_en": "Visionaries Lab",
     "category": "future",
     "floor": 3,
@@ -240,7 +300,10 @@
     "blind_detail": "脳研究と人工知能（AI）研究の融合によってどのようなビジョンを切り拓くことができるのか、最先端研究から「知性」についての新しい視点を獲得し、脳の大きな可能性を共に探っていく展示です。\n研究者たちは、知性の根源を探究し、脳について知るとともに、そこから新しいAIを創り出そうという新しい研究領域を「ニューロインテリジェンス（知脳）」と名づけました。脳研究の最新手法を体験したり、AIと共同作業をしたり、目で見て手で触れながら研究の最前線を実感できる展示です。「知脳」の研究は、人とAIの可能性をどこまで広げることができ、そこからどんなビジョンが描けるでしょうか。あなたも研究者とともに、「知脳」をめぐる冒険に出かけませんか？"
 }, {
     "id": "geo-scope",
+    "latitude": "35.61934964901937",
+    "longitude": "139.7768684936837",
     "title": "Geo-Scope ジオ・スコープ",
+    "title_pron": "ジオスコープ",
     "title_en": "Geo-Scope",
     "category": "tsunagari",
     "locations": [{
@@ -258,7 +321,10 @@
 }, {
     "id": "geopalette",
     "nodeId": "EDITOR_node_1616590345480",
+    "latitude": "35.61936194173268",
+    "longitude": "139.7768256067957",
     "title": "Geo-Palette ジオ・パレット",
+    "title_pron": "ジオパレット",
     "title_en": "Geo-Palette",
     "category": "tsunagari",
     "floor": 3,
@@ -269,7 +335,10 @@
     "blind_detail": ""
 }, {
     "id": "geo-cosmos",
+    "latitude": "35.61947182137691",
+    "longitude": "139.7771884313638",
     "title": "Geo-Cosmos ジオ・コスモス",
+    "title_pron": "ジオコスモス",
     "title_en": "Geo-Cosmos",
     "category": "tsunagari",
     "locations": [{
@@ -287,7 +356,10 @@
 }, {
     "id": "geo-prism",
     "nodeId": "EDITOR_node_1616590498419",
+    "latitude": "35.6193455888928",
+    "longitude": "139.7772762179374",
     "title": "Geo-Prism ジオ･プリズム",
+    "title_pron": "ジオプリズム",
     "title_en": "Geo-Prizm",
     "category": "tsunagari",
     "floor": 3,
@@ -298,7 +370,10 @@
     "blind_detail": ""
 }, {
     "id": "ovalbridge",
+    "latitude": "35.619440061826",
+    "longitude": "139.777124713634",
     "title": "オーバルブリッジ",
+    "title_pron": "オーバルブリッジ",
     "title_en": "Oval Bridge",
     "category": "tsunagari",
     "locations": [{
