@@ -237,11 +237,65 @@ fileprivate class SliderRow : BaseRow {
     
 }
 
+
+fileprivate struct ButtonModel {
+    let title: String
+    let key: String
+    let isEnabled : Bool?
+}
+
+fileprivate class ButtonRow : BaseRow {
+    
+    private let button = StyledButton()
+    private var key: String?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        button.sizeToFit()
+        addSubview(button)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func configure(_ model : ButtonModel) {
+        key = model.key
+        button.setTitle(model.title, for: .normal)
+        button.sizeToFit()
+        if let isEnabled = model.isEnabled {
+            button.isEnabled = isEnabled
+        }
+        button.addTarget(self, action: #selector(_tapAction(_:)), for: .touchUpInside)
+    }
+    
+    override func layoutSubviews() {
+        let midY = button.intrinsicContentSize.height / 2 + insets.top
+        button.frame.origin.x = (frame.width - button.frame.width) / 2 - insets.right
+        button.center.y = midY
+    }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let totalHeight = [insets.top,
+                           button.intrinsicContentSize.height,
+                           insets.bottom].reduce(0, { $0 + $1 })
+        return CGSize(width: size.width, height: totalHeight)
+    }
+    
+    @objc private func _tapAction(_ sender: UIButton) {
+        if let key = key {
+            UserDefaults.standard.removeObject(forKey: key)
+            self.nav?.popToRootViewController(animated: true)
+        }
+    }
+}
+
 class NaviSettingController : BaseListController, BaseListDelegate {
     
     private let locationId = "locationCell"
     private let switchId = "switchCell"
     private let sliderId = "sliderCell"
+    private let buttonId = "buttonCell"
     
     private struct CellModel {
         let cellId : String
@@ -255,7 +309,8 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         self.tableView.register(CurrentLocationRow.self, forCellReuseIdentifier: locationId)
         self.tableView.register(SwitchRow.self, forCellReuseIdentifier: switchId)
         self.tableView.register(SliderRow.self, forCellReuseIdentifier: sliderId)
-        
+        self.tableView.register(ButtonRow.self, forCellReuseIdentifier: buttonId)
+
         self.items = [CellModel(cellId: locationId, model: nil),
                       CellModel(cellId: switchId,
                                 model: SwitchModel(desc: NSLocalizedString("Preview", comment: ""),
@@ -291,7 +346,11 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                                 model: SwitchModel(desc: "Debug",
                                                    key: "DebugMode",
                                                    isOn: UserDefaults.standard.bool(forKey: "DebugMode"),
-                                                   isEnabled: nil))
+                                                   isEnabled: nil)),
+                      CellModel(cellId: buttonId,
+                                model: ButtonModel(title: NSLocalizedString("Logout", comment: ""),
+                                                   key: "LoggedIn",
+                                                   isEnabled: MiraikanUtil.isLoggedIn))
         ]
     }
     
@@ -309,6 +368,10 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                     let model = item?.model as? SliderModel {
             sliderCell.configure(model)
             return sliderCell
+        } else if let buttonCell = cell as? ButtonRow,
+                    let model = item?.model as? ButtonModel {
+            buttonCell.configure(model)
+            return buttonCell
         }
         
         return nil
