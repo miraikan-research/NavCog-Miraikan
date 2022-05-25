@@ -579,9 +579,9 @@ class Home : BaseListView {
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section < (items as! [Int : Any]).count - 1 {
-            return 10
+            return 20
         }
-        return 20
+        return 30
     }
     
 }

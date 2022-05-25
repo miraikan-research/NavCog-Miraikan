@@ -215,6 +215,7 @@ NavCogの設定画面から
 "Settings" = "設定";
 "About Miraikan" = "日本科学未来館について";
 "About This App" = "このアプリについて";
+"Logout" = "ログアウト";
 
 // Navigation Settings Texts
 "Navi Settings" = "ナビ設定";
