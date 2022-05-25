@@ -435,7 +435,11 @@ class Home : BaseListView {
         self.tableView.register(MenuRow.self, forCellReuseIdentifier: menuCellId)
         self.tableView.register(CardRow.self, forCellReuseIdentifier: cardCellId)
         self.tableView.register(NewsRow.self, forCellReuseIdentifier: newsCellId)
+        
+        setSection()
+    }
 
+    func setSection() {
         // load the data
         sections = MenuSection.allCases
         if MiraikanUtil.isLoggedIn {
@@ -575,7 +579,7 @@ class Home : BaseListView {
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section < (items as! [Int : Any]).count - 1 {
-            return 30
+            return 10
         }
         return 20
     }
