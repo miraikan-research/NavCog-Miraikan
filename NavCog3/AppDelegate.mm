@@ -62,6 +62,10 @@ void NavNSLog(NSString* fmt, ...) {
     long locationChangedTime;
     NSString *locationFilePath;
     NSFileHandle *locationFileHandle;
+
+    int temporaryFloor;
+    int currentFloor;
+    int continueFloorCount;
 }
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -378,7 +382,18 @@ void uncaughtExceptionHandler(NSException *exception)
         [self writeLocation: [NSString stringWithFormat: @"%@,%@\n", dateString, location]];
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:LOCATION_CHANGED_NOTIFICATION object:self userInfo:data];
+    // Floor change continuity check
+    if (temporaryFloor == location.floor) {
+        continueFloorCount++;
+    } else {
+        continueFloorCount = 0;
+    }
+    temporaryFloor = location.floor;
+
+    if (continueFloorCount > 8) {
+        currentFloor = temporaryFloor;
+        [[NSNotificationCenter defaultCenter] postNotificationName:LOCATION_CHANGED_NOTIFICATION object:self userInfo:data];
+    }
 }
 
 - (void)locationManager:(HLPLocationManager *)manager didLocationStatusUpdate:(HLPLocationStatus)status
