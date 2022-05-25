@@ -45,7 +45,10 @@ import UIKit
 private struct ExhibitionModel : Decodable {
     let id : String
     let nodeId : String?
+    let latitude : String?
+    let longitude : String?
     let title : String
+    let titlePron : String?
     let category : String
     let counter : String
     let floor : Int?

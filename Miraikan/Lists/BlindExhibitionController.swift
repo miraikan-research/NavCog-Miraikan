@@ -45,7 +45,10 @@ import UIKit
 private struct ExhibitionModel : Decodable {
     let id : String
     let nodeId : String?
+    let latitude : String?
+    let longitude : String?
     let title : String
+    let titlePron : String?
     let category : String
     let counter : String
     let floor : Int?
@@ -57,6 +60,7 @@ private struct ExhibitionModel : Decodable {
 
 fileprivate struct ExhibitionLinkModel {
     let title : String
+    let titlePron : String?
     let nodeId : String?
     let counter : String
     let locations: [ExhibitionLocation]?
@@ -130,7 +134,9 @@ fileprivate class LinkingHeader : BaseView {
         didSet {
             guard let model = model else { return }
             titleLink.title = model.title
-            
+            if let titlePron = model.titlePron {
+                titleLink.accessibilityLabel = titlePron
+            }
             let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
             self.isUserInteractionEnabled = true
             self.addGestureRecognizer(tap)
@@ -195,11 +201,13 @@ fileprivate class ContentRow : BaseRow {
     public func configure(_ model: ExhibitionContentModel) {
         lblDescription.text = model.blindIntro.isEmpty
         ? model.blindIntro
-        : NSLocalizedString("Description", tableName: "Miraikan", comment: "") + "\n\n\(model.blindIntro)\n"
+        : NSLocalizedString("Description", tableName: "Miraikan", comment: "") + "\n\(model.blindIntro)\n"
+        lblDescription.accessibilityLabel = lblDescription.text?.replacingOccurrences(of: "・", with: "")
 
         lblOverview.text = model.blindOverview.isEmpty
         ? model.blindOverview
-        : NSLocalizedString("Overview", tableName: "Miraikan", comment: "") + "\n\n\(model.blindOverview)"
+        : NSLocalizedString("Overview", tableName: "Miraikan", comment: "") + "\n\(model.blindOverview)"
+        lblOverview.accessibilityLabel = lblOverview.text?.replacingOccurrences(of: "・", with: "")
 
         addSubview(lblOverview)
 
@@ -298,6 +306,7 @@ class BlindExhibitionController : BaseListController, BaseListDelegate {
                 ? "\(model.counter) \(model.title)"
                 : model.title
             let linkModel = ExhibitionLinkModel(title: title,
+                                                titlePron: model.titlePron,
                                                 nodeId: model.nodeId,
                                                 counter: model.counter,
                                                 locations: model.locations,

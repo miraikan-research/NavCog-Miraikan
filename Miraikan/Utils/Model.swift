@@ -61,6 +61,21 @@ enum TabItem: Int, CaseIterable {
         }
     }
     
+    var accessibilityTitle: String {
+        switch self {
+        case .callStaff:
+            return NSLocalizedString("Call Staff pron", comment: "")
+        case .callSC:
+            return NSLocalizedString("Call SC pron", comment: "")
+        case .home:
+            return NSLocalizedString("Home pron", comment: "")
+        case .login:
+            return NSLocalizedString("Login pron", comment: "")
+        case .askAI:
+            return NSLocalizedString("Ask AI pron", comment: "")
+        }
+    }
+
     var imgName: String {
         switch self {
         case .callStaff:

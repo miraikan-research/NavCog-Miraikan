@@ -49,6 +49,7 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         if let items = self.tabBar.items {
             for (i, t) in tabs.enumerated() {
                 items[i].title = t.title
+                items[i].accessibilityLabel = t.accessibilityTitle
                 items[i].image = UIImage(named: t.imgName)
             }
         }

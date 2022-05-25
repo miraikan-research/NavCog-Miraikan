@@ -172,6 +172,13 @@ Feedback is sending...";
 "Login" = "Login";  // Also used as menu title
 "Ask AI" = "Ask AI";
 
+// pronunciation
+"Call Staff pron" = "Call Staff";
+"Call SC pron" = "Call SC";
+"Home pron" = "Home";
+"Login pron" = "Login";  // Also used as menu title
+"Ask AI pron" = "Ask AI";
+
 // Menu Section Titles
 "spex" = "Special Exhibition";
 "Events" = "Events";
