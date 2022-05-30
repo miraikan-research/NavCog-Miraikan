@@ -36,19 +36,19 @@ protocol WebAccessibilityDelegate {
  The parent view implemented with WKNavigationDelegate
  */
 class BaseWebView: BaseView, WKNavigationDelegate {
-    
+
     let webView = WKWebView()
     private let lblLoading = UILabel()
-    
+
     private let gap = CGFloat(10)
-    
-    private var isLoadingFailed : Bool = false
-    
+
+    private var isLoadingFailed = false
+
     var accessibilityDelegate: WebAccessibilityDelegate?
-    
+
     override func setup() {
         super.setup()
-        
+
         webView.navigationDelegate = self
         addSubview(webView)
 
@@ -66,31 +66,31 @@ class BaseWebView: BaseView, WKNavigationDelegate {
         lblLoading.center.y = self.center.y
         lblLoading.frame.size.width = innerSize.width
     }
-    
+
     // MARK: Public Customized Functions
     public func loadContent(_ address: String) {
         let url = URL(string: address)
         let req = URLRequest(url: url!)
         webView.load(req)
     }
-    
+
     public func loadDetail(html: String) {
         webView.loadHTMLString(html, baseURL: nil)
     }
-    
+
     // MARK: WKNavigationDelegate
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         lblLoading.text = NSLocalizedString("web_loading", comment: "")
         lblLoading.sizeToFit()
     }
-    
+
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         lblLoading.text = NSLocalizedString("web_failed", comment: "")
         lblLoading.sizeToFit()
         isLoadingFailed = true
         webView.isHidden = true
     }
-    
+
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         guard let response = navigationResponse.response as? HTTPURLResponse else { return }
         switch response.statusCode {
@@ -110,11 +110,10 @@ class BaseWebView: BaseView, WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         lblLoading.isHidden = !isLoadingFailed
         lblLoading.accessibilityElementsHidden = !isLoadingFailed
         accessibilityDelegate?.onFinished()
     }
-    
 }

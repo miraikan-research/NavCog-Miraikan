@@ -32,11 +32,11 @@ import UIKit
  The parent UIView which contains a UITableView.
  This is to be inherited by those screens implemented as UIView and difficult to rewrite as UIViewController
  */
-class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
+class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
     
     let tableView = UITableView()
     
-    public var items : Any? {
+    public var items: Any? {
         didSet {
             self.tableView.reloadData()
         }
@@ -50,7 +50,7 @@ class BaseListView : BaseView, UITableViewDelegate, UITableViewDataSource {
         addSubview(tableView)
     }
     
-    func initTable(isSelectionAllowed : Bool) {
+    func initTable(isSelectionAllowed: Bool) {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.allowsSelection = isSelectionAllowed

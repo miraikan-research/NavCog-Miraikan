@@ -285,7 +285,7 @@
 		D3A1180E27294B0B00BEC1C8 /* WelcomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E2E1E3F1E3700208042 /* WelcomViewController.m */; };
 		D3A1180F27294B0B00BEC1C8 /* HLPSettingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E9238DE1D5189F100875766 /* HLPSettingTableView.m */; };
 		D3A1181027294B0B00BEC1C8 /* MiraikanUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5832702B8F600F6AD28 /* MiraikanUtil.swift */; };
-		D3A1181127294B0B00BEC1C8 /* Customized.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5942702B8F600F6AD28 /* Customized.swift */; };
+		D3A1181127294B0B00BEC1C8 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5942702B8F600F6AD28 /* Label.swift */; };
 		D3A1181227294B0B00BEC1C8 /* HLPDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE207DA2022F7BA00160160 /* HLPDirectory.m */; };
 		D3A1181327294B0B00BEC1C8 /* HLPGeoJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6E42DD1D90C77C006B6899 /* HLPGeoJSON.m */; };
 		D3A1181427294B0B00BEC1C8 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D320F5962702B8F600F6AD28 /* BaseView.swift */; };
@@ -368,6 +368,9 @@
 		E5DC7990281A4E9A00EFF12F /* HomeTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC798F281A4E9A00EFF12F /* HomeTabController.swift */; };
 		E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */; };
 		E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */; };
+		E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAD2844B7CF00BB4152 /* Button.swift */; };
+		E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAF2844B83F00BB4152 /* Switch.swift */; };
+		E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -643,7 +646,7 @@
 		D320F5902702B8F600F6AD28 /* AppAboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppAboutView.swift; sourceTree = "<group>"; };
 		D320F5912702B8F600F6AD28 /* SettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		D320F5932702B8F600F6AD28 /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
-		D320F5942702B8F600F6AD28 /* Customized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Customized.swift; sourceTree = "<group>"; };
+		D320F5942702B8F600F6AD28 /* Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		D320F5952702B8F600F6AD28 /* BaseScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseScrollView.swift; sourceTree = "<group>"; };
 		D320F5962702B8F600F6AD28 /* BaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		D320F5992702B8F600F6AD28 /* EventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
@@ -689,6 +692,9 @@
 		E5DC798F281A4E9A00EFF12F /* HomeTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabController.swift; sourceTree = "<group>"; };
 		E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckViewController.swift; sourceTree = "<group>"; };
 		E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckView.swift; sourceTree = "<group>"; };
+		E5F52EAD2844B7CF00BB4152 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		E5F52EAF2844B83F00BB4152 /* Switch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
+		E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1206,7 +1212,10 @@
 			isa = PBXGroup;
 			children = (
 				D320F5932702B8F600F6AD28 /* BaseController.swift */,
-				D320F5942702B8F600F6AD28 /* Customized.swift */,
+				D320F5942702B8F600F6AD28 /* Label.swift */,
+				E5F52EAD2844B7CF00BB4152 /* Button.swift */,
+				E5F52EAF2844B83F00BB4152 /* Switch.swift */,
+				E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */,
 				D320F5952702B8F600F6AD28 /* BaseScrollView.swift */,
 				D320F5962702B8F600F6AD28 /* BaseView.swift */,
 				D31E27C227424A9000755958 /* BaseListController.swift */,
@@ -2143,6 +2152,7 @@
 				D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */,
 				D3A117F027294B0B00BEC1C8 /* AgreementViewController.m in Sources */,
 				D3A117F127294B0B00BEC1C8 /* InitViewController.mm in Sources */,
+				E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */,
 				D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */,
 				D3A117F227294B0B00BEC1C8 /* StarRatingView.m in Sources */,
 				D3A117F327294B0B00BEC1C8 /* MiraikanAboutView.swift in Sources */,
@@ -2154,6 +2164,7 @@
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
 				D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */,
 				D3921C30275760DF00F1DD55 /* BlankView.swift in Sources */,
+				E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */,
 				E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */,
 				D3A117F827294B0B00BEC1C8 /* NavBlindWebView.m in Sources */,
 				D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */,
@@ -2187,7 +2198,7 @@
 				D3A1180E27294B0B00BEC1C8 /* WelcomViewController.m in Sources */,
 				D3A1180F27294B0B00BEC1C8 /* HLPSettingTableView.m in Sources */,
 				D3A1181027294B0B00BEC1C8 /* MiraikanUtil.swift in Sources */,
-				D3A1181127294B0B00BEC1C8 /* Customized.swift in Sources */,
+				D3A1181127294B0B00BEC1C8 /* Label.swift in Sources */,
 				D3A1181227294B0B00BEC1C8 /* HLPDirectory.m in Sources */,
 				D3A1181327294B0B00BEC1C8 /* HLPGeoJSON.m in Sources */,
 				E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */,
@@ -2199,6 +2210,7 @@
 				D3A1181727294B0B00BEC1C8 /* SettingViewController.m in Sources */,
 				D3A1181827294B0B00BEC1C8 /* ExhibitionDataStore.swift in Sources */,
 				D3A1181927294B0B00BEC1C8 /* BaseScrollView.swift in Sources */,
+				E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */,
 				D3A1181A27294B0B00BEC1C8 /* DefaultTTS.m in Sources */,
 				D3A1181B27294B0B00BEC1C8 /* HLPSetting.m in Sources */,
 				D3A1181C27294B0B00BEC1C8 /* Model.swift in Sources */,
