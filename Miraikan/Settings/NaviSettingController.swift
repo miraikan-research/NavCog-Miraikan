@@ -311,47 +311,52 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         self.tableView.register(SliderRow.self, forCellReuseIdentifier: sliderId)
         self.tableView.register(ButtonRow.self, forCellReuseIdentifier: buttonId)
 
-        self.items = [CellModel(cellId: locationId, model: nil),
-                      CellModel(cellId: switchId,
-                                model: SwitchModel(desc: NSLocalizedString("Preview", comment: ""),
-                                                   key: "OnPreview",
-                                                   isOn: MiraikanUtil.isPreview,
-                                                   isEnabled: MiraikanUtil.isLocated)),
-                      CellModel(cellId: sliderId,
-                                model: SliderModel(min: 1,
-                                                   max: 10,
-                                                   defaultValue: MiraikanUtil.previewSpeed,
-                                                   step: 1,
-                                                   format: "%d",
-                                                   title: NSLocalizedString("Preview Speed", comment: "Name of the label"),
-                                                   name: "preview_speed",
-                                                   desc: NSLocalizedString("Preview Speed Description",
-                                                                           comment: "Description for VoiceOver"))),
-                      CellModel(cellId: switchId,
-                                model: SwitchModel(desc: NSLocalizedString("Voice Guide", comment: ""),
-                                                   key: "isVoiceGuideOn",
-                                                   isOn: UserDefaults.standard.bool(forKey: "isVoiceGuideOn"),
-                                                   isEnabled: nil)),
-                      CellModel(cellId: sliderId,
-                                model: SliderModel(min: 0.1,
-                                                   max: 1,
-                                                   defaultValue: MiraikanUtil.speechSpeed,
-                                                   step: 0.05,
-                                                   format: "%.2f",
-                                                   title: NSLocalizedString("Speech Speed", comment: "Name of the label"),
-                                                   name: "speech_speed",
-                                                   desc: NSLocalizedString("Speech Speed Description",
-                                                                           comment: "Description for VoiceOver"))),
-                      CellModel(cellId: switchId,
-                                model: SwitchModel(desc: "Debug",
-                                                   key: "DebugMode",
-                                                   isOn: UserDefaults.standard.bool(forKey: "DebugMode"),
-                                                   isEnabled: nil)),
-                      CellModel(cellId: buttonId,
-                                model: ButtonModel(title: NSLocalizedString("Logout", comment: ""),
-                                                   key: "LoggedIn",
-                                                   isEnabled: MiraikanUtil.isLoggedIn))
-        ]
+        var cellList: [CellModel] = []
+        
+        cellList.append(CellModel(cellId: locationId, model: nil))
+        cellList.append(CellModel(cellId: switchId,
+               model: SwitchModel(desc: NSLocalizedString("Preview", comment: ""),
+                                  key: "OnPreview",
+                                  isOn: MiraikanUtil.isPreview,
+                                  isEnabled: MiraikanUtil.isLocated)))
+        cellList.append(CellModel(cellId: sliderId,
+                                  model: SliderModel(min: 1,
+                                                     max: 10,
+                                                     defaultValue: MiraikanUtil.previewSpeed,
+                                                     step: 1,
+                                                     format: "%d",
+                                                     title: NSLocalizedString("Preview Speed", comment: "Name of the label"),
+                                                     name: "preview_speed",
+                                                     desc: NSLocalizedString("Preview Speed Description",
+                                                                             comment: "Description for VoiceOver"))))
+        cellList.append(CellModel(cellId: switchId,
+                model: SwitchModel(desc: NSLocalizedString("Voice Guide", comment: ""),
+                                   key: "isVoiceGuideOn",
+                                   isOn: UserDefaults.standard.bool(forKey: "isVoiceGuideOn"),
+                                   isEnabled: nil)))
+        cellList.append(CellModel(cellId: sliderId,
+                                  model: SliderModel(min: 0.1,
+                                                     max: 1,
+                                                     defaultValue: MiraikanUtil.speechSpeed,
+                                                     step: 0.05,
+                                                     format: "%.2f",
+                                                     title: NSLocalizedString("Speech Speed", comment: "Name of the label"),
+                                                     name: "speech_speed",
+                                                     desc: NSLocalizedString("Speech Speed Description",
+                                                                             comment: "Description for VoiceOver"))))
+
+#if DEBUG
+        cellList.append(CellModel(cellId: switchId,
+                                  model: SwitchModel(desc: "Debug",
+                                                     key: "DebugMode",
+                                                     isOn: UserDefaults.standard.bool(forKey: "DebugMode"),
+                                                     isEnabled: nil)))
+        cellList.append(CellModel(cellId: buttonId,
+                                  model: ButtonModel(title: NSLocalizedString("Logout", comment: ""),
+                                                     key: "LoggedIn",
+                                                     isEnabled: MiraikanUtil.isLoggedIn)))
+#endif
+        self.items = cellList
     }
     
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
@@ -379,6 +384,15 @@ class NaviSettingController : BaseListController, BaseListDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         super.tableView(tableView, didSelectRowAt: indexPath)
+        let item = (items as? [CellModel])?[indexPath.row]
+        guard let cellId = item?.cellId else { return }
+        if cellId == locationId {
+#if DEBUG
+            if let nav = self.navigationController {
+                nav.show(DistanceCheckViewController(title: ""), sender: nil)
+            }
+#endif
+        }
     }
     
 }
