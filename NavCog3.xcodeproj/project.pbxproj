@@ -366,6 +366,8 @@
 		E5DC79882817E4D500EFF12F /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79872817E4D500EFF12F /* TabController.swift */; };
 		E5DC798A2817E4F100EFF12F /* BaseNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79892817E4F100EFF12F /* BaseNavController.swift */; };
 		E5DC7990281A4E9A00EFF12F /* HomeTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC798F281A4E9A00EFF12F /* HomeTabController.swift */; };
+		E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */; };
+		E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -685,6 +687,8 @@
 		E5DC79872817E4D500EFF12F /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		E5DC79892817E4F100EFF12F /* BaseNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavController.swift; sourceTree = "<group>"; };
 		E5DC798F281A4E9A00EFF12F /* HomeTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabController.swift; sourceTree = "<group>"; };
+		E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckViewController.swift; sourceTree = "<group>"; };
+		E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckView.swift; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1193,6 +1197,7 @@
 				D320F5902702B8F600F6AD28 /* AppAboutView.swift */,
 				D320F5912702B8F600F6AD28 /* SettingView.swift */,
 				D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */,
+				E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1225,6 +1230,7 @@
 				E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */,
 				D3B1A1A427546AFB00E6CBCB /* AIController.swift */,
 				D3B06194276346BB0006B0DA /* VoiceGuideController.swift */,
+				E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */,
 			);
 			path = Contents;
 			sourceTree = "<group>";
@@ -2148,6 +2154,7 @@
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
 				D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */,
 				D3921C30275760DF00F1DD55 /* BlankView.swift in Sources */,
+				E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */,
 				D3A117F827294B0B00BEC1C8 /* NavBlindWebView.m in Sources */,
 				D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */,
 				D3A117F927294B0B00BEC1C8 /* DownloadViewController.m in Sources */,
@@ -2202,6 +2209,7 @@
 				D364735F273E0D4400C110B0 /* EventListController.swift in Sources */,
 				D3A1182127294B0B00BEC1C8 /* SearchViewController.m in Sources */,
 				D3A1182227294B0B00BEC1C8 /* main.mm in Sources */,
+				E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */,
 				D3A1182327294B0B00BEC1C8 /* HLPSettingViewCell.m in Sources */,
 				D3A1182427294B0B00BEC1C8 /* FloorSelectionController.swift in Sources */,
 				D3B06195276346BB0006B0DA /* VoiceGuideController.swift in Sources */,
@@ -2705,9 +2713,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "lab.miraikan.NavCog-Miraikan";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = navcog_miraikan;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "Miraikan/NavCogMiraikan-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0.1;
@@ -2742,9 +2752,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "lab.miraikan.NavCog-Miraikan";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = navcog_miraikan;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Miraikan/NavCogMiraikan-Bridging-Header.h";
 				SWIFT_VERSION = 5.0.1;
 				VALID_ARCHS = arm64;
