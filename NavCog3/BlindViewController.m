@@ -278,8 +278,8 @@
 
 - (UIViewController*) topMostController
 {
-    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    
+    UIViewController *topController = [UIApplication sharedApplication].windows.firstObject.rootViewController;
+
     while (topController.presentedViewController) {
         topController = topController.presentedViewController;
     }
@@ -405,7 +405,6 @@
             devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
         }
         BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey:@"p2p_debug_follower"];
-        BOOL hasCenter = [[NavDataStore sharedDataStore] mapCenter] != nil;
         BOOL previewMode = [NavDataStore sharedDataStore].previewMode;
         BOOL exerciseMode = [NavDataStore sharedDataStore].exerciseMode;
         BOOL isActive = [navigator isActive];

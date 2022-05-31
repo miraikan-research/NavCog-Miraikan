@@ -113,7 +113,7 @@ class LoginView: BaseView {
         UserDefaults.standard.setValue(true, forKey: "LoggedIn")
         
         // Remove the tab after login
-        if let viewController = UIApplication.shared.keyWindow?.rootViewController {
+        if let viewController = UIApplication.shared.windows.first?.rootViewController {
             if let tabBarController = viewController as? TabController {
                 tabBarController.selectedIndex = TabItem.home.rawValue
                 if var tabs = tabBarController.viewControllers {
