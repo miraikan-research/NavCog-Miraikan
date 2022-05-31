@@ -105,17 +105,16 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     [self.view addSubview:_webView];
-    [self showVoiceGuide];
     BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-        devMode = [ud boolForKey:@"developer_mode"];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]) {
+        devMode = [ud boolForKey: @"developer_mode"];
     }
     _webView.isDeveloperMode = devMode;
-    _webView.userMode = [ud stringForKey:@"user_mode"];
+    _webView.userMode = [ud stringForKey: @"user_mode"];
     _webView.config = @{
-                        @"serverHost":[ud stringForKey:@"selected_hokoukukan_server"],
-                        @"serverContext":[ud stringForKey:@"hokoukukan_server_context"],
-                        @"usesHttps":@([ud boolForKey:@"https_connection"])
+                        @"serverHost": [ud stringForKey: @"selected_hokoukukan_server"],
+                        @"serverContext": [ud stringForKey: @"hokoukukan_server_context"],
+                        @"usesHttps": @([ud boolForKey: @"https_connection"])
                         };
     _webView.delegate = self;
     _webView.tts = self;
@@ -149,17 +148,17 @@ typedef NS_ENUM(NSInteger, ViewState) {
     checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
     [self updateView];
 
-    BOOL checked = [ud boolForKey:@"checked_altimeter"];
+    BOOL checked = [ud boolForKey: @"checked_altimeter"];
     if (!checked && ![CMAltimeter isRelativeAltitudeAvailable]) {
         NSString *title = NSLocalizedString(@"NoAltimeterAlertTitle", @"");
         NSString *message = NSLocalizedString(@"NoAltimeterAlertMessage", @"");
         NSString *ok = NSLocalizedString(@"I_Understand", @"");
         
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                       message:message
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:ok
-                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle: title
+                                                                       message: message
+                                                                preferredStyle: UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle: ok
+                                                  style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                                                   }]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -231,9 +230,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [_webView evaluateJavaScript:script completionHandler:^(id _Nullable state, NSError * _Nullable error) {
         NSDictionary *json = state;
         if (json) {
-            HLPLocation *center = [[HLPLocation alloc] initWithLat:[json[@"lat"] doubleValue]
-                                                                Lng:[json[@"lng"] doubleValue]
-                                                              Floor:[json[@"floor"] doubleValue]];
+            HLPLocation *center = [[HLPLocation alloc] initWithLat: [json[@"lat"] doubleValue]
+                                                                Lng: [json[@"lng"] doubleValue]
+                                                              Floor: [json[@"floor"] doubleValue]];
             [NavDataStore sharedDataStore].mapCenter = center;
             HLPLocation *current = [NavDataStore sharedDataStore].currentLocation;
             if (isnan(current.lat) || isnan(current.lng)) {
@@ -247,7 +246,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
                 // Start navigating here within iBeacon environment
                 if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview",@"")];
+                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
                 }
             }
             
@@ -266,11 +265,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
         if ([self destId] != nil) {
             if (!isNaviStarted) {
                 __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
-                NSString *elv = [NSString stringWithFormat:@"&elv=%@", prefs[@"elv"]];
-                NSString *stairs = [NSString stringWithFormat:@"&stairs=%@", prefs[@"stairs"]];
-                NSString *esc = [NSString stringWithFormat:@"&esc=%@", prefs[@"esc"]];
-                NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@&dist=1000", [self destId],
-                                  [[NSDate date] timeIntervalSince1970], elv, stairs, esc];
+                NSString *elv = [NSString stringWithFormat: @"&elv=%@", prefs[@"elv"]];
+                NSString *stairs = [NSString stringWithFormat: @"&stairs=%@", prefs[@"stairs"]];
+                NSString *esc = [NSString stringWithFormat: @"&esc=%@", prefs[@"esc"]];
+                NSString *dist = [NSString stringWithFormat: @"&dist=%@", prefs[@"dist"]];
+                NSString *hash = [NSString stringWithFormat: @"navigate=%@&dummy=%f%@%@%@%@",
+                                  [self destId], [[NSDate date] timeIntervalSince1970], elv, stairs, esc, dist];
                 state = ViewStateNavigation;
                 dialogHelper.helperView.hidden = YES;
                 [self hiddenVoiceGuide];
@@ -342,7 +342,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:temp options:0 error:nil];
-    NSString *dataStr = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
+    NSString *dataStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     NSString *script = [NSString stringWithFormat:@"$hulop.map.showRoute(%@, null, true, true);$('#map-page').trigger('resize');", dataStr];
     
@@ -378,11 +378,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
     HLPLocation *loc = [nds currentLocation];
     BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
     BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-        devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]) {
+        devMode = [[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"];
     }
     BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
-    BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey:@"p2p_debug_follower"];
+    BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey: @"p2p_debug_follower"];
     BOOL peerExists = [[[NavDebugHelper sharedHelper] peers] count] > 0;
 
     switch(state) {
@@ -471,8 +471,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
 {
-    BOOL isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
-    [[NavDeviceTTS sharedTTS] speak:isVoiceGuideOn ? text : @"" withOptions:@{@"force": @(isForce)} completionHandler:handler];
+    BOOL isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey: @"isVoiceGuideOn"];
+    [[NavDeviceTTS sharedTTS] speak:isVoiceGuideOn ? text : @"" withOptions: @{@"force": @(isForce)} completionHandler:handler];
 }
 
 - (BOOL)isSpeaking
@@ -581,28 +581,32 @@ typedef NS_ENUM(NSInteger, ViewState) {
     BOOL inNavigation = [uiState[@"navigation"] boolValue];
 
     if (page) {
-        if ([page isEqualToString:@"control"]) {
+        if ([page isEqualToString: @"control"]) {
             state = ViewStateSearch;
+            [self hiddenVoiceGuide];
         }
-        else if ([page isEqualToString:@"settings"]) {
+        else if ([page isEqualToString: @"settings"]) {
             state = ViewStateSearchSetting;
+            [self hiddenVoiceGuide];
         }
-        else if ([page isEqualToString:@"confirm"]) {
+        else if ([page isEqualToString: @"confirm"]) {
             state = ViewStateRouteConfirm;
         }
-        else if ([page hasPrefix:@"map-page"]) {
+        else if ([page hasPrefix: @"map-page"]) {
             if (inNavigation) {
                 state = ViewStateNavigation;
                 [self hiddenVoiceGuide];
             } else {
                 state = ViewStateMap;
-                [self showVoiceGuide];
+//                if (!self.destId) {
+                    [self showVoiceGuide];
+//                }
             }
         }
-        else if ([page hasPrefix:@"ui-id-"]) {
+        else if ([page hasPrefix: @"ui-id-"]) {
             state = ViewStateSearchDetail;
         }
-        else if ([page isEqualToString:@"confirm_floor"]) {
+        else if ([page isEqualToString: @"confirm_floor"]) {
             state = ViewStateRouteCheck;
         }
         else {
@@ -622,11 +626,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
     
     __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
-    NSString *elv = [NSString stringWithFormat:@"&elv=%@", prefs[@"elv"]];
-    NSString *stairs = [NSString stringWithFormat:@"&stairs=%@", prefs[@"stairs"]];
-    NSString *esc = [NSString stringWithFormat:@"&esc=%@", prefs[@"esc"]];
-    NSString *hash = [NSString stringWithFormat:@"navigate=%@&dummy=%f%@%@%@&dist=1000", options[@"toID"],
-                      [[NSDate date] timeIntervalSince1970], elv, stairs, esc];
+    NSString *elv = [NSString stringWithFormat: @"&elv=%@", prefs[@"elv"]];
+    NSString *stairs = [NSString stringWithFormat: @"&stairs=%@", prefs[@"stairs"]];
+    NSString *esc = [NSString stringWithFormat: @"&esc=%@", prefs[@"esc"]];
+    NSString *dist = [NSString stringWithFormat: @"&dist=%@", prefs[@"dist"]];
+    NSString *hash = [NSString stringWithFormat: @"navigate=%@&dummy=%f%@%@%@%@",
+                      options[@"toID"], [[NSDate date] timeIntervalSince1970], elv, stairs, esc, dist];
     state = ViewStateNavigation;
     dialogHelper.helperView.hidden = YES;
     [self hiddenVoiceGuide];
@@ -673,26 +678,19 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         if (lastOrientationSent + 0.2 < now) {
             [_webView sendData:@[@{
-                                @"type":@"ORIENTATION",
-                                @"z":@(orientation)
+                                @"type": @"ORIENTATION",
+                                @"z": @(orientation)
                                 }]
-                      withName:@"Sensor"];
+                      withName: @"Sensor"];
             lastOrientationSent = now;
         }
-        
         
         location = locations[@"actual"];
         if (!location || [location isEqual:[NSNull null]]) {
             return;
         }
         
-        /*
-         if (isnan(location.lat) || isnan(location.lng)) {
-         return;
-         }
-         */
-        
-        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey:@"webview_update_min_interval"]) {
+        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
                 return;
             }
@@ -701,17 +699,17 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         double floor = location.floor;
         
-        [_webView sendData:@{
-                            @"lat":@(location.lat),
-                            @"lng":@(location.lng),
-                            @"floor":@(floor),
-                            @"accuracy":@(location.accuracy),
-                            @"rotate":@(0), // dummy
-                            @"orientation":@(999), //dummy
-                            @"debug_info":location.params?location.params[@"debug_info"]:[NSNull null],
-                            @"debug_latlng":location.params?location.params[@"debug_latlng"]:[NSNull null]
+        [_webView sendData: @{
+                            @"lat": @(location.lat),
+                            @"lng": @(location.lng),
+                            @"floor": @(floor),
+                            @"accuracy": @(location.accuracy),
+                            @"rotate": @(0), // dummy
+                            @"orientation": @(999), //dummy
+                            @"debug_info": location.params?location.params[@"debug_info"] : [NSNull null],
+                            @"debug_latlng": location.params?location.params[@"debug_latlng"] : [NSNull null]
                             }
-                  withName:@"XYZ"];
+                  withName: @"XYZ"];
 
         lastLocationSent = now;
         
@@ -796,10 +794,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-    if ([identifier isEqualToString:@"user_settings"] && (state == ViewStateMap || state == ViewStateLoading)) {
+    if ([identifier isEqualToString: @"user_settings"] && (state == ViewStateMap || state == ViewStateLoading)) {
         return YES;
     }
-    if ([identifier isEqualToString:@"user_settings"] && state == ViewStateSearch) {
+    if ([identifier isEqualToString: @"user_settings"] && state == ViewStateSearch) {
         state = ViewStateTransition;
         [self updateView];
         [_webView triggerWebviewControl:HLPWebviewControlRouteSearchOptionButton];
@@ -812,11 +810,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     segue.destinationViewController.restorationIdentifier = segue.identifier;
     
-    if ([segue.identifier isEqualToString:@"user_settings"]) {
+    if ([segue.identifier isEqualToString: @"user_settings"]) {
         SettingViewController *sv = (SettingViewController*)segue.destinationViewController;
         sv.webView = _webView;
     }
-    if ([segue.identifier isEqualToString:@"show_rating"] && ratingInfo) {
+    if ([segue.identifier isEqualToString: @"show_rating"] && ratingInfo) {
         RatingViewController *rv = (RatingViewController*)segue.destinationViewController;
         rv.start = [ratingInfo[@"start"] doubleValue]/1000.0;
         rv.end = [ratingInfo[@"end"] doubleValue]/1000.0;
@@ -826,7 +824,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         ratingInfo = nil;
     }
-    if ([segue.identifier isEqualToString:@"show_dialog_wc"]){
+    if ([segue.identifier isEqualToString: @"show_dialog_wc"]) {
         DialogViewController* dView = (DialogViewController*)segue.destinationViewController;
         dView.tts = [DefaultTTS new];
         dView.root = self;
@@ -840,8 +838,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"developer_mode"]) {
-        _webView.isDeveloperMode = @([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]);
+    if ([keyPath isEqualToString: @"developer_mode"]) {
+        _webView.isDeveloperMode = @([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]);
     }
 }
 
