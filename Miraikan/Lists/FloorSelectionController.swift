@@ -1,5 +1,5 @@
 //
-//  FloorSelectionView.swift
+//  FloorSelectionController.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -32,17 +32,17 @@ import UIKit
  The location for each floor has its own nodeId (destination id).
  */
 class FloorSelectionController: BaseListController, BaseListDelegate {
-    
+
     private let cellId = "floorCell"
-    
+
     override func initTable() {
         super.initTable()
-        
+
         self.baseDelegate = self
         self.tableView.separatorStyle = .singleLine
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
     }
-    
+
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLocation {
@@ -50,15 +50,14 @@ class FloorSelectionController: BaseListController, BaseListDelegate {
         }
         return cell
     }
-    
+
     override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
         super.onSelect(tableView, indexPath)
-        
+
         if let nav = self.navigationController as? BaseNavController,
            let model = (items as? [Any])?[indexPath.row] as? ExhibitionLocation {
             nav.openMap(nodeId: model.nodeId)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
 }

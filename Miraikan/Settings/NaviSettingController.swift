@@ -71,7 +71,6 @@ fileprivate class CurrentLocationRow : BaseRow {
                            insets.bottom].reduce(gap, { $0 + $1 })
         return CGSize(width: size.width, height: totalHeight)
     }
-    
 }
 
 fileprivate struct SwitchModel {
@@ -129,7 +128,6 @@ fileprivate class SwitchRow : BaseRow {
                            insets.bottom].reduce(0, { $0 + $1 })
         return CGSize(width: size.width, height: totalHeight)
     }
-    
 }
 
 fileprivate struct SliderModel {
@@ -208,7 +206,6 @@ fileprivate class SliderRow : BaseRow {
                 }
             }
         }
-        
     }
     
     override func layoutSubviews() {
@@ -234,7 +231,6 @@ fileprivate class SliderRow : BaseRow {
             .reduce((insets.top + insets.bottom), { $0 + $1 })
         return CGSize(width: size.width, height: height)
     }
-    
 }
 
 
@@ -394,5 +390,4 @@ class NaviSettingController : BaseListController, BaseListDelegate {
 #endif
         }
     }
-    
 }

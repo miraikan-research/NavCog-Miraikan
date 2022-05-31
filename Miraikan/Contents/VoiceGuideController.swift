@@ -41,59 +41,7 @@ private protocol AudioListDelegate {
     func checkStatus() -> Bool
 }
 
-fileprivate class VoiceGuideRow : BaseRow {
-    
-    private let lblDescription = AutoWrapLabel()
-    
-    // MARK: init
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        self.accessibilityElementsHidden = true
-        lblDescription.accessibilityElementsHidden = true
-        addSubview(lblDescription)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        lblDescription.text = nil
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let descSize = CGSize(width: innerSize.width,
-                              height: lblDescription.intrinsicContentSize.height)
-        lblDescription.frame = CGRect(x: insets.left,
-                                      y: insets.top,
-                                      width: innerSize.width,
-                                      height: lblDescription.sizeThatFits(descSize).height)
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let descSize = CGSize(width: innerSizing(parentSize: size).width,
-                              height: lblDescription.intrinsicContentSize.height)
-        let totalHeight = insets.top
-        + lblDescription.sizeThatFits(descSize).height
-        + insets.bottom
-        return CGSize(width: size.width, height: totalHeight)
-    }
-    
-    /**
-     Set data from DataSource
-     */
-    public func configure(title: String) {
-        lblDescription.text = title
-        lblDescription.sizeToFit()
-    }
-    
-}
-
-fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
+fileprivate class VoiceGuideListView: BaseListView, AudioControlDelegate {
     
     private let cellId = "cellId"
     private let tts = DefaultTTS()
@@ -170,12 +118,11 @@ fileprivate class VoiceGuideListView : BaseListView, AudioControlDelegate {
             self.listDelegate?.setPlaying(false)
         })
     }
-    
 }
 
-fileprivate class PanelView : BaseView {
+fileprivate class PanelView: BaseView {
     
-    private enum AudioControl : Int, CaseIterable {
+    private enum AudioControl: Int, CaseIterable {
         case main
         case prev
         case next
@@ -196,7 +143,7 @@ fileprivate class PanelView : BaseView {
     
     private(set) var isPlaying : Bool = false
     
-    var delegate : AudioControlDelegate?
+    var delegate: AudioControlDelegate?
     
     override func setup() {
         super.setup()
@@ -279,12 +226,11 @@ fileprivate class PanelView : BaseView {
         btnMain.accessibilityLabel = desc
         UIAccessibility.post(notification: .screenChanged, argument: btnMain)
     }
-    
 }
 
 class VoiceGuideController: BaseController {
     
-    private class InnerView : BaseView, AudioListDelegate{
+    private class InnerView: BaseView, AudioListDelegate{
         
         private let listView = VoiceGuideListView()
         private let panelView = PanelView()
@@ -323,7 +269,6 @@ class VoiceGuideController: BaseController {
         func checkStatus() -> Bool {
             return panelView.isPlaying
         }
-        
     }
     
     private let innerView = InnerView()
@@ -345,5 +290,4 @@ class VoiceGuideController: BaseController {
             innerView.setItems(items)
         }
     }
-    
 }

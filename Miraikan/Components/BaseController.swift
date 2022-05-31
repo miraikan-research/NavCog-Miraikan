@@ -1,5 +1,5 @@
 //
-//  ListController.swift
+//  BaseController.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -35,29 +35,28 @@ import UIKit
  - title: The title for NavigationBar
  */
 class BaseController: UIViewController {
-    
-    private let sceneView : UIView
-    
-    var nav : BaseNavController? {
+
+    private let sceneView: UIView
+
+    var nav: BaseNavController? {
         if let nav = self.navigationController as? BaseNavController {
             return nav
         }
         return nil
     }
-    
+
     // MARK: init
     @objc init(_ view: UIView, title: String?) {
         self.sceneView = view
         super.init(nibName: nil, bundle: nil)
         self.title = title
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func loadView() {
         self.view = sceneView
     }
-    
 }

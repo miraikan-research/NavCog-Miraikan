@@ -27,25 +27,6 @@
 import Foundation
 import UIKit
 
-/**
- Data model for Special Exhibition and Event
- 
- - Parameters
- - imagePc: URL address for the picture
- - permalink: URL address to open the WebView
- - title: The name of exhibition / event
- - start: The start date
- - end: The end date
- - isOnline: Online / inside Miraikan
- */
-fileprivate struct CardModel : Decodable {
-    let imagePc: String
-    let permalink: String
-    let title: String
-    let start: String
-    let end: String
-    let isOnline: String?
-}
 
 /**
  Customized UITableViewCell for Special Exhibition or Event
@@ -134,7 +115,6 @@ fileprivate class CardRow : BaseRow {
                                     width: halfWidth - insets.right,
                                     height: lblPlace.sizeThatFits(szFit).height)
         }
-        
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -153,7 +133,6 @@ fileprivate class CardRow : BaseRow {
         let height = max(heightLeft, heightRight)
         return CGSize(width: size.width, height: height)
     }
-    
 }
 
 /**
@@ -215,7 +194,6 @@ fileprivate class MenuRow : BaseRow {
         let height = insets.top + insets.bottom + btnItem.sizeThatFits(innerSz).height
         return CGSize(width: size.width, height: height)
     }
-    
 }
 
 fileprivate class NewsRow : BaseRow {
@@ -287,12 +265,21 @@ fileprivate enum MenuItem {
     case floorMap
     case nearestWashroom
     case setting
+    case miraikanIDmyPage
     case aboutMiraikan
     case aboutApp
     
     var isAvailable: Bool {
-        let availableItems : [MenuItem] = [.login, .miraikanToday, .permanentExhibition,
-                                           .currentPosition, .setting, .aboutMiraikan, .aboutApp]
+        let availableItems : [MenuItem] = [
+            .login,
+            .miraikanToday,
+            .permanentExhibition,
+            .currentPosition,
+            .setting,
+            .miraikanIDmyPage,
+            .aboutMiraikan,
+            .aboutApp
+        ]
         return availableItems.contains(self)
     }
     
@@ -316,13 +303,15 @@ fileprivate enum MenuItem {
             return NSLocalizedString("Neareast Washroom", comment: "")
         case .setting:
             return NSLocalizedString("Settings", comment: "")
+        case .miraikanIDmyPage:
+            return NSLocalizedString("Miraikan ID My Page", comment: "")
         case .aboutMiraikan:
             return NSLocalizedString("About Miraikan", comment: "")
         case .aboutApp:
             return NSLocalizedString("About This App", comment: "")
         }
     }
-    
+
     /**
      Create the UIViewController MenuItem is tapped.
      By default it ret
@@ -340,6 +329,8 @@ fileprivate enum MenuItem {
             return EventListController(title: self.name)
         case .setting:
             return createVC(view: SettingView())
+        case .miraikanIDmyPage:
+            return createVC(view: MiraikanIDMyPageView())
         case .aboutMiraikan:
             return createVC(view: MiraikanAboutView())
         case .aboutApp:
@@ -348,7 +339,7 @@ fileprivate enum MenuItem {
             return createVC(view: BaseView())
         }
     }
-    
+
     // Default method to create a UIViewController
     private func createVC(view: UIView) -> UIViewController {
         return BaseController(view, title: self.name)
@@ -368,7 +359,7 @@ fileprivate enum MenuSection : CaseIterable {
     case suggestion
     case map
     case settings
-    
+
     var items: [MenuItem]? {
         switch self {
         case .login:
@@ -384,12 +375,12 @@ fileprivate enum MenuSection : CaseIterable {
         case .map:
             return [.floorMap, .nearestWashroom]
         case .settings:
-            return [.setting, .aboutMiraikan, .aboutApp]
+            return [.setting, .miraikanIDmyPage, .aboutMiraikan, .aboutApp]
         default:
             return nil
         }
     }
-    
+
     var endpoint: String? {
         let lang = NSLocalizedString("lang", comment: "")
         // Caution: data are not fully available for other languages than Japanese.
@@ -403,7 +394,7 @@ fileprivate enum MenuSection : CaseIterable {
             return nil
         }
     }
-    
+
     var title: String? {
         switch self {
         case .spex:
@@ -476,14 +467,14 @@ class Home : BaseListView {
         }
         items = menuItems
     }
-    
+
     override func layoutSubviews() {
         tableView.frame = CGRect(x: insets.left,
                                  y: insets.top,
                                  width: innerSize.width,
                                  height: innerSize.height)
     }
-    
+
     // MARK: UITableViewDataSource
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let (sec, row) = (indexPath.section, indexPath.row)
@@ -527,7 +518,7 @@ class Home : BaseListView {
         
         return UITableViewCell()
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sections?[section].title
     }
@@ -550,7 +541,7 @@ class Home : BaseListView {
         
         return 0
     }
-    
+
     // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let nav = navVC else { return }
@@ -583,5 +574,4 @@ class Home : BaseListView {
         }
         return 30
     }
-    
 }

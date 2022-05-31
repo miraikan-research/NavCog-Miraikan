@@ -1,6 +1,6 @@
 //
 //
-//  BaseNavController.swift
+//  MiraikanIDMyPageView.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -26,36 +26,28 @@
  *******************************************************************************/
 
 import Foundation
+import UIKit
+import WebKit
 
 /**
- Base UINavigationController for UI navigation purpose
+ The WebView retrieved from Miraikan About page
  */
-class BaseNavController: UINavigationController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
+class MiraikanIDMyPageView : BaseWebView {
+
+    override func setup() {
+        super.setup()
+        
+        let address = "https://members.miraikan.jst.go.jp/area/p/nhoh7pdpjr7lflbta0/06YIAG/login.html"
+        loadContent(address)
     }
 
-    /**
-     Open the map and start navigation
-     
-     - Parameters:
-     - nodeId: destination id
-     */
-    public func openMap(nodeId: String?) {
+    override func layoutSubviews() {
+        super.layoutSubviews()
 
-        // Select mode
-        let mode = MiraikanUtil.routeMode
-        UserDefaults.standard.setValue("user_\(mode.rawValue)", forKey: "user_mode")
-        ConfigManager.loadConfig("presets/\(mode.rawValue).plist")
-
-        // Open the map for Blind or General/Wheelchair mode
-        let identifier = MiraikanUtil.routeMode == .blind ? "blind_ui" : "general_ui"
-        let mapVC = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
-        mapVC.destId = nodeId
-        mapVC.presetId = Int32(MiraikanUtil.presetId)
-        self.show(mapVC, sender: nil)
-    }    
+        // Loaded
+        webView.frame = CGRect(x: insets.left,
+                               y: insets.top,
+                               width: innerSize.width,
+                               height: innerSize.height)
+    }
 }

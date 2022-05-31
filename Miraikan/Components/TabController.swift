@@ -31,19 +31,19 @@ import Foundation
  Tabs for Home, Login and others
  */
 class TabController: UITabBarController, UITabBarControllerDelegate {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.delegate = self
-        
+
         let tabs = TabItem.allCases.filter({ item in
             if MiraikanUtil.isLoggedIn {
                 return item != .login
             }
             return true
         })
-        
+
         self.viewControllers = tabs.map({ $0.vc })
         self.selectedIndex = tabs.firstIndex(where: { $0 == .home })!
         if let items = self.tabBar.items {
@@ -53,9 +53,8 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
                 items[i].image = UIImage(named: t.imgName)
             }
         }
-        
     }
-    
+
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if let navigationController = viewController as? UINavigationController {
             navigationController.popToRootViewController(animated: true)
@@ -64,5 +63,4 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         }
         return true
     }
-    
 }

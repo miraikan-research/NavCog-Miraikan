@@ -33,6 +33,7 @@ import UIKit
 enum RouteMode : String, CaseIterable {
     case general
     case wheelchair
+//    case stroller
     case blind
     
     var description: String {
@@ -109,7 +110,7 @@ fileprivate class RouteModeRow: BaseRow {
             y += btn.frame.height + gap
         })
     }
-    
+
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let gap: CGFloat = 10
         let innerSz = innerSizing(parentSize: size)
@@ -121,7 +122,6 @@ fileprivate class RouteModeRow: BaseRow {
         let totalHeight = heightList.reduce((insets.top + insets.bottom), { $0 + $1})
         return CGSize(width: size.width, height: totalHeight)
     }
-    
 }
 
 // TODO: Display route histories
@@ -139,7 +139,7 @@ class SettingView : BaseListView {
         
         items = [routeModeId]
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cellId = (items as? [String])?[indexPath.row] else { return UITableViewCell() }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
@@ -150,5 +150,4 @@ class SettingView : BaseListView {
         
         return UITableViewCell()
     }
-    
 }

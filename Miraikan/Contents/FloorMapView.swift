@@ -1,5 +1,5 @@
 //
-//  MapView.swift
+//  FloorMapView.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,23 +27,6 @@
 import Foundation
 import UIKit
 
-/**
- The data model for FloorMap
- 
- - Parameters:
- - id: The primary index
- - floor: The floor number
- - counter: The marker on the FloorMap
- - title: The place name
- */
-struct FloorMapModel : Decodable {
-    let id: String
-    let floor: Int
-    let counter: String?
-    let title: String
-    let exhibitionId: String
-    let nodeId: String
-}
 
 /**
  The BaseView for the FloorMap

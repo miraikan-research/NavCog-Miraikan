@@ -32,7 +32,7 @@ import HLPDialog
 /**
  The view to show before AI Dialog starts and after it ends
  */
-class AIView : BaseView {
+class AIView: BaseView {
     
     private let btnStart = StyledButton()
     private let lblDesc = AutoWrapLabel()
@@ -70,7 +70,10 @@ class AIView : BaseView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        btnStart.center = self.center
+        btnStart.frame = CGRect(x: (self.frame.width - btnStart.frame.width) / 2,
+                                y: (self.frame.height - btnStart.frame.height) / 2,
+                                width: btnStart.frame.width,
+                                height: btnStart.frame.height)
     }
 }
 
@@ -86,11 +89,11 @@ class AIView : BaseView {
  A notification of navigation would be posted here, and another notification would be observed the next time opening AI Dialog,
  either automatically or manually.
  */
-class AIController : BaseController {
+class AIController: BaseController {
     
     private let aiView = AIView()
     
-    private var isObserved : Bool = false
+    private var isObserved = false
     
     init(title: String) {
         super.init(aiView, title: title)
@@ -141,14 +144,12 @@ class AIController : BaseController {
                                                name: Notification.Name(rawValue:"request_start_navigation"),
                                                object: nil)
         self.isObserved = true
-        
     }
-    
+
     @objc func aiNavi(note: Notification) {
         guard let toID = note.userInfo?["toID"] as? String else { return }
         guard let nav = self.navigationController as? BaseNavController else { return }
         self.isObserved = false
         nav.openMap(nodeId: toID)
     }
-    
 }

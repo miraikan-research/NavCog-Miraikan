@@ -1,5 +1,5 @@
 //
-//  ExhibitionView.swift
+//  PermanentExhibitionController.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,79 +27,11 @@
 import Foundation
 import UIKit
 
-/**
- Data model for Regular Exhibition categories
- 
- - Parameters:
- - id: Category id
- - title: Category name
- - floor: The floor number; not available for multiple floors
- - intro: description of this category
- */
-fileprivate struct RegularExhibitionModel : Decodable {
-    let id : String
-    let title : String
-    let floor : Int?
-    let intro : String
-}
-
-/**
- The customized UITableViewCell for category description
- */
-fileprivate class DescriptionRow : BaseRow {
-    
-    private let lblDescription = AutoWrapLabel()
-    
-    // MARK: init
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addSubview(lblDescription)
-        selectionStyle = .none
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        lblDescription.text = nil
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let descSize = CGSize(width: innerSize.width,
-                              height: lblDescription.intrinsicContentSize.height)
-        lblDescription.frame = CGRect(x: insets.left,
-                                      y: insets.top,
-                                      width: innerSize.width,
-                                      height: lblDescription.sizeThatFits(descSize).height)
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let descSize = CGSize(width: innerSizing(parentSize: size).width,
-                              height: lblDescription.intrinsicContentSize.height)
-        let totalHeight = insets.top
-        + lblDescription.sizeThatFits(descSize).height
-        + insets.bottom
-        return CGSize(width: size.width, height: totalHeight)
-    }
-    
-    /**
-     Set data from DataSource
-     */
-    public func configure(title: String) {
-        lblDescription.text = title
-        lblDescription.sizeToFit()
-    }
-    
-}
 
 /**
  Categories of Regular Exhibition
  */
-class PermanentExhibitionController : BaseListController, BaseListDelegate {
+class PermanentExhibitionController: BaseListController, BaseListDelegate {
     
     private let linkId = "linkCell"
     private let descId = "descCell"
@@ -130,7 +62,7 @@ class PermanentExhibitionController : BaseListController, BaseListDelegate {
         })
         items = dividedItems
     }
-    
+
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         let item = (items as? [Any])?[indexPath.row]
@@ -153,16 +85,15 @@ class PermanentExhibitionController : BaseListController, BaseListDelegate {
         }
         return nil
     }
-    
+
     override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
         // Only the link is clickable
         if let model = (items as? [Any])?[indexPath.row] as? RegularExhibitionModel {
             guard let nav = self.navigationController as? BaseNavController else { return }
             let vc = MiraikanUtil.routeMode == .blind
-            ? BlindExhibitionController(id: model.id, title: model.title)
-            : ExhibitionListController(id: model.id, title: model.title)
+                ? BlindExhibitionController(id: model.id, title: model.title)
+                : ExhibitionListController(id: model.id, title: model.title)
             nav.show(vc, sender: nil)
         }
     }
-    
 }
