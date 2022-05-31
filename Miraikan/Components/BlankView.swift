@@ -46,6 +46,9 @@ class BlankView: BaseView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        lblDesc.center = self.center
+        lblDesc.frame = CGRect(x: (self.frame.width - lblDesc.frame.width) / 2,
+                               y: (self.frame.height - lblDesc.frame.height) / 2,
+                               width: lblDesc.frame.width,
+                               height: lblDesc.frame.height)
     }
 }

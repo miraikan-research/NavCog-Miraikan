@@ -1,6 +1,6 @@
 //
 //
-//  FloorMapViewController.swift
+//  MiraikanIDMyPageView.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -26,39 +26,28 @@
  *******************************************************************************/
 
 import Foundation
+import UIKit
+import WebKit
 
-class FloorMapViewController : BaseController {
-   
-    private let floorMapView: FloorMapView
-    private let floorMapModel: FloorMapModel
+/**
+ The WebView retrieved from Miraikan About page
+ */
+class MiraikanIDMyPageView : BaseWebView {
 
-    private var isObserved : Bool = false
-
-    init(model: FloorMapModel, title: String) {
-        floorMapView = FloorMapView(model)
-        floorMapModel = model
-        super.init(floorMapView, title: title)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func setup() {
+        super.setup()
         
-        floorMapView.navigationAction = { [weak self] in
-            guard let self = self else { return }
-            self.startNavi()
-        }
+        let address = "https://members.miraikan.jst.go.jp/area/p/nhoh7pdpjr7lflbta0/06YIAG/login.html"
+        loadContent(address)
     }
 
-    private func startNavi() {
-        if self.isObserved { return }
-        self.isObserved = true
-        let toID = floorMapModel.nodeId
-        guard let nav = self.navigationController as? BaseNavController else { return }
-        nav.openMap(nodeId: toID)
-        self.isObserved = false
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Loaded
+        webView.frame = CGRect(x: insets.left,
+                               y: insets.top,
+                               width: innerSize.width,
+                               height: innerSize.height)
     }
 }

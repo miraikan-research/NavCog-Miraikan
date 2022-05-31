@@ -71,5 +71,4 @@ class AppAboutView: BaseView {
                                 width: innerSize.width,
                                 height: lblVersion.sizeThatFits(szFit).height)
     }
-    
 }

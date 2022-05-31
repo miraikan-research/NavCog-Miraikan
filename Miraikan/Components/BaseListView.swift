@@ -33,15 +33,15 @@ import UIKit
  This is to be inherited by those screens implemented as UIView and difficult to rewrite as UIViewController
  */
 class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
-    
+
     let tableView = UITableView()
-    
+
     public var items: Any? {
         didSet {
             self.tableView.reloadData()
         }
     }
-    
+
     // MARK: init
     override func setup() {
         super.setup()
@@ -49,7 +49,7 @@ class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
         initTable(isSelectionAllowed: false)
         addSubview(tableView)
     }
-    
+
     func initTable(isSelectionAllowed: Bool) {
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -57,13 +57,13 @@ class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
         self.tableView.separatorStyle = .none
         self.tableView.backgroundColor = .white
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         
         tableView.frame = self.frame
     }
-    
+
     // MARK: UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         if let _ = items as? [Any] {
@@ -74,7 +74,7 @@ class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
         
         return 0
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let items = items as? [Any] {
             return items.count
@@ -84,28 +84,27 @@ class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
         
         return 0
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
-    
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         print("To be implemented by subclasses")
         return nil
     }
-    
+
     // MARK: UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return nil
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         print("To be implemented by subclasses")
         return 0
     }
-    
 }

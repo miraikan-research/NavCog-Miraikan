@@ -1,5 +1,5 @@
 //
-//  ExhibitionView.swift
+//  MiraikanAboutView.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -49,5 +49,4 @@ class MiraikanAboutView : BaseWebView {
                                width: innerSize.width,
                                height: innerSize.height)
     }
-    
 }

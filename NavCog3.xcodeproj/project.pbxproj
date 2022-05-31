@@ -371,6 +371,23 @@
 		E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAD2844B7CF00BB4152 /* Button.swift */; };
 		E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAF2844B83F00BB4152 /* Switch.swift */; };
 		E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */; };
+		E5F52EB52844C06500BB4152 /* ScheduleRowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB42844C06500BB4152 /* ScheduleRowModel.swift */; };
+		E5F52EB72844C09200BB4152 /* ExhibitionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB62844C09200BB4152 /* ExhibitionModel.swift */; };
+		E5F52EB92844C27E00BB4152 /* NavButtonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB82844C27E00BB4152 /* NavButtonModel.swift */; };
+		E5F52EBB2844C2DE00BB4152 /* ExhibitionContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EBA2844C2DE00BB4152 /* ExhibitionContentModel.swift */; };
+		E5F52EBD2844C38500BB4152 /* ExhibitionLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EBC2844C38500BB4152 /* ExhibitionLinkModel.swift */; };
+		E5F52EBF2844C53400BB4152 /* RegularExhibitionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EBE2844C53400BB4152 /* RegularExhibitionModel.swift */; };
+		E5F52EC12845A17200BB4152 /* NavButtonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EC02845A17200BB4152 /* NavButtonRow.swift */; };
+		E5F52EC32845A1DB00BB4152 /* DescriptionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EC22845A1DB00BB4152 /* DescriptionRow.swift */; };
+		E5F52EC52845A26500BB4152 /* LinkingHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EC42845A26500BB4152 /* LinkingHeader.swift */; };
+		E5F52EC72845A2B400BB4152 /* ScheduleListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EC62845A2B400BB4152 /* ScheduleListHeader.swift */; };
+		E5F52EC92845A30300BB4152 /* ContentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EC82845A30300BB4152 /* ContentRow.swift */; };
+		E5F52ECB2845AA8F00BB4152 /* ScheduleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52ECA2845AA8F00BB4152 /* ScheduleRow.swift */; };
+		E5F52ECD2845ACD100BB4152 /* FloorMapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52ECC2845ACD100BB4152 /* FloorMapModel.swift */; };
+		E5F52ECF2845AD4800BB4152 /* CardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52ECE2845AD4800BB4152 /* CardModel.swift */; };
+		E5F52ED12845B0BC00BB4152 /* VoiceGuideRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52ED02845B0BC00BB4152 /* VoiceGuideRow.swift */; };
+		E5F52ED32845B24300BB4152 /* LinkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52ED22845B24300BB4152 /* LinkRow.swift */; };
+		E5F52ED52845B7AF00BB4152 /* MiraikanIDMyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52ED42845B7AF00BB4152 /* MiraikanIDMyPageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -695,6 +712,23 @@
 		E5F52EAD2844B7CF00BB4152 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		E5F52EAF2844B83F00BB4152 /* Switch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
 		E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		E5F52EB42844C06500BB4152 /* ScheduleRowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleRowModel.swift; sourceTree = "<group>"; };
+		E5F52EB62844C09200BB4152 /* ExhibitionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionModel.swift; sourceTree = "<group>"; };
+		E5F52EB82844C27E00BB4152 /* NavButtonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavButtonModel.swift; sourceTree = "<group>"; };
+		E5F52EBA2844C2DE00BB4152 /* ExhibitionContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionContentModel.swift; sourceTree = "<group>"; };
+		E5F52EBC2844C38500BB4152 /* ExhibitionLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionLinkModel.swift; sourceTree = "<group>"; };
+		E5F52EBE2844C53400BB4152 /* RegularExhibitionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularExhibitionModel.swift; sourceTree = "<group>"; };
+		E5F52EC02845A17200BB4152 /* NavButtonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavButtonRow.swift; sourceTree = "<group>"; };
+		E5F52EC22845A1DB00BB4152 /* DescriptionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionRow.swift; sourceTree = "<group>"; };
+		E5F52EC42845A26500BB4152 /* LinkingHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkingHeader.swift; sourceTree = "<group>"; };
+		E5F52EC62845A2B400BB4152 /* ScheduleListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleListHeader.swift; sourceTree = "<group>"; };
+		E5F52EC82845A30300BB4152 /* ContentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRow.swift; sourceTree = "<group>"; };
+		E5F52ECA2845AA8F00BB4152 /* ScheduleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleRow.swift; sourceTree = "<group>"; };
+		E5F52ECC2845ACD100BB4152 /* FloorMapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapModel.swift; sourceTree = "<group>"; };
+		E5F52ECE2845AD4800BB4152 /* CardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModel.swift; sourceTree = "<group>"; };
+		E5F52ED02845B0BC00BB4152 /* VoiceGuideRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceGuideRow.swift; sourceTree = "<group>"; };
+		E5F52ED22845B24300BB4152 /* LinkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkRow.swift; sourceTree = "<group>"; };
+		E5F52ED42845B7AF00BB4152 /* MiraikanIDMyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiraikanIDMyPageView.swift; sourceTree = "<group>"; };
 		EBE9F8032158D7532B8BFC20 /* Pods-NavCog3.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCog3.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCog3/Pods-NavCog3.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1149,6 +1183,7 @@
 			children = (
 				D3A1185B272950B400BEC1C8 /* Miraikan.plist */,
 				D320F5E52702D93700F6AD28 /* Assets.xcassets */,
+				E5F52EB32844C04E00BB4152 /* Model */,
 				D320F5922702B8F600F6AD28 /* Components */,
 				D320F5972702B8F600F6AD28 /* Contents */,
 				D320F5882702B8F600F6AD28 /* Lists */,
@@ -1200,6 +1235,7 @@
 			children = (
 				D320F58F2702B8F600F6AD28 /* LoginView.swift */,
 				D38EF876270406FE00DB9444 /* MiraikanAboutView.swift */,
+				E5F52ED42845B7AF00BB4152 /* MiraikanIDMyPageView.swift */,
 				D320F5902702B8F600F6AD28 /* AppAboutView.swift */,
 				D320F5912702B8F600F6AD28 /* SettingView.swift */,
 				D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */,
@@ -1211,20 +1247,28 @@
 		D320F5922702B8F600F6AD28 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				D320F5932702B8F600F6AD28 /* BaseController.swift */,
 				D320F5942702B8F600F6AD28 /* Label.swift */,
 				E5F52EAD2844B7CF00BB4152 /* Button.swift */,
 				E5F52EAF2844B83F00BB4152 /* Switch.swift */,
 				E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */,
 				D320F5952702B8F600F6AD28 /* BaseScrollView.swift */,
 				D320F5962702B8F600F6AD28 /* BaseView.swift */,
+				D3921C2F275760DF00F1DD55 /* BlankView.swift */,
+				D320F5932702B8F600F6AD28 /* BaseController.swift */,
 				D31E27C227424A9000755958 /* BaseListController.swift */,
 				D364735A273E0CFD00C110B0 /* BaseListView.swift */,
 				D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */,
-				D3921C2F275760DF00F1DD55 /* BlankView.swift */,
 				E5DC797A2817C72800EFF12F /* BaseTabController.swift */,
-				E5DC79872817E4D500EFF12F /* TabController.swift */,
 				E5DC79892817E4F100EFF12F /* BaseNavController.swift */,
+				E5DC79872817E4D500EFF12F /* TabController.swift */,
+				E5F52ED22845B24300BB4152 /* LinkRow.swift */,
+				E5F52EC02845A17200BB4152 /* NavButtonRow.swift */,
+				E5F52EC22845A1DB00BB4152 /* DescriptionRow.swift */,
+				E5F52EC42845A26500BB4152 /* LinkingHeader.swift */,
+				E5F52EC62845A2B400BB4152 /* ScheduleListHeader.swift */,
+				E5F52EC82845A30300BB4152 /* ContentRow.swift */,
+				E5F52ECA2845AA8F00BB4152 /* ScheduleRow.swift */,
+				E5F52ED02845B0BC00BB4152 /* VoiceGuideRow.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1254,6 +1298,21 @@
 				E5DC798F281A4E9A00EFF12F /* HomeTabController.swift */,
 			);
 			path = Tabs;
+			sourceTree = "<group>";
+		};
+		E5F52EB32844C04E00BB4152 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E5F52EB42844C06500BB4152 /* ScheduleRowModel.swift */,
+				E5F52EB62844C09200BB4152 /* ExhibitionModel.swift */,
+				E5F52EB82844C27E00BB4152 /* NavButtonModel.swift */,
+				E5F52EBA2844C2DE00BB4152 /* ExhibitionContentModel.swift */,
+				E5F52EBC2844C38500BB4152 /* ExhibitionLinkModel.swift */,
+				E5F52EBE2844C53400BB4152 /* RegularExhibitionModel.swift */,
+				E5F52ECC2845ACD100BB4152 /* FloorMapModel.swift */,
+				E5F52ECE2845AD4800BB4152 /* CardModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2145,6 +2204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5F52ED52845B7AF00BB4152 /* MiraikanIDMyPageView.swift in Sources */,
 				E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */,
 				300093032750A54900539A0F /* DefaultTTS.swift in Sources */,
 				D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */,
@@ -2154,14 +2214,17 @@
 				D3A117F127294B0B00BEC1C8 /* InitViewController.mm in Sources */,
 				E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */,
 				D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */,
+				E5F52EC52845A26500BB4152 /* LinkingHeader.swift in Sources */,
 				D3A117F227294B0B00BEC1C8 /* StarRatingView.m in Sources */,
 				D3A117F327294B0B00BEC1C8 /* MiraikanAboutView.swift in Sources */,
+				E5F52ED32845B24300BB4152 /* LinkRow.swift in Sources */,
 				D3A117F427294B0B00BEC1C8 /* ServerSelectionViewController.m in Sources */,
 				D3A117F527294B0B00BEC1C8 /* MiraikanMapController.m in Sources */,
 				D3A117F627294B0B00BEC1C8 /* HLPSettingHelper.m in Sources */,
 				E5DC79882817E4D500EFF12F /* TabController.swift in Sources */,
 				D31E27C327424A9000755958 /* BaseListController.swift in Sources */,
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
+				E5F52EC92845A30300BB4152 /* ContentRow.swift in Sources */,
 				D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */,
 				D3921C30275760DF00F1DD55 /* BlankView.swift in Sources */,
 				E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */,
@@ -2169,8 +2232,11 @@
 				D3A117F827294B0B00BEC1C8 /* NavBlindWebView.m in Sources */,
 				D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */,
 				D3A117F927294B0B00BEC1C8 /* DownloadViewController.m in Sources */,
+				E5F52EBB2844C2DE00BB4152 /* ExhibitionContentModel.swift in Sources */,
 				D3A117FA27294B0B00BEC1C8 /* NavCoverView.m in Sources */,
 				D3A117FB27294B0B00BEC1C8 /* DestinationTableViewController.m in Sources */,
+				E5F52ECF2845AD4800BB4152 /* CardModel.swift in Sources */,
+				E5F52EC32845A1DB00BB4152 /* DescriptionRow.swift in Sources */,
 				D3A117FC27294B0B00BEC1C8 /* NavDataSource.m in Sources */,
 				D3A117FD27294B0B00BEC1C8 /* NavUtil.m in Sources */,
 				D3A117FE27294B0B00BEC1C8 /* ExhibitionView.swift in Sources */,
@@ -2179,8 +2245,10 @@
 				D3A1180227294B0B00BEC1C8 /* NavDeviceTTS.m in Sources */,
 				D3B1A1A527546AFB00E6CBCB /* AIController.swift in Sources */,
 				D3A1180327294B0B00BEC1C8 /* BlindViewController.m in Sources */,
+				E5F52EC72845A2B400BB4152 /* ScheduleListHeader.swift in Sources */,
 				D3A1180427294B0B00BEC1C8 /* AppAboutView.swift in Sources */,
 				E5DC798A2817E4F100EFF12F /* BaseNavController.swift in Sources */,
+				E5F52EB72844C09200BB4152 /* ExhibitionModel.swift in Sources */,
 				D3A1180527294B0B00BEC1C8 /* NavCommander.m in Sources */,
 				D3083C7A275603CA0052ABEE /* PermanentExhibitionController.swift in Sources */,
 				D3B9D405274F76B1001F4D80 /* NaviSettingController.swift in Sources */,
@@ -2188,11 +2256,14 @@
 				D3A1180827294B0B00BEC1C8 /* NavNavigator.m in Sources */,
 				D3A1180927294B0B00BEC1C8 /* MiraikanController.swift in Sources */,
 				D3A1180A27294B0B00BEC1C8 /* ConfigManager.m in Sources */,
+				E5F52ECD2845ACD100BB4152 /* FloorMapModel.swift in Sources */,
 				E5DC79842817C7A000EFF12F /* StaffTabController.swift in Sources */,
 				D3A1180B27294B0B00BEC1C8 /* NavPreviewer.m in Sources */,
+				E5F52ED12845B0BC00BB4152 /* VoiceGuideRow.swift in Sources */,
 				D364736D273E140C00C110B0 /* Home.swift in Sources */,
 				D3A1180C27294B0B00BEC1C8 /* FloorMapView.swift in Sources */,
 				E5DC79822817C79300EFF12F /* SCTabController.swift in Sources */,
+				E5F52EB92844C27E00BB4152 /* NavButtonModel.swift in Sources */,
 				D39F3C2E27730ACD0014F1CE /* BlindExhibitionController.swift in Sources */,
 				D3A1180D27294B0B00BEC1C8 /* ScreenshotHelper.m in Sources */,
 				D3A1180E27294B0B00BEC1C8 /* WelcomViewController.m in Sources */,
@@ -2203,14 +2274,17 @@
 				D3A1181327294B0B00BEC1C8 /* HLPGeoJSON.m in Sources */,
 				E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */,
 				E5DC7990281A4E9A00EFF12F /* HomeTabController.swift in Sources */,
+				E5F52EBF2844C53400BB4152 /* RegularExhibitionModel.swift in Sources */,
 				D3A1181427294B0B00BEC1C8 /* BaseView.swift in Sources */,
 				D3C4A43B276092240098CF29 /* HTTPAdaptor.swift in Sources */,
+				E5F52EBD2844C38500BB4152 /* ExhibitionLinkModel.swift in Sources */,
 				D3A1181527294B0B00BEC1C8 /* SettingView.swift in Sources */,
 				D3A1181627294B0B00BEC1C8 /* LoginView.swift in Sources */,
 				D3A1181727294B0B00BEC1C8 /* SettingViewController.m in Sources */,
 				D3A1181827294B0B00BEC1C8 /* ExhibitionDataStore.swift in Sources */,
 				D3A1181927294B0B00BEC1C8 /* BaseScrollView.swift in Sources */,
 				E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */,
+				E5F52EB52844C06500BB4152 /* ScheduleRowModel.swift in Sources */,
 				D3A1181A27294B0B00BEC1C8 /* DefaultTTS.m in Sources */,
 				D3A1181B27294B0B00BEC1C8 /* HLPSetting.m in Sources */,
 				D3A1181C27294B0B00BEC1C8 /* Model.swift in Sources */,
@@ -2229,6 +2303,8 @@
 				D3A1182727294B0B00BEC1C8 /* WebViewController.m in Sources */,
 				D3A1182827294B0B00BEC1C8 /* NavSound.m in Sources */,
 				D3A1182927294B0B00BEC1C8 /* AuthManager.m in Sources */,
+				E5F52EC12845A17200BB4152 /* NavButtonRow.swift in Sources */,
+				E5F52ECB2845AA8F00BB4152 /* ScheduleRow.swift in Sources */,
 				E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */,
 				E5728D11282A4BD700E260F1 /* FloorMapViewController.swift in Sources */,
 			);

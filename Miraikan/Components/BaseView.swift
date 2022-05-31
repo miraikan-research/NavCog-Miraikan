@@ -26,7 +26,6 @@
 
 import Foundation
 import UIKit
-import CoreBluetooth
 
 /**
  The parent UIView with common variables and functions

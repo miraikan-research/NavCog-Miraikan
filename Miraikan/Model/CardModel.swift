@@ -1,6 +1,6 @@
 //
 //
-//  FloorMapViewController.swift
+//  CardModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,38 +27,23 @@
 
 import Foundation
 
-class FloorMapViewController : BaseController {
-   
-    private let floorMapView: FloorMapView
-    private let floorMapModel: FloorMapModel
 
-    private var isObserved : Bool = false
-
-    init(model: FloorMapModel, title: String) {
-        floorMapView = FloorMapView(model)
-        floorMapModel = model
-        super.init(floorMapView, title: title)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        floorMapView.navigationAction = { [weak self] in
-            guard let self = self else { return }
-            self.startNavi()
-        }
-    }
-
-    private func startNavi() {
-        if self.isObserved { return }
-        self.isObserved = true
-        let toID = floorMapModel.nodeId
-        guard let nav = self.navigationController as? BaseNavController else { return }
-        nav.openMap(nodeId: toID)
-        self.isObserved = false
-    }
+/**
+ Data model for Special Exhibition and Event
+ 
+ - Parameters
+ - imagePc: URL address for the picture
+ - permalink: URL address to open the WebView
+ - title: The name of exhibition / event
+ - start: The start date
+ - end: The end date
+ - isOnline: Online / inside Miraikan
+ */
+struct CardModel : Decodable {
+    let imagePc: String
+    let permalink: String
+    let title: String
+    let start: String
+    let end: String
+    let isOnline: String?
 }

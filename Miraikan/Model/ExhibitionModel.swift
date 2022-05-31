@@ -1,6 +1,6 @@
 //
 //
-//  FloorMapViewController.swift
+//  ExhibitionModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,38 +27,34 @@
 
 import Foundation
 
-class FloorMapViewController : BaseController {
-   
-    private let floorMapView: FloorMapView
-    private let floorMapModel: FloorMapModel
-
-    private var isObserved : Bool = false
-
-    init(model: FloorMapModel, title: String) {
-        floorMapView = FloorMapView(model)
-        floorMapModel = model
-        super.init(floorMapView, title: title)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        floorMapView.navigationAction = { [weak self] in
-            guard let self = self else { return }
-            self.startNavi()
-        }
-    }
-
-    private func startNavi() {
-        if self.isObserved { return }
-        self.isObserved = true
-        let toID = floorMapModel.nodeId
-        guard let nav = self.navigationController as? BaseNavController else { return }
-        nav.openMap(nodeId: toID)
-        self.isObserved = false
-    }
+/**
+ Model for ExhibitionList items
+ 
+ - Parameters:
+ - id : The primary index
+ - nodeId: The destination id
+ - title: The name displayed as link title
+ - category: The category
+ - counter: The location on FloorMap
+ - floor: The floor
+ - locations: Used for multiple locations
+ - intro: The description for general and wheelchair mode
+ - blindModeIntro: The description for blind mode
+ - blindModeIntro: The description for blind mode
+ */
+struct ExhibitionModel: Decodable {
+    let id: String
+    let nodeId: String?
+    let latitude: String?
+    let longitude: String?
+    let title: String
+    let titlePron: String?
+    let category: String
+    let counter: String
+    let floor: Int?
+    let locations: [ExhibitionLocation]?
+    let intro: String
+    let blindIntro: String
+    let blindOverview: String
+    let blindDetail: String
 }

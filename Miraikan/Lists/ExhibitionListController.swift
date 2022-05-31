@@ -1,5 +1,5 @@
 //
-//  ExhibitionView.swift
+//  ExhibitionListController.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -29,155 +29,13 @@ import UIKit
 
 
 /**
- Model for ExhibitionList items
- 
- - Parameters:
- - id : The primary index
- - nodeId: The destination id
- - title: The name displayed as link title
- - category: The category
- - counter: The location on FloorMap
- - floor: The floor
- - locations: Used for multiple locations
- - intro: The description for general and wheelchair mode
- - blindModeIntro: The description for blind mode
- */
-private struct ExhibitionModel : Decodable {
-    let id : String
-    let nodeId : String?
-    let latitude : String?
-    let longitude : String?
-    let title : String
-    let titlePron : String?
-    let category : String
-    let counter : String
-    let floor : Int?
-    let locations : [ExhibitionLocation]?
-    let intro : String
-}
-
-fileprivate struct ExhibitionLinkModel {
-    let id : String
-    let category : String
-    let title : String
-    let nodeId : String?
-    let counter : String
-    let locations: [ExhibitionLocation]?
-}
-
-fileprivate struct NavButtonModel {
-    let nodeId : String?
-    let locations: [ExhibitionLocation]?
-    let title : String?
-}
-
-fileprivate struct ExhibitionContentModel {
-    let title : String
-    let intro : String
-}
-
-fileprivate class NavButtonRow : BaseRow {
-    
-    private let btnNavi = StyledButton()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", tableName: "Miraikan", comment: ""), for: .normal)
-        btnNavi.sizeToFit()
-        addSubview(btnNavi)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    public func configure(nodeId : String) {
-        btnNavi.tapAction({ [weak self] _ in
-            guard let self = self else { return }
-            guard let nav = self.nav else { return }
-            nav.openMap(nodeId: nodeId)
-        })
-    }
-    
-    public func configure(locations : [ExhibitionLocation], title : String) {
-        btnNavi.tapAction({ [weak self] _ in
-            guard let self = self else { return }
-            guard let nav = self.nav else { return }
-            let vc = FloorSelectionController(title: title)
-            vc.items = locations
-            nav.show(vc, sender: nil)
-        })
-    }
-    
-    override func layoutSubviews() {
-        btnNavi.frame = CGRect(x: innerSize.width - btnNavi.frame.width,
-                               y: insets.top,
-                               width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
-                               height: btnNavi.intrinsicContentSize.height)
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let height = insets.top + insets.bottom + btnNavi.intrinsicContentSize.height
-        return CGSize(width: size.width, height: height)
-    }
-    
-}
-
-/**
- The customized UITableViewCell for each exhibition
- */
-fileprivate class ContentRow : BaseRow {
-    
-    private let lblDescription = AutoWrapLabel()
-    private var lblOverview : AutoWrapLabel?
-    
-    private let gap = CGFloat(10)
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addSubview(lblDescription)
-        lblDescription.isAccessibilityElement = true
-        selectionStyle = .none
-    }
-    
-    public func configure(_ model: ExhibitionContentModel) {
-        lblDescription.text = model.intro
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        lblDescription.text = nil
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        lblDescription.frame = CGRect(x: insets.left,
-                                      y: insets.top,
-                                      width: innerSize.width,
-                                      height: lblDescription.sizeThatFits(innerSize).height)
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let innerSz = innerSizing(parentSize: size)
-        let height = insets.top + insets.bottom + lblDescription.sizeThatFits(innerSz).height
-        return CGSize(width: size.width, height: height)
-    }
-    
-}
-
-/**
  The list for Regular Exhibitions
  
  - Parameters:
  - id: category id
  - title: The title for NavigationBar
  */
-class ExhibitionListController : BaseListController, BaseListDelegate {
+class ExhibitionListController: BaseListController, BaseListDelegate {
     
     private let category: String
     
@@ -222,14 +80,25 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
         var dividedItems = [Any]()
         sorted.forEach({ model in
             let title = model.counter != ""
-                ? "\(model.counter) \(model.title)"
-                : model.title
+                ? "\(model.counter) \(model.title)" : model.title
+
+            var hlpLocation: HLPLocation?
+            if let latitudeStr = model.latitude,
+               let longitudeStr = model.longitude,
+               let latitude = Double(latitudeStr),
+               let longitude = Double(longitudeStr) {
+                hlpLocation = HLPLocation(lat: latitude, lng: longitude)
+            }
+
             let linkModel = ExhibitionLinkModel(id: model.id,
-                                                category: model.category,
                                                 title: title,
+                                                titlePron: model.titlePron,
+                                                hlpLocation: hlpLocation,
+                                                category: model.category,
                                                 nodeId: model.nodeId,
                                                 counter: model.counter,
-                                                locations: model.locations)
+                                                locations: model.locations,
+                                                blindDetail: model.blindDetail)
             dividedItems += [linkModel]
             cells += [linkId]
             let navModel = NavButtonModel(nodeId: model.nodeId,
@@ -238,13 +107,15 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
             dividedItems += [navModel]
             cells += [navId]
             let contentModel = ExhibitionContentModel(title: model.title,
-                                                      intro: model.intro)
+                                                      intro: model.intro,
+                                                      blindIntro: model.blindIntro,
+                                                      blindOverview: model.blindOverview)
             dividedItems += [contentModel]
             cells += [contentId]
         })
         items = dividedItems
     }
-    
+
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         let cellId = cells[indexPath.row]
@@ -268,7 +139,7 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
         }
         return nil
     }
-    
+
     override func onSelect(_ tableView: UITableView, _ indexPath: IndexPath) {
         // Only the link is clickable
         if let model = (items as? [Any])?[indexPath.row] as? ExhibitionLinkModel {
@@ -280,5 +151,4 @@ class ExhibitionListController : BaseListController, BaseListDelegate {
                                     title: model.title), sender: nil)
         }
     }
-    
 }

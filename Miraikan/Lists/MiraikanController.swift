@@ -81,12 +81,12 @@ class MiraikanController: BaseController {
         
         // Load the data
         if let events = MiraikanUtil.readJSONFile(filename: "event",
-                                     type: [EventModel].self) as? [EventModel] {
+                                                  type: [EventModel].self) as? [EventModel] {
             ExhibitionDataStore.shared.events = events
         }
         
         if var schedules = MiraikanUtil.readJSONFile(filename: "schedule",
-                                     type: [ScheduleModel].self) as? [ScheduleModel] {
+                                                     type: [ScheduleModel].self) as? [ScheduleModel] {
             if !MiraikanUtil.isWeekend { schedules.removeAll(where: { $0.onHoliday == false }) }
             ExhibitionDataStore.shared.schedules = schedules
             
@@ -116,7 +116,7 @@ class MiraikanController: BaseController {
                     var title: String?
                     var nodeId: String?
                     if let floorMaps = MiraikanUtil.readJSONFile(filename: "floor_map",
-                                                 type: [FloorMapModel].self) as? [FloorMapModel],
+                                                                 type: [FloorMapModel].self) as? [FloorMapModel],
                        let floorMap = floorMaps.first(where: {$0.id == schedule.place }) {
                         title = floorMap.title
                         nodeId = floorMap.nodeId

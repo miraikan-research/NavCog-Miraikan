@@ -28,21 +28,6 @@
 import Foundation
 import UIKit
 
-private struct ExhibitionModel : Decodable {
-    let latitude : String
-    let longitude : String
-    let title : String
-    let titlePron : String?
-    let floor : Int?
-    let counter : String
-}
-
-fileprivate struct ExhibitionLinkModel {
-    let title : String
-    let hlpLocation : HLPLocation
-}
-
-
 /**
  The content of the  UIScrollView of EventView
  */
@@ -142,7 +127,15 @@ fileprivate class DistanceCheckContent: BaseView {
     
     // MARK: Private functions
     private func setupLocationList() {
-        let locationInfoes = ["latitude", "longitude", "floor", "speed", "accuracy", "orientation", "orientationAccuracy"]
+        let locationInfoes = [
+            "latitude",
+            "longitude",
+            "floor",
+            "speed",
+            "accuracy",
+            "orientation",
+            "orientationAccuracy"
+        ]
 
         for locationInfo in locationInfoes {
             let label = createLabel(locationInfo)
@@ -218,14 +211,26 @@ fileprivate class DistanceCheckContent: BaseView {
                 .sorted(by: { $0.counter < $1.counter })
             sorted.forEach({ model in
                 
-                guard let latitude = Double(model.latitude),
-                    let longitude = Double(model.longitude) else {
-                        return
+                let title = model.counter != ""
+                    ? "\(model.counter) \(model.title)" : model.title
+
+                var hlpLocation: HLPLocation?
+                if let latitudeStr = model.latitude,
+                   let longitudeStr = model.longitude,
+                   let latitude = Double(latitudeStr),
+                   let longitude = Double(longitudeStr) {
+                    hlpLocation = HLPLocation(lat: latitude, lng: longitude)
                 }
-                
-                let linkModel = ExhibitionLinkModel(title: model.title,
-                                                    hlpLocation: HLPLocation(lat: latitude, lng: longitude)
-                )
+
+                let linkModel = ExhibitionLinkModel(id: model.id,
+                                                    title: title,
+                                                    titlePron: model.titlePron,
+                                                    hlpLocation: hlpLocation,
+                                                    category: model.category,
+                                                    nodeId: model.nodeId,
+                                                    counter: model.counter,
+                                                    locations: model.locations,
+                                                    blindDetail: model.blindDetail)
                 self.items.append(linkModel)
             })
             

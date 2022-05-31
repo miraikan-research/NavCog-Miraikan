@@ -1,6 +1,6 @@
 //
 //
-//  WebViewAdaptor.swift
+//  BaseWebView.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
