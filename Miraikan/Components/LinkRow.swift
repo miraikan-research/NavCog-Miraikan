@@ -1,6 +1,6 @@
 //
 //
-//  FloorMapViewController.swift
+//  LinkRow.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,38 +27,53 @@
 
 import Foundation
 
-class FloorMapViewController : BaseController {
-   
-    private let floorMapView: FloorMapView
-    private let floorMapModel: FloorMapModel
+/**
+ The customized UITableViewCell for the "link"
+ */
+class LinkRow: BaseRow {
 
-    private var isObserved : Bool = false
+    private let titleLink = UnderlinedLabel()
 
-    init(model: FloorMapModel, title: String) {
-        floorMapView = FloorMapView(model)
-        floorMapModel = model
-        super.init(floorMapView, title: title)
+    // MARK: init
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addSubview(titleLink)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        floorMapView.navigationAction = { [weak self] in
-            guard let self = self else { return }
-            self.startNavi()
-        }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLink.title = nil
     }
 
-    private func startNavi() {
-        if self.isObserved { return }
-        self.isObserved = true
-        let toID = floorMapModel.nodeId
-        guard let nav = self.navigationController as? BaseNavController else { return }
-        nav.openMap(nodeId: toID)
-        self.isObserved = false
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let linkSize = CGSize(width: innerSize.width,
+                              height: titleLink.intrinsicContentSize.height)
+        titleLink.frame = CGRect(x: insets.left,
+                                 y: insets.top,
+                                 width: innerSize.width,
+                                 height: titleLink.sizeThatFits(linkSize).height)
+    }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let linkSize = CGSize(width: innerSizing(parentSize: size).width,
+                              height: titleLink.intrinsicContentSize.height)
+        let totalHeight = insets.top
+        + titleLink.sizeThatFits(linkSize).height
+        + insets.bottom
+        return CGSize(width: size.width, height: totalHeight)
+    }
+
+    /**
+     Set data from DataSource
+     */
+    public func configure(title: String) {
+        titleLink.title = title
+        titleLink.sizeToFit()
     }
 }

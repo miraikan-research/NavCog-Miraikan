@@ -32,21 +32,23 @@ import UIKit
  A blank page for functions not implemented
  */
 class BlankView: BaseView {
-    
+
     private let lblDesc = UILabel()
-    
+
     override func setup() {
         super.setup()
-        
+
         lblDesc.text = NSLocalizedString("blank_description", comment: "")
         lblDesc.sizeToFit()
         addSubview(lblDesc)
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        lblDesc.center = self.center
+
+        lblDesc.frame = CGRect(x: (self.frame.width - lblDesc.frame.width) / 2,
+                               y: (self.frame.height - lblDesc.frame.height) / 2,
+                               width: lblDesc.frame.width,
+                               height: lblDesc.frame.height)
     }
-    
 }

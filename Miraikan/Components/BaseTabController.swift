@@ -36,7 +36,7 @@ import UIKit
  - title: The title for NavigationBar
  */
 class BaseTabController: UIViewController {
-    
+
     let nav = BaseNavController()
 
     // MARK: init
@@ -57,19 +57,19 @@ class BaseTabController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
     }
-    
+
     func tabLayout() {
         var bottomPadding = 0.0
         // TODO: タブバーの高さ取得
@@ -78,7 +78,7 @@ class BaseTabController: UIViewController {
         if let window = UIApplication.shared.windows.first {
             bottomPadding = window.safeAreaInsets.bottom
         }
-        
+
         nav.navigationBar.barTintColor = UIColor.white
         nav.navigationBar.isTranslucent = false
 

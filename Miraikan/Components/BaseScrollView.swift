@@ -30,7 +30,7 @@ import UIKit
 /**
  The parent class for UIScrollView to be inherited by specific screens
  */
-class BaseScrollView : BaseView {
+class BaseScrollView: BaseView {
     
     let scrollView = UIScrollView()
     var contentView: UIView!

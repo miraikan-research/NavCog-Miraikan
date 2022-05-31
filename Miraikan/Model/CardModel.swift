@@ -1,6 +1,6 @@
 //
 //
-//  BaseNavController.swift
+//  CardModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,35 +27,23 @@
 
 import Foundation
 
+
 /**
- Base UINavigationController for UI navigation purpose
+ Data model for Special Exhibition and Event
+ 
+ - Parameters
+ - imagePc: URL address for the picture
+ - permalink: URL address to open the WebView
+ - title: The name of exhibition / event
+ - start: The start date
+ - end: The end date
+ - isOnline: Online / inside Miraikan
  */
-class BaseNavController: UINavigationController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
-    }
-
-    /**
-     Open the map and start navigation
-     
-     - Parameters:
-     - nodeId: destination id
-     */
-    public func openMap(nodeId: String?) {
-
-        // Select mode
-        let mode = MiraikanUtil.routeMode
-        UserDefaults.standard.setValue("user_\(mode.rawValue)", forKey: "user_mode")
-        ConfigManager.loadConfig("presets/\(mode.rawValue).plist")
-
-        // Open the map for Blind or General/Wheelchair mode
-        let identifier = MiraikanUtil.routeMode == .blind ? "blind_ui" : "general_ui"
-        let mapVC = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
-        mapVC.destId = nodeId
-        mapVC.presetId = Int32(MiraikanUtil.presetId)
-        self.show(mapVC, sender: nil)
-    }    
+struct CardModel : Decodable {
+    let imagePc: String
+    let permalink: String
+    let title: String
+    let start: String
+    let end: String
+    let isOnline: String?
 }

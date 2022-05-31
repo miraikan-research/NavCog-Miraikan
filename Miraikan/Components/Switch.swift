@@ -1,6 +1,6 @@
 //
 //
-//  BaseNavController.swift
+//  Switch.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -26,36 +26,20 @@
  *******************************************************************************/
 
 import Foundation
+import UIKit
 
-/**
- Base UINavigationController for UI navigation purpose
- */
-class BaseNavController: UINavigationController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
+class BaseSwitch: UISwitch {
+
+    private var action: ((UISwitch)->())?
+
+    public func onSwitch(_ action: @escaping ((UISwitch)->())) {
+        self.action = action
+        self.addTarget(self, action: #selector(_switchAction(_:)), for: .touchUpInside)
     }
 
-    /**
-     Open the map and start navigation
-     
-     - Parameters:
-     - nodeId: destination id
-     */
-    public func openMap(nodeId: String?) {
-
-        // Select mode
-        let mode = MiraikanUtil.routeMode
-        UserDefaults.standard.setValue("user_\(mode.rawValue)", forKey: "user_mode")
-        ConfigManager.loadConfig("presets/\(mode.rawValue).plist")
-
-        // Open the map for Blind or General/Wheelchair mode
-        let identifier = MiraikanUtil.routeMode == .blind ? "blind_ui" : "general_ui"
-        let mapVC = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
-        mapVC.destId = nodeId
-        mapVC.presetId = Int32(MiraikanUtil.presetId)
-        self.show(mapVC, sender: nil)
-    }    
+    @objc private func _switchAction(_ sender: UIButton) {
+        if let _f = action {
+            _f(self)
+        }
+    }
 }

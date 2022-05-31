@@ -1,9 +1,10 @@
 //
-//  BaseView.swift
+//
+//  TableViewCell.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
- * Copyright (c) 2021 © Miraikan - The National Museum of Emerging Science and Innovation
+ * Copyright (c) 2022 © Miraikan - The National Museum of Emerging Science and Innovation  
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +29,10 @@ import Foundation
 import UIKit
 
 /**
- The parent UIView with common variables and functions
- for calculating the size and accessing the parent ViewControllers.
- 
- It is suggested to override the setup() function instead of init(),
- since the required init?() would also be required for init().
+ The parent customized UITableViewCell to be inherited by specific cells.
+ The variables and functions are copied from BaseView for the same purposes
  */
-class BaseView: UIView {
+class BaseRow: UITableViewCell {
 
     // MARK: padding
     var innerSize: CGSize {
@@ -45,65 +43,49 @@ class BaseView: UIView {
         return padding()
     }
 
-    var paddingAboveTab: CGFloat {
-        return 0.0
-    }
-
-    // MARK: parent ViewControllers
-    var parentVC: UIViewController? {
+    // MARK: Variables for upper level controllers
+    var parent: UIViewController? {
         return getParent()
     }
 
-    var navVC: BaseNavController? {
-        if let parent = parentVC {
+    var nav: BaseNavController? {
+        if let parent = parent {
             return parent.navigationController as? BaseNavController
         }
         return nil
     }
 
-    var tabVC: TabController? {
-        if let parent = parentVC {
-            return parent.tabBarController as? TabController
-        }
-        return nil
-    }
-
-    // MARK: init with setup() function
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        // To enable the UI actions inside the cell
+        self.contentView.isUserInteractionEnabled = true
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    /**
-     Override it, and add the subviews here
-     */
-    func setup() {
-        backgroundColor = .white
-    }
-
     // MARK: Size calculation
-    private func padding(margin: CGFloat = 10) -> UIEdgeInsets {
-        return UIEdgeInsets(top: safeAreaInsets.top,
-                            left: margin,
-                            bottom: 0,
-                            right: margin)
+    private func padding() -> UIEdgeInsets {
+        return UIEdgeInsets(top: safeAreaInsets.top + 10,
+                            left: 20,
+                            bottom: 10,
+                            right: 20)
     }
 
-    func innerSizing(margin: CGFloat = 10) -> CGSize {
-        return innerSizing(parentSize: frame.size, margin: margin)
+    func innerSizing() -> CGSize {
+        let insets = padding()
+        return CGSize(width: frame.width - (insets.left + insets.right),
+                      height: frame.height - (insets.top + insets.bottom))
     }
 
-    func innerSizing(parentSize: CGSize, margin: CGFloat = 10) -> CGSize {
-        let insets = padding(margin: margin)
+    func innerSizing(parentSize: CGSize) -> CGSize {
+        let insets = padding()
         return CGSize(width: parentSize.width - (insets.left + insets.right),
                       height: parentSize.height - (insets.top + insets.bottom))
     }
 
-    // MARK: Parent UIViewController
+    // MARK: Parent Controllers
     private func getParent() -> UIViewController? {
         var responder: UIResponder? = self.next
         while responder != nil {
@@ -111,5 +93,5 @@ class BaseView: UIView {
             else { responder = responder?.next }
         }
         return nil
-    }    
+    }
 }

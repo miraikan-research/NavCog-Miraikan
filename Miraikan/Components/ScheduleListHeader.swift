@@ -1,6 +1,6 @@
 //
 //
-//  BaseNavController.swift
+//  ScheduleListHeader.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -28,34 +28,31 @@
 import Foundation
 
 /**
- Base UINavigationController for UI navigation purpose
+ The header that displays today's date
  */
-class BaseNavController: UINavigationController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
+class ScheduleListHeader: BaseView {
+
+    private let lblDate = UILabel()
+
+    private let padding: CGFloat = 20
+
+    override func setup() {
+        super.setup()
+        
+        lblDate.text = MiraikanUtil.todayText()
+        lblDate.font = .boldSystemFont(ofSize: 16)
+        lblDate.sizeToFit()
+        addSubview(lblDate)
     }
 
-    /**
-     Open the map and start navigation
-     
-     - Parameters:
-     - nodeId: destination id
-     */
-    public func openMap(nodeId: String?) {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        lblDate.center.y = self.center.y
+        lblDate.frame.origin.x = padding
+    }
 
-        // Select mode
-        let mode = MiraikanUtil.routeMode
-        UserDefaults.standard.setValue("user_\(mode.rawValue)", forKey: "user_mode")
-        ConfigManager.loadConfig("presets/\(mode.rawValue).plist")
-
-        // Open the map for Blind or General/Wheelchair mode
-        let identifier = MiraikanUtil.routeMode == .blind ? "blind_ui" : "general_ui"
-        let mapVC = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
-        mapVC.destId = nodeId
-        mapVC.presetId = Int32(MiraikanUtil.presetId)
-        self.show(mapVC, sender: nil)
-    }    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let height = padding * 2 + lblDate.frame.height
+        return CGSize(width: size.width, height: height)
+    }
 }

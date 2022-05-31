@@ -1,6 +1,6 @@
 //
 //
-//  BaseNavController.swift
+//  FloorMapModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -28,34 +28,19 @@
 import Foundation
 
 /**
- Base UINavigationController for UI navigation purpose
+ The data model for FloorMap
+ 
+ - Parameters:
+ - id: The primary index
+ - floor: The floor number
+ - counter: The marker on the FloorMap
+ - title: The place name
  */
-class BaseNavController: UINavigationController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationBar.titleTextAttributes = [.foregroundColor: UIColor.blue]
-    }
-
-    /**
-     Open the map and start navigation
-     
-     - Parameters:
-     - nodeId: destination id
-     */
-    public func openMap(nodeId: String?) {
-
-        // Select mode
-        let mode = MiraikanUtil.routeMode
-        UserDefaults.standard.setValue("user_\(mode.rawValue)", forKey: "user_mode")
-        ConfigManager.loadConfig("presets/\(mode.rawValue).plist")
-
-        // Open the map for Blind or General/Wheelchair mode
-        let identifier = MiraikanUtil.routeMode == .blind ? "blind_ui" : "general_ui"
-        let mapVC = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
-        mapVC.destId = nodeId
-        mapVC.presetId = Int32(MiraikanUtil.presetId)
-        self.show(mapVC, sender: nil)
-    }    
+struct FloorMapModel : Decodable {
+    let id: String
+    let floor: Int
+    let counter: String?
+    let title: String
+    let exhibitionId: String
+    let nodeId: String
 }

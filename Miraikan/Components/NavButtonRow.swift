@@ -1,6 +1,6 @@
 //
 //
-//  FloorMapViewController.swift
+//  NavButtonRow.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,38 +27,48 @@
 
 import Foundation
 
-class FloorMapViewController : BaseController {
-   
-    private let floorMapView: FloorMapView
-    private let floorMapModel: FloorMapModel
+class NavButtonRow: BaseRow {
 
-    private var isObserved : Bool = false
+    private let btnNavi = StyledButton()
 
-    init(model: FloorMapModel, title: String) {
-        floorMapView = FloorMapView(model)
-        floorMapModel = model
-        super.init(floorMapView, title: title)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", tableName: "Miraikan", comment: ""), for: .normal)
+        btnNavi.sizeToFit()
+        addSubview(btnNavi)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        floorMapView.navigationAction = { [weak self] in
+    public func configure(nodeId : String) {
+        btnNavi.tapAction({ [weak self] _ in
             guard let self = self else { return }
-            self.startNavi()
-        }
+            guard let nav = self.nav else { return }
+            nav.openMap(nodeId: nodeId)
+        })
     }
 
-    private func startNavi() {
-        if self.isObserved { return }
-        self.isObserved = true
-        let toID = floorMapModel.nodeId
-        guard let nav = self.navigationController as? BaseNavController else { return }
-        nav.openMap(nodeId: toID)
-        self.isObserved = false
+    public func configure(locations : [ExhibitionLocation], title : String) {
+        btnNavi.tapAction({ [weak self] _ in
+            guard let self = self else { return }
+            guard let nav = self.nav else { return }
+            let vc = FloorSelectionController(title: title)
+            vc.items = locations
+            nav.show(vc, sender: nil)
+        })
+    }
+
+    override func layoutSubviews() {
+        btnNavi.frame = CGRect(x: innerSize.width - btnNavi.frame.width,
+                               y: insets.top,
+                               width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
+                               height: btnNavi.intrinsicContentSize.height)
+    }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let height = insets.top + insets.bottom + btnNavi.intrinsicContentSize.height
+        return CGSize(width: size.width, height: height)
     }
 }
