@@ -28,7 +28,6 @@
 #import "Logging.h"
 #import "NavDataStore.h"
 #import <HLPLocationManager/HLPLocationManager.h>
-#import <HLPLocationManager/HLPLocationManagerParameters.h>
 #import "NavUtil.h"
 #import "InitViewController.h"
 

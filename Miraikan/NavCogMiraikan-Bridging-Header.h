@@ -33,6 +33,5 @@
 // External Libraries
 #import <AVFAudio/AVAudioSession.h>
 #import <HLPLocationManager/HLPLocationManager.h>
-#import <HLPLocationManager/HLPLocationManagerParameters.h>
 
 #endif /* NavCog3_Bridging_Header_h */

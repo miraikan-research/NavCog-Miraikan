@@ -121,7 +121,13 @@ class MiraikanController: BaseController {
                         title = floorMap.title
                         nodeId = floorMap.nodeId
                     }
-                    content.userInfo = ["year": date, "eventId": schedule.event, "nodeId": nodeId, "facilityId": schedule.place, "title": title]
+                    content.userInfo = [
+                        "year": date ?? Date(),
+                        "eventId": schedule.event,
+                        "nodeId": nodeId ?? "",
+                        "facilityId": schedule.place,
+                        "title": title ?? ""
+                    ]
 
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components,
                                                                 repeats: false)
