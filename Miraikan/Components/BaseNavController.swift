@@ -56,6 +56,7 @@ class BaseNavController: UINavigationController {
             .instantiateViewController(withIdentifier: identifier) as! MiraikanMapController
         mapVC.destId = nodeId
         mapVC.presetId = Int32(MiraikanUtil.presetId)
+        NSLog("openMap(\(nodeId ?? "nil")) \(identifier), presetId: \(MiraikanUtil.presetId)")
         self.show(mapVC, sender: nil)
     }    
 }
