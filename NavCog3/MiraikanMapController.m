@@ -31,6 +31,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSLog(@"%s: %d, destId: %@, presetId: %@", __func__, __LINE__, _destId, @(_presetId));
     [[SettingDataManager sharedManager] setPresetId: _presetId];
 
     self.isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey:@"isVoiceGuideOn"];
