@@ -347,11 +347,11 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                                                      key: "DebugMode",
                                                      isOn: UserDefaults.standard.bool(forKey: "DebugMode"),
                                                      isEnabled: nil)))
+#endif
         cellList.append(CellModel(cellId: buttonId,
                                   model: ButtonModel(title: NSLocalizedString("Logout", comment: ""),
                                                      key: "LoggedIn",
                                                      isEnabled: MiraikanUtil.isLoggedIn)))
-#endif
         self.items = cellList
     }
     
@@ -383,11 +383,9 @@ class NaviSettingController : BaseListController, BaseListDelegate {
         let item = (items as? [CellModel])?[indexPath.row]
         guard let cellId = item?.cellId else { return }
         if cellId == locationId {
-#if DEBUG
             if let nav = self.navigationController {
                 nav.show(DistanceCheckViewController(title: ""), sender: nil)
             }
-#endif
         }
     }
 }
