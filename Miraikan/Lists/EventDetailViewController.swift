@@ -86,26 +86,26 @@ class EventDetailViewController : BaseController {
 
                 if let scheduleDate = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: today) {
                     if scheduleDate < today {
-                        let alert = UIAlertController(title: nil, message: "本日のイベントは終了しています", preferredStyle: .alert)
-                        let yesAction = UIAlertAction(title: "OK", style: .default)
+                        let alert = UIAlertController(title: nil, message: NSLocalizedString("Today's event is over", comment: ""), preferredStyle: .alert)
+                        let yesAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default)
                         alert.addAction(yesAction)
                         present(alert, animated: true, completion: nil)
                     } else if let preDate = calendar.date(byAdding: .minute, value: -PREV_MINS, to: scheduleDate) {
                         if preDate < today {
-                            let alert = UIAlertController(title: nil, message: "まもなく開始されます。会場に向かってください", preferredStyle: .alert)
-                            let yesAction = UIAlertAction(title: "はい", style: .default) { action in
+                            let alert = UIAlertController(title: nil, message: NSLocalizedString("It will start soon. Please head to the venue", comment: ""), preferredStyle: .alert)
+                            let yesAction = UIAlertAction(title: NSLocalizedString("YES", comment: ""), style: .default) { action in
                                 self.startNavi()
                             }
-                            let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel)
+                            let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel)
                             alert.addAction(yesAction)
                             alert.addAction(cancelAction)
                             present(alert, animated: true, completion: nil)
                         } else {
-                            let alert = UIAlertController(title: nil, message: "イベント開始前の通知を行いますか？", preferredStyle: .alert)
-                            let yesAction = UIAlertAction(title: "はい", style: .default) { action in
+                            let alert = UIAlertController(title: nil, message: NSLocalizedString("Do you want to be notified before the event starts?", comment: ""), preferredStyle: .alert)
+                            let yesAction = UIAlertAction(title: NSLocalizedString("YES", comment: ""), style: .default) { action in
                                 self.setLocalNotification(date: scheduleDate, notificationDate: preDate)
                             }
-                            let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel)
+                            let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel)
                             alert.addAction(yesAction)
                             alert.addAction(cancelAction)
                             present(alert, animated: true, completion: nil)
@@ -121,7 +121,7 @@ class EventDetailViewController : BaseController {
         let schedule = scheduleRowModel.schedule
 
         let content = UNMutableNotificationContent()
-        content.title = "コ・スタジオトークに参加します"
+        content.title = NSLocalizedString("Join the Co-Studio Talk", comment: "")
         guard let talkTitle = ExhibitionDataStore.shared.events?
             .first(where: { $0.id == schedule.event })?.talkTitle
         else { return }

@@ -120,6 +120,14 @@
 "BluetoothOffAlertMessage" = "You need to turn on bluetooth to enable indoor localization function.";
 "CANCEL" = "Cancel";
 "SETTING" = "Open Settings";
+"YES"     = "Yes";
+"NO"      = "No";
+"OK"      = "OK";
+"Done"    = "Done";
+"Decide"  = "Enter";
+"Confirm" = "Confirm";
+"Search"  = "Search";
+"Edit"    = "Edit";
 
 "LocationNotAllowedTitle" = "Location not allowed";
 "LocationNotAllowedMessage" = "You need to allow access to location service to enable indoor localization function.
@@ -242,3 +250,9 @@ Feedback is sending...";
 "btn_next" = "Next description";
 "btn_play" = "Read the description";
 "btn_stop" = "Stop reading the description";
+
+// local push
+"Today's event is over" = "Today's event is over";
+"It will start soon. Please head to the venue" = "It will start soon. Please head to the venue";
+"Do you want to be notified before the event starts?" = "Do you want to be notified before the event starts?";
+"Join the Co-Studio Talk" = "Join the Co-Studio Talk";
