@@ -208,18 +208,57 @@ class MiraikanUtil : NSObject {
     
     //MARK: Objc utils for NavCog3
     // Open the page for Scientist Communicator Talk
-    @objc static public func openTalk(eventId: String, nodeId: String, facilityId: String?) {
+    @objc static public func openTalk(eventId: String, date: Date?, nodeId: String, facilityId: String?) {
+
+        if let date = date {
+            let formatter = DateFormatter()
+            formatter.timeStyle = .short
+            formatter.dateStyle = .none
+            formatter.locale = Locale(identifier: "ja_JP")
+            let time = formatter.string(from: date)
+
+            if let schedules = MiraikanUtil.readJSONFile(filename: "schedule",
+                                                         type: [ScheduleModel].self) as? [ScheduleModel],
+                let schedule = schedules.first(where: {$0.time == time }),
+                let floorMaps = MiraikanUtil.readJSONFile(filename: "floor_map",
+                                             type: [FloorMapModel].self) as? [FloorMapModel],
+               let floorMap = floorMaps.first(where: {$0.id == facilityId }),
+               let event = ExhibitionDataStore.shared.events?.first(where: {$0.id == eventId}) {
+                let model = ScheduleRowModel(schedule: schedule,
+                                             floorMap: floorMap,
+                                             event: event)
+                
+                if let window = UIApplication.shared.windows.first,
+                   let tab = window.rootViewController as? TabController {
+                    tab.selectedIndex = 2
+                    
+                    if let baseTab = tab.selectedViewController as? BaseTabController {
+                        baseTab.popToRootViewController(animated: false)
+                        baseTab.nav.show(EventDetailViewController(model: model, title: model.event.title), sender: nil)
+//                        baseTab.nav.openMap(nodeId: nodeId)
+
+//                        let today = Date()
+//                        if date < today {
+//                            let alert = UIAlertController(title: nil, message: "本日のイベントは終了しています", preferredStyle: .alert)
+//                            let yesAction = UIAlertAction(title: "OK", style: .default)
+//                            alert.addAction(yesAction)
+//                            parent(alert, animated: true, completion: nil)
+//                        }
+
+                        return
+                    }
+                }
+            }
+        }
+
         if let window = UIApplication.shared.windows.first,
            let tab = window.rootViewController as? TabController {
             tab.selectedIndex = 2
             
             if let baseTab = tab.selectedViewController as? BaseTabController {
                 baseTab.popToRootViewController(animated: false)
-                if let event = ExhibitionDataStore.shared.events?.first(where: { $0.id == eventId}) {
-                    baseTab.nav.show(BaseController(EventView(event, facilityId: facilityId), title: event.title), sender: nil)
-                }
+                baseTab.nav.openMap(nodeId: nodeId)
             }
-            
         }
     }
     
@@ -246,5 +285,4 @@ class MiraikanUtil : NSObject {
             }
         }
     }
-    
 }

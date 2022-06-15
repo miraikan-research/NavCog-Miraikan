@@ -46,19 +46,32 @@ fileprivate class EventContent: BaseView {
     
     private let facilityId: String?
 
+    private var map: UIImageView!
+    private var mapImage: UIImage!
+
+    private let lblMapTitle = UILabel()
+    private let lblPlace = UILabel()
+    private let btnNav = StyledButton()
+    
+    var navigationAction: (()->())?
+    var notificationAction: (()->())?
+
     // MARK: init
-    init(_ model: EventModel, facilityId: String?) {
+    init(_ eventModel: EventModel, mapModel: FloorMapModel?, facilityId: String?) {
         self.facilityId = facilityId
-        self.type = ImageType(rawValue: model.imageType.uppercased())!
+        self.type = ImageType(rawValue: eventModel.imageType.uppercased())!
         let imageCoStudio = "co_studio"
-        let imageName = model.id.contains(imageCoStudio)
+        let imageName = eventModel.id.contains(imageCoStudio)
             ? imageCoStudio
-            : model.id
+            : eventModel.id
         self.image = UIImage(named: imageName)
         self.imgView = UIImageView(image: self.image)
         
         super.init(frame: .zero)
-        setup(model)
+        setupEvent(eventModel)
+        if let mapModel = mapModel {
+            setupFloorMap(mapModel)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -116,6 +129,26 @@ fileprivate class EventContent: BaseView {
                               height: $0.sizeThatFits(safeSize).height)
             y += $0.frame.height + CGFloat(5)
         })
+        y += gap
+
+        // Floor
+        lblMapTitle.frame.origin = CGPoint(x: insets.left, y: y)
+        y += lblMapTitle.frame.height + gap
+        
+        lblPlace.frame.origin = CGPoint(x: insets.left, y: y)
+        y += lblPlace.frame.height + gap
+
+        let mapImgAdaptor = ImageAdaptor(img: mapImage)
+        let mapScaledSize = mapImgAdaptor.scaleImage(viewSize: ImageType.FLOOR_MAP.size,
+                                               frameWidth: frame.width)
+        map.frame = CGRect(x: 0,
+                           y: y,
+                           width: mapScaledSize.width,
+                           height: mapScaledSize.height)
+        y += map.frame.height + gap
+        
+        btnNav.center.x = center.x
+        btnNav.frame.origin.y = y
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -138,11 +171,16 @@ fileprivate class EventContent: BaseView {
             height += gap
         }
         
+        height += lblMapTitle.frame.height + gap
+        height += lblPlace.frame.height + gap
+        height += map.frame.height + gap
+        height += btnNav.frame.height + gap
+
         return CGSize(width: size.width, height: height)
     }
     
     // MARK: Private functions
-    private func setup(_ model: EventModel) {
+    private func setupEvent(_ model: EventModel) {
         
         btnNavi = StyledButton()
         guard let btnNavi = btnNavi else { return }
@@ -171,7 +209,7 @@ fileprivate class EventContent: BaseView {
         }
         
         lblTitle = createLabel(model.title)
-        lblTitle.font = .preferredFont(forTextStyle: .largeTitle)
+        lblTitle.font = .preferredFont(forTextStyle: .title2)
         addSubview(lblTitle)
         
         addSubview(imgView)
@@ -179,7 +217,7 @@ fileprivate class EventContent: BaseView {
         if let schedules = model.schedule {
             schedules.forEach({
                 let lbl = createLabel($0)
-                lbl.font = .boldSystemFont(ofSize: 16)
+                lbl.font = .preferredFont(forTextStyle: .headline)
                 scheduleLabels += [lbl]
                 addSubview(lbl)
             })
@@ -199,16 +237,54 @@ fileprivate class EventContent: BaseView {
         }
     }
     
+    private func setupFloorMap(_ model: FloorMapModel) {
+
+        lblMapTitle.font = .preferredFont(forTextStyle: .title2)
+        lblPlace.font = .preferredFont(forTextStyle: .title3)
+
+        lblMapTitle.text = model.title
+        let floor = String(model.floor)
+        var floorText = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), floor)
+
+        if let counter = model.counter {
+            // If the map exists, use it.
+            floorText += "   " + counter.uppercased()
+            mapImage = UIImage(named: "f\(floor)_\(counter)")
+        } else {
+            // Otherwise, use the placeholder
+            mapImage = UIImage(named: "no_map")
+        }
+        map = UIImageView(image: mapImage)
+
+        lblPlace.text = floorText
+        [lblMapTitle, lblPlace].forEach({
+            $0.textColor = .black
+            $0.sizeToFit()
+            addSubview($0)
+        })
+        
+        addSubview(map)
+        
+        btnNav.setTitle(String(format: NSLocalizedString("Guide to", tableName: "Miraikan", comment: ""), (model.title)), for: .normal)
+        btnNav.sizeToFit()
+        btnNav.tapAction { [weak self] _ in
+            guard let self = self else { return }
+            if let _f = self.navigationAction {
+                _f()
+            }
+        }
+        addSubview(btnNav)
+    }
 }
 
 /**
  The UIScrollView of event details
  */
 class EventView: BaseScrollView {
-    init(_ model: EventModel, facilityId: String?) {
+    init(_ eventModel: EventModel, mapModel: FloorMapModel?, facilityId: String?) {
         super.init(frame: .zero)
         
-        contentView = EventContent(model, facilityId: facilityId)
+        contentView = EventContent(eventModel, mapModel:mapModel, facilityId: facilityId)
         scrollView.addSubview(contentView)
         addSubview(scrollView)
     }
@@ -216,5 +292,4 @@ class EventView: BaseScrollView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }

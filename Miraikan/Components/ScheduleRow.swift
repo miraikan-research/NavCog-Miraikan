@@ -26,6 +26,7 @@
  *******************************************************************************/
 
 import Foundation
+import UIKit
 
 /**
  The customized UITableViewCell for schedule item
@@ -56,6 +57,10 @@ class ScheduleRow: BaseRow {
      Set the data from DataSource
      */
     public func configure(_ model: ScheduleRowModel) {
+        
+        lblTime.font = .preferredFont(forTextStyle: .callout)
+        lblDescription.font = .preferredFont(forTextStyle: .callout)
+        
         lblTime.text = model.schedule.time
         lblTime.sizeToFit()
         
@@ -78,7 +83,7 @@ class ScheduleRow: BaseRow {
         lblEvent.openView({ [weak self] _ in
             guard let self = self else { return }
             if let nav = self.nav {
-                nav.show(BaseController(EventView(model.event, facilityId: model.schedule.place), title: model.event.title), sender: nil)
+                nav.show(EventDetailViewController(model: model, title: model.event.title), sender: nil)
             }
         })
         

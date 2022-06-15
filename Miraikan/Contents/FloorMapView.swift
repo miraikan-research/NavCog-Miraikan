@@ -27,7 +27,6 @@
 import Foundation
 import UIKit
 
-
 /**
  The BaseView for the FloorMap
  */
@@ -80,13 +79,17 @@ class FloorMapView: BaseView {
     
     // MARK: Private Functions
     private func setup(_ model: FloorMapModel) {
+        
+        lblTitle.font = .preferredFont(forTextStyle: .title2)
+        lblPlace.font = .preferredFont(forTextStyle: .title3)
+
         lblTitle.text = model.title
         let floor = String(model.floor)
         var floorText = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), floor)
 
         if let counter = model.counter {
             // If the map exists, use it.
-            floorText += counter.uppercased()
+            floorText += "   " + counter.uppercased()
             image = UIImage(named: "f\(floor)_\(counter)")
             map = UIImageView(image: image)
         } else {
@@ -114,5 +117,4 @@ class FloorMapView: BaseView {
         }
         addSubview(btnNav)
     }
-    
 }

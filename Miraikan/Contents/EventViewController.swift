@@ -1,6 +1,6 @@
 //
 //
-//  ScheduleListHeader.swift
+//  EventViewController.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,32 +27,38 @@
 
 import Foundation
 
-/**
- The header that displays today's date
- */
-class ScheduleListHeader: BaseView {
+class EventViewController : BaseController {
 
-    private let lblDate = UILabel()
+    private let floorMapView: FloorMapView
+    private let floorMapModel: FloorMapModel
 
-    private let padding: CGFloat = 20
+    private var isObserved : Bool = false
 
-    override func setup() {
-        super.setup()
+    init(model: FloorMapModel, title: String) {
+        floorMapView = FloorMapView(model)
+        floorMapModel = model
+        super.init(floorMapView, title: title)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        lblDate.text = MiraikanUtil.todayText()
-        lblDate.font = .preferredFont(forTextStyle: .headline)
-        lblDate.sizeToFit()
-        addSubview(lblDate)
+        floorMapView.navigationAction = { [weak self] in
+            guard let self = self else { return }
+            self.startNavi()
+        }
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        lblDate.center.y = self.center.y
-        lblDate.frame.origin.x = padding
-    }
-
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let height = padding * 2 + lblDate.frame.height
-        return CGSize(width: size.width, height: height)
+    private func startNavi() {
+        if self.isObserved { return }
+        self.isObserved = true
+        let toID = floorMapModel.nodeId
+        guard let nav = self.navigationController as? BaseNavController else { return }
+        nav.openMap(nodeId: toID)
+        self.isObserved = false
     }
 }

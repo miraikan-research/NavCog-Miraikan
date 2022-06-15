@@ -35,6 +35,18 @@ class BaseButton: UIButton {
     
     private var action: ((UIButton)->())?
 
+    override init(frame: CGRect) {
+      super.init(frame: frame)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+    }
+
     @objc public func tapAction(_ action: @escaping ((UIButton)->())) {
         self.action = action
         self.addTarget(self, action: #selector(_pressAction(_:)), for: .touchDown)
@@ -136,8 +148,12 @@ class BaseBarButton: UIBarButtonItem {
 /**
  A BaseButton that styled as Navigation Button
  */
-class StyledButton: BaseButton {
+@IBDesignable
+class StyledButton: UIButton {
     
+    @IBInspectable var mainColor = UIColor.blue
+    @IBInspectable var subColor = UIColor.white
+
     private var action: ((UIButton)->())?
     
     var paddingX: CGFloat {
@@ -149,42 +165,64 @@ class StyledButton: BaseButton {
         setup()
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+
+    override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        setup()
     }
 
     private func setup() {
-        self.setTitleColor(.blue, for: .normal)
-        self.setTitleColor(.white, for: .highlighted)
+        setupDesign()
+        setupAction()
+    }
+
+    private func setupDesign() {
+        self.setTitleColor(mainColor, for: .normal)
+        self.setTitleColor(subColor, for: .highlighted)
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.blue.cgColor
-        self.layer.backgroundColor = UIColor.white.cgColor
+        self.layer.borderColor = mainColor.cgColor
+        self.layer.backgroundColor = subColor.cgColor
         self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
     }
 
-    override func tapAction(_ action: @escaping ((UIButton) -> ())) {
-        self.action = action
-        self.addTarget(self, action: #selector(_touchDown), for: .touchDown)
+    private func setupAction() {
         self.addTarget(self, action: #selector(_touchUpInside(_:)), for: .touchUpInside)
-    }
-
-    @objc private func _touchDown() {
-        self.layer.backgroundColor = UIColor.blue.cgColor
+        self.addTarget(self, action: #selector(_touchInside), for: .touchDown)
+        self.addTarget(self, action: #selector(_touchInside(_:)), for: .touchDragInside)
+        self.addTarget(self, action: #selector(_touchOutside(_:)), for: .touchDragOutside)
     }
 
     @objc private func _touchUpInside(_ sender: UIButton) {
-        self.setTitleColor(.white, for: .normal)
-        self.layer.backgroundColor = UIColor.blue.cgColor
-        UIView.animate(withDuration: 0.1, animations: {
-            self.setTitleColor(UIColor.blue, for: .normal)
-            self.layer.backgroundColor = UIColor.white.cgColor
+        UIView.animate(withDuration: 0.2, animations: {
+            self.setTitleColor(self.mainColor, for: .normal)
+            self.layer.backgroundColor = self.subColor.cgColor
         }, completion: { [weak self] finished in
             guard let self = self else { return }
             if let _f = self.action {
                 _f(self)
             }
         })
+    }
+
+    @objc private func _touchInside(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.layer.backgroundColor = self.mainColor.cgColor
+        })
+    }
+
+    @objc private func _touchOutside(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.layer.backgroundColor = self.subColor.cgColor
+        })
+    }
+
+    @objc public func tapAction(_ action: @escaping ((UIButton)->())) {
+        self.action = action
     }
 }
 
@@ -236,5 +274,5 @@ class RadioButton: BaseButton {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let height = min(radioSize.height, self.titleLabel!.intrinsicContentSize.height)
         return CGSize(width: size.width, height: height)
-    }    
+    }
 }

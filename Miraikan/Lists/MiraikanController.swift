@@ -79,6 +79,7 @@ class MiraikanController: BaseController {
                 }
             })
         
+        // TODO: Initialization processing position needs to be changed
         // Load the data
         if let events = MiraikanUtil.readJSONFile(filename: "event",
                                                   type: [EventModel].self) as? [EventModel] {
@@ -89,58 +90,58 @@ class MiraikanController: BaseController {
                                                      type: [ScheduleModel].self) as? [ScheduleModel] {
             if !MiraikanUtil.isWeekend { schedules.removeAll(where: { $0.onHoliday == false }) }
             ExhibitionDataStore.shared.schedules = schedules
-            
-            // Add local notifications
-            schedules.forEach({ schedule in
-                if schedule.place == "co_studio" {
-                    let scheduledTime = schedule.time.split(separator: ":")
-                    var components = DateComponents()
-                    components.calendar = .current
-                    // Show notification 5 minutes before the event
-                    let PREV_MINS = 5
-                    let ONE_HOUR = 60
-                    let minute = Int(scheduledTime[1])! - PREV_MINS
-                    components.minute = minute >= 0 ? minute : ONE_HOUR + minute
-                    let hour = Int(scheduledTime[0])!
-                    components.hour = minute >= 0 ? hour : hour - 1
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "コ・スタジオトークに参加します"
-                    guard let talkTitle = ExhibitionDataStore.shared.events?
-                        .first(where: { $0.id == schedule.event })?.talkTitle
-                    else { return }
-                    content.body = "\(talkTitle)"
-                    
-                    let calendar = Calendar(identifier: .gregorian)
-                    let date = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: Date())
-                    var title: String?
-                    var nodeId: String?
-                    if let floorMaps = MiraikanUtil.readJSONFile(filename: "floor_map",
-                                                                 type: [FloorMapModel].self) as? [FloorMapModel],
-                       let floorMap = floorMaps.first(where: {$0.id == schedule.place }) {
-                        title = floorMap.title
-                        nodeId = floorMap.nodeId
-                    }
-                    content.userInfo = [
-                        "year": date ?? Date(),
-                        "eventId": schedule.event,
-                        "nodeId": nodeId ?? "",
-                        "facilityId": schedule.place,
-                        "title": title ?? ""
-                    ]
 
-                    let trigger = UNCalendarNotificationTrigger(dateMatching: components,
-                                                                repeats: false)
-                    let request = UNNotificationRequest(identifier: schedule.event,
-                                                        content: content,
-                                                        trigger: trigger)
-                    UNUserNotificationCenter.current().add(request, withCompletionHandler: { error in
-                        if let _err = error {
-                            print(_err.localizedDescription)
-                        }
-                    })
-                }
-            })
+//            // Add local notifications
+//            schedules.forEach({ schedule in
+//                if schedule.place == "co_studio" {
+//                    let scheduledTime = schedule.time.split(separator: ":")
+//                    var components = DateComponents()
+//                    components.calendar = .current
+//                    // Show notification 5 minutes before the event
+//                    let PREV_MINS = 5
+//                    let ONE_HOUR = 60
+//                    let minute = Int(scheduledTime[1])! - PREV_MINS
+//                    components.minute = minute >= 0 ? minute : ONE_HOUR + minute
+//                    let hour = Int(scheduledTime[0])!
+//                    components.hour = minute >= 0 ? hour : hour - 1
+//
+//                    let content = UNMutableNotificationContent()
+//                    content.title = "コ・スタジオトークに参加します"
+//                    guard let talkTitle = ExhibitionDataStore.shared.events?
+//                        .first(where: { $0.id == schedule.event })?.talkTitle
+//                    else { return }
+//                    content.body = "\(talkTitle)"
+//
+//                    let calendar = Calendar(identifier: .gregorian)
+//                    let date = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: Date())
+//                    var title: String?
+//                    var nodeId: String?
+//                    if let floorMaps = MiraikanUtil.readJSONFile(filename: "floor_map",
+//                                                                 type: [FloorMapModel].self) as? [FloorMapModel],
+//                       let floorMap = floorMaps.first(where: {$0.id == schedule.place }) {
+//                        title = floorMap.title
+//                        nodeId = floorMap.nodeId
+//                    }
+//                    content.userInfo = [
+//                        "year": date ?? Date(),
+//                        "eventId": schedule.event,
+//                        "nodeId": nodeId ?? "",
+//                        "facilityId": schedule.place,
+//                        "title": title ?? ""
+//                    ]
+//
+//                    let trigger = UNCalendarNotificationTrigger(dateMatching: components,
+//                                                                repeats: false)
+//                    let request = UNNotificationRequest(identifier: schedule.event,
+//                                                        content: content,
+//                                                        trigger: trigger)
+//                    UNUserNotificationCenter.current().add(request, withCompletionHandler: { error in
+//                        if let _err = error {
+//                            print(_err.localizedDescription)
+//                        }
+//                    })
+//                }
+//            })
         }
     }
 

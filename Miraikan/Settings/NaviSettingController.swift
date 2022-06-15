@@ -39,7 +39,7 @@ fileprivate class CurrentLocationRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         lblDescription.text = NSLocalizedString("Current Location", comment: "")
-        lblDescription.font = .boldSystemFont(ofSize: 16)
+        lblDescription.font = .preferredFont(forTextStyle: .headline)
         lblDescription.sizeToFit()
         if MiraikanUtil.isLocated {
             guard let loc = MiraikanUtil.location else { return }
@@ -87,7 +87,7 @@ fileprivate class SwitchRow : BaseRow {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        lblDescription.font = .boldSystemFont(ofSize: 16)
+        lblDescription.font = .preferredFont(forTextStyle: .headline)
         addSubview(lblDescription)
         sw.sizeToFit()
         addSubview(sw)
@@ -152,7 +152,7 @@ fileprivate class SliderRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        lblDescription.font = .boldSystemFont(ofSize: 16)
+        lblDescription.font = .preferredFont(forTextStyle: .headline)
         addSubview(lblDescription)
         lblValue.textAlignment = .left
         addSubview(lblValue)

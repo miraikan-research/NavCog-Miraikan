@@ -155,11 +155,12 @@ void NavNSLog(NSString* fmt, ...) {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
     NSString *nodeId = userInfo[@"nodeId"];
     NSString *facilityId = userInfo[@"facilityId"];
+    NSDate *date = userInfo[@"date"];
 
     // Remove the notification and open the view
     if (eventId) {
         [center removeDeliveredNotificationsWithIdentifiers:@[eventId]];
-        [MiraikanUtil openTalkWithEventId:eventId nodeId:nodeId facilityId:facilityId];
+        [MiraikanUtil openTalkWithEventId:eventId date:date nodeId:nodeId facilityId:facilityId];
     }
 }
 

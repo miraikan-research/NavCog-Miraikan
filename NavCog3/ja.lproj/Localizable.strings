@@ -135,6 +135,14 @@
 "BluetoothOffAlertMessage" = "屋内での位置推定の機能を使うためにはBluetoothをオンにする必要があります。";
 "CANCEL" = "キャンセル";
 "SETTING" = "設定を開く";
+"YES"     = "はい";
+"NO"      = "いいえ";
+"OK"      = "OK";
+"Done"    = "完了";
+"Decide"  = "決定";
+"Confirm" = "確認";
+"Search"  = "検索";
+"Edit"    = "編集";
 
 
 "LocationNotAllowedTitle" = "位置情報が許可されていません";
@@ -262,3 +270,11 @@ NavCogの設定画面から
 "btn_next" = "次の説明";
 "btn_play" = "説明を読み上げる";
 "btn_stop" = "説明の読み上げを中止する";
+
+// local push
+"Today's event is over" = "本日のイベントは終了しています";
+"It will start soon. Please head to the venue" = "まもなく開始されます。会場に向かってください";
+"Do you want to be notified before the event starts?" = "イベント開始前の通知を行いますか？";
+"Join the Co-Studio Talk" = "コ・スタジオトークに参加します";
+
+

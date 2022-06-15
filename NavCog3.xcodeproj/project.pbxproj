@@ -358,6 +358,10 @@
 		E5728D11282A4BD700E260F1 /* FloorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
 		E5A716F6280FEC8900CF5757 /* Miraikan.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5A716F8280FEC8900CF5757 /* Miraikan.strings */; };
+		E5BFB1942859675700D57E93 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB1932859675700D57E93 /* EventDetailView.swift */; };
+		E5BFB198285967F600D57E93 /* EventDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5BFB197285967F600D57E93 /* EventDetailView.xib */; };
+		E5BFB19A2859680E00D57E93 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB1992859680E00D57E93 /* EventViewController.swift */; };
+		E5BFB19C2859688B00D57E93 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */; };
 		E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797A2817C72800EFF12F /* BaseTabController.swift */; };
 		E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797D2817C77600EFF12F /* AITabController.swift */; };
 		E5DC79802817C78700EFF12F /* LoginTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797F2817C78700EFF12F /* LoginTabController.swift */; };
@@ -699,6 +703,10 @@
 		E5A716FA280FEC9500CF5757 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Miraikan.strings; sourceTree = "<group>"; };
 		E5A71704280FF66400CF5757 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Miraikan.strings"; sourceTree = "<group>"; };
 		E5A71705280FF66B00CF5757 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Miraikan.strings; sourceTree = "<group>"; };
+		E5BFB1932859675700D57E93 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
+		E5BFB197285967F600D57E93 /* EventDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventDetailView.xib; sourceTree = "<group>"; };
+		E5BFB1992859680E00D57E93 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
+		E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
 		E5DC797A2817C72800EFF12F /* BaseTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabController.swift; sourceTree = "<group>"; };
 		E5DC797D2817C77600EFF12F /* AITabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITabController.swift; sourceTree = "<group>"; };
 		E5DC797F2817C78700EFF12F /* LoginTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTabController.swift; sourceTree = "<group>"; };
@@ -1226,6 +1234,7 @@
 				D39F3C2D27730ACD0014F1CE /* BlindExhibitionController.swift */,
 				D3083C79275603CA0052ABEE /* PermanentExhibitionController.swift */,
 				D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */,
+				E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */,
 			);
 			path = Lists;
 			sourceTree = "<group>";
@@ -1279,6 +1288,9 @@
 				D364736C273E140C00C110B0 /* Home.swift */,
 				D38EF87A2704072A00DB9444 /* ExhibitionView.swift */,
 				D320F5992702B8F600F6AD28 /* EventView.swift */,
+				E5BFB1932859675700D57E93 /* EventDetailView.swift */,
+				E5BFB197285967F600D57E93 /* EventDetailView.xib */,
+				E5BFB1992859680E00D57E93 /* EventViewController.swift */,
 				D320F59A2702B8F600F6AD28 /* FloorMapView.swift */,
 				E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */,
 				D3B1A1A427546AFB00E6CBCB /* AIController.swift */,
@@ -1633,6 +1645,7 @@
 				D3A1184C27294B0B00BEC1C8 /* Localizable.strings in Resources */,
 				D3A1184D27294B0B00BEC1C8 /* HLPSettingView.strings in Resources */,
 				D3A1184E27294B0B00BEC1C8 /* dev.hashfile in Resources */,
+				E5BFB198285967F600D57E93 /* EventDetailView.xib in Resources */,
 				D3A1184F27294B0B00BEC1C8 /* event.json in Resources */,
 				D3A1185027294B0B00BEC1C8 /* Settings.bundle in Resources */,
 				D3A1185127294B0B00BEC1C8 /* HLPSettingViewTextCell.xib in Resources */,
@@ -2206,6 +2219,7 @@
 			files = (
 				E5F52ED52845B7AF00BB4152 /* MiraikanIDMyPageView.swift in Sources */,
 				E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */,
+				E5BFB19C2859688B00D57E93 /* EventDetailViewController.swift in Sources */,
 				300093032750A54900539A0F /* DefaultTTS.swift in Sources */,
 				D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */,
 				D364735B273E0CFD00C110B0 /* BaseListView.swift in Sources */,
@@ -2244,6 +2258,7 @@
 				D3A1180127294B0B00BEC1C8 /* ViewController.m in Sources */,
 				D3A1180227294B0B00BEC1C8 /* NavDeviceTTS.m in Sources */,
 				D3B1A1A527546AFB00E6CBCB /* AIController.swift in Sources */,
+				E5BFB1942859675700D57E93 /* EventDetailView.swift in Sources */,
 				D3A1180327294B0B00BEC1C8 /* BlindViewController.m in Sources */,
 				E5F52EC72845A2B400BB4152 /* ScheduleListHeader.swift in Sources */,
 				D3A1180427294B0B00BEC1C8 /* AppAboutView.swift in Sources */,
@@ -2268,6 +2283,7 @@
 				D3A1180D27294B0B00BEC1C8 /* ScreenshotHelper.m in Sources */,
 				D3A1180E27294B0B00BEC1C8 /* WelcomViewController.m in Sources */,
 				D3A1180F27294B0B00BEC1C8 /* HLPSettingTableView.m in Sources */,
+				E5BFB19A2859680E00D57E93 /* EventViewController.swift in Sources */,
 				D3A1181027294B0B00BEC1C8 /* MiraikanUtil.swift in Sources */,
 				D3A1181127294B0B00BEC1C8 /* Label.swift in Sources */,
 				D3A1181227294B0B00BEC1C8 /* HLPDirectory.m in Sources */,
