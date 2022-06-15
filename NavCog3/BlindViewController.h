@@ -30,6 +30,7 @@
 #import "WebViewController.h"
 #import "HLPHelper.h"
 #import "MiraikanMapController.h"
+#import <CoreLocation/CoreLocation.h>
 
 
 @interface BlindViewController: MiraikanMapController <
@@ -40,7 +41,8 @@
     NavPreviewerDelegate,
     MCBrowserViewControllerDelegate,
     DialogViewDelegate,
-    WebViewControllerDelegate
+    WebViewControllerDelegate,
+    CLLocationManagerDelegate
 >
 
 @property (nonatomic) IBOutlet NavBlindWebView *webView;

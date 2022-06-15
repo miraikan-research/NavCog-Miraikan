@@ -63,12 +63,15 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSTimer *checkMapCenterTimer;
     NSTimer *checkStateTimer;
 
+    long initChangedTime;
     long locationChangedTime;
     BOOL isNaviStarted;
     BOOL isRouteNavi;
     BOOL isSetupMap;
     BOOL isInitTarget;
     BOOL isSetupNavigation;
+    
+    CLLocationManager *locationManager;
 }
 
 @end
@@ -85,6 +88,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)prepareForDealloc
 {
+    [locationManager stopUpdatingLocation];
+    locationManager.delegate = nil;
+    locationManager = nil;
+
     [_webView triggerWebviewControl:HLPWebviewControlEndNavigation];
 
     _webView.delegate = nil;
@@ -105,6 +112,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    initChangedTime = (long)([[NSDate date] timeIntervalSince1970] * 1000);
+    [self setUpdateLocation];
+
     defaultColor = self.navigationController.navigationBar.barTintColor;
     
     isRouteNavi = YES;
@@ -260,10 +270,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
                 // Start navigating here within iBeacon environment
-                if ([self destId] && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                    [NavUtil hideWaitingForView:self.view];
-                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
-                }
+//                if ([self destId] && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+//                    [NavUtil hideWaitingForView:self.view];
+//                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
+//                }
             }
             
             [timer invalidate];
@@ -700,7 +710,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
             return;
         }
         HLPLocation *location = locations[@"current"];
-        if (!location || [location isEqual:[NSNull null]]) {
+        if (isnan(location.lat) || isnan(location.lng)) {
+            // handle location information nan here
             return;
         }
         
@@ -718,10 +729,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
         }
         
         location = locations[@"actual"];
-        if (!location || [location isEqual:[NSNull null]]) {
+        if (isnan(location.lat) || isnan(location.lng)) {
+            // handle location information nan here
             return;
         }
         
+        locationChangedTime = now * 1000;
+
         if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
                 return;
@@ -750,18 +764,16 @@ typedef NS_ENUM(NSInteger, ViewState) {
         if (!self.destId || isNaviStarted) {
             return;
         }
-        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            NSString *msg = [MiraikanUtil isPreview]
-                ? NSLocalizedString(@"Loading preview",@"")
-                : NSLocalizedString(@"Loading, please wait",@"");
-            [NavUtil showModalWaitingWithMessage:msg];
-        }
-
         if(!isInitTarget) {
             return;
         }
-
         if ([self destId]) {
+            if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                NSString *msg = [MiraikanUtil isPreview]
+                    ? NSLocalizedString(@"Loading preview",@"")
+                    : NSLocalizedString(@"Loading, please wait",@"");
+                [NavUtil showModalWaitingWithMessage:msg];
+            }
             [self setupNavigation];
         }
     });
@@ -923,6 +935,65 @@ typedef NS_ENUM(NSInteger, ViewState) {
 - (void)didNavigationFinished:(NSDictionary *)properties
 {
 
+}
+
+#pragma mark - location
+- (void)setUpdateLocation
+{
+    if (nil == locationManager) {
+        locationManager = [[CLLocationManager alloc] init];
+    }
+
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.distanceFilter = 1;
+
+    switch([CLLocationManager authorizationStatus]) {
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+        case kCLAuthorizationStatusAuthorizedAlways:
+            [locationManager startUpdatingLocation];
+        default:
+            break;
+    }
+}
+
+#pragma mark - CLLocationManagerDelegate
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    CLLocation* location = [locations lastObject];
+//    NSLog(@"緯度 %+.6f, 経度 %+.6f 標高 %+.6f AccuracyH: %@, AccuracyV: %@\n", location.coordinate.latitude, location.coordinate.longitude, location.altitude, @(location.horizontalAccuracy), @(location.verticalAccuracy));
+    if (locationChangedTime > 0) {
+        [locationManager stopUpdatingLocation];
+        locationManager.delegate = nil;
+        locationManager = nil;
+        return;
+    }
+
+    long now = (long)([[NSDate date] timeIntervalSince1970] * 1000);
+    if (initChangedTime + 5000 > now) {
+        return;
+    }
+    
+    [_webView sendData: @{
+                        @"lat": @(location.coordinate.latitude),
+                        @"lng": @(location.coordinate.longitude),
+                        @"floor": @(0),
+                        @"accuracy": @(location.horizontalAccuracy),
+                        @"rotate": @(0), // dummy
+                        @"orientation": @(999), //dummy
+                        }
+              withName: @"XYZ"];
+
+    lastLocationSent = now;
+    
+    [NavUtil hideWaitingForView:self.view];
+
+    if (isNaviStarted) {
+        return;
+    }
+    
+    if ([self destId]) {
+        [self setupNavigation];
+    }
 }
 
 @end

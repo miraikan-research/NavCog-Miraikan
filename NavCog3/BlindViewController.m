@@ -71,6 +71,7 @@
 
     NSTimer *checkMapCenterTimer;
 
+    long initChangedTime;
     long locationChangedTime;
 
     BOOL isNaviStarted;
@@ -79,6 +80,8 @@
     BOOL initialViewDidAppear;
     BOOL needVOFocus;
     WebViewController *showingPage;
+    
+    CLLocationManager *locationManager;
 }
 
 @end
@@ -92,6 +95,10 @@
 
 - (void)prepareForDealloc
 {
+    [locationManager stopUpdatingLocation];
+    locationManager.delegate = nil;
+    locationManager = nil;
+
     [_webView triggerWebviewControl:HLPWebviewControlEndNavigation];
     
     [_webView logToServer:@{@"event": @"navigation", @"status": @"canceled"}];
@@ -124,6 +131,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    initChangedTime = (long)([[NSDate date] timeIntervalSince1970] * 1000);
+    [self setUpdateLocation];
+
     self.isNaviStarted = NO;
     self.isDestLoaded = NO;
     self.isRouteRequested = NO;
@@ -310,12 +320,12 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
             }
             // Start preview outside of iBeacon environment
-            if (!self.isNaviStarted && self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                NSString *msg = [MiraikanUtil isPreview]
-                    ? NSLocalizedString(@"Loading preview",@"")
-                    : NSLocalizedString(@"Loading, please wait",@"");
-                [NavUtil showModalWaitingWithMessage:msg];
-            }
+//            if (!self.isNaviStarted && self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+//                NSString *msg = [MiraikanUtil isPreview]
+//                    ? NSLocalizedString(@"Loading preview",@"")
+//                    : NSLocalizedString(@"Loading, please wait",@"");
+//                [NavUtil showModalWaitingWithMessage:msg];
+//            }
             [self updateView];
             [timer invalidate];
         }
@@ -731,7 +741,8 @@
             return;
         }
         HLPLocation *location = locations[@"current"];
-        if (!location || [location isEqual:[NSNull null]]) {
+        if (isnan(location.lat) || isnan(location.lng)) {
+            // handle location information nan here
             return;
         }
         
@@ -750,16 +761,13 @@
         
         
         location = locations[@"actual"];
-        if (!location || [location isEqual:[NSNull null]]) {
+        if (isnan(location.lat) || isnan(location.lng)) {
+            // handle location information nan here
             return;
         }
         
-        /*
-         if (isnan(location.lat) || isnan(location.lng)) {
-         return;
-         }
-         */
-        
+        locationChangedTime = now * 1000;
+
         if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey:@"webview_update_min_interval"]) {
             if (!location.params) {
                 return;
@@ -784,15 +792,15 @@
         lastLocationSent = now;
         [self dialogHelperUpdate];
         
-        if (!self.destId || self.isDestLoaded || [navigator isActive] || self.isNaviStarted) {
-            return;
-        }
-        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            NSString *msg = [MiraikanUtil isPreview]
-                ? NSLocalizedString(@"Loading preview",@"")
-                : NSLocalizedString(@"Loading, please wait",@"");
-            [NavUtil showModalWaitingWithMessage:msg];
-        }
+//        if (!self.destId || self.isDestLoaded || [navigator isActive] || self.isNaviStarted) {
+//            return;
+//        }
+//        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+//            NSString *msg = [MiraikanUtil isPreview]
+//                ? NSLocalizedString(@"Loading preview",@"")
+//                : NSLocalizedString(@"Loading, please wait",@"");
+//            [NavUtil showModalWaitingWithMessage:msg];
+//        }
     });
 }
 
@@ -1553,6 +1561,83 @@
     }
     
     return YES;
+}
+
+#pragma mark - location
+- (void)setUpdateLocation
+{
+    if (nil == locationManager) {
+        locationManager = [[CLLocationManager alloc] init];
+    }
+
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.distanceFilter = 1;
+
+    switch([CLLocationManager authorizationStatus]) {
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+        case kCLAuthorizationStatusAuthorizedAlways:
+            [locationManager startUpdatingLocation];
+        default:
+            break;
+    }
+}
+
+#pragma mark - CLLocationManagerDelegate
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    CLLocation* location = [locations lastObject];
+//    NSLog(@"緯度 %+.6f, 経度 %+.6f 標高 %+.6f AccuracyH: %@, AccuracyV: %@\n", location.coordinate.latitude, location.coordinate.longitude, location.altitude, @(location.horizontalAccuracy), @(location.verticalAccuracy));
+    if (locationChangedTime > 0) {
+        [locationManager stopUpdatingLocation];
+        locationManager.delegate = nil;
+        locationManager = nil;
+        return;
+    }
+
+    long now = (long)([[NSDate date] timeIntervalSince1970] * 1000);
+    if (initChangedTime + 5000 > now) {
+        return;
+    }
+    
+    [_webView sendData: @{
+                        @"lat": @(location.coordinate.latitude),
+                        @"lng": @(location.coordinate.longitude),
+                        @"floor": @(0),
+                        @"accuracy": @(location.horizontalAccuracy),
+                        @"rotate": @(0), // dummy
+                        @"orientation": @(999), //dummy
+                        }
+              withName: @"XYZ"];
+
+    lastLocationSent = now;
+    
+    [NavUtil hideWaitingForView:self.view];
+
+    if (isNaviStarted) {
+        return;
+    }
+    
+    if ([self destId]) {
+        [self hiddenVoiceGuide];
+        NavDataStore *nds = [NavDataStore sharedDataStore];
+        NavDestination *from = [NavDataStore destinationForCurrentLocation];
+        NavDestination *to = [nds destinationByID: [self destId]];
+        [NavDataStore sharedDataStore].to = to;
+        
+        __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
+                                         withOptions:AVAudioSessionCategoryOptionAllowBluetooth
+                                               error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
+        [nds requestRouteFrom:from.singleId
+                           To:to._id
+              withPreferences:prefs complete:^{
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                nds.previewMode = [MiraikanUtil isPreview];
+                nds.exerciseMode = NO;
+            });
+        }];
+    }
 }
 
 @end

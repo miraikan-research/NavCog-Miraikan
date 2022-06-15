@@ -25,14 +25,15 @@
 #import "HLPHelper.h"
 #import "NavNavigator.h"
 #import "MiraikanMapController.h"
-
+#import <CoreLocation/CoreLocation.h>
 
 @interface ViewController: MiraikanMapController <
     UIGestureRecognizerDelegate,
     NavNavigatorDelegate,
     HLPWebViewDelegate,
     HLPTTSProtocol,
-    DialogViewDelegate
+    DialogViewDelegate,
+    CLLocationManagerDelegate
 >
 
 @property (strong, nonatomic) IBOutlet HLPWebView *webView;
