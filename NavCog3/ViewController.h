@@ -23,11 +23,13 @@
 #import <UIKit/UIKit.h>
 #import <HLPWebView/HLPWebView.h>
 #import "HLPHelper.h"
+#import "NavNavigator.h"
 #import "MiraikanMapController.h"
 
 
 @interface ViewController: MiraikanMapController <
     UIGestureRecognizerDelegate,
+    NavNavigatorDelegate,
     HLPWebViewDelegate,
     HLPTTSProtocol,
     DialogViewDelegate

@@ -48,10 +48,14 @@ typedef NS_ENUM(NSInteger, ViewState) {
 };
 
 @interface ViewController () {
+    NavNavigator *navigator;
+
     UISwipeGestureRecognizer *recognizer;
     NSDictionary *uiState;
     DialogViewHelper *dialogHelper;
+    UIButton *titleButton;
     NSDictionary *ratingInfo;
+    NSArray *landmarks;
     
     NSTimeInterval lastLocationSent;
     NSTimeInterval lastOrientationSent;
@@ -62,6 +66,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
     long locationChangedTime;
     BOOL isNaviStarted;
     BOOL isRouteNavi;
+    BOOL isSetupMap;
+    BOOL isInitTarget;
+    BOOL isSetupNavigation;
 }
 
 @end
@@ -85,6 +92,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
     dialogHelper.delegate = nil;
     dialogHelper = nil;
     
+    navigator.delegate = nil;
+    navigator = nil;
+
     recognizer = nil;
     
     _settingButton = nil;
@@ -102,6 +112,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
     state = ViewStateLoading;
     locationChangedTime = 0;
     lastLocationSent = 0;
+
+    titleButton = [[UIButton alloc] init];
+    [titleButton addTarget:self action:@selector(titleAction) forControlEvents:UIControlEventTouchUpInside];
+    [titleButton setIsAccessibilityElement: false];
+    [self setTitleButton:NSLocalizedStringFromTable(@"Miraikan", @"BlindView", @"")];
+    self.navigationItem.titleView = titleButton;
 
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
@@ -121,18 +137,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
     _webView.tts = self;
     [_webView setFullScreenForView:self.view];
     
-    /*
-    NSString *server = ;
-    helper = [[HLPWebviewHelper alloc] initWithWebview:self.webView server:server];
-    helper.developerMode = @([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]);
-    helper.userMode = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_mode"];
-    helper.delegate = self;
-     */
-    
     recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openMenu:)];
     recognizer.delegate = self;
     [self.webView addGestureRecognizer:recognizer];
     
+    navigator = [[NavNavigator alloc] init];
+    navigator.delegate = self;
+
     [NSNotificationCenter.defaultCenter removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestStartNavigation:) name:REQUEST_START_NAVIGATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uiStateChanged:) name:WCUI_STATE_CHANGED_NOTIFICATION object:nil];
@@ -148,6 +159,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
     checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
     checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
     [self updateView];
+
+    if ([self destId]) {
+        dialogHelper.helperView.hidden = YES;
+        [self hiddenVoiceGuide];
+    }
 
     BOOL checked = [ud boolForKey: @"checked_altimeter"];
     if (!checked && ![CMAltimeter isRelativeAltitudeAvailable]) {
@@ -199,8 +215,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     _settingButton = nil;
     
-//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_STOP object:self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -246,7 +260,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
                 // Start navigating here within iBeacon environment
-                if (self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                if ([self destId] && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                    [NavUtil hideWaitingForView:self.view];
                     [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
                 }
             }
@@ -258,10 +273,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)startNavi: (HLPLocation*)center {
     
-    if (lastLocationSent <= 0) {
-        return;
-    }
-
     if (isRouteNavi) {
         if ([self destId] != nil) {
             if (!isNaviStarted) {
@@ -282,8 +293,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         }
     }
 
-//    if (!isNaviStarted) {
-        NSDictionary *target =
+    NSDictionary *target =
         @{
           @"action": @"start",
           @"lat": @(center.lat),
@@ -291,21 +301,22 @@ typedef NS_ENUM(NSInteger, ViewState) {
           @"dist": @(YES)
           };
         
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:target requiringSecureCoding:NO error:nil];
-        NSString *dataStr = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
-        
-        NSString *script = [NSString stringWithFormat:@"$hulop.route.callService(%@, null)", dataStr];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_webView evaluateJavaScript:script completionHandler:nil];
-        });
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:target requiringSecureCoding:NO error:nil];
+    NSString *dataStr = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
+    
+    NSString *script = [NSString stringWithFormat:@"$hulop.route.callService(%@, null)", dataStr];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_webView evaluateJavaScript:script completionHandler:nil];
         isNaviStarted = YES;
-//    }
-
+    });
 }
 
 - (void)initTarget:(NSArray *)landmarks
 {
+    if (isInitTarget) {
+        return;
+    }
     NSMutableArray *temp = [@[] mutableCopy];
     NSError *error;
     for(id obj in landmarks) {
@@ -313,7 +324,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
     
     if ([temp count] == 0) {
-        //NSLog(@"No Landmarks %@", landmarks);
+        NSLog(@"No Landmarks");
         return;
     }
     
@@ -325,6 +336,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     dispatch_async(dispatch_get_main_queue(), ^{
         [_webView evaluateJavaScript:script completionHandler:nil];
     });
+    isInitTarget = true;
 }
 
 - (void)showRoute
@@ -359,7 +371,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [timer invalidate];
         return;
     }
-    NSLog(@"checkState");
+
     [_webView getStateWithCompletionHandler:^(NSDictionary * _Nonnull json) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WCUI_STATE_CHANGED_NOTIFICATION object:self userInfo:json];
     }];
@@ -426,7 +438,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
     
     if (state == ViewStateMap) {
-        if ([[DialogManager sharedManager] isAvailable]  && (!isPreviewDisabled || devMode || validLocation)) {
+        if ([[DialogManager sharedManager] isAvailable]  && (!isPreviewDisabled || devMode || validLocation) && ![self destId]) {
             if (dialogHelper.helperView.hidden) {
                 dialogHelper.helperView.hidden = NO;
                 [dialogHelper recognize];
@@ -438,12 +450,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
         dialogHelper.helperView.hidden = YES;
     }
     
-    self.navigationItem.title = NSLocalizedStringFromTable(@"NavCog", @"BlindView", @"");
-    
-    if (debugFollower) {
-        self.navigationItem.title = NSLocalizedStringFromTable(@"Follow", @"BlindView", @"");
-    }
-    
     if (peerExists) {
         self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.9 alpha:1.0];
     } else {
@@ -451,20 +457,33 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
 }
 
+- (void)setTitleButton:(NSString*)title
+{
+    [titleButton setTitle:title forState: UIControlStateNormal];
+    [titleButton setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
+    [titleButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    [titleButton setIsAccessibilityElement: false];
+}
+
+- (void)titleAction
+{
+    
+}
+
 #pragma mark - HLPWebView
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
     [_indicator startAnimating];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [_indicator stopAnimating];
     _indicator.hidden = YES;
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     _errorMessage.hidden = NO;
     _retryButton.hidden = NO;
@@ -472,7 +491,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
 {
-    BOOL isVoiceGuideOn = [NSUserDefaults.standardUserDefaults boolForKey: @"isVoiceGuideOn"];
+    BOOL isVoiceGuideOn = false;
     [[NavDeviceTTS sharedTTS] speak:isVoiceGuideOn ? text : @"" withOptions: @{@"force": @(isForce)} completionHandler:handler];
 }
 
@@ -483,7 +502,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)vibrate
 {
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+//    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
 - (void)webView:(HLPWebView *)webView didChangeLatitude:(double)lat longitude:(double)lng floor:(double)floor synchronized:(BOOL)sync
@@ -513,6 +532,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [[NSNotificationCenter defaultCenter] postNotificationName:WCUI_STATE_CHANGED_NOTIFICATION object:self userInfo:uiState];
 }
 
+/// Arrive at destination
 - (void)webView:(HLPWebView *)webView didFinishNavigationStart:(NSTimeInterval)start end:(NSTimeInterval)end from:(NSString *)from to:(NSString *)to
 {
     NSDictionary *navigationInfo =
@@ -592,6 +612,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
         }
         else if ([page isEqualToString: @"confirm"]) {
             state = ViewStateRouteConfirm;
+            [self hiddenVoiceGuide];
+            [NavUtil hideModalWaiting];
+            [NavUtil hideWaitingForView:self.view];
         }
         else if ([page hasPrefix: @"map-page"]) {
             if (inNavigation) {
@@ -599,9 +622,16 @@ typedef NS_ENUM(NSInteger, ViewState) {
                 [self hiddenVoiceGuide];
             } else {
                 state = ViewStateMap;
-//                if (!self.destId) {
-                    [self showVoiceGuide];
-//                }
+                [self showVoiceGuide];
+                isSetupMap = true;
+                
+                if (!isInitTarget && landmarks) {
+                    [self initTarget:landmarks];
+                }
+                
+                if ([self destId]) {
+                    [self setupNavigation];
+                }
             }
         }
         else if ([page hasPrefix: @"ui-id-"]) {
@@ -648,6 +678,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         switch(status) {
             case HLPLocationStatusLocating:
+                [NavUtil hideModalWaiting];
                 [NavUtil showWaitingForView:self.view withMessage:NSLocalizedStringFromTable(@"Locating...", @"BlindView", @"")];
                 break;
             default:
@@ -714,6 +745,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
         lastLocationSent = now;
         
+        [NavUtil hideWaitingForView:self.view];
+
         if (!self.destId || isNaviStarted) {
             return;
         }
@@ -723,37 +756,63 @@ typedef NS_ENUM(NSInteger, ViewState) {
                 : NSLocalizedString(@"Loading, please wait",@"");
             [NavUtil showModalWaitingWithMessage:msg];
         }
+
+        if(!isInitTarget) {
+            return;
+        }
+
+        if ([self destId]) {
+            [self setupNavigation];
+        }
     });
 }
 
 - (void)destinationChanged: (NSNotification*) note
 {
-//    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
-//    if (locationChangedTime + 500 > now) {
-//        return;
-//    }
-//    locationChangedTime = now;
-
-    [self initTarget:[note userInfo][@"destinations"]];
+    if (!isSetupMap) {
+        landmarks = [note userInfo][@"destinations"];
+        return;
+    }
     
+    // 到着判定データ
+    [self initTarget:[note userInfo][@"destinations"]];
+}
+
+- (void)setupNavigation
+{
+    if (isSetupNavigation) {
+        return;
+    }
+    isSetupNavigation = true;
+
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
     NavDestination *to = [nds destinationByID:[self destId]];
-    
-    [self startNavi:from.location];
+
+    HLPLocation *location = nds.currentLocation;
+    if (isnan(location.lat) || isnan(location.lng)) {
+        location = from.location;
+    }
+
+    [self startNavi:location];
     
     __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
                                      withOptions:AVAudioSessionCategoryOptionAllowBluetooth
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [nds requestRouteFrom:from.singleId
-                       To:to._id withPreferences:prefs complete:^{
-        __weak typeof(self) weakself = self;
-        nds.previewMode = [MiraikanUtil isPreview];
-        nds.exerciseMode = NO;
-        [weakself showRoute];
-    }];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [nds requestRouteFrom:from.singleId
+                           To:to._id
+              withPreferences:prefs complete:^{
+                __weak typeof(self) weakself = self;
+                nds.previewMode = [MiraikanUtil isPreview];
+                nds.exerciseMode = NO;
+                [weakself showRoute];
+            }
+        ];
+    });
 }
 
 #pragma mark - IBActions
@@ -842,6 +901,28 @@ typedef NS_ENUM(NSInteger, ViewState) {
     if ([keyPath isEqualToString: @"developer_mode"]) {
         _webView.isDeveloperMode = @([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]);
     }
+}
+
+#pragma mark - NavNavigatorDelegate
+
+- (void)didActiveStatusChanged:(NSDictionary *)properties
+{
+
+}
+
+- (void)couldNotStartNavigation:(NSDictionary *)properties
+{
+
+}
+
+- (void)didNavigationStarted:(NSDictionary *)properties
+{
+
+}
+
+- (void)didNavigationFinished:(NSDictionary *)properties
+{
+
 }
 
 @end

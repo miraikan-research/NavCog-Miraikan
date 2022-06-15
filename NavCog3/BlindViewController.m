@@ -62,6 +62,7 @@
     
     UIColor *defaultColor;
     
+    NSDictionary *uiState;
     DialogViewHelper *dialogHelper;
     
     NSTimeInterval lastShake;
@@ -71,6 +72,9 @@
     NSTimer *checkMapCenterTimer;
 
     long locationChangedTime;
+
+    BOOL isNaviStarted;
+    BOOL isSetupMap;
 
     BOOL initialViewDidAppear;
     BOOL needVOFocus;
@@ -168,6 +172,7 @@
     self.searchButton.enabled = NO;
     [NSNotificationCenter.defaultCenter removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestStartNavigation:) name:REQUEST_START_NAVIGATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uiStateChanged:) name:WCUI_STATE_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logReplay:) name:REQUEST_LOG_REPLAY object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugPeerStateChanged:) name:DEBUG_PEER_STATE_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestDialogStart:) name:REQUEST_DIALOG_START object:nil];
@@ -676,7 +681,7 @@
                 } else {
                     mv.message.text = [NSString stringWithFormat:@"Log %03.0f%% %s", (progress /(double)total)*100, msg];
                 }
-                NSLog(@"%@", mv.message.text);
+                NSLog(@"%s: %d, %@" , __func__, __LINE__, mv.message.text);
             });
             
             if (progress == total) {
@@ -793,11 +798,11 @@
 
 - (void)destinationChanged: (NSNotification*) note
 {
-//    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
-//    if (locationChangedTime + 500 > now) {
-//        return;
-//    }
-//    locationChangedTime = now;
+
+    if (self.isNaviStarted) {
+        return;
+    }
+    self.isNaviStarted = YES;
 
     [_webView initTarget:[note userInfo][@"destinations"]];
     
@@ -830,6 +835,33 @@
 {
     NSArray *route = [note userInfo][@"route"];
     [_webView showRoute:route];
+}
+
+- (void)uiStateChanged:(NSNotification*)note
+{
+    uiState = [note userInfo];
+
+    NSString *page = uiState[@"page"];
+//    BOOL inNavigation = [uiState[@"navigation"] boolValue];
+
+    if (page) {
+        if ([page isEqualToString: @"control"]) {
+        }
+        else if ([page isEqualToString: @"settings"]) {
+        }
+        else if ([page isEqualToString: @"confirm"]) {
+        }
+        else if ([page hasPrefix: @"map-page"]) {
+            isSetupMap = true;
+        }
+        else if ([page hasPrefix: @"ui-id-"]) {
+        }
+        else if ([page isEqualToString: @"confirm_floor"]) {
+        }
+        else {
+            NSLog(@"unmanaged state: %@", page);
+        }
+    }
 }
 
 - (void)requestStartNavigation:(NSNotification*)note
@@ -1172,7 +1204,7 @@
         } else {
             description = poi.text;
         }
-        NSLog(@"poi: %@", description);
+        NSLog(@"%s: %d, poi: %@" , __func__, __LINE__, description);
         NSMutableArray *descriptions = [(NSArray*) ExhibitionDataStore.shared.descriptions mutableCopy];
         if (descriptions) {
             [descriptions addObject:description];
