@@ -231,6 +231,18 @@
 "not_located" = "Outside of iBeacon area";
 "Pathfinding failed" = "Pathfinding failed";
 
+/* Button for navigation */
+"Guide to this exhibition" = "이 전시에 안내한다";
+
+/* Button for navigation */
+"Guide to" = "%@ 안내한다";
+
+/* Exhibition explanation */
+"Description" = "설명";
+
+/* Exhibition appearance */
+"Overview" = "개관";
+
 // Language Code
 "lang" = "ko";
 

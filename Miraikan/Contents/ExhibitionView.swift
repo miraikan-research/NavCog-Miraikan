@@ -58,7 +58,7 @@ class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
         
         btnNavi = StyledButton()
         guard let btnNavi = btnNavi else { return }
-        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
+        btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", comment: ""), for: .normal)
         btnNavi.sizeToFit()
         btnNavi.tapAction({ [weak self] _ in
             guard let self = self else { return }

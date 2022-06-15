@@ -184,7 +184,7 @@ fileprivate class EventContent: BaseView {
         
         btnNavi = StyledButton()
         guard let btnNavi = btnNavi else { return }
-        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
+        btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", comment: ""), for: .normal)
         btnNavi.sizeToFit()
         
         var nodeId: String?
@@ -265,7 +265,7 @@ fileprivate class EventContent: BaseView {
         
         addSubview(map)
         
-        btnNav.setTitle(String(format: NSLocalizedString("Guide to", tableName: "Miraikan", comment: ""), (model.title)), for: .normal)
+        btnNav.setTitle(String(format: NSLocalizedString("Guide to", comment: ""), (model.title)), for: .normal)
         btnNav.sizeToFit()
         btnNav.tapAction { [weak self] _ in
             guard let self = self else { return }

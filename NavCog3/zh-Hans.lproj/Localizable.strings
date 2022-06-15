@@ -233,6 +233,18 @@
 "not_located" = "Outside of iBeacon area";
 "Pathfinding failed" = "寻路失败";
 
+/* Button for navigation */
+"Guide to this exhibition" = "本次展览指南";
+
+/* Button for navigation */
+"Guide to" = "%@指南";
+
+/* Exhibition explanation */
+"Description" = "描述";
+
+/* Exhibition appearance */
+"Overview" = "概述";
+
 // Language Code
 "lang" = "zh";
 

@@ -58,12 +58,12 @@ class ContentRow: BaseRow {
         } else {
             lblDescription.text = model.blindIntro.isEmpty
                 ? model.blindIntro
-                : NSLocalizedString("Description", tableName: "Miraikan", comment: "") + "\n\(model.blindIntro)\n"
+                : NSLocalizedString("Description", comment: "") + "\n\(model.blindIntro)\n"
             lblDescription.accessibilityLabel = lblDescription.text?.replacingOccurrences(of: "・", with: "")
 
             lblOverview.text = model.blindOverview.isEmpty
                 ? model.blindOverview
-                : NSLocalizedString("Overview", tableName: "Miraikan", comment: "") + "\n\(model.blindOverview)"
+                : NSLocalizedString("Overview", comment: "") + "\n\(model.blindOverview)"
             lblOverview.accessibilityLabel = lblOverview.text?.replacingOccurrences(of: "・", with: "")
 
             let islblDescription = lblDescription.text?.isEmpty ?? true
