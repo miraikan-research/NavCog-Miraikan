@@ -237,8 +237,17 @@ NavCogの設定画面から
 "Preview Speed Description" = "プレビュースピード";
 "Pathfinding failed" = "経路探索に失敗しました";
 
-// NaviButton Title
-"navi_button_title" = "この展示へナビ";
+/* Button for navigation */
+"Guide to this exhibition" = "この展示へナビ";
+
+/* Button for navigation */
+"Guide to" = "%@へナビ";
+
+/* Exhibition explanation */
+"Description" = "概要";
+
+/* Exhibition appearance */
+"Overview" = "概観";
 
 // Language Code
 "lang" = "ja";

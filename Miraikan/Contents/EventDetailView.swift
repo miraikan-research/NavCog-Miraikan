@@ -92,7 +92,7 @@ class EventDetailView: UIView {
     }
     
     func setup() {
-        btnNavi.setTitle(NSLocalizedString("navi_button_title", comment: ""), for: .normal)
+        btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", comment: ""), for: .normal)
         btnNavi.sizeToFit()
         btnNavi.tapAction { [weak self] _ in
             guard let self = self else { return }
@@ -177,7 +177,7 @@ class EventDetailView: UIView {
             floorMapView.isHidden = floorMapViewHidden
             lblPlace.text = floorText
 
-            btnFloor.setTitle(String(format: NSLocalizedString("Guide to", tableName: "Miraikan", comment: ""), (mapModel.title)), for: .normal)
+            btnFloor.setTitle(String(format: NSLocalizedString("Guide to", comment: ""), (mapModel.title)), for: .normal)
             btnFloor.sizeToFit()
             btnFloor.tapAction { [weak self] _ in
                 guard let self = self else { return }
