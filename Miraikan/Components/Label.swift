@@ -72,7 +72,7 @@ class UnderlinedLabel: AutoWrapLabel {
 
     private func setText(_ text: String) {
         let attr: [NSAttributedString.Key: Any] = [
-            .font: UIFont.boldSystemFont(ofSize: 16),
+            .font: UIFont.preferredFont(forTextStyle: .headline),
             .underlineStyle: NSUnderlineStyle.single.rawValue
         ]
         let str = NSMutableAttributedString(string: text,

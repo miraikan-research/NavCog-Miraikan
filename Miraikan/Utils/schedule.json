@@ -42,7 +42,7 @@
     "place": "dome_theater",
     "event": "birthday",
     "description": "要予約",
-    "on_holiday": true
+    "on_holiday": false
 }, {
     "time": "12:30",
     "place": "geo_cosmos",
