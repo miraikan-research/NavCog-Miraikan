@@ -310,12 +310,12 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
             }
             // Start preview outside of iBeacon environment
-            if (!self.isNaviStarted && self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                NSString *msg = [MiraikanUtil isPreview]
-                    ? NSLocalizedString(@"Loading preview",@"")
-                    : NSLocalizedString(@"Loading, please wait",@"");
-                [NavUtil showModalWaitingWithMessage:msg];
-            }
+//            if (!self.isNaviStarted && self.destId && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+//                NSString *msg = [MiraikanUtil isPreview]
+//                    ? NSLocalizedString(@"Loading preview",@"")
+//                    : NSLocalizedString(@"Loading, please wait",@"");
+//                [NavUtil showModalWaitingWithMessage:msg];
+//            }
             [self updateView];
             [timer invalidate];
         }
@@ -784,15 +784,15 @@
         lastLocationSent = now;
         [self dialogHelperUpdate];
         
-        if (!self.destId || self.isDestLoaded || [navigator isActive] || self.isNaviStarted) {
-            return;
-        }
-        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            NSString *msg = [MiraikanUtil isPreview]
-                ? NSLocalizedString(@"Loading preview",@"")
-                : NSLocalizedString(@"Loading, please wait",@"");
-            [NavUtil showModalWaitingWithMessage:msg];
-        }
+//        if (!self.destId || self.isDestLoaded || [navigator isActive] || self.isNaviStarted) {
+//            return;
+//        }
+//        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+//            NSString *msg = [MiraikanUtil isPreview]
+//                ? NSLocalizedString(@"Loading preview",@"")
+//                : NSLocalizedString(@"Loading, please wait",@"");
+//            [NavUtil showModalWaitingWithMessage:msg];
+//        }
     });
 }
 
