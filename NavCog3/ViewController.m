@@ -260,10 +260,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
                   };
                 [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
                 // Start navigating here within iBeacon environment
-                if ([self destId] && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-                    [NavUtil hideWaitingForView:self.view];
-                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
-                }
+//                if ([self destId] && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+//                    [NavUtil hideWaitingForView:self.view];
+//                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
+//                }
             }
             
             [timer invalidate];
@@ -750,18 +750,17 @@ typedef NS_ENUM(NSInteger, ViewState) {
         if (!self.destId || isNaviStarted) {
             return;
         }
-        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-            NSString *msg = [MiraikanUtil isPreview]
-                ? NSLocalizedString(@"Loading preview",@"")
-                : NSLocalizedString(@"Loading, please wait",@"");
-            [NavUtil showModalWaitingWithMessage:msg];
-        }
-
-        if(!isInitTarget) {
+        if (!isInitTarget) {
             return;
         }
 
         if ([self destId]) {
+            if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                NSString *msg = [MiraikanUtil isPreview]
+                    ? NSLocalizedString(@"Loading preview",@"")
+                    : NSLocalizedString(@"Loading, please wait",@"");
+                [NavUtil showModalWaitingWithMessage:msg];
+            }
             [self setupNavigation];
         }
     });
