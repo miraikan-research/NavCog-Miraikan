@@ -32,7 +32,10 @@ import UIKit
  The content of the  UIScrollView of EventView
  */
 fileprivate class DistanceCheckContent: BaseView {
+    private let tts = DefaultTTS()
+    private var isPlaying = false
     private var items: [ExhibitionLinkModel] = []
+    private var nearestItems = [ExhibitionLinkModel?](repeating: nil, count: 4)
 
     private var lblTitleArray: [UILabel] = []
     private var lblLatitude = UILabel()
@@ -186,11 +189,9 @@ fileprivate class DistanceCheckContent: BaseView {
     }
 
     func setDataForFloor(floor: Int) {
-        // Load the data
-        guard let models = MiraikanUtil.readJSONFile(filename: "exhibition",
-                                                  type: [ExhibitionModel].self) as? [ExhibitionModel]
-        else { return }
-        
+        guard let navDataStore = NavDataStore.shared(),
+              let destinations = navDataStore.destinations() else { return }
+
         DispatchQueue.main.async{
             self.items.removeAll()
             
@@ -204,43 +205,30 @@ fileprivate class DistanceCheckContent: BaseView {
             }
             self.lblLocationDistanceArray = []
 
-            let sorted = models
-                .filter({ model in
-                    return model.floor == floor
-                })
-                .sorted(by: { $0.counter < $1.counter })
-            sorted.forEach({ model in
-                
-                let title = model.counter != ""
-                    ? "\(model.counter) \(model.title)" : model.title
-
-                var hlpLocation: HLPLocation?
-                if let latitudeStr = model.latitude,
-                   let longitudeStr = model.longitude,
-                   let latitude = Double(latitudeStr),
-                   let longitude = Double(longitudeStr) {
-                    hlpLocation = HLPLocation(lat: latitude, lng: longitude)
+            for landmark in destinations {
+                if let landmark = landmark as? HLPLandmark,
+                   Int(landmark.nodeHeight) + 1 == floor,
+                   !landmark.name.isEmpty,
+                   let id = landmark.properties[PROPKEY_FACILITY_ID] as? String {
+                    let linkModel = ExhibitionLinkModel(id: id,
+                                                        title: landmark.name,
+                                                        titlePron: landmark.namePron,
+                                                        hlpLocation: landmark.nodeLocation,
+                                                        category: landmark.category,
+                                                        nodeId: landmark.nodeID,
+                                                        counter: "",
+                                                        locations: nil,
+                                                        blindDetail: "")
+                    self.items.append(linkModel)
                 }
-
-                let linkModel = ExhibitionLinkModel(id: model.id,
-                                                    title: title,
-                                                    titlePron: model.titlePron,
-                                                    hlpLocation: hlpLocation,
-                                                    category: model.category,
-                                                    nodeId: model.nodeId,
-                                                    counter: model.counter,
-                                                    locations: model.locations,
-                                                    blindDetail: model.blindDetail)
-                self.items.append(linkModel)
-            })
-            
+            }
             self.setupFloorList()
         }
     }
 
     func locationChanged(current: HLPLocation) {
 
-        DispatchQueue.main.async{
+        DispatchQueue.main.async{ [self] in
             self.lblLatitude.text = String(current.lat)
             self.lbllongitude.text = String(current.lng)
             self.lblFloor.text = String(current.floor + 1)
@@ -249,11 +237,43 @@ fileprivate class DistanceCheckContent: BaseView {
             self.lblOrientation.text = String(current.orientation)
             self.lblOrientationAccuracy.text = String(current.orientationAccuracy)
             
+            var nearest: Double = 10
+            var nearestItem: ExhibitionLinkModel?
+            
             for (index, item) in self.items.enumerated() {
                 let dist = current.distance(to: item.hlpLocation)
+                if nearest > dist {
+                    nearest = dist
+                    nearestItem = item
+                }
                 self.lblLocationDistanceArray[index].text = String(dist)
             }
+
+            if let nearestItem = nearestItem {
+                let passingItem = self.nearestItems.first(where: {$0?.id == nearestItem.id })
+                if passingItem == nil {
+                    let text = nearestItem.title + "の近く"
+                    self.play(text: text)
+                    self.nearestItems.removeFirst()
+                    self.nearestItems.append(nearestItem)
+                }
+            }
         }
+    }
+
+    private func pause() {
+        tts.stop(true)
+        self.isPlaying = false
+    }
+
+    private func play(text: String) {
+        if self.isPlaying { return }
+
+        self.isPlaying = true
+        tts.speak(text, callback: { [weak self] in
+            guard let self = self else { return }
+            self.isPlaying = false
+        })
     }
 }
 
@@ -282,6 +302,10 @@ class DistanceCheckView: BaseScrollView {
     func floorChanged(floor: Int) {
         if let contentView = contentView as? DistanceCheckContent {
             contentView.setDataForFloor(floor: floor)
+        }
+        
+        DispatchQueue.main.async{
+            self.scrollView.contentSize = CGSize(width: self.contentView.frame.width, height: 1000)
         }
     }
 }

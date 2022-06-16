@@ -34,7 +34,9 @@ class LinkingHeader: BaseView {
     var model : ExhibitionLinkModel? {
         didSet {
             guard let model = model else { return }
-            titleLink.title = model.title
+            titleLink.title = model.counter != ""
+                ? "\(model.counter) \(model.title)" : model.title
+
             if let titlePron = model.titlePron {
                 titleLink.accessibilityLabel = titlePron
             }
