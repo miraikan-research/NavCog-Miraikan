@@ -79,9 +79,6 @@ class BlindExhibitionController: BaseListController, BaseListDelegate {
             .sorted(by: { $0.counter < $1.counter })
         var sections = [(NavButtonModel, ExhibitionContentModel)]()
         sorted.forEach({ model in
-            let title = model.counter != ""
-                ? "\(model.counter) \(model.title)" : model.title
-  
             var hlpLocation: HLPLocation?
             if let latitudeStr = model.latitude,
                let longitudeStr = model.longitude,
@@ -91,7 +88,7 @@ class BlindExhibitionController: BaseListController, BaseListDelegate {
             }
 
             let linkModel = ExhibitionLinkModel(id: model.id,
-                                                title: title,
+                                                title: model.title,
                                                 titlePron: model.titlePron,
                                                 hlpLocation: hlpLocation,
                                                 category: model.category,
