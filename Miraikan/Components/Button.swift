@@ -82,7 +82,7 @@ class ChevronButton: BaseButton {
         
         self.backgroundColor = .clear
         self.titleLabel?.numberOfLines = 0
-        self.titleLabel?.lineBreakMode = .byCharWrapping
+        self.titleLabel?.lineBreakMode = .byWordWrapping
         self.setImage(UIImage(systemName: "chevron.right"), for: .normal)
     }
     

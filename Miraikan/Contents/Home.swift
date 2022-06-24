@@ -46,8 +46,8 @@ fileprivate class CardRow : BaseRow {
     private let lblPlace = AutoWrapLabel()
     
     // Sizing
-    private let gapX = CGFloat(10)
-    private let gapY: CGFloat = 5
+    private let gapX: CGFloat = 10
+    private let gapY: CGFloat = 10
     private let imgAdaptor = ImageAdaptor()
     
     // MARK: init
@@ -55,6 +55,8 @@ fileprivate class CardRow : BaseRow {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.accessibilityTraits = .button
+        lblTitle.font = .preferredFont(forTextStyle: .body)
+        lblPlace.font = .preferredFont(forTextStyle: .body)
         addSubview(imgView)
         addSubview(lblTitle)
     }
@@ -98,16 +100,16 @@ fileprivate class CardRow : BaseRow {
         let halfWidth = CGFloat(frame.width / 2)
         
         let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.CARD.size,
-                                               frameWidth: halfWidth - (insets.left + gapX),
+                                               frameWidth: halfWidth - insets.left - gapX * 2,
                                                imageSize: img.size)
-        imgView.frame = CGRect(x: insets.left,
-                               y: insets.top,
+        imgView.frame = CGRect(x: insets.left + gapX,
+                               y: insets.top + gapY,
                                width: scaledSize.width,
                                height: scaledSize.height)
         let szFit = CGSize(width: halfWidth, height: innerSize.height)
         lblTitle.frame = CGRect(x: halfWidth,
-                                y: insets.top,
-                                width: halfWidth - insets.right,
+                                y: insets.top + gapY,
+                                width: halfWidth - insets.right - gapX,
                                 height: lblTitle.sizeThatFits(szFit).height)
         if isOnline {
             lblPlace.frame = CGRect(x: halfWidth,
@@ -120,17 +122,17 @@ fileprivate class CardRow : BaseRow {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let halfWidth = CGFloat(size.width / 2)
         let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.CARD.size,
-                                               frameWidth: halfWidth - (insets.left + gapX),
+                                               frameWidth: halfWidth - insets.left - gapX * 2,
                                                imageSize: img.size)
         let heightLeft = insets.top + scaledSize.height
-        let szFit = CGSize(width: halfWidth - insets.right, height: size.height)
+        let szFit = CGSize(width: halfWidth - insets.right - gapX, height: size.height)
         var heightList = [lblTitle.sizeThatFits(szFit).height]
         if isOnline {
             heightList += [lblPlace.sizeThatFits(szFit).height,
                            gapY]
         }
         let heightRight = heightList.reduce((insets.top + insets.bottom), { $0 + $1 })
-        let height = max(heightLeft, heightRight)
+        let height = max(heightLeft, heightRight) + gapY * 2
         return CGSize(width: size.width, height: height)
     }
 }
@@ -423,11 +425,12 @@ class Home : BaseListView {
         // init the tableView
         super.initTable(isSelectionAllowed: true)
 
-        self.tableView.register(MenuRow.self, forCellReuseIdentifier: menuCellId)
+        self.tableView.register(BaseRow.self, forCellReuseIdentifier: menuCellId)
         self.tableView.register(CardRow.self, forCellReuseIdentifier: cardCellId)
         self.tableView.register(NewsRow.self, forCellReuseIdentifier: newsCellId)
         
         setSection()
+        setHeaderFooter()
     }
 
     func setSection() {
@@ -468,6 +471,14 @@ class Home : BaseListView {
         items = menuItems
     }
 
+    private func setHeaderFooter() {
+        let headerView = UIView (frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 20.0))
+        self.tableView.tableHeaderView = headerView
+
+        let footerView = UIView (frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 80.0))
+        self.tableView.tableFooterView = footerView
+    }
+
     override func layoutSubviews() {
         tableView.frame = CGRect(x: insets.left,
                                  y: insets.top,
@@ -494,11 +505,24 @@ class Home : BaseListView {
             return cell
         } else {
             let rowItem = (items as? [Int: [Any]])?[sec]?[row]
-            if let menuItem = rowItem as? MenuItem,
-               let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath) as? MenuRow {
+            if let menuItem = rowItem as? MenuItem {
+               let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath)
                 // Normal Menu Row
-                menuRow.title = menuItem.name
-                menuRow.isAvailable = menuItem.isAvailable
+                let attrStr = NSMutableAttributedString()
+                attrStr.append(NSAttributedString(string:(menuItem.name)))
+                
+                if let image = UIImage(systemName: "chevron.right") {
+                    let attachment = NSTextAttachment(image: image)
+                    attrStr.append(NSAttributedString(string: " "))
+                    attrStr.append(NSAttributedString(attachment: attachment))
+                }
+                menuRow.textLabel?.attributedText = attrStr
+                menuRow.textLabel?.font = .preferredFont(forTextStyle: .body)
+                menuRow.textLabel?.isEnabled = menuItem.isAvailable
+                menuRow.selectionStyle = menuItem.isAvailable ? .default : .none
+                menuRow.accessibilityLabel = menuItem.isAvailable ? menuItem.name : NSLocalizedString("blank_description", comment: "")
+                menuRow.accessibilityTraits = .button
+
                 return menuRow
             } else if let cardModel = rowItem as? CardModel,
                       let cardRow = tableView.dequeueReusableCell(withIdentifier: cardCellId,
@@ -534,7 +558,7 @@ class Home : BaseListView {
         if sections?[section] == .spex
                     || sections?[section] == .event,
             let items = (items as? [Int : [Any]])?[section] {
-                return items.count > 0 ? items.count : 1
+            return items.count > 0 ? items.count : 1
         } else if let rows = (items as? [Int: [Any]])?[section] {
             return rows.count
         }
@@ -562,16 +586,5 @@ class Home : BaseListView {
             nav.show(BaseController(view, title: cardModel.title), sender: nil)
         }
         super.tableView(tableView, didSelectRowAt: indexPath)
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section < (items as! [Int : Any]).count - 1 {
-            return 20
-        }
-        return 30
     }
 }

@@ -34,6 +34,9 @@ class DescriptionRow: BaseRow {
     
     private let lblDescription = AutoWrapLabel()
     
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 20
+
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,20 +56,23 @@ class DescriptionRow: BaseRow {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let descSize = CGSize(width: innerSize.width,
+        let x = insets.left + gapX
+        let y = insets.top + gapY
+        let descSize = CGSize(width: innerSize.width - gapX * 2,
                               height: lblDescription.intrinsicContentSize.height)
-        lblDescription.frame = CGRect(x: insets.left,
-                                      y: insets.top,
-                                      width: innerSize.width,
+        lblDescription.frame = CGRect(x: x,
+                                      y: y,
+                                      width: innerSize.width - gapX * 2,
                                       height: lblDescription.sizeThatFits(descSize).height)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let descSize = CGSize(width: innerSizing(parentSize: size).width,
+        let descSize = CGSize(width: innerSizing(parentSize: size).width - gapX * 2,
                               height: lblDescription.intrinsicContentSize.height)
-        let totalHeight = insets.top
-        + lblDescription.sizeThatFits(descSize).height
-        + insets.bottom
+        let y = insets.top + gapY
+        let totalHeight = y
+            + lblDescription.sizeThatFits(descSize).height
+            + gapY
         return CGSize(width: size.width, height: totalHeight)
     }
     
@@ -75,6 +81,7 @@ class DescriptionRow: BaseRow {
      */
     public func configure(title: String) {
         lblDescription.text = title
+        lblDescription.font = .preferredFont(forTextStyle: .callout)
         lblDescription.sizeToFit()
     }
 }

@@ -41,7 +41,8 @@ class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
     private var btnNavi : StyledButton?
     private var lblDetail : AutoWrapLabel?
 
-    private let gap = CGFloat(10)
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
     
     private let id: String?
     private var nodeId: String?
@@ -103,18 +104,18 @@ class ExhibitionView: BaseWebView, WebAccessibilityDelegate {
         
         var y = insets.top
         if let btnNavi = btnNavi {
-            btnNavi.frame = CGRect(x: insets.left,
-                                   y: y + gap,
+            btnNavi.frame = CGRect(x: insets.left + gapX,
+                                   y: y + gapY,
                                    width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
                                    height: btnNavi.intrinsicContentSize.height)
-            y += btnNavi.frame.height + gap * 2
+            y += btnNavi.frame.height + gapY * 2
         }
 
         // Loaded
         webView.frame = CGRect(x: insets.left,
                                y: y,
                                width: innerSize.width,
-                               height: innerSize.height - y + insets.top - gap)
+                               height: innerSize.height - y + insets.top - gapY * 2)
     }
     
     func onFinished() {

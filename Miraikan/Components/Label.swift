@@ -36,7 +36,7 @@ class AutoWrapLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.numberOfLines = 0
-        self.lineBreakMode = .byCharWrapping
+        self.lineBreakMode = .byWordWrapping
     }
 
     required init?(coder: NSCoder) {
@@ -72,7 +72,7 @@ class UnderlinedLabel: AutoWrapLabel {
 
     private func setText(_ text: String) {
         let attr: [NSAttributedString.Key: Any] = [
-            .font: UIFont.preferredFont(forTextStyle: .headline),
+            .font: UIFont.preferredFont(forTextStyle: .body),
             .underlineStyle: NSUnderlineStyle.single.rawValue
         ]
         let str = NSMutableAttributedString(string: text,

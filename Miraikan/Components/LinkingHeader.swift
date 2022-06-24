@@ -31,6 +31,9 @@ class LinkingHeader: BaseView {
 
     private let titleLink = UnderlinedLabel()
 
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 20
+
     var model : ExhibitionLinkModel? {
         didSet {
             guard let model = model else { return }
@@ -65,17 +68,17 @@ class LinkingHeader: BaseView {
     }
     
     override func layoutSubviews() {
-        let topMargin = isFirst ? (insets.top + 20) : insets.top
-        let linkSz = CGSize(width: innerSize.width, height: 0)
-        titleLink.frame = CGRect(x: insets.left,
+        let topMargin = isFirst ? (insets.top + gapY) : insets.top
+        let linkSz = CGSize(width: innerSize.width - gapX * 2, height: 0)
+        titleLink.frame = CGRect(x: insets.left + gapX,
                                  y: topMargin,
-                                 width: innerSize.width,
+                                 width: innerSize.width - gapX * 2,
                                  height: titleLink.sizeThatFits(linkSz).height)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let linkSz = CGSize(width: innerSizing(parentSize: size).width, height: 0)
-        let topMargin = isFirst ? (insets.top + 20) : insets.top
+        let topMargin = isFirst ? (insets.top + gapY) : insets.top
         let height = topMargin + insets.bottom + titleLink.sizeThatFits(linkSz).height
         return CGSize(width: size.width, height: height)
     }

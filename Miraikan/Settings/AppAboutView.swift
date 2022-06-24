@@ -37,20 +37,26 @@ class AppAboutView: BaseView {
     private let lblIcon8 = UILabel()
     private let lblVersion = UILabel()
 
+    // Sizing
+    private let gapX: CGFloat = 10
+    private let gapY: CGFloat = 10
+
     override func setup() {
         super.setup()
         
         lblIcon8.text = "Free Icons Retreived from: https://icons8.com for TabBar and NavBar."
-        lblIcon8.numberOfLines = 0
         lblIcon8.lineBreakMode = .byWordWrapping
+        lblIcon8.numberOfLines = 0
+        lblIcon8.font = .preferredFont(forTextStyle: .callout)
         lblIcon8.sizeToFit()
         addSubview(lblIcon8)
 
         if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
             let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
             lblVersion.text = "Version: \(version)    Buld: \(build)"
-            lblVersion.numberOfLines = 0
             lblVersion.lineBreakMode = .byWordWrapping
+            lblVersion.numberOfLines = 0
+            lblIcon8.font = .preferredFont(forTextStyle: .callout)
             lblVersion.sizeToFit()
             addSubview(lblVersion)
         }
@@ -58,17 +64,19 @@ class AppAboutView: BaseView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
+        var y = insets.top + gapY
         var szFit = CGSize(width: innerSize.width, height: lblIcon8.intrinsicContentSize.height)
-        lblIcon8.frame = CGRect(x: insets.left,
-                                y: insets.top + 8,
-                                width: innerSize.width,
+        lblIcon8.frame = CGRect(x: insets.left + gapX,
+                                y: y,
+                                width: innerSize.width - gapX * 2,
                                 height: lblIcon8.sizeThatFits(szFit).height)
 
+        y += insets.top + lblIcon8.frame.height + gapY
         szFit = CGSize(width: innerSize.width, height: lblVersion.intrinsicContentSize.height)
-        lblVersion.frame = CGRect(x: insets.left,
-                                y: insets.top + 8 + lblIcon8.frame.height + 20,
-                                width: innerSize.width,
+        lblVersion.frame = CGRect(x: insets.left + gapX,
+                                y: y,
+                                width: innerSize.width - gapX * 2,
                                 height: lblVersion.sizeThatFits(szFit).height)
     }
 }

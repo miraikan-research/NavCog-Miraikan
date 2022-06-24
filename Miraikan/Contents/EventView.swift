@@ -185,6 +185,8 @@ fileprivate class EventContent: BaseView {
         btnNavi = StyledButton()
         guard let btnNavi = btnNavi else { return }
         btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", comment: ""), for: .normal)
+        btnNavi.titleLabel?.numberOfLines = 0
+        btnNavi.titleLabel?.lineBreakMode = .byWordWrapping
         btnNavi.sizeToFit()
         
         var nodeId: String?
@@ -204,7 +206,7 @@ fileprivate class EventContent: BaseView {
             let lbl = UILabel()
             lbl.text = txt
             lbl.numberOfLines = 0
-            lbl.lineBreakMode = .byCharWrapping
+            lbl.lineBreakMode = .byWordWrapping
             return lbl
         }
         
@@ -217,7 +219,7 @@ fileprivate class EventContent: BaseView {
         if let schedules = model.schedule {
             schedules.forEach({
                 let lbl = createLabel($0)
-                lbl.font = .preferredFont(forTextStyle: .headline)
+                lbl.font = .preferredFont(forTextStyle: .callout)
                 scheduleLabels += [lbl]
                 addSubview(lbl)
             })
@@ -266,6 +268,8 @@ fileprivate class EventContent: BaseView {
         addSubview(map)
         
         btnNav.setTitle(String(format: NSLocalizedString("Guide to", comment: ""), (model.title)), for: .normal)
+        btnNav.titleLabel?.numberOfLines = 0
+        btnNav.titleLabel?.lineBreakMode = .byWordWrapping
         btnNav.sizeToFit()
         btnNav.tapAction { [weak self] _ in
             guard let self = self else { return }
