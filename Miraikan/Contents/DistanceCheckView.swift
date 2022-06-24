@@ -52,8 +52,6 @@ fileprivate class DistanceCheckContent: BaseView {
     private let gap: CGFloat = 5
     private let space: CGFloat = 10
 
-    private let gapX: CGFloat = 20
-    private let gapY: CGFloat = 10
     private let nearestArea: Double = 12
     private let nearestGuide: Double = 8
 
