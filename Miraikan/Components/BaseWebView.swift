@@ -40,8 +40,6 @@ class BaseWebView: BaseView, WKNavigationDelegate {
     let webView = WKWebView()
     private let lblLoading = UILabel()
 
-    private let gap = CGFloat(10)
-
     private var isLoadingFailed = false
 
     var accessibilityDelegate: WebAccessibilityDelegate?
@@ -53,18 +51,19 @@ class BaseWebView: BaseView, WKNavigationDelegate {
         addSubview(webView)
 
         // Display: Loading
-        lblLoading.numberOfLines = 0
-        lblLoading.lineBreakMode = .byCharWrapping
+        lblLoading.lineBreakMode = .byWordWrapping
         lblLoading.textAlignment = .center
+        lblLoading.numberOfLines = 0
+        lblLoading.font = .preferredFont(forTextStyle: .headline)
         addSubview(lblLoading)
     }
 
     // MARK: Layout
     override func layoutSubviews() {
         // Loading
-        lblLoading.frame.origin.x = insets.left
-        lblLoading.center.y = self.center.y
-        lblLoading.frame.size.width = innerSize.width
+        lblLoading.frame.size.width = self.frame.width
+        lblLoading.frame.size.height = self.frame.height
+        lblLoading.center = self.center
     }
 
     // MARK: Public Customized Functions

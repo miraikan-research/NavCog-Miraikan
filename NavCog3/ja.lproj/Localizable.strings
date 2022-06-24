@@ -263,7 +263,7 @@ NavCogの設定画面から
 "blank_description" = "この機能はまだ実装されていません";
 
 // Web Page Loading
-"web_loading" = "ウェブ画面の読み込み中です。しばらくお待ちください。";
+"web_loading" = "ウェブ画面の読み込み中です。\nしばらくお待ちください。";
 "web_failed" = "ウェブ画面の読み込みは失敗しました。";
 
 // Home: No Event / Exhibition Today

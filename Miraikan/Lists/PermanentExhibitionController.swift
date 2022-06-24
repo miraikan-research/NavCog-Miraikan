@@ -74,7 +74,7 @@ class PermanentExhibitionController: BaseListController, BaseListDelegate {
             if let floor = model.floor {
                 title = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), String(floor)) + " " + title
             }
-            cell.configure(title: title)
+            cell.configure(title: title, accessibility: title)
             return cell
         } else if let title = item as? String,
                   let cell = tableView.dequeueReusableCell(withIdentifier: descId,

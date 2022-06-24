@@ -67,6 +67,10 @@ fileprivate class RouteModeRow: BaseRow {
     
     private var radioGroup = [RouteMode: RadioButton]()
     
+    // Sizing
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -76,6 +80,7 @@ fileprivate class RouteModeRow: BaseRow {
             let btn = RadioButton()
             btn.setTitle(mode.description, for: .normal)
             btn.setTitleColor(.black, for: .normal)
+            btn.titleLabel?.font = .preferredFont(forTextStyle: .callout)
             btn.isChecked = mode == MiraikanUtil.routeMode
             btn.tapAction({ [weak self] _ in
                 guard let _self = self else { return }
@@ -101,26 +106,27 @@ fileprivate class RouteModeRow: BaseRow {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let gap = CGFloat(10)
-        var y = insets.top
+        var y = insets.top + gapY
         RouteMode.allCases.forEach({ mode in
             let btn = radioGroup[mode]!
-            btn.frame = CGRect(origin: CGPoint(x: insets.left, y: y),
-                               size: btn.sizeThatFits(innerSize))
-            y += btn.frame.height + gap
+            let szFit = btn.sizeThatFits(innerSize)
+            btn.frame = CGRect(x: insets.left + gapX,
+                               y: y,
+                               width: szFit.width - gapX * 2,
+                               height: szFit.height)
+            y += btn.frame.height + gapY
         })
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let gap: CGFloat = 10
-        let innerSz = innerSizing(parentSize: size)
-        let buttonHeight: [CGFloat] = RouteMode.allCases.map({ mode in
-            guard let btn = radioGroup[mode] else { return 0 }
-            return btn.sizeThatFits(innerSz).height
+
+        var y = insets.top + gapY
+        RouteMode.allCases.forEach({ mode in
+            let btn = radioGroup[mode]!
+            let szFit = btn.sizeThatFits(innerSize)
+            y += szFit.height + gapY
         })
-        let heightList = [gap * 2] + buttonHeight
-        let totalHeight = heightList.reduce((insets.top + insets.bottom), { $0 + $1})
-        return CGSize(width: size.width, height: totalHeight)
+        return CGSize(width: size.width, height: y)
     }
 }
 

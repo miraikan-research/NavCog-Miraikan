@@ -34,6 +34,8 @@ class LinkRow: BaseRow {
 
     private let titleLink = UnderlinedLabel()
 
+    private let gapX: CGFloat = 20
+
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,28 +54,30 @@ class LinkRow: BaseRow {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        let linkSize = CGSize(width: innerSize.width,
+        let x = insets.left + gapX
+        let linkSize = CGSize(width: innerSize.width - gapX * 2,
                               height: titleLink.intrinsicContentSize.height)
-        titleLink.frame = CGRect(x: insets.left,
+        titleLink.frame = CGRect(x: x,
                                  y: insets.top,
-                                 width: innerSize.width,
+                                 width: innerSize.width - gapX * 2,
                                  height: titleLink.sizeThatFits(linkSize).height)
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let linkSize = CGSize(width: innerSizing(parentSize: size).width,
+        let linkSize = CGSize(width: innerSizing(parentSize: size).width - gapX * 2,
                               height: titleLink.intrinsicContentSize.height)
         let totalHeight = insets.top
-        + titleLink.sizeThatFits(linkSize).height
-        + insets.bottom
+            + titleLink.sizeThatFits(linkSize).height
+            + insets.bottom
         return CGSize(width: size.width, height: totalHeight)
     }
 
     /**
      Set data from DataSource
      */
-    public func configure(title: String) {
+    public func configure(title: String, accessibility: String) {
         titleLink.title = title
         titleLink.sizeToFit()
+        titleLink.accessibilityLabel = accessibility
     }
 }

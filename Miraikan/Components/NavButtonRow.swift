@@ -31,6 +31,9 @@ class NavButtonRow: BaseRow {
 
     private let btnNavi = StyledButton()
 
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         btnNavi.setTitle(NSLocalizedString("Guide to this exhibition", comment: ""), for: .normal)
@@ -61,14 +64,14 @@ class NavButtonRow: BaseRow {
     }
 
     override func layoutSubviews() {
-        btnNavi.frame = CGRect(x: innerSize.width - btnNavi.frame.width,
-                               y: insets.top,
+        btnNavi.frame = CGRect(x: innerSize.width - btnNavi.frame.width - gapX,
+                               y: insets.top + gapY,
                                width: btnNavi.intrinsicContentSize.width + btnNavi.paddingX,
                                height: btnNavi.intrinsicContentSize.height)
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let height = insets.top + insets.bottom + btnNavi.intrinsicContentSize.height
-        return CGSize(width: size.width, height: height)
+        return CGSize(width: size.width, height: height + gapY * 2)
     }
 }

@@ -39,7 +39,14 @@ class BlankView: BaseView {
         super.setup()
 
         lblDesc.text = NSLocalizedString("blank_description", comment: "")
+        lblDesc.lineBreakMode = .byWordWrapping
+        lblDesc.textAlignment = .center
+        lblDesc.numberOfLines = 0
+        lblDesc.font = .preferredFont(forTextStyle: .headline)
+        lblDesc.frame.size.width = UIScreen.main.bounds.width
+        lblDesc.frame.size.height = UIScreen.main.bounds.height
         lblDesc.sizeToFit()
+        lblDesc.center = self.center
         addSubview(lblDesc)
     }
 

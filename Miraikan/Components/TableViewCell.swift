@@ -67,10 +67,10 @@ class BaseRow: UITableViewCell {
 
     // MARK: Size calculation
     private func padding() -> UIEdgeInsets {
-        return UIEdgeInsets(top: safeAreaInsets.top + 10,
-                            left: 20,
-                            bottom: 10,
-                            right: 20)
+        return UIEdgeInsets(top: safeAreaInsets.top + 0,
+                            left: 0,
+                            bottom: 0,
+                            right: 0)
     }
 
     func innerSizing() -> CGSize {
