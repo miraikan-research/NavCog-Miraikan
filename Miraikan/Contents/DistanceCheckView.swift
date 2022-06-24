@@ -34,8 +34,8 @@ import UIKit
 fileprivate class DistanceCheckContent: BaseView {
     private let tts = DefaultTTS()
     private var isPlaying = false
-    private var items: [ExhibitionLinkModel] = []
-    private var nearestItems = [ExhibitionLinkModel?](repeating: nil, count: 4)
+    private var items: [LandmarkModel] = []
+    private var nearestItems = [PositionModel?](repeating: nil, count: 5)
 
     private var lblTitleArray: [UILabel] = []
     private var lblLatitude = UILabel()
@@ -49,14 +49,25 @@ fileprivate class DistanceCheckContent: BaseView {
     private var lblLocationTitleArray: [UILabel] = []
     private var lblLocationDistanceArray: [UILabel] = []
 
-    private let gap = CGFloat(5)
-    private let space = CGFloat(10)
+    private let gap: CGFloat = 5
+    private let space: CGFloat = 10
+
+    private let nearestArea: Double = 12
+    private let nearestGuide: Double = 8
+
+    private var checkLocation: HLPLocation?
+
+    private var locationChangedTime = Date().timeIntervalSince1970
+    
+    private var filePath: URL?
 
     // MARK: init
     init() {
         super.init(frame: .zero)
 
         setupLocationList()
+        
+        setFilePath()
     }
     
     required init?(coder: NSCoder) {
@@ -210,16 +221,26 @@ fileprivate class DistanceCheckContent: BaseView {
                    Int(landmark.nodeHeight) + 1 == floor,
                    !landmark.name.isEmpty,
                    let id = landmark.properties[PROPKEY_FACILITY_ID] as? String {
-                    let linkModel = ExhibitionLinkModel(id: id,
-                                                        title: landmark.name,
-                                                        titlePron: landmark.namePron,
-                                                        hlpLocation: landmark.nodeLocation,
-                                                        category: landmark.category,
-                                                        nodeId: landmark.nodeID,
-                                                        counter: "",
-                                                        locations: nil,
-                                                        blindDetail: "")
+                    let linkModel = LandmarkModel(id: id,
+                                                  nodeId: landmark.nodeID,
+                                                  title: landmark.name,
+                                                  titlePron: landmark.namePron,
+                                                  hlpLocation: landmark.nodeLocation)
                     self.items.append(linkModel)
+                    NSLog("\(linkModel.id)")
+
+                    if self.items.first(where: {$0.nodeId == id }) == nil,
+                       let coordinates = landmark.geometry.coordinates,
+                       let latitude = coordinates[1] as? Double,
+                       let longitude = coordinates[0] as? Double {
+                        let linkModel = LandmarkModel(id: id,
+                                                      nodeId: id,
+                                                      title: landmark.name,
+                                                      titlePron: landmark.namePron,
+                                                      hlpLocation: HLPLocation(lat: latitude, lng: longitude))
+                        self.items.append(linkModel)
+                        NSLog("\(linkModel.id)")
+                    }
                 }
             }
             self.setupFloorList()
@@ -227,6 +248,99 @@ fileprivate class DistanceCheckContent: BaseView {
     }
 
     func locationChanged(current: HLPLocation) {
+
+
+        var updateDistance = false
+        let now = Date().timeIntervalSince1970
+        if !current.lat.isNaN && !current.lng.isNaN && (locationChangedTime + 1 < now) {
+            locationChangedTime = now
+
+            if checkLocation == nil {
+                checkLocation = current
+                return
+            }
+
+            let distance = current.distance(to: checkLocation)
+//            NSLog("distance = \(distance), \(current), \(checkLocation) ")
+            if distance < 1 {
+                return
+            }
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.calendar = Calendar(identifier: .gregorian)
+            dateFormatter.locale = Locale(identifier: "ja_JP")
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+            let dateString = dateFormatter.string(from: Date())
+
+            guard let checkLocation = checkLocation else { return }
+            let vector = Line(from: CGPoint(x: checkLocation.lat, y: checkLocation.lng),
+                              to: CGPoint(x: current.lat, y: current.lng))
+            self.writeData("\(dateString), \(current.lat), \(current.lng), \(checkLocation.lat), \(checkLocation.lng)\n")
+            self.checkLocation = current
+
+            updateDistance = true
+
+            for item in self.items {
+                item.distance = current.distance(to: item.hlpLocation)
+            }
+            
+            var sortItems = self.items.filter({ $0.distance <= nearestArea })
+            sortItems.sort(by: { $0.distance < $1.distance})
+            
+            var positionModels: [PositionModel] = []
+
+            for (index, item) in sortItems.enumerated() {
+                for cnt in (index + 1) ..< sortItems.count {
+                    let sortItem = sortItems[cnt]
+                    if item.id == sortItem.id {
+                        break
+                    }
+
+                    let destination1 = CGPoint(x: item.hlpLocation.lat, y: item.hlpLocation.lng)
+                    let destination2 = CGPoint(x: sortItem.hlpLocation.lat, y: sortItem.hlpLocation.lng)
+
+                    let lineSegment = Line(from: destination1, to: destination2)
+                    if let cross = Line.intersection(vector, lineSegment, true) {
+//                        NSLog("cross[\(index)][\(cnt)]  = \(cross), \(item.id), \(sortItem.id) ")
+
+                        if item.distance < nearestGuide,
+                           self.nearestItems.first(where: {$0?.id == item.id }) == nil,
+                           positionModels.first(where: {$0.id == item.id }) == nil {
+                            let positionModel = PositionModel(id: item.id, titlePron: item.titlePron)
+                            positionModel.distance = item.distance
+                            positionModel.isRightDirection = Line.isRightDirection(vector, point: destination1)
+                            positionModels.append(positionModel)
+
+                            self.writeData("\(dateString), \(current.lat), \(current.lng), \(checkLocation.lat), \(checkLocation.lng), \(cross.x),\(cross.y), [\(positionModel.id)],\(positionModel.isRightDirection ? "左" : "右") \(positionModel.distance)m \(positionModel.titlePron), \(item.title), \(destination1.x), \(destination1.y), \(sortItem.title), \(destination2.x), \(destination2.y)\n")
+                        }
+                        
+                        if sortItem.distance < nearestGuide,
+                           self.nearestItems.first(where: {$0?.id == sortItem.id }) == nil,
+                           positionModels.first(where: {$0.id == sortItem.id }) == nil {
+                            let positionModel = PositionModel(id: sortItem.id, titlePron: sortItem.titlePron)
+                            positionModel.distance = sortItem.distance
+                            positionModel.isRightDirection = Line.isRightDirection(vector, point: destination2)
+                            positionModels.append(positionModel)
+
+                            self.writeData("\(dateString), \(current.lat), \(current.lng), \(checkLocation.lat), \(checkLocation.lng), \(cross.x),\(cross.y), [\(positionModel.id)],\(positionModel.isRightDirection ? "左" : "右") \(positionModel.distance)m \(positionModel.titlePron), \(item.title), \(destination1.x), \(destination1.y), \(sortItem.title), \(destination2.x), \(destination2.y)\n")
+                        }
+                    }
+                }
+            }
+
+
+            var text = ""
+
+            for item in positionModels {
+                self.nearestItems.removeFirst()
+                self.nearestItems.append(item)
+                text += String(format: NSLocalizedString(item.isRightDirection ? "TheLeftSide" : "TheRightSide", tableName: "BlindView", comment: ""), item.titlePron)
+            }
+            
+            if !text.isEmpty {
+                self.play(text: text)
+            }
+        }
 
         DispatchQueue.main.async{ [self] in
             self.lblLatitude.text = String(current.lat)
@@ -237,25 +351,9 @@ fileprivate class DistanceCheckContent: BaseView {
             self.lblOrientation.text = String(current.orientation)
             self.lblOrientationAccuracy.text = String(current.orientationAccuracy)
             
-            var nearest: Double = 10
-            var nearestItem: ExhibitionLinkModel?
-            
-            for (index, item) in self.items.enumerated() {
-                let dist = current.distance(to: item.hlpLocation)
-                if nearest > dist {
-                    nearest = dist
-                    nearestItem = item
-                }
-                self.lblLocationDistanceArray[index].text = String(dist)
-            }
-
-            if let nearestItem = nearestItem {
-                let passingItem = self.nearestItems.first(where: {$0?.id == nearestItem.id })
-                if passingItem == nil {
-                    let text = nearestItem.title + "の近く"
-                    self.play(text: text)
-                    self.nearestItems.removeFirst()
-                    self.nearestItems.append(nearestItem)
+            if updateDistance {
+                for (index, item) in self.items.enumerated() {
+                    self.lblLocationDistanceArray[index].text = String(item.distance )
                 }
             }
         }
@@ -274,6 +372,43 @@ fileprivate class DistanceCheckContent: BaseView {
             guard let self = self else { return }
             self.isPlaying = false
         })
+    }
+}
+
+extension DistanceCheckContent {
+
+    func setFilePath() {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.dateFormat = "yyyyMMddHHmm"
+        let dateString = dateFormatter.string(from: Date())
+        if let dir = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        ).first {
+            filePath = dir.appendingPathComponent("institution\(dateString).csv")
+            guard let filePath = filePath else { return }
+            if FileManager.default.createFile(
+                            atPath: filePath.path,
+                            contents: nil,
+                            attributes: nil
+                            )
+            {
+            }
+        }
+    }
+    
+    func writeData(_ writeLine: String) {
+        guard let filePath = filePath else {
+            return
+        }
+        if let file = FileHandle(forWritingAtPath: filePath.path),
+           let data = writeLine.data(using: .utf8) {
+            file.seekToEndOfFile()
+            file.write(data)
+        }
     }
 }
 
@@ -305,7 +440,7 @@ class DistanceCheckView: BaseScrollView {
         }
         
         DispatchQueue.main.async{
-            self.scrollView.contentSize = CGSize(width: self.contentView.frame.width, height: 1000)
+            self.scrollView.contentSize = CGSize(width: self.contentView.frame.width, height: 1500)
         }
     }
 }

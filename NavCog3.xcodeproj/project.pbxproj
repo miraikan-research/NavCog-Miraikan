@@ -361,6 +361,8 @@
 		E5BFB198285967F600D57E93 /* EventDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5BFB197285967F600D57E93 /* EventDetailView.xib */; };
 		E5BFB19A2859680E00D57E93 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB1992859680E00D57E93 /* EventViewController.swift */; };
 		E5BFB19C2859688B00D57E93 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */; };
+		E5BFB19E28602C9800D57E93 /* lineSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19D28602C9800D57E93 /* lineSegment.swift */; };
+		E5BFB1A028617AB400D57E93 /* LandmarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */; };
 		E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797A2817C72800EFF12F /* BaseTabController.swift */; };
 		E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797D2817C77600EFF12F /* AITabController.swift */; };
 		E5DC79802817C78700EFF12F /* LoginTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797F2817C78700EFF12F /* LoginTabController.swift */; };
@@ -702,6 +704,8 @@
 		E5BFB197285967F600D57E93 /* EventDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventDetailView.xib; sourceTree = "<group>"; };
 		E5BFB1992859680E00D57E93 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
+		E5BFB19D28602C9800D57E93 /* lineSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lineSegment.swift; sourceTree = "<group>"; };
+		E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModel.swift; sourceTree = "<group>"; };
 		E5DC797A2817C72800EFF12F /* BaseTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabController.swift; sourceTree = "<group>"; };
 		E5DC797D2817C77600EFF12F /* AITabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITabController.swift; sourceTree = "<group>"; };
 		E5DC797F2817C78700EFF12F /* LoginTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTabController.swift; sourceTree = "<group>"; };
@@ -1290,6 +1294,7 @@
 				D3B1A1A427546AFB00E6CBCB /* AIController.swift */,
 				D3B06194276346BB0006B0DA /* VoiceGuideController.swift */,
 				E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */,
+				E5BFB19D28602C9800D57E93 /* lineSegment.swift */,
 			);
 			path = Contents;
 			sourceTree = "<group>";
@@ -1314,6 +1319,7 @@
 				E5F52EB82844C27E00BB4152 /* NavButtonModel.swift */,
 				E5F52EBA2844C2DE00BB4152 /* ExhibitionContentModel.swift */,
 				E5F52EBC2844C38500BB4152 /* ExhibitionLinkModel.swift */,
+				E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */,
 				E5F52EBE2844C53400BB4152 /* RegularExhibitionModel.swift */,
 				E5F52ECC2845ACD100BB4152 /* FloorMapModel.swift */,
 				E5F52ECE2845AD4800BB4152 /* CardModel.swift */,
@@ -2223,6 +2229,7 @@
 				D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */,
 				E5F52EC52845A26500BB4152 /* LinkingHeader.swift in Sources */,
 				D3A117F227294B0B00BEC1C8 /* StarRatingView.m in Sources */,
+				E5BFB1A028617AB400D57E93 /* LandmarkModel.swift in Sources */,
 				D3A117F327294B0B00BEC1C8 /* MiraikanAboutView.swift in Sources */,
 				E5F52ED32845B24300BB4152 /* LinkRow.swift in Sources */,
 				D3A117F427294B0B00BEC1C8 /* ServerSelectionViewController.m in Sources */,
@@ -2294,6 +2301,7 @@
 				D3A1181927294B0B00BEC1C8 /* BaseScrollView.swift in Sources */,
 				E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */,
 				E5F52EB52844C06500BB4152 /* ScheduleRowModel.swift in Sources */,
+				E5BFB19E28602C9800D57E93 /* lineSegment.swift in Sources */,
 				D3A1181A27294B0B00BEC1C8 /* DefaultTTS.m in Sources */,
 				D3A1181B27294B0B00BEC1C8 /* HLPSetting.m in Sources */,
 				D3A1181C27294B0B00BEC1C8 /* Model.swift in Sources */,

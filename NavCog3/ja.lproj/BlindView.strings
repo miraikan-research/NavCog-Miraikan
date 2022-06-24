@@ -447,6 +447,11 @@
 /* head to the diagonally forward right direction */
 "turn slightly to the right" = "少し右に向く";
 
+/* No comment provided by engineer. */
+"TheLeftSide" = "左側に%@";
+
+/* No comment provided by engineer. */
+"TheRightSide" = "右側に%@";
 
 "Always_Background" = "常にバックグラウンドで動作";
 
