@@ -83,14 +83,14 @@ fileprivate class DistanceCheckContent: BaseView {
         var y = insets.top
         
         for (index, lblTitle) in lblTitleArray.enumerated() {
-            lblTitle.frame = CGRect(x: insets.left,
+            lblTitle.frame = CGRect(x: insets.left + gap,
                                     y: y,
-                                    width: innerSize.width / 2,
+                                    width: (innerSize.width - gap) / 2 ,
                                     height: lblTitle.sizeThatFits(safeSize).height)
             if let label = getLabel(index: index) {
                 label.frame = CGRect(x: insets.left + innerSize.width / 2 + gap,
                                      y: y,
-                                     width: innerSize.width / 2,
+                                     width: (innerSize.width - gap) / 2 ,
                                      height: lblTitle.sizeThatFits(safeSize).height)
             }
             y += lblTitle.frame.height + gap
@@ -99,15 +99,15 @@ fileprivate class DistanceCheckContent: BaseView {
         y += space
         
         for (index, lblLocationTitle) in lblLocationTitleArray.enumerated() {
-            lblLocationTitle.frame = CGRect(x: insets.left,
+            lblLocationTitle.frame = CGRect(x: insets.left + gap,
                                     y: y,
-                                    width: innerSize.width / 2,
+                                    width:(innerSize.width - gap) / 2 ,
                                     height: lblLocationTitle.sizeThatFits(safeSize).height)
             
             let label = lblLocationDistanceArray[index]
             label.frame = CGRect(x: insets.left + innerSize.width / 2 + gap,
                                  y: y,
-                                 width: innerSize.width / 2,
+                                 width: (innerSize.width - gap) / 2 ,
                                  height: lblLocationTitle.sizeThatFits(safeSize).height)
 
             y += lblLocationTitle.frame.height + gap
