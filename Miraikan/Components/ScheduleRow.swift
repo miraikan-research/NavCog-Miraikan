@@ -37,8 +37,9 @@ class ScheduleRow: BaseRow {
     private let lblEvent = UnderlinedLabel()
     private var lblDescription = UILabel()
     
-    private let gapX = CGFloat(10)
-    private let gapY = CGFloat(5)
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
+    private let gapLine: CGFloat = 5
     
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -97,48 +98,53 @@ class ScheduleRow: BaseRow {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        var y = insets.top
+        var y = insets.top + gapY
+
+        lblTime.frame.origin.x = insets.left + gapX
         
-        lblTime.frame.origin.x = insets.left
-        lblTime.center.y = lblPlace.center.y
-        
-        let leftColWidth = insets.left + lblTime.frame.width + gapX
+        let leftColWidth = lblTime.frame.origin.x + lblTime.frame.width + gapX
         lblPlace.frame = CGRect(x: leftColWidth,
                                 y: y,
                                 width: frame.width - leftColWidth - insets.right,
                                 height: lblPlace.intrinsicContentSize.height)
-        y += lblPlace.frame.height + gapY
-        
-        let rightColWidth = innerSize.width - lblTime.frame.width - gapX
+        y += lblPlace.frame.height + gapLine
+
+        lblTime.center.y = lblPlace.center.y
+
+        let rightColWidth = innerSize.width - leftColWidth - gapX
         let eventWidth = min(rightColWidth, lblEvent.intrinsicContentSize.width)
         let szFit = CGSize(width: eventWidth, height: lblEvent.intrinsicContentSize.height)
         lblEvent.frame = CGRect(x: leftColWidth,
                                 y: y,
                                 width: eventWidth,
                                 height: lblEvent.sizeThatFits(szFit).height)
-        
-        y += lblEvent.frame.height + CGFloat(5)
+
+        y += lblEvent.frame.height + gapLine
         lblDescription.frame.origin = CGPoint(x: leftColWidth, y: y)
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        var heightList = [lblPlace.intrinsicContentSize.height]
-        
-        let innerSz = innerSizing(parentSize: size)
-        let eventWidth = min(lblEvent.intrinsicContentSize.width,
-                             innerSz.width - lblTime.frame.width - gapX)
-        let szFit = CGSize(width: eventWidth, height: lblEvent.intrinsicContentSize.height)
-        let eventHeight = lblEvent.sizeThatFits(szFit).height
-        heightList += [eventHeight]
-        
-        // In order to display the description label
-        // Add the height of it when totalWidth beyonds the inner width
+        var y = insets.top + gapY
+        let x = insets.left + gapX
+
+        let leftColWidth = x + lblTime.frame.width + gapX
+        var szFit = CGSize(width: frame.width - leftColWidth - insets.right,
+                           height: lblPlace.intrinsicContentSize.height)
+        y += lblPlace.sizeThatFits(szFit).height + gapLine
+
+        let rightColWidth = innerSize.width - leftColWidth - gapX
+        let eventWidth = min(rightColWidth, lblEvent.intrinsicContentSize.width)
+        szFit = CGSize(width: eventWidth,
+                       height: lblEvent.intrinsicContentSize.height)
+        y += lblEvent.sizeThatFits(szFit).height + gapLine
+
         if lblDescription.frame.width > 0 {
-            heightList += [lblDescription.intrinsicContentSize.height]
+            szFit = CGSize(width: frame.width - leftColWidth - insets.right,
+                           height: lblDescription.intrinsicContentSize.height)
+            y += lblDescription.sizeThatFits(szFit).height + gapLine
         }
-        
-        let height = heightList.reduce((insets.top + insets.bottom), {$0 + $1 + gapY})
-        
-        return CGSize(width: size.width, height: height)
+        y += gapY
+
+        return CGSize(width: size.width, height: y)
     }
 }

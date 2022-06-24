@@ -34,12 +34,13 @@ fileprivate class CurrentLocationRow : BaseRow {
     private let lblDescription = UILabel()
     private let lblLocation = UILabel()
     
-    private let gap: CGFloat = 10
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         lblDescription.text = NSLocalizedString("Current Location", comment: "")
-        lblDescription.font = .preferredFont(forTextStyle: .headline)
+        lblDescription.font = .preferredFont(forTextStyle: .callout)
         lblDescription.sizeToFit()
         if MiraikanUtil.isLocated {
             guard let loc = MiraikanUtil.location else { return }
@@ -60,16 +61,16 @@ fileprivate class CurrentLocationRow : BaseRow {
     }
     
     override func layoutSubviews() {
-        lblDescription.frame.origin = CGPoint(x: insets.left, y: insets.top)
-        lblLocation.frame.origin = CGPoint(x: insets.left, y: insets.top + lblDescription.frame.height + gap)
+        lblDescription.frame.origin = CGPoint(x: insets.left + gapX, y: insets.top)
+        lblLocation.frame.origin = CGPoint(x: insets.left + gapX, y: insets.top + lblDescription.frame.height + gapY)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let totalHeight = [insets.top,
                            lblDescription.intrinsicContentSize.height,
                            lblLocation.intrinsicContentSize.height,
-                           insets.bottom].reduce(gap, { $0 + $1 })
-        return CGSize(width: size.width, height: totalHeight)
+                           insets.bottom].reduce(gapY, { $0 + $1 })
+        return CGSize(width: size.width, height: totalHeight + gapY)
     }
 }
 
@@ -85,9 +86,12 @@ fileprivate class SwitchRow : BaseRow {
     private let lblDescription = UILabel()
     private let sw = BaseSwitch()
     
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 20
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        lblDescription.font = .preferredFont(forTextStyle: .headline)
+        lblDescription.font = .preferredFont(forTextStyle: .callout)
         addSubview(lblDescription)
         sw.sizeToFit()
         addSubview(sw)
@@ -115,9 +119,9 @@ fileprivate class SwitchRow : BaseRow {
 //                            sw.intrinsicContentSize.height)
         let midY = max(lblDescription.intrinsicContentSize.height,
                        sw.intrinsicContentSize.height) / 2 + insets.top
-        lblDescription.frame.origin.x = insets.left
+        lblDescription.frame.origin.x = insets.left + gapX
         lblDescription.center.y = midY
-        sw.frame.origin.x = frame.width - insets.right - sw.frame.width
+        sw.frame.origin.x = frame.width - insets.right - sw.frame.width - gapX * 2
         sw.center.y = midY
     }
     
@@ -126,7 +130,7 @@ fileprivate class SwitchRow : BaseRow {
                            max(lblDescription.intrinsicContentSize.height,
                                sw.intrinsicContentSize.height),
                            insets.bottom].reduce(0, { $0 + $1 })
-        return CGSize(width: size.width, height: totalHeight)
+        return CGSize(width: size.width, height: totalHeight + gapY)
     }
 }
 
@@ -149,10 +153,13 @@ fileprivate class SliderRow : BaseRow {
     
     private var model : SliderModel?
     
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 20
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        lblDescription.font = .preferredFont(forTextStyle: .headline)
+        lblDescription.font = .preferredFont(forTextStyle: .callout)
         addSubview(lblDescription)
         lblValue.textAlignment = .left
         addSubview(lblValue)
@@ -210,18 +217,18 @@ fileprivate class SliderRow : BaseRow {
     
     override func layoutSubviews() {
         var y = insets.top
-        lblDescription.frame.origin = CGPoint(x: insets.left, y: insets.top)
+        lblDescription.frame.origin = CGPoint(x: insets.left + gapX, y: insets.top)
         y += lblDescription.frame.height
         
         let colLeftWidth: CGFloat = innerSize.width / 5
         let colRightWidth: CGFloat = colLeftWidth * 4
         
-        lblValue.frame = CGRect(x: insets.left,
+        lblValue.frame = CGRect(x: insets.left + gapX,
                                 y: y,
                                 width: colLeftWidth,
                                 height: lblValue.intrinsicContentSize.height)
         slider.center.y = lblValue.center.y
-        slider.frame.origin.x = insets.left + colLeftWidth
+        slider.frame.origin.x = insets.left + gapX + colLeftWidth
         slider.frame.size.width = colRightWidth
     }
     
@@ -229,7 +236,7 @@ fileprivate class SliderRow : BaseRow {
         let height = [lblValue, lblDescription]
             .map({ $0.intrinsicContentSize.height })
             .reduce((insets.top + insets.bottom), { $0 + $1 })
-        return CGSize(width: size.width, height: height)
+        return CGSize(width: size.width, height: height + gapY)
     }
 }
 
@@ -244,6 +251,9 @@ fileprivate class ButtonRow : BaseRow {
     
     private let button = StyledButton()
     private var key: String?
+
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 20
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -275,7 +285,7 @@ fileprivate class ButtonRow : BaseRow {
         let totalHeight = [insets.top,
                            button.intrinsicContentSize.height,
                            insets.bottom].reduce(0, { $0 + $1 })
-        return CGSize(width: size.width, height: totalHeight)
+        return CGSize(width: size.width, height: totalHeight + gapY)
     }
     
     @objc private func _tapAction(_ sender: UIButton) {

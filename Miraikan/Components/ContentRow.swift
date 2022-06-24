@@ -36,7 +36,8 @@ class ContentRow: BaseRow {
     private let lblDescription = AutoWrapLabel()
     private var lblOverview = AutoWrapLabel()
 
-    private let gap = CGFloat(10)
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 20
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -51,6 +52,9 @@ class ContentRow: BaseRow {
 
     public func configure(_ model: ExhibitionContentModel) {
         
+        lblDescription.font = .preferredFont(forTextStyle: .body)
+        lblOverview.font = .preferredFont(forTextStyle: .body)
+
         if MiraikanUtil.routeMode != .blind {
             lblDescription.text = model.intro
             lblOverview.isHidden = true
@@ -90,16 +94,16 @@ class ContentRow: BaseRow {
         super.layoutSubviews()
         
         var y = insets.top
-        lblDescription.frame = CGRect(x: insets.left,
+        lblDescription.frame = CGRect(x: insets.left + gapX,
                                       y: y,
-                                      width: innerSize.width,
+                                      width: innerSize.width - gapX * 2,
                                       height: lblDescription.sizeThatFits(innerSize).height)
 
         if MiraikanUtil.routeMode == .blind {
             y += lblDescription.frame.height
-            lblOverview.frame = CGRect(x: insets.left,
+            lblOverview.frame = CGRect(x: insets.left + gapX,
                                        y: y,
-                                       width: innerSize.width,
+                                       width: innerSize.width - gapX * 2,
                                        height: lblOverview.sizeThatFits(innerSize).height)
         }
     }
@@ -112,8 +116,8 @@ class ContentRow: BaseRow {
                 ?  insets.top + insets.bottom + lblDescription.sizeThatFits(innerSz).height
                 : [lblDescription, lblOverview]
                     .map({ $0.sizeThatFits(innerSz).height })
-                    .reduce((insets.top + insets.bottom), { $0 + $1 + gap})
+                    .reduce((insets.top + insets.bottom), { $0 + $1 + gapY})
 
-        return CGSize(width: size.width, height: height)
+        return CGSize(width: size.width, height: height + gapY)
     }
 }

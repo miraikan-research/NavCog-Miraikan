@@ -49,8 +49,11 @@ fileprivate class DistanceCheckContent: BaseView {
     private var lblLocationTitleArray: [UILabel] = []
     private var lblLocationDistanceArray: [UILabel] = []
 
-    private let gap = CGFloat(5)
-    private let space = CGFloat(10)
+    private let gap: CGFloat = 5
+    private let space: CGFloat = 10
+
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
 
     // MARK: init
     init() {
@@ -124,7 +127,7 @@ fileprivate class DistanceCheckContent: BaseView {
         let lbl = UILabel()
         lbl.text = txt
         lbl.numberOfLines = 1
-        lbl.lineBreakMode = .byCharWrapping
+        lbl.lineBreakMode = .byWordWrapping
         return lbl
     }
     

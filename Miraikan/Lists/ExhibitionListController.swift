@@ -118,9 +118,15 @@ class ExhibitionListController: BaseListController, BaseListDelegate {
         let cellId = cells[indexPath.row]
         let item = (items as? [Any])?[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        if let title = (item as? ExhibitionLinkModel)?.title,
+        if let model = item as? ExhibitionLinkModel,
            let cell = cell as? LinkRow {
-            cell.configure(title: title)
+
+            let title = model.counter != "" ? "\(model.counter) \(model.title)" : model.title
+            var accessibility = model.title
+            if let titlePron = model.titlePron {
+                accessibility = titlePron
+            }
+            cell.configure(title: title, accessibility: accessibility)
             return cell
         } else if let model = item as? NavButtonModel, let cell = cell as? NavButtonRow {
             if let nodeId = model.nodeId {
