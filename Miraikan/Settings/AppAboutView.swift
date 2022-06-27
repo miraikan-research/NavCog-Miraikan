@@ -36,10 +36,11 @@ class AppAboutView: BaseView {
     
     private let lblIcon8 = UILabel()
     private let lblVersion = UILabel()
+    private let lblCrossProduct = UILabel()
 
     // Sizing
     private let gapX: CGFloat = 10
-    private let gapY: CGFloat = 10
+    private let gapY: CGFloat = 15
 
     override func setup() {
         super.setup()
@@ -60,23 +61,40 @@ class AppAboutView: BaseView {
             lblVersion.sizeToFit()
             addSubview(lblVersion)
         }
+        
+        lblCrossProduct.text = "GeoUtils.swift\nPiece of code for calculating the intersection of two 2D vectors.\nhttps://gist.github.com/codelynx/80077dbbb07e7d989016188573eab880"
+        lblCrossProduct.lineBreakMode = .byWordWrapping
+        lblCrossProduct.numberOfLines = 0
+        lblCrossProduct.font = .preferredFont(forTextStyle: .callout)
+        lblCrossProduct.sizeToFit()
+        addSubview(lblCrossProduct)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
 
         var y = insets.top + gapY
-        var szFit = CGSize(width: innerSize.width, height: lblIcon8.intrinsicContentSize.height)
-        lblIcon8.frame = CGRect(x: insets.left + gapX,
-                                y: y,
-                                width: innerSize.width - gapX * 2,
-                                height: lblIcon8.sizeThatFits(szFit).height)
+        var szFit = CGSize.zero
 
-        y += insets.top + lblIcon8.frame.height + gapY
         szFit = CGSize(width: innerSize.width, height: lblVersion.intrinsicContentSize.height)
         lblVersion.frame = CGRect(x: insets.left + gapX,
                                 y: y,
                                 width: innerSize.width - gapX * 2,
                                 height: lblVersion.sizeThatFits(szFit).height)
+        y += insets.top + lblVersion.frame.height + gapY
+
+        szFit = CGSize(width: innerSize.width, height: lblIcon8.intrinsicContentSize.height)
+        lblIcon8.frame = CGRect(x: insets.left + gapX,
+                                y: y,
+                                width: innerSize.width - gapX * 2,
+                                height: lblIcon8.sizeThatFits(szFit).height)
+        y += insets.top + lblIcon8.frame.height + gapY
+        
+        szFit = CGSize(width: innerSize.width, height: lblCrossProduct.intrinsicContentSize.height)
+        lblCrossProduct.frame = CGRect(x: insets.left + gapX,
+                                y: y,
+                                width: innerSize.width - gapX * 2,
+                                height: lblCrossProduct.sizeThatFits(szFit).height)
+        y += insets.top + lblCrossProduct.frame.height + gapY
     }
 }

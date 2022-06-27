@@ -351,6 +351,12 @@ Head to the correct orientation
 /* head to the diagonally forward right direction */
 "turn slightly to the right" = "turn slightly to the right";
 
+/* No comment provided by engineer. */
+"TheLeftSide" = "The Left Side %@";
+
+/* No comment provided by engineer. */
+"TheRightSide" = "The Right Side %@";
+
 /* */
 "Disabled" = "%@. disabled.";
 
