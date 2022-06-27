@@ -253,16 +253,16 @@ fileprivate class DistanceCheckContent: BaseView {
         var updateDistance = false
         let now = Date().timeIntervalSince1970
         if !current.lat.isNaN && !current.lng.isNaN && (locationChangedTime + 1 < now) {
-            locationChangedTime = now
 
             if checkLocation == nil {
+                locationChangedTime = now
                 checkLocation = current
                 return
             }
 
             let distance = current.distance(to: checkLocation)
 //            NSLog("distance = \(distance), \(current), \(checkLocation) ")
-            if distance < 1 {
+            if distance < 1.5 {
                 return
             }
             
@@ -276,6 +276,8 @@ fileprivate class DistanceCheckContent: BaseView {
             let vector = Line(from: CGPoint(x: checkLocation.lat, y: checkLocation.lng),
                               to: CGPoint(x: current.lat, y: current.lng))
             self.writeData("\(dateString), \(current.lat), \(current.lng), \(checkLocation.lat), \(checkLocation.lng)\n")
+
+            locationChangedTime = now
             self.checkLocation = current
 
             updateDistance = true
@@ -378,7 +380,10 @@ fileprivate class DistanceCheckContent: BaseView {
 extension DistanceCheckContent {
 
     func setFilePath() {
-        
+        if !UserDefaults.standard.bool(forKey: "DebugMode") {
+            return
+        }
+
         let dateFormatter = DateFormatter()
         dateFormatter.calendar = Calendar(identifier: .gregorian)
         dateFormatter.locale = Locale(identifier: "ja_JP")
@@ -401,6 +406,9 @@ extension DistanceCheckContent {
     }
     
     func writeData(_ writeLine: String) {
+        if !UserDefaults.standard.bool(forKey: "DebugMode") {
+            return
+        }
         guard let filePath = filePath else {
             return
         }
