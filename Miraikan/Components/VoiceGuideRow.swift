@@ -31,7 +31,10 @@ import Foundation
 class VoiceGuideRow : BaseRow {
     
     private let lblDescription = AutoWrapLabel()
-    
+
+    private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
+
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,24 +55,24 @@ class VoiceGuideRow : BaseRow {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let descSize = CGSize(width: innerSize.width,
-                              height: lblDescription.intrinsicContentSize.height)
-        lblDescription.frame = CGRect(x: insets.left,
-                                      y: insets.top,
-                                      width: innerSize.width,
+
+        let descSize = CGSize(width: innerSize.width - gapX * 2,
+                              height: lblDescription.intrinsicContentSize.height + gapY * 2)
+        lblDescription.frame = CGRect(x: insets.left + gapX,
+                                      y: insets.top + gapY,
+                                      width: innerSize.width - gapX * 2,
                                       height: lblDescription.sizeThatFits(descSize).height)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let descSize = CGSize(width: innerSizing(parentSize: size).width,
                               height: lblDescription.intrinsicContentSize.height)
-        let totalHeight = insets.top
-        + lblDescription.sizeThatFits(descSize).height
+        let totalHeight = insets.top + gapY
+        + lblDescription.sizeThatFits(descSize).height + gapY
         + insets.bottom
         return CGSize(width: size.width, height: totalHeight)
     }
-    
+
     /**
      Set data from DataSource
      */
