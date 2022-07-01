@@ -249,7 +249,6 @@ fileprivate class DistanceCheckContent: BaseView {
 
     func locationChanged(current: HLPLocation) {
 
-
         var updateDistance = false
         let now = Date().timeIntervalSince1970
         if !current.lat.isNaN && !current.lng.isNaN && (locationChangedTime + 1 < now) {
@@ -273,10 +272,10 @@ fileprivate class DistanceCheckContent: BaseView {
             let dateString = dateFormatter.string(from: Date())
 
             guard let checkLocation = checkLocation else { return }
-            let vector = Line(from: CGPoint(x: checkLocation.lat, y: checkLocation.lng),
+            var vector = Line(from: CGPoint(x: checkLocation.lat, y: checkLocation.lng),
                               to: CGPoint(x: current.lat, y: current.lng))
             self.writeData("\(dateString), \(current.lat), \(current.lng), \(checkLocation.lat), \(checkLocation.lng)\n")
-
+            vector.scalarTimes(1.5)
             locationChangedTime = now
             self.checkLocation = current
 
@@ -304,7 +303,7 @@ fileprivate class DistanceCheckContent: BaseView {
                     let lineSegment = Line(from: destination1, to: destination2)
                     if let cross = Line.intersection(vector, lineSegment, true) {
 //                        NSLog("cross[\(index)][\(cnt)]  = \(cross), \(item.id), \(sortItem.id) ")
-
+                        
                         if item.distance < nearestGuide,
                            self.nearestItems.first(where: {$0?.id == item.id }) == nil,
                            positionModels.first(where: {$0.id == item.id }) == nil {
@@ -330,9 +329,7 @@ fileprivate class DistanceCheckContent: BaseView {
                 }
             }
 
-
             var text = ""
-
             for item in positionModels {
                 self.nearestItems.removeFirst()
                 self.nearestItems.append(item)
