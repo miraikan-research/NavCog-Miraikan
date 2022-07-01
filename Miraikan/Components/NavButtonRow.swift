@@ -49,6 +49,7 @@ class NavButtonRow: BaseRow {
         btnNavi.tapAction({ [weak self] _ in
             guard let self = self else { return }
             guard let nav = self.nav else { return }
+            AudioGuideManager.shared.isDisplayButton(false)
             nav.openMap(nodeId: nodeId)
         })
     }
@@ -57,6 +58,7 @@ class NavButtonRow: BaseRow {
         btnNavi.tapAction({ [weak self] _ in
             guard let self = self else { return }
             guard let nav = self.nav else { return }
+            AudioGuideManager.shared.isDisplayButton(false)
             let vc = FloorSelectionController(title: title)
             vc.items = locations
             nav.show(vc, sender: nil)
