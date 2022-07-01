@@ -363,6 +363,7 @@
 		E5BFB19C2859688B00D57E93 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */; };
 		E5BFB19E28602C9800D57E93 /* lineSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19D28602C9800D57E93 /* lineSegment.swift */; };
 		E5BFB1A028617AB400D57E93 /* LandmarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */; };
+		E5C5B93F286E905900A48E88 /* AudioGuideManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */; };
 		E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797A2817C72800EFF12F /* BaseTabController.swift */; };
 		E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797D2817C77600EFF12F /* AITabController.swift */; };
 		E5DC79802817C78700EFF12F /* LoginTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797F2817C78700EFF12F /* LoginTabController.swift */; };
@@ -706,6 +707,7 @@
 		E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
 		E5BFB19D28602C9800D57E93 /* lineSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lineSegment.swift; sourceTree = "<group>"; };
 		E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModel.swift; sourceTree = "<group>"; };
+		E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGuideManager.swift; sourceTree = "<group>"; };
 		E5DC797A2817C72800EFF12F /* BaseTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabController.swift; sourceTree = "<group>"; };
 		E5DC797D2817C77600EFF12F /* AITabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITabController.swift; sourceTree = "<group>"; };
 		E5DC797F2817C78700EFF12F /* LoginTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTabController.swift; sourceTree = "<group>"; };
@@ -1219,6 +1221,7 @@
 				30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */,
 				D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */,
 				D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */,
+				E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -2299,6 +2302,7 @@
 				D3A1181727294B0B00BEC1C8 /* SettingViewController.m in Sources */,
 				D3A1181827294B0B00BEC1C8 /* ExhibitionDataStore.swift in Sources */,
 				D3A1181927294B0B00BEC1C8 /* BaseScrollView.swift in Sources */,
+				E5C5B93F286E905900A48E88 /* AudioGuideManager.swift in Sources */,
 				E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */,
 				E5F52EB52844C06500BB4152 /* ScheduleRowModel.swift in Sources */,
 				E5BFB19E28602C9800D57E93 /* lineSegment.swift in Sources */,

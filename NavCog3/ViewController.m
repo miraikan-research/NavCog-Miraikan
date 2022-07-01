@@ -162,7 +162,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
     if ([self destId]) {
         dialogHelper.helperView.hidden = YES;
-        [self hiddenVoiceGuide];
+//        [self hiddenVoiceGuide];
     }
 
     BOOL checked = [ud boolForKey: @"checked_altimeter"];
@@ -285,7 +285,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                                   [self destId], [[NSDate date] timeIntervalSince1970], elv, stairs, esc, dist];
                 state = ViewStateNavigation;
                 dialogHelper.helperView.hidden = YES;
-                [self hiddenVoiceGuide];
+//                [self hiddenVoiceGuide];
                 [_webView setLocationHash:hash];
                 isNaviStarted = YES;
                 return;
@@ -604,25 +604,25 @@ typedef NS_ENUM(NSInteger, ViewState) {
     if (page) {
         if ([page isEqualToString: @"control"]) {
             state = ViewStateSearch;
-            [self hiddenVoiceGuide];
+//            [self hiddenVoiceGuide];
         }
         else if ([page isEqualToString: @"settings"]) {
             state = ViewStateSearchSetting;
-            [self hiddenVoiceGuide];
+//            [self hiddenVoiceGuide];
         }
         else if ([page isEqualToString: @"confirm"]) {
             state = ViewStateRouteConfirm;
-            [self hiddenVoiceGuide];
+//            [self hiddenVoiceGuide];
             [NavUtil hideModalWaiting];
             [NavUtil hideWaitingForView:self.view];
         }
         else if ([page hasPrefix: @"map-page"]) {
             if (inNavigation) {
                 state = ViewStateNavigation;
-                [self hiddenVoiceGuide];
+//                [self hiddenVoiceGuide];
             } else {
                 state = ViewStateMap;
-                [self showVoiceGuide];
+//                [self showVoiceGuide];
                 isSetupMap = true;
                 
                 if (!isInitTarget && landmarks) {
@@ -665,7 +665,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                       options[@"toID"], [[NSDate date] timeIntervalSince1970], elv, stairs, esc, dist];
     state = ViewStateNavigation;
     dialogHelper.helperView.hidden = YES;
-    [self hiddenVoiceGuide];
+//    [self hiddenVoiceGuide];
     [_webView setLocationHash:hash];
     isNaviStarted = YES;
 }

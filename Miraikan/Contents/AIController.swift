@@ -104,9 +104,11 @@ class AIController: BaseController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         loadDialog()
+        AudioGuideManager.shared.isDisplayButton(false)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         

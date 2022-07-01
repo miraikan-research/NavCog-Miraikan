@@ -154,7 +154,7 @@
     _webView.delegate = self;
     _webView.tts = self;
     [_webView setFullScreenForView:self.view];
-    [self hiddenVoiceGuide];
+//    [self hiddenVoiceGuide];
 
     navigator = [[NavNavigator alloc] init];
     commander = [[NavCommander alloc] init];
@@ -871,7 +871,7 @@
         return;
     }
     self.destId = options[@"toID"];
-    [self hiddenVoiceGuide];
+//    [self hiddenVoiceGuide];
     
     NavDataStore *nds = [NavDataStore sharedDataStore];
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
@@ -1195,7 +1195,7 @@
     self.isNaviStarted = NO;
     
     NSArray *pois = properties[@"pois"];
-    if (pois.count > 0 && self.isVoiceGuideOn) {
+    if (pois.count > 0) {
         // Get description texts from pois
         NavPOI *poi = pois.lastObject;
         NSString *description;

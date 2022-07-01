@@ -108,6 +108,7 @@ class EventDetailView: UIView {
             if schedule.place == "co_studio" {
                 btnScheduleTime.tapAction { [weak self] _ in
                     guard let self = self else { return }
+                    AudioGuideManager.shared.isDisplayButton(false)
                     if let _f = self.notificationAction {
                         _f()
                     }

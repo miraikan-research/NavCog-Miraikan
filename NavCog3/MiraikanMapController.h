@@ -20,9 +20,6 @@
 @property (nonatomic) BOOL isRouteRequested;
 @property (nonatomic) BOOL isVoiceGuideOn;
 
-- (void)showVoiceGuide;
-- (void)hiddenVoiceGuide;
-
 @end
 
 #endif /* MiraikanMapDelegate_h */
