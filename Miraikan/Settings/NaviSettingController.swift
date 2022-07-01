@@ -221,7 +221,7 @@ fileprivate class SliderRow : BaseRow {
         y += lblDescription.frame.height
         
         let colLeftWidth: CGFloat = innerSize.width / 5
-        let colRightWidth: CGFloat = colLeftWidth * 4
+        let colRightWidth: CGFloat = colLeftWidth * 4 - gapX * 2
         
         lblValue.frame = CGRect(x: insets.left + gapX,
                                 y: y,
