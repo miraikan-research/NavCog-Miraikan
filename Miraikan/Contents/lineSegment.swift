@@ -115,4 +115,9 @@ struct Line {
         let  cross = (line.from.x - line.to.x) * (point.y - line.to.y) - (line.from.y - line.to.y) * (point.x - line.to.x)
         return cross > 0
     }
+
+    mutating func scalarTimes(_ scalar: Double) {
+        let diff =  self.to - self.from
+        self.to = self.to + CGPoint(x: diff.x * scalar, y: diff.y * scalar)
+    }
 }
