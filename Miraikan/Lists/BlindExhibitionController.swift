@@ -107,8 +107,15 @@ class BlindExhibitionController: BaseListController, BaseListDelegate {
             sections += [(navModel, contentModel)]
         })
         items = sections
+
+        setFooter()
     }
-    
+
+    private func setFooter() {
+        let footerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 80.0))
+        self.tableView.tableFooterView = footerView
+    }
+
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         let item = (items as? [(NavButtonModel, ExhibitionContentModel)])?[indexPath.section]

@@ -111,6 +111,13 @@ class ExhibitionListController: BaseListController, BaseListDelegate {
             cells += [contentId]
         })
         items = dividedItems
+        
+        setFooter()
+    }
+
+    private func setFooter() {
+        let footerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 80.0))
+        self.tableView.tableFooterView = footerView
     }
 
     // MARK: BaseListDelegate
