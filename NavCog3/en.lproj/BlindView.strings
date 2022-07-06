@@ -352,10 +352,22 @@ Head to the correct orientation
 "turn slightly to the right" = "turn slightly to the right";
 
 /* No comment provided by engineer. */
-"TheLeftSide" = "The Left Side %@";
+"InTheFront" = "%@ in the front";
 
 /* No comment provided by engineer. */
-"TheRightSide" = "The Right Side %@";
+"InTheRear" = "%@ in the rear";
+
+/* No comment provided by engineer. */
+"OnTheLeftSide" = "%@ on the left side";
+
+/* No comment provided by engineer. */
+"OnTheRightSide" = "%@ on the right side";
+
+/* No comment provided by engineer. */
+"OnTheLeftRear" = "%@ on the right rear";
+
+/* No comment provided by engineer. */
+"OnTheRightRear" = "%@ on the right rear";
 
 /* */
 "Disabled" = "%@. disabled.";

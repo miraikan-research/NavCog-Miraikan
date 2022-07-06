@@ -33,19 +33,22 @@ class LandmarkModel {
     let nodeId: String
     let title: String
     let titlePron: String
-    let hlpLocation: HLPLocation
+    let nodeLocation: HLPLocation
+    let spotLocation: HLPLocation
     var distance: Double = 0
 
     init(id: String,
          nodeId: String,
          title: String,
          titlePron: String,
-         hlpLocation: HLPLocation) {
+         nodeLocation: HLPLocation,
+         spotLocation: HLPLocation) {
         self.id = id
         self.nodeId = nodeId
         self.title = title
         self.titlePron = titlePron
-        self.hlpLocation = hlpLocation
+        self.nodeLocation = nodeLocation
+        self.spotLocation = spotLocation
     }
 }
 
@@ -53,7 +56,7 @@ class PositionModel {
     let id: String
     let titlePron: String
     var distance: Double = 0
-    var isRightDirection = false
+    var angle: Double = 0
 
     init(id: String,  titlePron: String) {
         self.id = id

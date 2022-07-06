@@ -448,10 +448,22 @@
 "turn slightly to the right" = "少し右に向く";
 
 /* No comment provided by engineer. */
-"TheLeftSide" = "左側に%@";
+"InTheFront" = "正面に%@";
 
 /* No comment provided by engineer. */
-"TheRightSide" = "右側に%@";
+"InTheRear" = "後方に%@";
+
+/* No comment provided by engineer. */
+"OnTheLeftSide" = "左側に%@";
+
+/* No comment provided by engineer. */
+"OnTheRightSide" = "右側に%@";
+
+/* No comment provided by engineer. */
+"OnTheLeftRear" = "左後方に%@";
+
+/* No comment provided by engineer. */
+"OnTheRightRear" = "右後方に%@";
 
 "Always_Background" = "常にバックグラウンドで動作";
 
