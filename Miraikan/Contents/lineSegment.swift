@@ -106,9 +106,16 @@ struct Line {
     }
 
     static func angle(_ line1: Line, _ line2: Line) -> CGFloat {
-        let a = line1.to - line1.from
-        let b = line2.to - line2.from
-        return atan2(b.y - a.y, b.x - a.x)
+        let lenght1 = line1.length
+        let lenght2 = line2.length
+
+        let vector1 = line1.vector
+        let vector2 = line2.vector
+
+        let cosSita = (vector1.x * vector2.x + vector1.y * vector2.y) / (lenght1 * lenght2)
+        let sita = acos(cosSita)
+
+        return sita
     }
 
     static func isRightDirection(_ line: Line, point: CGPoint) -> Bool {
