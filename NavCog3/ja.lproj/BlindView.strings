@@ -465,6 +465,9 @@
 /* No comment provided by engineer. */
 "OnTheRightRear" = "右後方に%@";
 
+/* No comment provided by engineer. */
+"Near" = "%@の近く";
+
 "Always_Background" = "常にバックグラウンドで動作";
 
 "HEADING_CALIBRATION" = "方角を調整するため、周りに注意して、5メートルほど歩いてください。";

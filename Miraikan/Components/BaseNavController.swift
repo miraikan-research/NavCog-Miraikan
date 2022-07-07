@@ -57,6 +57,14 @@ class BaseNavController: UINavigationController {
         mapVC.destId = nodeId
         mapVC.presetId = Int32(MiraikanUtil.presetId)
         NSLog("openMap(\(nodeId ?? "nil")) \(identifier), presetId: \(MiraikanUtil.presetId)")
-        self.show(mapVC, sender: nil)
-    }    
+        self.pushViewController(mapVC,
+                                animated: true,
+                                completion: {
+            if MiraikanUtil.routeMode == .blind,
+               nodeId == nil,
+               let location = MiraikanUtil.location {
+                AudioGuideManager.shared.nearLocation(current: location)
+            }
+        })
+    }
 }
