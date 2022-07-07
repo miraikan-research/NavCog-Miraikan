@@ -227,6 +227,24 @@ final public class AudioGuideManager: NSObject {
         }
     }
 
+    
+    func nearLocation(current: HLPLocation) {
+        if !current.lat.isNaN && !current.lng.isNaN {
+
+            for item in self.items {
+                item.distance = current.distance(to: item.nodeLocation)
+            }
+            
+            var sortItems = self.items.filter({ $0.distance <= nearestFront })
+            sortItems.sort(by: { $0.distance < $1.distance})
+            
+            if let sortItem = sortItems.first {
+                self.speakTexts.append(String(format: NSLocalizedString("Near", tableName: "BlindView", comment: ""), sortItem.titlePron))
+                self.dequeueSpeak()
+            }
+        }
+    }
+
     private func pause() {
         tts.stop(true)
         self.isPlaying = false
