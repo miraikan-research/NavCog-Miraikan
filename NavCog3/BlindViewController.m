@@ -705,6 +705,8 @@
             case HLPLocationStatusLocating:
                 [NavUtil showWaitingForView:self.view withMessage:NSLocalizedStringFromTable(@"Locating...", @"BlindView", @"")];
                 break;
+            case HLPLocationStatusUnknown:
+                break;
             default:
                 [NavUtil hideWaitingForView:self.view];
         }
@@ -853,6 +855,14 @@
         }
         else if ([page hasPrefix: @"map-page"]) {
             isSetupMap = true;
+            NavDataStore *nds = [NavDataStore sharedDataStore];
+            if (isnan(nds.currentLocation.lat) || isnan(nds.currentLocation.lng)) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [NavUtil hideModalWaiting];
+                    [NavUtil showWaitingForView:self.view withMessage:NSLocalizedStringFromTable(@"Locating...", @"BlindView", @"")];
+                });
+                return;
+            }
         }
         else if ([page hasPrefix: @"ui-id-"]) {
         }
@@ -874,6 +884,10 @@
 //    [self hiddenVoiceGuide];
     
     NavDataStore *nds = [NavDataStore sharedDataStore];
+    if (nds.directory == nil) {
+        return;
+    }
+    
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
     NavDestination *to = [nds destinationByID: [self destId]];
     [NavDataStore sharedDataStore].to = to;

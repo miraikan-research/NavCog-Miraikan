@@ -633,6 +633,15 @@ typedef NS_ENUM(NSInteger, ViewState) {
                     [self setupNavigation];
                 }
             }
+            
+            NavDataStore *nds = [NavDataStore sharedDataStore];
+            if (isnan(nds.currentLocation.lat) || isnan(nds.currentLocation.lng)) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [NavUtil hideModalWaiting];
+                    [NavUtil showWaitingForView:self.view withMessage:NSLocalizedStringFromTable(@"Locating...", @"BlindView", @"")];
+                });
+                return;
+            }
         }
         else if ([page hasPrefix: @"ui-id-"]) {
             state = ViewStateSearchDetail;
@@ -643,10 +652,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
         else {
             NSLog(@"unmanaged state: %@", page);
         }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateView];
+        });
     }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateView];
-    });
 }
 
 - (void)requestStartNavigation:(NSNotification*)note
@@ -680,6 +690,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
             case HLPLocationStatusLocating:
                 [NavUtil hideModalWaiting];
                 [NavUtil showWaitingForView:self.view withMessage:NSLocalizedStringFromTable(@"Locating...", @"BlindView", @"")];
+                break;
+            case HLPLocationStatusUnknown:
                 break;
             default:
                 [NavUtil hideWaitingForView:self.view];
@@ -782,9 +794,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
     if (isSetupNavigation) {
         return;
     }
-    isSetupNavigation = true;
-
+    
     NavDataStore *nds = [NavDataStore sharedDataStore];
+    if (nds.directory == nil) {
+        return;
+    }
+
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
     NavDestination *to = [nds destinationByID:[self destId]];
 
@@ -793,6 +808,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         location = from.location;
     }
 
+    isSetupNavigation = true;
     [self startNavi:location];
     
     __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
@@ -801,7 +817,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
 
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [nds requestRouteFrom:from.singleId
                            To:to._id
               withPreferences:prefs complete:^{
