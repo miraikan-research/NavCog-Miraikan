@@ -1,8 +1,4 @@
 [{
-    "time": "10:30",
-    "place": "geo_cosmos",
-    "event": "asimo"
-}, {
     "time": "10:20",
     "place": "dome_theater",
     "event": "inherit",
@@ -44,11 +40,6 @@
     "description": "要予約",
     "on_holiday": false
 }, {
-    "time": "12:30",
-    "place": "geo_cosmos",
-    "event": "asimo",
-    "on_holiday": false
-}, {
     "time": "13:00",
     "place": "geo_cosmos",
     "event": "digging_the_future",
@@ -58,11 +49,6 @@
     "place": "dome_theater",
     "event": "birthday",
     "description": "要予約"
-}, {
-    "time": "13:30",
-    "place": "geo_cosmos",
-    "event": "asimo",
-    "on_holiday": false
 }, {
     "time": "13:45",
     "place": "co_studio",
