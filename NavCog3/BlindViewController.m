@@ -59,7 +59,9 @@
     
     BOOL initFlag;
     BOOL rerouteFlag;
-    
+    BOOL isSetupNavigation;
+    BOOL isNoRoute;
+
     UIColor *defaultColor;
     
     NSDictionary *uiState;
@@ -547,6 +549,7 @@
     [UIView animateWithDuration:0.3 animations: ^{
         _webView.alpha = 1;
     }];
+    initFlag = true;
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
@@ -786,15 +789,54 @@
         lastLocationSent = now;
         [self dialogHelperUpdate];
         
-//        if (!self.destId || self.isDestLoaded || [navigator isActive] || self.isNaviStarted) {
-//            return;
-//        }
-//        if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-//            NSString *msg = [MiraikanUtil isPreview]
-//                ? NSLocalizedString(@"Loading preview",@"")
-//                : NSLocalizedString(@"Loading, please wait",@"");
-//            [NavUtil showModalWaitingWithMessage:msg];
-//        }
+        if (initFlag && [self destId] && !isSetupNavigation) {
+            if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+                NSString *msg = [MiraikanUtil isPreview]
+                    ? NSLocalizedString(@"Loading preview",@"")
+                    : NSLocalizedString(@"Loading, please wait",@"");
+                [NavUtil showModalWaitingWithMessage:msg];
+            }
+            [self setupNavigation];
+        }
+    });
+}
+
+- (void)setupNavigation
+{
+    if (isSetupNavigation) {
+        return;
+    }
+
+    NavDataStore *nds = [NavDataStore sharedDataStore];
+    if (nds.directory == nil) {
+        return;
+    }
+
+    NavDestination *from = [NavDataStore destinationForCurrentLocation];
+    NavDestination *to = [nds destinationByID:[self destId]];
+
+    HLPLocation *location = nds.currentLocation;
+    if (isnan(location.lat) || isnan(location.lng)) {
+        location = from.location;
+    }
+
+    isSetupNavigation = true;
+    
+    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
+                                     withOptions:AVAudioSessionCategoryOptionAllowBluetooth
+                                           error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [nds requestRouteFrom:from.singleId
+                           To:to._id
+              withPreferences:prefs complete:^{
+                if (self == nil) return;
+                nds.previewMode = [MiraikanUtil isPreview];
+                nds.exerciseMode = NO;
+            }
+        ];
     });
 }
 
@@ -897,14 +939,16 @@
                                      withOptions:AVAudioSessionCategoryOptionAllowBluetooth
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [nds requestRouteFrom:from.singleId
-                       To:to._id
-          withPreferences:prefs complete:^{
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            nds.previewMode = [MiraikanUtil isPreview];
-            nds.exerciseMode = NO;
-        });
-    }];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [nds requestRouteFrom:from.singleId
+                           To:to._id
+              withPreferences:prefs complete:^{
+                if (self == nil) return;
+                nds.previewMode = [MiraikanUtil isPreview];
+                nds.exerciseMode = NO;
+            }
+        ];
+    });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
@@ -1154,15 +1198,22 @@
 
 - (void)couldNotStartNavigation:(NSDictionary *)properties
 {
+    if (isNoRoute) return;
+    isNoRoute = true;
+    
+    [NavUtil hideModalWaiting];
+    [NavUtil showModalWaitingWithMessage:@""];
+
     [commander couldNotStartNavigation:properties];
     [previewer couldNotStartNavigation:properties];
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [NavUtil hideModalWaiting];
     
     [self speak:NSLocalizedString(@"Pathfinding failed", @"") withOptions:@{@"force":@(YES)} completionHandler:^{
+        if (self == nil) return;
         [self prepareForDealloc];
+        [NavUtil hideModalWaiting];
         [self.navigationController popViewControllerAnimated:YES];
     }];
 }
