@@ -60,6 +60,7 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         }
 
         AudioGuideManager.shared.active()
+        AudioGuideManager.shared.isActive(UserDefaults.standard.bool(forKey: "isVoiceGuideOn"))
         setVoiceGuideButton()
         setKVO()
     }
