@@ -34,8 +34,9 @@ import UIKit
 class TabController: UITabBarController, UITabBarControllerDelegate {
 
     private var voiceGuideButton = UIButton()
-    private var isDisplayButton = false
+    private var logButton = UIButton()
     var observer: NSKeyValueObservation?
+    var debugObserver: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,6 +63,7 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         AudioGuideManager.shared.active()
         AudioGuideManager.shared.isActive(UserDefaults.standard.bool(forKey: "isVoiceGuideOn"))
         setVoiceGuideButton()
+        setMoveLogButton()
         setKVO()
     }
 
@@ -81,6 +83,14 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
             guard let self = self else { return }
             if let change = change.newValue {
                 self.isDisplayButton(change)
+            }
+        })
+        
+        debugObserver = UserDefaults.standard.observe(\.DebugMode, options: [.initial, .new], changeHandler: { [weak self] (defaults, change) in
+            guard let self = self else { return }
+            if let change = change.newValue {
+                UserDefaults.standard.set(false, forKey: "isMoveLogStart")
+                self.isDisplayMoveLogButton(change)
             }
         })
     }
@@ -152,4 +162,81 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
             })
         }
     }
+
+    private func setMoveLogButton() {
+        var rightPadding: CGFloat = 0
+        var bottomPadding: CGFloat = 0
+        if let window = UIApplication.shared.windows.first {
+            rightPadding = window.safeAreaInsets.right
+            bottomPadding = window.safeAreaInsets.bottom
+        }
+
+        let tabHeight = self.tabBar.frame.height
+        
+        // Temporary design
+        logButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.width - 100 - 10 - 60 - rightPadding,
+                                                  y: UIScreen.main.bounds.height - 90 + 10 - tabHeight - bottomPadding,
+                                                  width: 60,
+                                                  height: 60))
+        logButton.backgroundColor = .white
+        logButton.layer.cornerRadius = 30
+
+        logButton.layer.borderColor = UIColor(red: 105/255, green: 0, blue: 50/255, alpha: 1).cgColor
+        logButton.layer.borderWidth = 6.0
+
+        logButton.layer.shadowColor = UIColor.black.cgColor
+        logButton.layer.shadowOpacity = 0.3
+        logButton.layer.shadowRadius = 5.0
+        logButton.layer.shadowOffset = CGSize(width: 5.0, height: 5.0)
+
+        logButton.titleLabel?.numberOfLines = 0
+
+        logButton.setTitleColor(.black, for: .normal)
+        logButton.setTitle(NSLocalizedString("Move Log Start", comment: ""), for: .normal)
+        logButton.setTitle(NSLocalizedString("Move Log End", comment: ""), for: .selected)
+        logButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
+        logButton.titleLabel?.textAlignment = .center
+
+        logButton.addTarget(self, action: #selector(self.moveLogButtonTapped(_:)), for: .touchUpInside)
+
+        UserDefaults.standard.set(false, forKey: "isMoveLogStart")
+        logButton.isSelected = UserDefaults.standard.bool(forKey: "isMoveLogStart")
+        isDisplayMoveLogButton(UserDefaults.standard.bool(forKey: "DebugMode"))
+        
+        self.view.addSubview(logButton)
+    }
+
+    @objc func moveLogButtonTapped(_ sender: UIButton) {
+        let isOn = !sender.isSelected
+        sender.isSelected = isOn
+        logButton.backgroundColor = isOn ? UIColor(red: 218/255, green: 245/255, blue: 255/255, alpha: 1) : .white
+
+        UserDefaults.standard.set(isOn, forKey: "isMoveLogStart")
+    }
+
+    func isDisplayMoveLogButton(_ isDisplay: Bool) {
+        if (logButton.alpha == 1) == isDisplay {
+            return
+        }
+
+        DispatchQueue.main.async{
+            self.logButton.alpha = isDisplay ? 0 : 1
+            UIView.animate(withDuration: 0.1, animations: { [weak self] in
+                guard let self = self else { return }
+                self.logButton.alpha = isDisplay ? 1 : 0
+            })
+        }
+    }
+}
+
+
+extension UserDefaults {
+    @objc dynamic var isMoveLogStart: Bool {
+        return Bool("isMoveLogStart") ?? false
+    }
+
+    @objc dynamic var DebugMode: Bool {
+        return Bool("DebugMode") ?? false
+    }
+
 }

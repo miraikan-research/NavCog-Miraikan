@@ -333,7 +333,7 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                                                      defaultValue: MiraikanUtil.previewSpeed,
                                                      step: 1,
                                                      format: "%d",
-                                                     title: NSLocalizedString("Preview Speed", comment: "Name of the label"),
+                                                     title: NSLocalizedString("Preview Speed", comment: ""),
                                                      name: "preview_speed",
                                                      desc: NSLocalizedString("Preview Speed Description",
                                                                              comment: "Description for VoiceOver"))))
@@ -348,18 +348,15 @@ class NaviSettingController : BaseListController, BaseListDelegate {
                                                      defaultValue: MiraikanUtil.speechSpeed,
                                                      step: 0.05,
                                                      format: "%.2f",
-                                                     title: NSLocalizedString("Speech Speed", comment: "Name of the label"),
+                                                     title: NSLocalizedString("Speech Speed", comment: ""),
                                                      name: "speech_speed",
                                                      desc: NSLocalizedString("Speech Speed Description",
                                                                              comment: "Description for VoiceOver"))))
-
-#if DEBUG
         cellList.append(CellModel(cellId: switchId,
-                                  model: SwitchModel(desc: "Debug",
+                                  model: SwitchModel(desc: NSLocalizedString("Move Log", comment: ""),
                                                      key: "DebugMode",
                                                      isOn: UserDefaults.standard.bool(forKey: "DebugMode"),
                                                      isEnabled: nil)))
-#endif
         cellList.append(CellModel(cellId: buttonId,
                                   model: ButtonModel(title: NSLocalizedString("Logout", comment: ""),
                                                      key: "LoggedIn",
