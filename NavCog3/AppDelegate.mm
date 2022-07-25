@@ -77,10 +77,6 @@ void NavNSLog(NSString* fmt, ...) {
     // Override point for customization after application launch.
     // [Logging startLog];
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DebugMode"]) {
-        [self setFilePath];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"LoggedIn"];
-    }
     locationChangedTime = 0;
 
     // Start locating here
@@ -138,6 +134,7 @@ void NavNSLog(NSString* fmt, ...) {
     [ud addObserver:self forKeyPath:@"location_tracking" options:NSKeyValueObservingOptionNew context:nil];
     
     [ud addObserver:self forKeyPath:@"background_mode" options:NSKeyValueObservingOptionNew context:nil];
+    [ud addObserver:self forKeyPath:@"isMoveLogStart" options:NSKeyValueObservingOptionNew context:nil];
     
     return YES;
 }
@@ -570,6 +567,12 @@ void uncaughtExceptionHandler(NSException *exception)
 {
     if ([keyPath isEqualToString:@"background_mode"]) {
         [self requestBackgroundLocation:nil];
+    } else if ([keyPath isEqualToString:@"isMoveLogStart"]) {
+        if (![change[@"new"] boolValue]) {
+            locationFilePath = nil;
+        } else {
+            [self setFilePath];
+        }
     } else {
         [[HLPLocationManager sharedManager] invalidate];
     }
@@ -579,13 +582,13 @@ void uncaughtExceptionHandler(NSException *exception)
 {
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"ja_JP"]];
-    [df setDateFormat:@"yyyyMMddHHmm"];
+    [df setDateFormat:@"yyyyMMdd-HHmmss"];
     NSDate *now = [NSDate date];
     NSString *strNow = [df stringFromDate:now];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *directory = [paths objectAtIndex:0];
-    locationFilePath = [directory stringByAppendingPathComponent:  [NSString stringWithFormat: @"%@.csv", strNow]];
+    locationFilePath = [directory stringByAppendingPathComponent: [NSString stringWithFormat: @"move-%@.csv", strNow]];
     
     BOOL isNew = false;
     NSFileManager *fileManager = [NSFileManager defaultManager];

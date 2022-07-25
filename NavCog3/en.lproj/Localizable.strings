@@ -260,6 +260,10 @@ Feedback is sending...";
 "btn_play" = "Read the description";
 "btn_stop" = "Stop reading the description";
 
+"Move Log" = "Move Log";
+"Move Log Start" = "Move\nLog\nStart";
+"Move Log End" = "Move\nLog\nEnd";
+
 // local push
 "Today's event is over" = "Today's event is over";
 "It will start soon. Please head to the venue" = "It will start soon. Please head to the venue";
