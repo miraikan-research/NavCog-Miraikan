@@ -346,11 +346,7 @@ void uncaughtExceptionHandler(NSException *exception)
         return;
     }
 
-//    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
-//    if (locationChangedTime + 200 > now) {
-//        return;
-//    }
-//    locationChangedTime = now;
+    long now = (long)([[NSDate date] timeIntervalSince1970]*1000);
 
     NSMutableDictionary *data =
     [@{
@@ -389,10 +385,12 @@ void uncaughtExceptionHandler(NSException *exception)
     }
     temporaryFloor = location.floor;
 
-    if (continueFloorCount > 8) {
+    if ((continueFloorCount > 8) &&
+        (locationChangedTime + 200 > now)) {
         currentFloor = temporaryFloor;
         [[NSNotificationCenter defaultCenter] postNotificationName:LOCATION_CHANGED_NOTIFICATION object:self userInfo:data];
     }
+    locationChangedTime = now;
 }
 
 - (void)locationManager:(HLPLocationManager *)manager didLocationStatusUpdate:(HLPLocationStatus)status
