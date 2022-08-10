@@ -68,6 +68,26 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         AudioGuideManager.shared.isActive(UserDefaults.standard.bool(forKey: "isVoiceGuideOn"))
         setLayerButton()
         setKVO()
+        becomeFirstResponder()
+    }
+
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        super.motionBegan(motion, with: event)
+    }
+
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        super.motionEnded(motion, with: event)
+        if motion == .motionShake {
+            showSettings()
+        }
+    }
+
+    override func motionCancelled(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        super.motionCancelled(motion, with: event)
     }
 
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
@@ -152,6 +172,11 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
                                          height: 440)
         locationInputView.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 3)
         self.view.addSubview(locationInputView)
+    }
+
+    private func showSettings() {
+        let vc = NaviSettingController(title: NSLocalizedString("Navi Settings", comment: ""))
+        self.present(vc, animated: true, completion: nil)
     }
 }
 
