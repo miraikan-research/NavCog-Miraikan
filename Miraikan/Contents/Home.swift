@@ -451,9 +451,8 @@ class Home : BaseListView {
                     
                     guard let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data)
                     else { return }
-                    NSLog("\(URL(string: #file)!.lastPathComponent) \(#function): \(#line), \(_endpoint)")
+//                    NSLog("\(URL(string: #file)!.lastPathComponent) \(#function): \(#line), \(_endpoint)")
                     let filtered = res.filter({ model in
-                        NSLog("\(model)")
                         let now = Date()
                         let start = MiraikanUtil.parseDate(model.start)!
                         let end = MiraikanUtil.parseDate(model.end)!
@@ -504,7 +503,6 @@ class Home : BaseListView {
             return cell
         } else {
             let rowItem = (items as? [Int: [Any]])?[sec]?[row]
-            NSLog("\(sec):\(row): \(rowItem)")
             if let menuItem = rowItem as? MenuItem {
                let menuRow = tableView.dequeueReusableCell(withIdentifier: menuCellId, for: indexPath)
                 // Normal Menu Row
