@@ -179,22 +179,3 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         self.present(vc, animated: true, completion: nil)
     }
 }
-
-
-extension UserDefaults {
-    @objc dynamic var isMoveLogStart: Bool {
-        return Bool("isMoveLogStart") ?? false
-    }
-
-    @objc dynamic var isLocationInput: Bool {
-        return Bool("isLocationInput") ?? false
-    }
-
-    @objc dynamic var DebugMode: Bool {
-        return Bool("DebugMode") ?? false
-    }
-
-    @objc dynamic var DebugLocationInput: Bool {
-        return Bool("DebugLocationInput") ?? false
-    }
-}
