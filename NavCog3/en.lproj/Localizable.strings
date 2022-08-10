@@ -263,6 +263,8 @@ Feedback is sending...";
 "Move Log" = "Move Log";
 "Move Log Start" = "Move\nLog\nStart";
 "Move Log End" = "Move\nLog\nEnd";
+"Location information input" = "Location information input";
+"Location Input" = "Location\nInput";
 
 // local push
 "Today's event is over" = "Today's event is over";

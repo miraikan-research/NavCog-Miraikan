@@ -283,6 +283,8 @@ NavCogの設定画面から
 "Move Log" = "移動記録機能";
 "Move Log Start" = "移動\n記録\n開始";
 "Move Log End" = "移動\n記録\n終了";
+"Location information input" = "位置情報入力";
+"Location Input" = "位置\n入力";
 
 // local push
 "Today's event is over" = "本日のイベントは終了しています";
