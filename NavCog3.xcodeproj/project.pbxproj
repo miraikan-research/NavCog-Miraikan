@@ -373,6 +373,11 @@
 		E5DC79882817E4D500EFF12F /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79872817E4D500EFF12F /* TabController.swift */; };
 		E5DC798A2817E4F100EFF12F /* BaseNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC79892817E4F100EFF12F /* BaseNavController.swift */; };
 		E5DC7990281A4E9A00EFF12F /* HomeTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC798F281A4E9A00EFF12F /* HomeTabController.swift */; };
+		E5DD185E28A0A3C800213F66 /* VoiceGuideButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD185D28A0A3C800213F66 /* VoiceGuideButton.swift */; };
+		E5DD186028A0AB0500213F66 /* LocationRecordingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD185F28A0AB0500213F66 /* LocationRecordingButton.swift */; };
+		E5DD186228A0B14100213F66 /* LocationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD186128A0B14100213F66 /* LocationInputView.swift */; };
+		E5DD186428A0B24300213F66 /* LocationInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5DD186328A0B24300213F66 /* LocationInputView.xib */; };
+		E5DD186628A0EB4700213F66 /* LocationInputButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD186528A0EB4700213F66 /* LocationInputButton.swift */; };
 		E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */; };
 		E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */; };
 		E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAD2844B7CF00BB4152 /* Button.swift */; };
@@ -718,6 +723,11 @@
 		E5DC79872817E4D500EFF12F /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		E5DC79892817E4F100EFF12F /* BaseNavController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavController.swift; sourceTree = "<group>"; };
 		E5DC798F281A4E9A00EFF12F /* HomeTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabController.swift; sourceTree = "<group>"; };
+		E5DD185D28A0A3C800213F66 /* VoiceGuideButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceGuideButton.swift; sourceTree = "<group>"; };
+		E5DD185F28A0AB0500213F66 /* LocationRecordingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRecordingButton.swift; sourceTree = "<group>"; };
+		E5DD186128A0B14100213F66 /* LocationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputView.swift; sourceTree = "<group>"; };
+		E5DD186328A0B24300213F66 /* LocationInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationInputView.xib; sourceTree = "<group>"; };
+		E5DD186528A0EB4700213F66 /* LocationInputButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputButton.swift; sourceTree = "<group>"; };
 		E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckViewController.swift; sourceTree = "<group>"; };
 		E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckView.swift; sourceTree = "<group>"; };
 		E5F52EAD2844B7CF00BB4152 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -1282,6 +1292,11 @@
 				E5F52EC82845A30300BB4152 /* ContentRow.swift */,
 				E5F52ECA2845AA8F00BB4152 /* ScheduleRow.swift */,
 				E5F52ED02845B0BC00BB4152 /* VoiceGuideRow.swift */,
+				E5DD185D28A0A3C800213F66 /* VoiceGuideButton.swift */,
+				E5DD185F28A0AB0500213F66 /* LocationRecordingButton.swift */,
+				E5DD186528A0EB4700213F66 /* LocationInputButton.swift */,
+				E5DD186128A0B14100213F66 /* LocationInputView.swift */,
+				E5DD186328A0B24300213F66 /* LocationInputView.xib */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1625,6 +1640,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5DD186428A0B24300213F66 /* LocationInputView.xib in Resources */,
 				D3A1183727294B0B00BEC1C8 /* nosound.aiff in Resources */,
 				D3A1183827294B0B00BEC1C8 /* miraikan_serverlist.json in Resources */,
 				D3A1183927294B0B00BEC1C8 /* HLPSettingViewPickerCell.xib in Resources */,
@@ -2280,9 +2296,11 @@
 				E5F52ECD2845ACD100BB4152 /* FloorMapModel.swift in Sources */,
 				E5DC79842817C7A000EFF12F /* StaffTabController.swift in Sources */,
 				D3A1180B27294B0B00BEC1C8 /* NavPreviewer.m in Sources */,
+				E5DD186028A0AB0500213F66 /* LocationRecordingButton.swift in Sources */,
 				E5F52ED12845B0BC00BB4152 /* VoiceGuideRow.swift in Sources */,
 				D364736D273E140C00C110B0 /* Home.swift in Sources */,
 				D3A1180C27294B0B00BEC1C8 /* FloorMapView.swift in Sources */,
+				E5DD186228A0B14100213F66 /* LocationInputView.swift in Sources */,
 				E5DC79822817C79300EFF12F /* SCTabController.swift in Sources */,
 				E5F52EB92844C27E00BB4152 /* NavButtonModel.swift in Sources */,
 				D39F3C2E27730ACD0014F1CE /* BlindExhibitionController.swift in Sources */,
@@ -2303,6 +2321,7 @@
 				D3A1181527294B0B00BEC1C8 /* SettingView.swift in Sources */,
 				D3A1181627294B0B00BEC1C8 /* LoginView.swift in Sources */,
 				D3A1181727294B0B00BEC1C8 /* SettingViewController.m in Sources */,
+				E5DD186628A0EB4700213F66 /* LocationInputButton.swift in Sources */,
 				D3A1181827294B0B00BEC1C8 /* ExhibitionDataStore.swift in Sources */,
 				D3A1181927294B0B00BEC1C8 /* BaseScrollView.swift in Sources */,
 				E5C5B93F286E905900A48E88 /* AudioGuideManager.swift in Sources */,
@@ -2322,6 +2341,7 @@
 				D3A1182227294B0B00BEC1C8 /* main.mm in Sources */,
 				E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */,
 				D3A1182327294B0B00BEC1C8 /* HLPSettingViewCell.m in Sources */,
+				E5DD185E28A0A3C800213F66 /* VoiceGuideButton.swift in Sources */,
 				D3A1182427294B0B00BEC1C8 /* FloorSelectionController.swift in Sources */,
 				D3B06195276346BB0006B0DA /* VoiceGuideController.swift in Sources */,
 				D3A1182627294B0B00BEC1C8 /* Logging.m in Sources */,

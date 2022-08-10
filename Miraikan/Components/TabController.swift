@@ -33,10 +33,14 @@ import UIKit
  */
 class TabController: UITabBarController, UITabBarControllerDelegate {
 
-    private var voiceGuideButton = UIButton()
-    private var logButton = UIButton()
+    private var voiceGuideButton = VoiceGuideButton()
+    private var logButton = LocationRecordingButton()
+    private var locationButton = LocationInputButton()
+    private var locationInputView = LocationInputView()
     var observer: NSKeyValueObservation?
     var debugObserver: NSKeyValueObservation?
+    var debugLocationObserver: NSKeyValueObservation?
+    var locationObserver: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,8 +66,7 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
 
         AudioGuideManager.shared.active()
         AudioGuideManager.shared.isActive(UserDefaults.standard.bool(forKey: "isVoiceGuideOn"))
-        setVoiceGuideButton()
-        setMoveLogButton()
+        setLayerButton()
         setKVO()
     }
 
@@ -82,150 +85,73 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
                                                      changeHandler: { [weak self] (defaults, change) in
             guard let self = self else { return }
             if let change = change.newValue {
-                self.isDisplayButton(change)
+                self.voiceGuideButton.isDisplayButton(change)
             }
         })
         
+        locationObserver = UserDefaults.standard.observe(\.isLocationInput, options: [.initial, .new], changeHandler: { [weak self] (defaults, change) in
+            guard let self = self else { return }
+            if let change = change.newValue {
+                self.locationInputView.isDisplayButton(change)
+            }
+        })
+
         debugObserver = UserDefaults.standard.observe(\.DebugMode, options: [.initial, .new], changeHandler: { [weak self] (defaults, change) in
             guard let self = self else { return }
             if let change = change.newValue {
                 UserDefaults.standard.set(false, forKey: "isMoveLogStart")
-                self.isDisplayMoveLogButton(change)
+                self.logButton.isDisplayButton(change)
+            }
+        })
+
+        debugLocationObserver = UserDefaults.standard.observe(\.DebugLocationInput, options: [.initial, .new], changeHandler: { [weak self] (defaults, change) in
+            guard let self = self else { return }
+            if let change = change.newValue {
+                self.locationButton.isDisplayButton(change)
+                if !change {
+                    let center = NotificationCenter.default
+                    center.post(name: NSNotification.Name(rawValue: "request_location_restart"), object: self)
+                }
             }
         })
     }
 
-    private func setVoiceGuideButton() {
+    private func setLayerButton() {
         var rightPadding: CGFloat = 0
+        var leftPadding: CGFloat = 0
         var bottomPadding: CGFloat = 0
         if let window = UIApplication.shared.windows.first {
             rightPadding = window.safeAreaInsets.right
+            leftPadding = window.safeAreaInsets.left
             bottomPadding = window.safeAreaInsets.bottom
         }
 
         let tabHeight = self.tabBar.frame.height
         
-        // Temporary design
-        voiceGuideButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.width - 100 - rightPadding,
-                                                  y: UIScreen.main.bounds.height - 90 - tabHeight - bottomPadding,
-                                                  width: 80,
-                                                  height: 80))
-        voiceGuideButton.backgroundColor = .white
-        voiceGuideButton.layer.cornerRadius = 30
-
-        voiceGuideButton.layer.borderColor = UIColor(red: 105/255, green: 0, blue: 50/255, alpha: 1).cgColor
-        voiceGuideButton.layer.borderWidth = 6.0
-
-        voiceGuideButton.layer.shadowColor = UIColor.black.cgColor
-        voiceGuideButton.layer.shadowOpacity = 0.3
-        voiceGuideButton.layer.shadowRadius = 5.0
-        voiceGuideButton.layer.shadowOffset = CGSize(width: 5.0, height: 5.0)
-
-        voiceGuideButton.titleLabel?.numberOfLines = 0
-
-        voiceGuideButton.setTitleColor(.black, for: .normal)
-        voiceGuideButton.setTitle(NSLocalizedString("Voice Guide Off", comment: ""), for: .normal)
-        voiceGuideButton.setTitle(NSLocalizedString("Voice Guide On", comment: ""), for: .selected)
-        voiceGuideButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
-        voiceGuideButton.titleLabel?.textAlignment = .center
-
-        voiceGuideButton.setImage(UIImage(named: "icons8-mute-24"), for: .normal)
-        voiceGuideButton.setImage(UIImage(named: "icons8-sound-24"), for: .selected)
-        
-        voiceGuideButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 30, right: 0)
-        voiceGuideButton.titleEdgeInsets = UIEdgeInsets(top: 30, left: -20, bottom: 0, right: 0)
-
-        voiceGuideButton.addTarget(self, action: #selector(self.buttonTapped(_:)), for: .touchUpInside)
-
-        voiceGuideButton.isSelected = UserDefaults.standard.bool(forKey: "isVoiceGuideOn")
-
+        voiceGuideButton.frame = CGRect(x: UIScreen.main.bounds.width - 100 - rightPadding,
+                                        y: UIScreen.main.bounds.height - 90 - tabHeight - bottomPadding,
+                                        width: 80,
+                                        height: 80)
         self.view.addSubview(voiceGuideButton)
-    }
 
-    @objc func buttonTapped(_ sender: UIButton) {
-        let isOn = !sender.isSelected
-        sender.isSelected = isOn
-        UserDefaults.standard.set(isOn, forKey: "isVoiceGuideOn")
-        AudioGuideManager.shared.isActive(isOn)
-    }
-
-    func isDisplayButton(_ isDisplay: Bool) {
-        if (voiceGuideButton.alpha == 1) == isDisplay {
-            return
-        }
-
-        DispatchQueue.main.async{
-            self.voiceGuideButton.alpha = isDisplay ? 0 : 1
-            UIView.animate(withDuration: 0.1, animations: { [weak self] in
-                guard let self = self else { return }
-                self.voiceGuideButton.alpha = isDisplay ? 1 : 0
-            })
-        }
-    }
-
-    private func setMoveLogButton() {
-        var rightPadding: CGFloat = 0
-        var bottomPadding: CGFloat = 0
-        if let window = UIApplication.shared.windows.first {
-            rightPadding = window.safeAreaInsets.right
-            bottomPadding = window.safeAreaInsets.bottom
-        }
-
-        let tabHeight = self.tabBar.frame.height
-        
-        // Temporary design
-        logButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.width - 100 - 10 - 60 - rightPadding,
-                                                  y: UIScreen.main.bounds.height - 90 + 10 - tabHeight - bottomPadding,
-                                                  width: 60,
-                                                  height: 60))
-        logButton.backgroundColor = .white
-        logButton.layer.cornerRadius = 30
-
-        logButton.layer.borderColor = UIColor(red: 105/255, green: 0, blue: 50/255, alpha: 1).cgColor
-        logButton.layer.borderWidth = 6.0
-
-        logButton.layer.shadowColor = UIColor.black.cgColor
-        logButton.layer.shadowOpacity = 0.3
-        logButton.layer.shadowRadius = 5.0
-        logButton.layer.shadowOffset = CGSize(width: 5.0, height: 5.0)
-
-        logButton.titleLabel?.numberOfLines = 0
-
-        logButton.setTitleColor(.black, for: .normal)
-        logButton.setTitle(NSLocalizedString("Move Log Start", comment: ""), for: .normal)
-        logButton.setTitle(NSLocalizedString("Move Log End", comment: ""), for: .selected)
-        logButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
-        logButton.titleLabel?.textAlignment = .center
-
-        logButton.addTarget(self, action: #selector(self.moveLogButtonTapped(_:)), for: .touchUpInside)
-
-        UserDefaults.standard.set(false, forKey: "isMoveLogStart")
-        logButton.isSelected = UserDefaults.standard.bool(forKey: "isMoveLogStart")
-        isDisplayMoveLogButton(UserDefaults.standard.bool(forKey: "DebugMode"))
-        
+        logButton.frame = CGRect(x: UIScreen.main.bounds.width - 100 - 10 - 60 - rightPadding,
+                                 y: UIScreen.main.bounds.height - 90 + 10 - tabHeight - bottomPadding,
+                                 width: 60,
+                                 height: 60)
         self.view.addSubview(logButton)
-    }
+        
+        locationButton.frame = CGRect(x: leftPadding + leftPadding + 100,
+                                      y: UIScreen.main.bounds.height - 90 + 10 - tabHeight - bottomPadding,
+                                      width: 60,
+                                      height: 60)
+        self.view.addSubview(locationButton)
 
-    @objc func moveLogButtonTapped(_ sender: UIButton) {
-        let isOn = !sender.isSelected
-        sender.isSelected = isOn
-        logButton.backgroundColor = isOn ? UIColor(red: 218/255, green: 245/255, blue: 255/255, alpha: 1) : .white
-
-        UserDefaults.standard.set(isOn, forKey: "isMoveLogStart")
-    }
-
-    func isDisplayMoveLogButton(_ isDisplay: Bool) {
-        if (logButton.alpha == 1) == isDisplay {
-            return
-        }
-
-        DispatchQueue.main.async{
-            self.logButton.alpha = isDisplay ? 0 : 1
-            UIView.animate(withDuration: 0.1, animations: { [weak self] in
-                guard let self = self else { return }
-                self.logButton.alpha = isDisplay ? 1 : 0
-            })
-        }
+        locationInputView.frame = CGRect(x: 0,
+                                         y: 0,
+                                         width: 360,
+                                         height: 440)
+        locationInputView.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 3)
+        self.view.addSubview(locationInputView)
     }
 }
 
@@ -235,8 +161,15 @@ extension UserDefaults {
         return Bool("isMoveLogStart") ?? false
     }
 
+    @objc dynamic var isLocationInput: Bool {
+        return Bool("isLocationInput") ?? false
+    }
+
     @objc dynamic var DebugMode: Bool {
         return Bool("DebugMode") ?? false
     }
 
+    @objc dynamic var DebugLocationInput: Bool {
+        return Bool("DebugLocationInput") ?? false
+    }
 }
