@@ -69,9 +69,6 @@ fileprivate class CardRow : BaseRow {
      Set data from DataSource
      */
     public func configure(_ model: CardModel) {
-        // Prevent it to be reloaded
-        // which can cause glitch
-        if isSet { return }
         
         // Set the data and flag
         if let data = try? Data(contentsOf: URL(string: "\(Host.miraikan.address)\(model.imagePc)")!),
@@ -454,6 +451,7 @@ class Home : BaseListView {
                     
                     guard let res = MiraikanUtil.decdoeToJSON(type: [CardModel].self, data: data)
                     else { return }
+//                    NSLog("\(URL(string: #file)!.lastPathComponent) \(#function): \(#line), \(_endpoint)")
                     let filtered = res.filter({ model in
                         let now = Date()
                         let start = MiraikanUtil.parseDate(model.start)!
