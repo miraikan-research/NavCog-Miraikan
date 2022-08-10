@@ -502,7 +502,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)vibrate
 {
-//    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
 - (void)webView:(HLPWebView *)webView didChangeLatitude:(double)lat longitude:(double)lng floor:(double)floor synchronized:(BOOL)sync
@@ -817,7 +817,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [nds requestRouteFrom:from.singleId
                            To:to._id
               withPreferences:prefs complete:^{

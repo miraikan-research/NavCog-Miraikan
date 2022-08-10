@@ -386,7 +386,7 @@ void uncaughtExceptionHandler(NSException *exception)
     temporaryFloor = location.floor;
 
     if ((continueFloorCount > 8) &&
-        (locationChangedTime + 200 > now)) {
+        (locationChangedTime + 250 > now)) {
         currentFloor = temporaryFloor;
         [[NSNotificationCenter defaultCenter] postNotificationName:LOCATION_CHANGED_NOTIFICATION object:self userInfo:data];
     }

@@ -365,6 +365,7 @@
 		E5BFB1A028617AB400D57E93 /* LandmarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */; };
 		E5C5B93F286E905900A48E88 /* AudioGuideManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */; };
 		E5C5B94128767ED100A48E88 /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C5B94028767ED100A48E88 /* UINavigationControllerExtension.swift */; };
+		E5CBF9A228A3792F00954AEF /* UserDefaultsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CBF9A128A3792F00954AEF /* UserDefaultsExtension.swift */; };
 		E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797A2817C72800EFF12F /* BaseTabController.swift */; };
 		E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797D2817C77600EFF12F /* AITabController.swift */; };
 		E5DC79802817C78700EFF12F /* LoginTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797F2817C78700EFF12F /* LoginTabController.swift */; };
@@ -715,6 +716,7 @@
 		E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModel.swift; sourceTree = "<group>"; };
 		E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGuideManager.swift; sourceTree = "<group>"; };
 		E5C5B94028767ED100A48E88 /* UINavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtension.swift; sourceTree = "<group>"; };
+		E5CBF9A128A3792F00954AEF /* UserDefaultsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtension.swift; sourceTree = "<group>"; };
 		E5DC797A2817C72800EFF12F /* BaseTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabController.swift; sourceTree = "<group>"; };
 		E5DC797D2817C77600EFF12F /* AITabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITabController.swift; sourceTree = "<group>"; };
 		E5DC797F2817C78700EFF12F /* LoginTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTabController.swift; sourceTree = "<group>"; };
@@ -1235,6 +1237,7 @@
 				D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */,
 				E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */,
 				E5C5B94028767ED100A48E88 /* UINavigationControllerExtension.swift */,
+				E5CBF9A128A3792F00954AEF /* UserDefaultsExtension.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1283,7 +1286,6 @@
 				D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */,
 				E5DC797A2817C72800EFF12F /* BaseTabController.swift */,
 				E5DC79892817E4F100EFF12F /* BaseNavController.swift */,
-				E5DC79872817E4D500EFF12F /* TabController.swift */,
 				E5F52ED22845B24300BB4152 /* LinkRow.swift */,
 				E5F52EC02845A17200BB4152 /* NavButtonRow.swift */,
 				E5F52EC22845A1DB00BB4152 /* DescriptionRow.swift */,
@@ -1323,6 +1325,7 @@
 		E5DC797C2817C75800EFF12F /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				E5DC79872817E4D500EFF12F /* TabController.swift */,
 				E5DC797D2817C77600EFF12F /* AITabController.swift */,
 				E5DC797F2817C78700EFF12F /* LoginTabController.swift */,
 				E5DC79812817C79300EFF12F /* SCTabController.swift */,
@@ -2298,6 +2301,7 @@
 				D3A1180B27294B0B00BEC1C8 /* NavPreviewer.m in Sources */,
 				E5DD186028A0AB0500213F66 /* LocationRecordingButton.swift in Sources */,
 				E5F52ED12845B0BC00BB4152 /* VoiceGuideRow.swift in Sources */,
+				E5CBF9A228A3792F00954AEF /* UserDefaultsExtension.swift in Sources */,
 				D364736D273E140C00C110B0 /* Home.swift in Sources */,
 				D3A1180C27294B0B00BEC1C8 /* FloorMapView.swift in Sources */,
 				E5DD186228A0B14100213F66 /* LocationInputView.swift in Sources */,
