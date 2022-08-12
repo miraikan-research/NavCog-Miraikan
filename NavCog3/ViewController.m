@@ -85,7 +85,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)prepareForDealloc
 {
-    [_webView triggerWebviewControl:HLPWebviewControlEndNavigation];
+    [_webView triggerWebviewControl: HLPWebviewControlEndNavigation];
 
     _webView.delegate = nil;
     
@@ -187,6 +187,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
     if (!dialogHelper) {
         dialogHelper = [[DialogViewHelper alloc] init];
         double scale = 0.75;
@@ -206,6 +208,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     _webView.delegate = nil;
     
     dialogHelper.delegate = nil;
@@ -219,6 +222,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
     [checkMapCenterTimer invalidate];
     [checkStateTimer invalidate];
 }
@@ -304,7 +308,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:target requiringSecureCoding:NO error:nil];
     NSString *dataStr = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
     
-    NSString *script = [NSString stringWithFormat:@"$hulop.route.callService(%@, null)", dataStr];
+    NSString *script = [NSString stringWithFormat: @"$hulop.route.callService(%@, null)", dataStr];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [_webView evaluateJavaScript:script completionHandler:nil];
@@ -328,10 +332,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
         return;
     }
     
-    NSData *data = [NSJSONSerialization dataWithJSONObject:@{@"landmarks":temp} options:0 error:nil];
+    NSData *data = [NSJSONSerialization dataWithJSONObject: @{@"landmarks":temp} options:0 error:nil];
     NSString *dataStr = [[NSString alloc] initWithData:data  encoding:NSUTF8StringEncoding];
     
-    NSString *script = [NSString stringWithFormat:@"$hulop.map.initTarget(%@, null)", dataStr];
+    NSString *script = [NSString stringWithFormat: @"$hulop.map.initTarget(%@, null)", dataStr];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [_webView evaluateJavaScript:script completionHandler:nil];
@@ -750,8 +754,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
                             @"accuracy": @(location.accuracy),
                             @"rotate": @(0), // dummy
                             @"orientation": @(999), //dummy
-                            @"debug_info": location.params?location.params[@"debug_info"] : [NSNull null],
-                            @"debug_latlng": location.params?location.params[@"debug_latlng"] : [NSNull null]
+                            @"debug_info": location.params ? location.params[@"debug_info"] : [NSNull null],
+                            @"debug_latlng": location.params ? location.params[@"debug_latlng"] : [NSNull null]
                             }
                   withName: @"XYZ"];
 
@@ -821,10 +825,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [nds requestRouteFrom:from.singleId
                            To:to._id
               withPreferences:prefs complete:^{
-                __weak typeof(self) weakself = self;
+                if (self == nil) return;
                 nds.previewMode = [MiraikanUtil isPreview];
                 nds.exerciseMode = NO;
-                [weakself showRoute];
+                [self showRoute];
             }
         ];
     });
@@ -835,25 +839,25 @@ typedef NS_ENUM(NSInteger, ViewState) {
 - (IBAction)doSearch:(id)sender {
     state = ViewStateTransition;
     [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlRouteSearchButton];
+    [_webView triggerWebviewControl: HLPWebviewControlRouteSearchButton];
 }
 
 - (IBAction)stopNavigation:(id)sender {
     state = ViewStateTransition;
     [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlNone];
+    [_webView triggerWebviewControl: HLPWebviewControlNone];
 }
 
 - (IBAction)doCancel:(id)sender {
     state = ViewStateTransition;
     [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlNone];
+    [_webView triggerWebviewControl: HLPWebviewControlNone];
 }
 
 - (IBAction)doDone:(id)sender {
     state = ViewStateTransition;
     [self updateView];
-    [_webView triggerWebviewControl:HLPWebviewControlDoneButton];
+    [_webView triggerWebviewControl: HLPWebviewControlDoneButton];
 }
 
 - (IBAction)doBack:(id)sender {
