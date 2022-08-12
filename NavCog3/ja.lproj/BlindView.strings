@@ -146,9 +146,6 @@
 "FloorNumType" = "cardinal";
 
 /* No comment provided by engineer. */
-"Follow" = "-NavCog-";
-
-/* No comment provided by engineer. */
 "From_button" = "%@から";
 
 /* No comment provided by engineer. */

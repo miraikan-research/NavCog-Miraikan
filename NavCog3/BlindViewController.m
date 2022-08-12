@@ -45,7 +45,7 @@
     NavCommander *commander;
     NavPreviewer *previewer;
     
-    NSTimer *timerForSimulator;
+    UIButton *titleButton;
     
     CMMotionManager *motionManager;
     NSOperationQueue *motionQueue;
@@ -143,15 +143,15 @@
         }
     }
     BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-        devMode = [ud boolForKey:@"developer_mode"];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]) {
+        devMode = [ud boolForKey: @"developer_mode"];
     }
     _webView.isDeveloperMode = devMode;
-    _webView.userMode = [ud stringForKey:@"user_mode"];
+    _webView.userMode = [ud stringForKey: @"user_mode"];
     _webView.config = @{
-                        @"serverHost":[ud stringForKey:@"selected_hokoukukan_server"],
-                        @"serverContext":[ud stringForKey:@"hokoukukan_server_context"],
-                        @"usesHttps":@([ud boolForKey:@"https_connection"])
+                        @"serverHost": [ud stringForKey: @"selected_hokoukukan_server"],
+                        @"serverContext": [ud stringForKey: @"hokoukukan_server_context"],
+                        @"usesHttps": @([ud boolForKey: @"https_connection"])
                         };
     _webView.delegate = self;
     _webView.tts = self;
@@ -177,7 +177,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uiStateChanged:) name:WCUI_STATE_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logReplay:) name:REQUEST_LOG_REPLAY object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugPeerStateChanged:) name:DEBUG_PEER_STATE_CHANGE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestDialogStart:) name:REQUEST_DIALOG_START object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dialogStateChanged:) name:DialogManager.DIALOG_AVAILABILITY_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLocaionUnknown:) name:REQUEST_HANDLE_LOCATION_UNKNOWN object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationStatusChanged:) name:NAV_LOCATION_STATUS_CHANGE object:nil];
@@ -200,11 +199,12 @@
         NSString *message = NSLocalizedString(@"NoAltimeterAlertMessage", @"");
         NSString *ok = NSLocalizedString(@"I_Understand", @"");
         
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                       message:message
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:ok
-                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle: title
+                                                                       message: message
+                                                                preferredStyle: UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle: ok
+                                                  style: UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction *action) {
                                                   }]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -216,6 +216,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(elementDidBecomeFocused:) name:AccessibilityElementDidBecomeFocused object:nil];
     
     if (!initialViewDidAppear) {
@@ -246,33 +247,18 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self updateView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-//    _webView.delegate = nil;
-//
-////    [navigator stop];
-//    navigator.delegate = nil;
-//    navigator = nil;
-//
-//    commander.delegate = nil;
-//    commander = nil;
-//
-//    previewer.delegate = nil;
-//    previewer = nil;
-//
-//    dialogHelper.delegate = nil;
-//    dialogHelper = nil;
-//
-//    _settingButton = nil;
-    
-//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"developer_mode"];
+    [super viewWillDisappear: animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
     [checkMapCenterTimer invalidate];
     [[NSNotificationCenter defaultCenter] postNotificationName:DISABLE_ACCELEARATION object:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:ENABLE_STABILIZE_LOCALIZE object:self];
@@ -300,8 +286,8 @@
     [_webView getCenterWithCompletion:^(HLPLocation *loc) {
         if (loc != nil) {
             [NavDataStore sharedDataStore].mapCenter = loc;
-            HLPLocation *cloc = [NavDataStore sharedDataStore].currentLocation;
-            if (isnan(cloc.lat) || isnan(cloc.lng)) {
+            HLPLocation *center = [NavDataStore sharedDataStore].currentLocation;
+            if (isnan(center.lat) || isnan(center.lng)) {
                 NSDictionary *param =
                 @{
                   @"floor": @(loc.floor),
@@ -328,7 +314,16 @@
 {
     [dialogHelper inactive];
     dialogHelper.helperView.disabled = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_DIALOG_START object:self];
+
+    if ([navigator isActive] ||
+        self.navigationController.topViewController != self ||
+        !self.searchButton.enabled) {
+        
+        [[NavSound sharedInstance] playFail];
+        return;
+    }
+    [[NavSound sharedInstance] playVoiceRecoEnd];
+    [self performSegueWithIdentifier:@"show_search" sender:@[@"toDestinations", @"show_dialog"]];
 }
 
 // show p2p debug
@@ -445,14 +440,11 @@
             [[_settingButton valueForKey:@"view"] addGestureRecognizer:longPressGesture];
         }
         
-        UILabel *titleView = [[UILabel alloc] init];
-        titleView.text = NSLocalizedStringFromTable(exerciseMode?@"Exercise":(previewMode?@"Preview":@"NavCog"), @"BlindView", @"");
-        if (debugFollower) {
-            titleView.text = NSLocalizedStringFromTable(@"Follow", @"BlindView", @"");
-        }
-        titleView.accessibilityLabel = @"( )";
-        titleView.accessibilityTraits = UIAccessibilityTraitStaticText;
-        self.navigationItem.titleView = titleView;
+        NSString *titleStr = NSLocalizedStringFromTable(exerciseMode ? @"Exercise" : (previewMode ? @"Preview" : @"Miraikan"), @"BlindView", @"");
+        titleButton = [[UIButton alloc] init];
+        [titleButton addTarget:self action:@selector(titleAction) forControlEvents:UIControlEventTouchUpInside];
+        [self setTitleButton: titleStr];
+        self.navigationItem.titleView = titleButton;
         
         // Show Setting Button for current location only
         if (debugFollower || initFlag) {
@@ -478,7 +470,7 @@
         
         [self dialogHelperUpdate];
         
-        NSString *cn = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"lastcommit" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
+        NSString *cn = [NSString stringWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"lastcommit" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
         [self.commitLabel setText:cn];
         
         NSMutableArray *elements = [@[self.navigationItem] mutableCopy];
@@ -488,6 +480,19 @@
         [elements addObject:_cover];
         self.view.accessibilityElements = elements;
     });
+}
+
+- (void)setTitleButton:(NSString*)title
+{
+    [titleButton setTitle:title forState: UIControlStateNormal];
+    [titleButton setTitleColor:UIColor.blueColor forState: UIControlStateNormal];
+    [titleButton.titleLabel setFont: [UIFont boldSystemFontOfSize: 16]];
+    [titleButton setIsAccessibilityElement: false];
+}
+
+- (void)titleAction
+{
+    
 }
 
 - (void)dialogHelperUpdate
@@ -746,26 +751,19 @@
         
         if (lastOrientationSent + 0.2 < now) {
             [_webView sendData:@[@{
-                                @"type":@"ORIENTATION",
-                                @"z":@(orientation)
+                                @"type": @"ORIENTATION",
+                                @"z": @(orientation)
                                 }]
-                      withName:@"Sensor"];
+                      withName: @"Sensor"];
             lastOrientationSent = now;
         }
-        
         
         location = locations[@"actual"];
         if (!location || [location isEqual:[NSNull null]]) {
             return;
         }
         
-        /*
-         if (isnan(location.lat) || isnan(location.lng)) {
-         return;
-         }
-         */
-        
-        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey:@"webview_update_min_interval"]) {
+        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
                 return;
             }
@@ -775,14 +773,14 @@
         double floor = location.floor;
         
         [_webView sendData:@{
-                            @"lat":@(location.lat),
-                            @"lng":@(location.lng),
-                            @"floor":@(floor),
-                            @"accuracy":@(location.accuracy),
-                            @"rotate":@(0), // dummy
-                            @"orientation":@(999), //dummy
-                            @"debug_info":location.params?location.params[@"debug_info"]:[NSNull null],
-                            @"debug_latlng":location.params?location.params[@"debug_latlng"]:[NSNull null]
+                            @"lat": @(location.lat),
+                            @"lng": @(location.lng),
+                            @"floor": @(floor),
+                            @"accuracy": @(location.accuracy),
+                            @"rotate": @(0), // dummy
+                            @"orientation": @(999), //dummy
+                            @"debug_info": location.params ? location.params[@"debug_info"] : [NSNull null],
+                            @"debug_latlng": location.params ? location.params[@"debug_latlng"] : [NSNull null]
                             }
                   withName:@"XYZ"];
 
@@ -1116,34 +1114,6 @@
     }
 }
 
-#pragma mark - NavNavigator actions
-
-- (IBAction)repeatLastSpokenAction:(id)sender
-{
-    
-}
-
-// tricky information in NavCog
-// If there is any accessibility information the user is notified
-// The user can access the information by executing this command
-- (IBAction)speakAccessibilityInfo:(id)sender
-{
-    
-}
-
-// speak surroungind information
-//  - link info for source node
-//  - transit info
-- (IBAction)speakSurroundingPOI:(id)sender
-{
-    
-}
-
-- (IBAction)stopNavigation:(id)sender
-{
-    
-}
-
 #pragma mark - NavNavigatorDelegate
 
 - (void)didActiveStatusChanged:(NSDictionary *)properties
@@ -1221,10 +1191,6 @@
 - (void)didNavigationStarted:(NSDictionary *)properties
 {
     self.isNaviStarted = YES;
-    if (timerForSimulator) {
-        [timerForSimulator invalidate];
-        timerForSimulator = nil;
-    }
     [NavDataStore sharedDataStore].start = [[NSDate date] timeIntervalSince1970];
     dispatch_async(dispatch_get_main_queue(), ^{
         [_webView evaluateJavaScript:[NSString stringWithFormat:@"$hulop.map.getMap().getView().setZoom(%f);", [[NSUserDefaults standardUserDefaults] doubleForKey:@"zoom_for_navigation"]] completionHandler:nil];
@@ -1520,24 +1486,6 @@
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_NAVIGATION_RESUME object:nil];
     showingPage = nil;
-}
-
-- (void)requestDialogStart:(NSNotification *)note
-{
-    if ([navigator isActive] ||
-        self.navigationController.topViewController != self ||
-        !self.searchButton.enabled) {
-        
-        [[NavSound sharedInstance] playFail];
-        return;
-    }
-    [[NavSound sharedInstance] playVoiceRecoEnd];
-    [self performSegueWithIdentifier:@"show_search" sender:@[@"toDestinations", @"show_dialog"]];
-    
-    // TODO: Screen transition Test
-//    [dialogHelper inactive];
-//    dialogHelper.helperView.hidden = YES;
-//    [self performSegueWithIdentifier:@"show_dialog_blind_wc" sender:self];
 }
 
 - (void)handleLocaionUnknown:(NSNotification*)note
