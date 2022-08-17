@@ -69,6 +69,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     BOOL isSetupMap;
     BOOL isInitTarget;
     BOOL isSetupNavigation;
+    BOOL reserveNavigation;
 }
 
 @end
@@ -156,7 +157,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
 
-    checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
+    checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:NO];
     checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
     [self updateView];
 
@@ -243,15 +244,49 @@ typedef NS_ENUM(NSInteger, ViewState) {
     return topController;
 }
 
+- (BOOL)initLocation {
+    double lat = 0;
+    double lng = 0;
+    double floor = 0;
+    HLPLocation *current = [NavDataStore sharedDataStore].currentLocation;
+    if (isnan(current.lat) || isnan(current.lng)) {
+        return false;
+    }
+
+    lat = current.lat;
+    lng = current.lng;
+    floor = current.floor + 1;
+
+    NSDictionary *param =
+    @{
+      @"floor": @(floor),
+      @"lat": @(lat),
+      @"lng": @(lng),
+      @"sync": @(NO)
+      };
+    HLPLocation *center = [[HLPLocation alloc] initWithLat: lat
+                                                       Lng: lng
+                                                     Floor: floor];
+    [NavDataStore sharedDataStore].mapCenter = center;
+    [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
+    return true;
+}
+
 - (void)checkMapCenter:(NSTimer*)timer
 {
     NSString *script = @"(function(){var a=$hulop.map.getCenter();var f=$hulop.indoor.getCurrentFloor();f=f>0?f-1:f;return {lat:a[1],lng:a[0],floor:f};})()";
     [_webView evaluateJavaScript:script completionHandler:^(id _Nullable state, NSError * _Nullable error) {
         NSDictionary *json = state;
         if (json) {
-            HLPLocation *center = [[HLPLocation alloc] initWithLat: [json[@"lat"] doubleValue]
-                                                                Lng: [json[@"lng"] doubleValue]
-                                                              Floor: [json[@"floor"] doubleValue]];
+            double lat = [json[@"lat"] doubleValue];
+            double lng = [json[@"lng"] doubleValue];
+            double floor = [json[@"floor"] doubleValue];
+            if (lat == 0 || lng == 0 || floor == 0) {
+                return;
+            }
+            HLPLocation *center = [[HLPLocation alloc] initWithLat: lat
+                                                               Lng: lng
+                                                             Floor: floor];
             [NavDataStore sharedDataStore].mapCenter = center;
             HLPLocation *current = [NavDataStore sharedDataStore].currentLocation;
             if (isnan(current.lat) || isnan(current.lng)) {
@@ -290,6 +325,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                 state = ViewStateNavigation;
                 dialogHelper.helperView.hidden = YES;
 //                [self hiddenVoiceGuide];
+//                NSLog(@"%s: %d, %@" , __func__, __LINE__, hash);
                 [_webView setLocationHash:hash];
                 isNaviStarted = YES;
                 return;
@@ -311,6 +347,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSString *script = [NSString stringWithFormat: @"$hulop.route.callService(%@, null)", dataStr];
     
     dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"%s: %d, %@" , __func__, __LINE__, script);
         [_webView evaluateJavaScript:script completionHandler:nil];
         isNaviStarted = YES;
     });
@@ -338,6 +375,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSString *script = [NSString stringWithFormat: @"$hulop.map.initTarget(%@, null)", dataStr];
     
     dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"%s: %d, %@" , __func__, __LINE__, script);
         [_webView evaluateJavaScript:script completionHandler:nil];
     });
     isInitTarget = true;
@@ -364,6 +402,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSString *script = [NSString stringWithFormat:@"$hulop.map.showRoute(%@, null, true, true);$('#map-page').trigger('resize');", dataStr];
     
     dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"%s: %d, %@" , __func__, __LINE__, script);
         [NavUtil hideModalWaiting];
         [_webView evaluateJavaScript:script completionHandler:nil];
     });
@@ -377,6 +416,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
 
     [_webView getStateWithCompletionHandler:^(NSDictionary * _Nonnull json) {
+//        NSLog(@"%s: %d, %@" , __func__, __LINE__, json);
         [[NSNotificationCenter defaultCenter] postNotificationName:WCUI_STATE_CHANGED_NOTIFICATION object:self userInfo:json];
     }];
 }
@@ -511,6 +551,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)webView:(HLPWebView *)webView didChangeLatitude:(double)lat longitude:(double)lng floor:(double)floor synchronized:(BOOL)sync
 {
+    if (floor == 0) {
+        return;
+    }
     NSDictionary *loc =
     @{
       @"lat": @(lat),
@@ -518,6 +561,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
       @"floor": @(floor),
       @"sync": @(sync),
       };
+//    NSLog(@"%s: %d, %@" , __func__, __LINE__, loc);
     [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:loc];
 }
 
@@ -533,6 +577,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
       @"page": page,
       @"navigation": @(inNavigation),
       };
+//    NSLog(@"%s: %d, %@" , __func__, __LINE__, uiState);
     [[NSNotificationCenter defaultCenter] postNotificationName:WCUI_STATE_CHANGED_NOTIFICATION object:self userInfo:uiState];
 }
 
@@ -546,6 +591,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
       @"from": from,
       @"to": to,
       };
+//    NSLog(@"%s: %d, %@" , __func__, __LINE__, navigationInfo);
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_RATING object:self userInfo:navigationInfo];
 }
 
@@ -605,6 +651,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSString *page = uiState[@"page"];
     BOOL inNavigation = [uiState[@"navigation"] boolValue];
 
+//    NSLog(@"%s: %d, page:%@, %d" , __func__, __LINE__, page, inNavigation);
     if (page) {
         if ([page isEqualToString: @"control"]) {
             state = ViewStateSearch;
@@ -633,9 +680,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
                     [self initTarget:landmarks];
                 }
                 
-                if ([self destId]) {
-                    [self setupNavigation];
-                }
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    if ([self initLocation]) {
+                        reserveNavigation = true;
+                    }
+                });
             }
             
             NavDataStore *nds = [NavDataStore sharedDataStore];
@@ -680,6 +729,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     state = ViewStateNavigation;
     dialogHelper.helperView.hidden = YES;
 //    [self hiddenVoiceGuide];
+//    NSLog(@"%s: %d, %@" , __func__, __LINE__, hash);
     [_webView setLocationHash:hash];
     isNaviStarted = YES;
 }
@@ -705,18 +755,22 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)locationChanged: (NSNotification*) note
 {
+//    NSLog(@"%s: %d, %@" , __func__, __LINE__, note);
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
         if (appState == UIApplicationStateBackground || appState == UIApplicationStateInactive) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         
         NSDictionary *locations = [note userInfo];
         if (!locations) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         HLPLocation *location = locations[@"current"];
         if (!location || [location isEqual:[NSNull null]]) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         
@@ -735,11 +789,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         location = locations[@"actual"];
         if (!location || [location isEqual:[NSNull null]]) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         
         if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
+//                NSLog(@"%s: %d" , __func__);
                 return;
             }
             //return; // prevent too much send location info
@@ -764,11 +820,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [NavUtil hideWaitingForView:self.view];
 
         if (!self.destId || isNaviStarted) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
-        if (!isInitTarget) {
-            return;
-        }
+//        if (!isInitTarget) {
+//            NSLog(@"%s: %d, return" , __func__, __LINE__);
+//            return;
+//        }
 
         if ([self destId]) {
             if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
@@ -777,7 +835,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
                     : NSLocalizedString(@"Loading, please wait",@"");
                 [NavUtil showModalWaitingWithMessage:msg];
             }
-            [self setupNavigation];
+            
+            if (reserveNavigation) {
+                [self setupNavigation];
+            }
         }
     });
 }
@@ -795,17 +856,20 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)setupNavigation
 {
+//    NSLog(@"%s: %d" , __func__, __LINE__);
     if (isSetupNavigation) {
+//        NSLog(@"%s: %d" , __func__);
         return;
     }
     
     NavDataStore *nds = [NavDataStore sharedDataStore];
     if (nds.directory == nil) {
+//        NSLog(@"%s: %d" , __func__);
         return;
     }
 
     NavDestination *from = [NavDataStore destinationForCurrentLocation];
-    NavDestination *to = [nds destinationByID:[self destId]];
+//    NavDestination *to = [nds destinationByID:[self destId]];
 
     HLPLocation *location = nds.currentLocation;
     if (isnan(location.lat) || isnan(location.lng)) {
@@ -815,23 +879,24 @@ typedef NS_ENUM(NSInteger, ViewState) {
     isSetupNavigation = true;
     [self startNavi:location];
     
-    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+//    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
                                      withOptions:AVAudioSessionCategoryOptionAllowBluetooth
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [nds requestRouteFrom:from.singleId
-                           To:to._id
-              withPreferences:prefs complete:^{
-                if (self == nil) return;
-                nds.previewMode = [MiraikanUtil isPreview];
-                nds.exerciseMode = NO;
-                [self showRoute];
-            }
-        ];
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//        NSLog(@"%s: %d" , __func__, __LINE__);
+//        [nds requestRouteFrom:from.singleId
+//                           To:to._id
+//              withPreferences:prefs complete:^{
+//                if (self == nil) return;
+//                nds.previewMode = [MiraikanUtil isPreview];
+//                nds.exerciseMode = NO;
+//                [self showRoute];
+//            }
+//        ];
+//    });
 }
 
 #pragma mark - IBActions
