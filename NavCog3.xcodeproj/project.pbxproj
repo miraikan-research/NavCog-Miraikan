@@ -220,6 +220,7 @@
 		E5DD186228A0B14100213F66 /* LocationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD186128A0B14100213F66 /* LocationInputView.swift */; };
 		E5DD186428A0B24300213F66 /* LocationInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5DD186328A0B24300213F66 /* LocationInputView.xib */; };
 		E5DD186628A0EB4700213F66 /* LocationInputButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DD186528A0EB4700213F66 /* LocationInputButton.swift */; };
+		E5E31F1728ACCCAD00445462 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E31F1628ACCCAD00445462 /* UIColorExtension.swift */; };
 		E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */; };
 		E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */; };
 		E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAD2844B7CF00BB4152 /* Button.swift */; };
@@ -476,6 +477,7 @@
 		E5DD186128A0B14100213F66 /* LocationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputView.swift; sourceTree = "<group>"; };
 		E5DD186328A0B24300213F66 /* LocationInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationInputView.xib; sourceTree = "<group>"; };
 		E5DD186528A0EB4700213F66 /* LocationInputButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputButton.swift; sourceTree = "<group>"; };
+		E5E31F1628ACCCAD00445462 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckViewController.swift; sourceTree = "<group>"; };
 		E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckView.swift; sourceTree = "<group>"; };
 		E5F52EAD2844B7CF00BB4152 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -822,6 +824,7 @@
 				E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */,
 				E5C5B94028767ED100A48E88 /* UINavigationControllerExtension.swift */,
 				E5CBF9A128A3792F00954AEF /* UserDefaultsExtension.swift */,
+				E5E31F1628ACCCAD00445462 /* UIColorExtension.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1419,6 +1422,7 @@
 				D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */,
 				D3A117F927294B0B00BEC1C8 /* DownloadViewController.m in Sources */,
 				E5F52EBB2844C2DE00BB4152 /* ExhibitionContentModel.swift in Sources */,
+				E5E31F1728ACCCAD00445462 /* UIColorExtension.swift in Sources */,
 				D3A117FA27294B0B00BEC1C8 /* NavCoverView.m in Sources */,
 				D3A117FB27294B0B00BEC1C8 /* DestinationTableViewController.m in Sources */,
 				E5F52ECF2845AD4800BB4152 /* CardModel.swift in Sources */,
