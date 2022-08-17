@@ -183,42 +183,23 @@ class StyledButton: UIButton {
     private func setupDesign() {
         self.setTitleColor(mainColor, for: .normal)
         self.setTitleColor(subColor, for: .highlighted)
+        self.setBackgroundImage(subColor.createColorImage(), for: .normal)
+        self.setBackgroundImage(mainColor.createColorImage(), for: .highlighted)
+        self.clipsToBounds = true
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
         self.layer.borderColor = mainColor.cgColor
-        self.layer.backgroundColor = subColor.cgColor
         self.contentEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
     }
 
     private func setupAction() {
         self.addTarget(self, action: #selector(_touchUpInside(_:)), for: .touchUpInside)
-        self.addTarget(self, action: #selector(_touchInside), for: .touchDown)
-        self.addTarget(self, action: #selector(_touchInside(_:)), for: .touchDragInside)
-        self.addTarget(self, action: #selector(_touchOutside(_:)), for: .touchDragOutside)
     }
 
     @objc private func _touchUpInside(_ sender: UIButton) {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.setTitleColor(self.mainColor, for: .normal)
-            self.layer.backgroundColor = self.subColor.cgColor
-        }, completion: { [weak self] finished in
-            guard let self = self else { return }
-            if let _f = self.action {
-                _f(self)
-            }
-        })
-    }
-
-    @objc private func _touchInside(_ sender: UIButton) {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.layer.backgroundColor = self.mainColor.cgColor
-        })
-    }
-
-    @objc private func _touchOutside(_ sender: UIButton) {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.layer.backgroundColor = self.subColor.cgColor
-        })
+        if let _f = self.action {
+            _f(self)
+        }
     }
 
     @objc public func tapAction(_ action: @escaping ((UIButton)->())) {
