@@ -88,4 +88,6 @@ typedef NSArray<ServerEntry*> ServerList;
 
 - (NSArray* _Nullable) extraMenuList;
 - (NSString*_Nonnull)convertRelativePath:(NSString*_Nonnull)orig;
+- (void)setDataDownloaded:(BOOL) isCompleted;
+- (BOOL)checkDataDownloaded;
 @end

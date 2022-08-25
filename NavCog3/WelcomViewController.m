@@ -30,6 +30,10 @@
 #import <HLPLocationManager/HLPLocationManager.h>
 #import "NavUtil.h"
 #import "InitViewController.h"
+#import "ConfigManager.h"
+#import <UserNotifications/UserNotifications.h>
+
+@import HLPDialog;
 
 @interface WelcomViewController ()
 
@@ -40,23 +44,28 @@
     int agreementCount;
     int retryCount;
     BOOL networkError;
+    CBCentralManager *bluetoothManager;
+    CLLocationManager *locationManager;
+    BOOL isLocationAlert;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
- 
+
     agreementCount = 0;
     first = YES;
+    isLocationAlert = NO;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dataInitializeRestart:) name:DATA_INITIALIZE_RESTART object:nil];
+
     [self updateView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    // TODO set serverlist address
     if (first) {
         first = NO;
-        [self checkConfig];
+        [self detectBluetooth];
     }
     self.navigationItem.hidesBackButton = YES;
 }
@@ -71,6 +80,11 @@
         }
         self.retryButton.hidden = !networkError;
     });
+}
+
+- (void) dataInitializeRestart:(NSNotification*) note
+{
+    [self detectBluetooth];
 }
 
 - (void)didNetworkError
@@ -160,6 +174,9 @@
                 });
             } else {
                 NSLog(@"file downloaded");
+                [config setDataDownloaded:true];
+                [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_INIT object:nil];
+
                 NSArray *files = config.downloadConfig[@"map_files"];
                 NSFileManager *fm = [NSFileManager defaultManager];
 
@@ -190,16 +207,29 @@
                                                                     object:self
                                                                   userInfo:config.selectedServerConfig];
                 
+                NSString *hostname = config.selected.hostname;
+                [[NSUserDefaults standardUserDefaults] setObject:hostname forKey:@"selected_hokoukukan_server"];
+                
+                NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                
+                NSString *mode = [ud stringForKey:@"RouteMode"];
+                if (mode.length == 0) {
+                    mode = @"user_general";
+                }
+
+                [ud setObject:mode forKey:@"user_mode"];
+                [DialogManager sharedManager].userMode = mode;
+
+                // load server presets for the user mode
+                [ConfigManager loadConfig:[NSString stringWithFormat:@"presets/%@.plist", [mode substringFromIndex:5]]];
+
+                [Logging stopLog];
+                if ([[NSUserDefaults standardUserDefaults] boolForKey:@"logging_to_file"]) {
+                    BOOL sensor = [[NSUserDefaults standardUserDefaults] boolForKey:@"logging_sensor"];
+                    [Logging startLog:sensor];
+                }
+
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSString *hostname = config.selected.hostname;
-                    [[NSUserDefaults standardUserDefaults] setObject:hostname forKey:@"selected_hokoukukan_server"];
-                        
-                    [Logging stopLog];
-                    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"logging_to_file"]) {
-                        BOOL sensor = [[NSUserDefaults standardUserDefaults] boolForKey:@"logging_sensor"];
-                        [Logging startLog:sensor];
-                    }
-                    
                     // Here, set the root to Miraikan's Home page
                     TabController *vc = [[TabController alloc] init];
                     UIWindow *window = UIApplication.sharedApplication.windows.firstObject;
@@ -210,12 +240,116 @@
     }
 }
 
+#pragma mark - Bluetooth
+- (void)detectBluetooth
+{
+    if(!bluetoothManager)
+    {
+        bluetoothManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue() options:@{CBCentralManagerOptionShowPowerAlertKey: @NO}];
+    }
+    [self centralManagerDidUpdateState:bluetoothManager];
+}
+
+- (void)centralManagerDidUpdateState:(CBCentralManager *)central
+{
+    if (bluetoothManager.state == CBManagerStatePoweredOff) {
+        NSString *title = NSLocalizedString(@"BluetoothOffAlertTitle", @"");
+        NSString *message = NSLocalizedString(@"BluetoothOffAlertMessage", @"");
+        NSString *okay = NSLocalizedString(@"OK", @"");
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:okay
+                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self detectLocationManager];
+        }]];
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[self topMostController] presentViewController:alert animated:YES completion:nil];
+        });
+    } else if (bluetoothManager.state != CBManagerStateUnknown) {
+        [self detectLocationManager];
+    }
+}
+
+#pragma mark - Location
+- (void)detectLocationManager
+{
+    if (isLocationAlert) {
+        isLocationAlert = NO;
+        [self requestLocalNotificationPermission];
+        return;
+    }
+
+    if(!locationManager)
+    {
+        locationManager = [[CLLocationManager alloc] init];
+    }
+    locationManager.delegate = self;
+    [locationManager requestWhenInUseAuthorization];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    if (status == kCLAuthorizationStatusDenied) {
+        NSString *title = NSLocalizedString(@"LocationNotAllowedTitle", @"");
+        NSString *message = NSLocalizedString(@"LocationNotAllowedMessage", @"");
+        NSString *setting = NSLocalizedString(@"SETTING", @"");
+        NSString *cancel = NSLocalizedString(@"CANCEL", @"");
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:setting
+                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                                                      NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                                                      [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:cancel
+                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self requestLocalNotificationPermission];
+        }]];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[self topMostController] presentViewController:alert animated:YES completion:nil];
+        });
+        isLocationAlert = YES;
+    } else if (status != kCLAuthorizationStatusNotDetermined) {
+        [self requestLocalNotificationPermission];
+    }
+}
+
+#pragma mark - Notification
+- (void)requestLocalNotificationPermission {
+    [[UNUserNotificationCenter currentNotificationCenter]
+     requestAuthorizationWithOptions:(UNAuthorizationOptionAlert |
+                                      UNAuthorizationOptionSound |
+                                      UNAuthorizationOptionBadge )
+     completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        NSLog(@"Authorization granted: %d", granted);
+        if (error != nil) {
+            NSLog(@"Error %@", [error description]);
+        }
+        [self checkConfig];
+     }];
+}
+
+#pragma mark - 
+- (UIViewController*) topMostController
+{
+    UIViewController *topController = [UIApplication sharedApplication].windows.firstObject.rootViewController;
+
+    while (topController.presentedViewController) {
+        topController = topController.presentedViewController;
+    }
+    
+    return topController;
+}
+
 - (IBAction)returnActionForSegue:(UIStoryboardSegue *)segue
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0f*NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [self checkConfig];
     });
-    //[self checkConfig];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -231,6 +365,5 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-
 
 @end
