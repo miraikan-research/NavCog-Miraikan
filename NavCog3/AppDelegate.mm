@@ -32,6 +32,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ScreenshotHelper.h"
 #import "NavUtil.h"
+#import "ServerConfig.h"
 
 @import HLPDialog;
 
@@ -56,7 +57,6 @@ void NavNSLog(NSString* fmt, ...) {
 @end
 
 @implementation AppDelegate {
-    CBCentralManager *bluetoothManager;
     BOOL secondOrLater;
     NSTimeInterval lastActiveTime;
     long locationChangedTime;
@@ -79,9 +79,6 @@ void NavNSLog(NSString* fmt, ...) {
 
     locationChangedTime = 0;
 
-    // Start locating here
-    [MiraikanUtil startLocating];
-    
     // Notification
     [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     
@@ -104,8 +101,6 @@ void NavNSLog(NSString* fmt, ...) {
         
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingChanged:) name:HLPSettingChanged object:nil];
     
-    [self detectBluetooth];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disableAcceleration:) name:DISABLE_ACCELEARATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableAcceleration:) name:ENABLE_ACCELEARATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disableStabilizeLocalize:) name:DISABLE_STABILIZE_LOCALIZE object:nil];
@@ -118,6 +113,7 @@ void NavNSLog(NSString* fmt, ...) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestBackgroundLocation:) name:REQUEST_BACKGROUND_LOCATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestLogReplay:) name:REQUEST_LOG_REPLAY object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestLogReplayStop:) name:REQUEST_LOG_REPLAY_STOP object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestLocationInit:) name:REQUEST_LOCATION_INIT object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverConfigChanged:) name:SERVER_CONFIG_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationChanged:) name:NAV_LOCATION_CHANGED_NOTIFICATION object:nil];
@@ -298,6 +294,12 @@ void uncaughtExceptionHandler(NSException *exception)
     [[HLPLocationManager sharedManager] resetLocation:loc];
 }
 
+- (void) requestLocationInit:(NSNotification*) note
+{
+    HLPLocationManager *manager = [HLPLocationManager sharedManager];
+    manager.delegate = self;
+}
+
 - (void) requestBackgroundLocation:(NSNotification*) note
 {
     BOOL backgroundMode = (note && [[note userInfo][@"value"] boolValue]) ||
@@ -400,31 +402,6 @@ void uncaughtExceptionHandler(NSException *exception)
                                                       userInfo:@{@"status":@(status)}];
 }
 
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
-{
-    if (status == kCLAuthorizationStatusDenied) {
-        NSString *title = NSLocalizedString(@"LocationNotAllowedTitle", @"");
-        NSString *message = NSLocalizedString(@"LocationNotAllowedMessage", @"");
-        NSString *setting = NSLocalizedString(@"SETTING", @"");
-        NSString *cancel = NSLocalizedString(@"CANCEL", @"");
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                       message:message
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:setting
-                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                                                      NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-                                                      [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-                                                  }]];
-        [alert addAction:[UIAlertAction actionWithTitle:cancel
-                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                                                  }]];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[self topMostController] presentViewController:alert animated:YES completion:nil];
-        });
-    }
-}
-
 - (void)locationManager:(HLPLocationManager *)manager didUpdateOrientation:(double)orientation withAccuracy:(double)accuracy
 {
     NSDictionary *dic = @{
@@ -451,25 +428,32 @@ void uncaughtExceptionHandler(NSException *exception)
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    [[NSNotificationCenter defaultCenter] postNotificationName:DATA_INITIALIZE_RESTART object:self userInfo:nil];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [UIApplication.sharedApplication endBackgroundTask:_backgroundID];
     
-    HLPLocationManager *manager = [HLPLocationManager sharedManager];
-    manager.delegate = self;
     if (secondOrLater) {
-        if (!manager.isActive) {
-            [manager start];
-        }
-        if ([[NSDate date] timeIntervalSince1970] - lastActiveTime > 30) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_RESTART object:self];
-        }
-        [Logging stopLog];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"logging_to_file"]) {
-            BOOL sensor = [[NSUserDefaults standardUserDefaults] boolForKey:@"logging_sensor"];
-            [Logging startLog:sensor];
+        ServerConfig *config = [ServerConfig sharedConfig];
+        
+        // Initialization data downloaded check
+        if (config.checkDataDownloaded) {
+            
+            HLPLocationManager *manager = [HLPLocationManager sharedManager];
+            manager.delegate = self;
+            if (!manager.isActive) {
+                [manager start];
+            }
+            if ([[NSDate date] timeIntervalSince1970] - lastActiveTime > 30) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_RESTART object:self];
+            }
+            [Logging stopLog];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"logging_to_file"]) {
+                BOOL sensor = [[NSUserDefaults standardUserDefaults] boolForKey:@"logging_sensor"];
+                [Logging startLog:sensor];
+            }
         }
     }
     [self checkRecordScreenshots];
@@ -523,42 +507,6 @@ void uncaughtExceptionHandler(NSException *exception)
         }
     }
     return NO;
-}
-
-- (void)detectBluetooth
-{
-    if(!bluetoothManager)
-    {
-        bluetoothManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue() options:@{CBCentralManagerOptionShowPowerAlertKey: @NO}];
-    }
-    [self centralManagerDidUpdateState:bluetoothManager];
-}
-
-- (void)centralManagerDidUpdateState:(CBCentralManager *)central
-{
-    if (bluetoothManager.state == CBManagerStatePoweredOff) {
-        NSString *title = NSLocalizedString(@"BluetoothOffAlertTitle", @"");
-        NSString *message = NSLocalizedString(@"BluetoothOffAlertMessage", @"");
-        //NSString *setting = NSLocalizedString(@"SETTING", @"");
-        //NSString *cancel = NSLocalizedString(@"CANCEL", @"");
-        NSString *okay = NSLocalizedString(@"OK", @"");
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
-                                                                       message:message
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        /*[alert addAction:[UIAlertAction actionWithTitle:setting
-                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                                                      NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-                                                      [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-                                                  }]];*/
-        [alert addAction:[UIAlertAction actionWithTitle:okay
-                                                  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                                                  }]];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[self topMostController] presentViewController:alert animated:YES completion:nil];
-        });
-        
-    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

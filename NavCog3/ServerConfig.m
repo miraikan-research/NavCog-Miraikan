@@ -530,4 +530,13 @@ static ServerConfig *instance;
     
     return _extraMenuConfig;
 }
+
+- (void)setDataDownloaded:(BOOL) isCompleted {
+    [[NSUserDefaults standardUserDefaults] setBool:isCompleted forKey:@"data_downloaded"];
+}
+
+- (BOOL)checkDataDownloaded {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"data_downloaded"];
+}
+
 @end

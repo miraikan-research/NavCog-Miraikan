@@ -23,14 +23,13 @@
 
 
 #import <UIKit/UIKit.h>
-#import <CoreBluetooth/CoreBluetooth.h>
 #import <HLPLocationManager/HLPLocationManager.h>
 #import <WebKit/WebKit.h>
 #import <UserNotifications/UserNotifications.h>
 #import <NavCogMiraikan-Swift.h>
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CBCentralManagerDelegate, UNUserNotificationCenterDelegate, HLPLocationManagerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UNUserNotificationCenterDelegate, HLPLocationManagerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property UIBackgroundTaskIdentifier backgroundID;
