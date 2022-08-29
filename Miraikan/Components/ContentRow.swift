@@ -116,8 +116,8 @@ class ContentRow: BaseRow {
                 ?  insets.top + insets.bottom + lblDescription.sizeThatFits(innerSz).height
                 : [lblDescription, lblOverview]
                     .map({ $0.sizeThatFits(innerSz).height })
-                    .reduce((insets.top + insets.bottom), { $0 + $1 + gapY})
+                    .reduce((insets.top + insets.bottom), { $0 + $1})
 
-        return CGSize(width: size.width, height: height + gapY)
+        return CGSize(width: size.width, height: height + gapY * 2)
     }
 }

@@ -44,6 +44,11 @@ class PermanentExhibitionController: BaseListController, BaseListDelegate {
         self.tableView.register(LinkRow.self, forCellReuseIdentifier: linkId)
         self.tableView.register(DescriptionRow.self, forCellReuseIdentifier: descId)
         
+        setSection()
+        setHeaderFooter()
+    }
+
+    private func setSection() {
         // Load the data
         guard let models = MiraikanUtil.readJSONFile(filename: "exhibition_category",
                                                   type: [RegularExhibitionModel].self)
@@ -61,6 +66,11 @@ class PermanentExhibitionController: BaseListController, BaseListDelegate {
             dividedItems += [model.intro]
         })
         items = dividedItems
+    }
+
+    private func setHeaderFooter() {
+        let headerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 20.0))
+        self.tableView.tableHeaderView = headerView
     }
 
     // MARK: BaseListDelegate

@@ -55,7 +55,11 @@ class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
         self.tableView.dataSource = self
         self.tableView.allowsSelection = isSelectionAllowed
         self.tableView.separatorStyle = .none
-        self.tableView.backgroundColor = .white
+        self.tableView.backgroundColor = .systemBackground
+
+        if #available(iOS 15, *) {
+            tableView.sectionHeaderTopPadding = 0.0
+        }
     }
 
     override func layoutSubviews() {

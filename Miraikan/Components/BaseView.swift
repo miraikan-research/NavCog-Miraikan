@@ -82,7 +82,7 @@ class BaseView: UIView {
      Override it, and add the subviews here
      */
     func setup() {
-        backgroundColor = .white
+        backgroundColor = .systemBackground
     }
 
     // MARK: Size calculation

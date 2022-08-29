@@ -34,7 +34,7 @@ class ScheduleListHeader: BaseView {
 
     private let lblDate = UILabel()
 
-    private let padding: CGFloat = 20
+    private let padding: CGFloat = 10
 
     override func setup() {
         super.setup()

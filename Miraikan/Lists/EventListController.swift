@@ -43,6 +43,11 @@ class EventListController: BaseListController, BaseListDelegate {
         self.tableView.allowsSelection = false
         self.tableView.register(ScheduleRow.self, forCellReuseIdentifier: cellId)
         
+        setSection()
+        setHeaderFooter()
+    }
+
+    private func setSection() {
         // load the data
         var models = [ScheduleRowModel]()
         ExhibitionDataStore.shared.schedules?.forEach({ schedule in
@@ -58,7 +63,12 @@ class EventListController: BaseListController, BaseListDelegate {
         })
         items = models
     }
-    
+
+    private func setHeaderFooter() {
+        let footerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 80.0))
+        self.tableView.tableFooterView = footerView
+    }
+
     // MARK: BaseListDelegate
     func getCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell? {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
@@ -81,9 +91,9 @@ class EventListController: BaseListController, BaseListDelegate {
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if (indexPath.row % 2 == 0) {
-            cell.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
+            cell.backgroundColor = .tertiarySystemGroupedBackground
         } else {
-            cell.backgroundColor = UIColor.white
+            cell.backgroundColor = .secondarySystemGroupedBackground
         }
     }
 }

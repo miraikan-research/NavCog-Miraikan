@@ -54,6 +54,7 @@ fileprivate class CardRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.backgroundColor = .systemBackground
         self.accessibilityTraits = .button
         lblTitle.font = .preferredFont(forTextStyle: .body)
         lblPlace.font = .preferredFont(forTextStyle: .body)
@@ -171,7 +172,7 @@ fileprivate class MenuRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // To prevent the button being selected on VoiceOver
-        self.backgroundColor = .clear
+        self.backgroundColor = .systemBackground
         btnItem.isEnabled = false
         // "Disabled" would not be read out
         btnItem.accessibilityTraits = .button
@@ -228,7 +229,7 @@ fileprivate class NewsRow : BaseRow {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.backgroundColor = .clear
+        self.backgroundColor = .systemBackground
         btnItem.isEnabled = false
         btnItem.accessibilityTraits = .button
         addSubview(btnItem)

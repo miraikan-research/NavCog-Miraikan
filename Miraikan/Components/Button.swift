@@ -151,8 +151,8 @@ class BaseBarButton: UIBarButtonItem {
 @IBDesignable
 class StyledButton: UIButton {
     
-    @IBInspectable var mainColor = UIColor.blue
-    @IBInspectable var subColor = UIColor.white
+    @IBInspectable var mainColor = UIColor.systemBlue
+    @IBInspectable var subColor = UIColor.systemBackground
 
     private var action: ((UIButton)->())?
     
