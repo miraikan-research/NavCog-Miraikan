@@ -64,6 +64,11 @@ class ExhibitionListController: BaseListController, BaseListDelegate {
         self.tableView.register(NavButtonRow.self, forCellReuseIdentifier: navId)
         self.tableView.register(ContentRow.self, forCellReuseIdentifier: contentId)
         
+        setSection()
+        setHeaderFooter()
+    }
+
+    private func setSection() {
         // Load the data
         guard let models = MiraikanUtil.readJSONFile(filename: "exhibition",
                                                   type: [ExhibitionModel].self)
@@ -111,11 +116,12 @@ class ExhibitionListController: BaseListController, BaseListDelegate {
             cells += [contentId]
         })
         items = dividedItems
-        
-        setFooter()
     }
 
-    private func setFooter() {
+    private func setHeaderFooter() {
+        let headerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 20.0))
+        self.tableView.tableHeaderView = headerView
+
         let footerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 80.0))
         self.tableView.tableFooterView = footerView
     }

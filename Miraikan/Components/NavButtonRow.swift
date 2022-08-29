@@ -32,7 +32,7 @@ class NavButtonRow: BaseRow {
     private let btnNavi = StyledButton()
 
     private let gapX: CGFloat = 20
-    private let gapY: CGFloat = 10
+    private let gapY: CGFloat = 4
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

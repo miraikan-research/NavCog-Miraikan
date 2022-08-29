@@ -77,7 +77,7 @@ class LocationInputView: UIButton, UITextFieldDelegate {
 
     private func setupDesign() {
         
-        self.backgroundColor = .white
+        self.backgroundColor = .systemBackground
         self.layer.cornerRadius = 30
 
         self.layer.borderColor = UIColor(red: 105/255, green: 0, blue: 50/255, alpha: 1).cgColor

@@ -79,7 +79,7 @@ fileprivate class RouteModeRow: BaseRow {
         RouteMode.allCases.forEach({ mode in
             let btn = RadioButton()
             btn.setTitle(mode.description, for: .normal)
-            btn.setTitleColor(.black, for: .normal)
+            btn.setTitleColor(.label, for: .normal)
             btn.titleLabel?.font = .preferredFont(forTextStyle: .callout)
             btn.isChecked = mode == MiraikanUtil.routeMode
             btn.tapAction({ [weak self] _ in
