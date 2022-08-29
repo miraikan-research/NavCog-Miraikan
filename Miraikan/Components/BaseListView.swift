@@ -94,7 +94,6 @@ class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        print("To be implemented by subclasses")
         return nil
     }
 
@@ -108,7 +107,6 @@ class BaseListView: BaseView, UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        print("To be implemented by subclasses")
         return 0
     }
 }
