@@ -137,7 +137,7 @@ final public class AudioGuideManager: NSObject {
                                               titlePron: landmark.namePron,
                                               nodeLocation: landmark.nodeLocation,
                                               spotLocation: HLPLocation(lat: latitude, lng: longitude))
-                self.items.append(linkModel)
+                self.appendItem(model: linkModel)
 
                 if self.items.first(where: {$0.nodeId == id }) == nil {
                     let linkModel = LandmarkModel(id: id,
@@ -146,9 +146,15 @@ final public class AudioGuideManager: NSObject {
                                                   titlePron: landmark.namePron,
                                                   nodeLocation: HLPLocation(lat: latitude, lng: longitude),
                                                   spotLocation: HLPLocation(lat: latitude, lng: longitude))
-                    self.items.append(linkModel)
+                    self.appendItem(model: linkModel)
                 }
             }
+        }
+    }
+
+    private func appendItem(model: LandmarkModel) {
+        if !model.title.contains("ASIMO") {
+            self.items.append(model)
         }
     }
 
