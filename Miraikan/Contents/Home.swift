@@ -34,8 +34,8 @@ import UIKit
 fileprivate class CardRow : BaseRow {
     // Default image
     private var img = UIImage(named: "card_loading")!
-    // Prevent it from reloading every time
-    private var isSet : Bool = false
+    // image cache
+    private var url: URL?
     
     // Global variables
     private var isOnline : Bool! = false
@@ -69,18 +69,31 @@ fileprivate class CardRow : BaseRow {
     /**
      Set data from DataSource
      */
-    public func configure(_ model: CardModel) {
+    public func configure(_ model: CardModel, owner: UITableView?) {
         
         // Set the data and flag
-        if let data = try? Data(contentsOf: URL(string: "\(Host.miraikan.address)\(model.imagePc)")!),
-           let image = UIImage(data: data) {
-            img = image
+        if let url = URL(string: "\(Host.miraikan.address)\(model.imagePc)") {
+            if self.url != nil,
+               self.url == url  {
+                return
+            }
+            imgView.image = nil
+            URLSession.shared.dataTask(with: url) { [weak self] (data, res, error) in
+                guard let data = data else { return }
+                guard error == nil else { return }
+                let image = UIImage(data: data)
+                self?.url = url
+
+                DispatchQueue.main.async {
+                    self?.onFetchedImage(image: image,
+                                         table: owner)
+                }
+            }.resume()
         } else {
-            img = UIImage(named: "card_not_available")!
+            if let img = UIImage(named: "card_not_available") {
+                imgView.image = img
+            }
         }
-        imgView.image = img
-        
-        lblTitle.text = model.title
         
         if let _isOnline = model.isOnline {
             self.isOnline = !_isOnline.isEmpty
@@ -88,9 +101,16 @@ fileprivate class CardRow : BaseRow {
         
         if self.isOnline {
             lblPlace.text = NSLocalizedString("place_online", comment: "")
+        } else {
+            lblTitle.text = model.title
         }
-        
-        isSet = true
+    }
+
+    func onFetchedImage(image: UIImage?, table: UITableView?) {
+        imgView.image = image
+        if let indexPath = table?.indexPath(for: self) {
+            table?.reloadRows(at: [indexPath], with: .none)
+        }
     }
     
     // MARK: layout
@@ -528,7 +548,7 @@ class Home : BaseListView {
                                                                   for: indexPath) as? CardRow {
                 // When HTTP request is finished,
                 // display the data on the row for Special Exhibition or Event
-                cardRow.configure(cardModel)
+                cardRow.configure(cardModel, owner: tableView)
                 return cardRow
             } else if let news = rowItem as? String,
                       let newsRow = tableView.dequeueReusableCell(withIdentifier: newsCellId,
