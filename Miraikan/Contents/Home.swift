@@ -38,7 +38,7 @@ fileprivate class CardRow : BaseRow {
     private var url: URL?
     
     // Global variables
-    private var isOnline : Bool! = false
+    private var isOnline = false
     
     // Views
     private let imgView = UIImageView()
@@ -60,6 +60,7 @@ fileprivate class CardRow : BaseRow {
         lblPlace.font = .preferredFont(forTextStyle: .body)
         addSubview(imgView)
         addSubview(lblTitle)
+        addSubview(lblPlace)
     }
     
     required init?(coder: NSCoder) {
@@ -94,7 +95,8 @@ fileprivate class CardRow : BaseRow {
                 imgView.image = img
             }
         }
-        
+
+        lblTitle.text = model.title
         if let _isOnline = model.isOnline {
             self.isOnline = !_isOnline.isEmpty
         }
@@ -102,8 +104,9 @@ fileprivate class CardRow : BaseRow {
         if self.isOnline {
             lblPlace.text = NSLocalizedString("place_online", comment: "")
         } else {
-            lblTitle.text = model.title
+            lblPlace.text = ""
         }
+        layoutSubviews()
     }
 
     func onFetchedImage(image: UIImage?, table: UITableView?) {
@@ -115,6 +118,7 @@ fileprivate class CardRow : BaseRow {
     
     // MARK: layout
     override func layoutSubviews() {
+        super.layoutSubviews()
         let halfWidth = CGFloat(frame.width / 2)
         
         let scaledSize = imgAdaptor.scaleImage(viewSize: ImageType.CARD.size,
@@ -205,6 +209,7 @@ fileprivate class MenuRow : BaseRow {
     
     // MARK: layout
     override func layoutSubviews() {
+        super.layoutSubviews()
         btnItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
                                size: btnItem.sizeThatFits(innerSize))
     }
@@ -260,6 +265,7 @@ fileprivate class NewsRow : BaseRow {
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         btnItem.frame = CGRect(origin: CGPoint(x: insets.bottom, y: insets.top),
                                size: btnItem.sizeThatFits(innerSize))
     }
@@ -499,6 +505,7 @@ class Home : BaseListView {
     }
 
     override func layoutSubviews() {
+        super.layoutSubviews()
         tableView.frame = CGRect(x: insets.left,
                                  y: insets.top,
                                  width: innerSize.width,
