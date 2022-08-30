@@ -167,4 +167,12 @@ class ExhibitionListController: BaseListController, BaseListDelegate {
                                     title: model.title), sender: nil)
         }
     }
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (indexPath.row / 3 % 2 == 0) {
+            cell.backgroundColor = .systemBackground
+        } else {
+            cell.backgroundColor = .secondarySystemBackground
+        }
+    }
 }

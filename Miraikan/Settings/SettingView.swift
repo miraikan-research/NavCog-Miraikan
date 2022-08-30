@@ -69,7 +69,7 @@ fileprivate class RouteModeRow: BaseRow {
     
     // Sizing
     private let gapX: CGFloat = 20
-    private let gapY: CGFloat = 10
+    private let gapY: CGFloat = 16
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -113,8 +113,8 @@ fileprivate class RouteModeRow: BaseRow {
             btn.frame = CGRect(x: insets.left + gapX,
                                y: y,
                                width: szFit.width - gapX * 2,
-                               height: szFit.height)
-            y += btn.frame.height + gapY
+                               height: szFit.height + gapY)
+            y += btn.frame.height
         })
     }
 

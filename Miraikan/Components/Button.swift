@@ -210,8 +210,10 @@ class StyledButton: UIButton {
 /**
  A button for HTML style RadioGroup
  */
-class RadioButton: BaseButton {
+class RadioButton: UIButton {
     
+    private var action: ((UIButton)->())?
+
     var isChecked: Bool {
         didSet {
             setImage()
@@ -219,7 +221,7 @@ class RadioButton: BaseButton {
         }
     }
 
-    private let radioSize = CGSize(width: 24, height: 24)
+    private let radioSize = CGSize(width: 30, height: 30)
     private var img: UIImage?
 
     override init(frame: CGRect) {
@@ -233,7 +235,7 @@ class RadioButton: BaseButton {
     }
 
     private func setImage() {
-        let imgName = isChecked ? "radio_checked" : "radio_unchecked"
+        let imgName = isChecked ? "icons8-checked-radio-button" : "icons8-unchecked-radio-button"
         img = UIImage(named: imgName)
         self.titleLabel?.sizeToFit()
         self.setImage(img, for: .normal)
@@ -255,5 +257,16 @@ class RadioButton: BaseButton {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let height = min(radioSize.height, self.titleLabel!.intrinsicContentSize.height)
         return CGSize(width: size.width, height: height)
+    }
+
+    @objc public func tapAction(_ action: @escaping ((UIButton)->())) {
+        self.action = action
+        self.addTarget(self, action: #selector(_tapAction(_:)), for: .touchUpInside)
+    }
+    
+    @objc private func _tapAction(_ sender: UIButton) {
+        if let _f = self.action {
+            _f(self)
+        }
     }
 }
