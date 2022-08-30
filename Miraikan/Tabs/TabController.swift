@@ -46,6 +46,9 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
 
         self.delegate = self
+        self.tabBar.backgroundColor = .systemBackground
+        self.tabBar.layer.borderWidth = 1.0
+        self.tabBar.layer.borderColor = UIColor.systemGray5.cgColor
 
         let tabs = TabItem.allCases.filter({ item in
             if MiraikanUtil.isLoggedIn {

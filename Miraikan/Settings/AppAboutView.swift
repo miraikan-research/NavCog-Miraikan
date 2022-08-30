@@ -81,20 +81,20 @@ class AppAboutView: BaseView {
                                 y: y,
                                 width: innerSize.width - gapX * 2,
                                 height: lblVersion.sizeThatFits(szFit).height)
-        y += insets.top + lblVersion.frame.height + gapY
+        y += lblVersion.frame.height + gapY
 
         szFit = CGSize(width: innerSize.width, height: lblIcon8.intrinsicContentSize.height)
         lblIcon8.frame = CGRect(x: insets.left + gapX,
                                 y: y,
                                 width: innerSize.width - gapX * 2,
                                 height: lblIcon8.sizeThatFits(szFit).height)
-        y += insets.top + lblIcon8.frame.height + gapY
+        y += lblIcon8.frame.height + gapY
         
         szFit = CGSize(width: innerSize.width, height: lblCrossProduct.intrinsicContentSize.height)
         lblCrossProduct.frame = CGRect(x: insets.left + gapX,
                                 y: y,
                                 width: innerSize.width - gapX * 2,
                                 height: lblCrossProduct.sizeThatFits(szFit).height)
-        y += insets.top + lblCrossProduct.frame.height + gapY
+        y += lblCrossProduct.frame.height + gapY
     }
 }

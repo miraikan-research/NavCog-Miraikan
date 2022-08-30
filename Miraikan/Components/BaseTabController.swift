@@ -79,8 +79,12 @@ class BaseTabController: UIViewController {
             bottomPadding = window.safeAreaInsets.bottom
         }
 
-        nav.navigationBar.barTintColor = UIColor.white
-        nav.navigationBar.isTranslucent = false
+        nav.navigationBar.barTintColor = .systemBackground
+        
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.configureWithOpaqueBackground()
+        navigationBarAppearance.shadowColor = .systemGray5
+        nav.navigationBar.scrollEdgeAppearance = navigationBarAppearance
 
         nav.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(nav.view)

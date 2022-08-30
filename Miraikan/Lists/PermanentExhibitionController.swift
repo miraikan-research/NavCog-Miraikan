@@ -106,4 +106,12 @@ class PermanentExhibitionController: BaseListController, BaseListDelegate {
             nav.show(vc, sender: nil)
         }
     }
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (indexPath.row / 2 % 2 == 0) {
+            cell.backgroundColor = .systemBackground
+        } else {
+            cell.backgroundColor = .secondarySystemBackground
+        }
+    }
 }
