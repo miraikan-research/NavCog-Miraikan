@@ -31,12 +31,28 @@
 
 @implementation AgreementViewController {
     int count; // temporary
+    WKWebView *webView;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.webView.delegate = self;
+    
+    webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[[WKWebViewConfiguration alloc] init]];
+    [self.view addSubview:webView];
+
+    [webView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    NSLayoutConstraint* topAnchor = [webView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:0];
+    NSLayoutConstraint* leftAnchor = [webView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:0];
+    NSLayoutConstraint* rightAnchor = [webView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:0];
+    NSLayoutConstraint* bottomAnchor = [webView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:0];
+    [self.view addConstraint:topAnchor];
+    [self.view addConstraint:leftAnchor];
+    [self.view addConstraint:rightAnchor];
+    [self.view addConstraint:bottomAnchor];
+
+    webView.navigationDelegate = self;
+    webView.UIDelegate = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -47,14 +63,14 @@
         
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
         request.timeoutInterval = 30;
-        [self.webView loadRequest:request];
+        [webView loadRequest:request];
     }
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     // TODO: arrow only our content
-    NSURL *url = [NSURL URLWithString:[[[request URL] standardizedURL] absoluteString]];
+    NSURL *url = [NSURL URLWithString:[[[webView URL] standardizedURL] absoluteString]];
     if ([[url path] hasSuffix:@"/finish_agreement.jsp"]) { // check if finish page is tryed to be loaded
         NSString *identifier = [[NavDataStore sharedDataStore] userID];
         [[ServerConfig sharedConfig] checkAgreementForIdentifier:identifier withCompletion:^(NSDictionary* config) {
@@ -66,12 +82,13 @@
                 [self performSegueWithIdentifier:@"unwind_agreement" sender:self];
             }
         }];
-        return NO;
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
     }
-    return YES;
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.waitIndicator.hidden = NO;
@@ -79,7 +96,7 @@
     });
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.waitIndicator.hidden = YES;
@@ -90,6 +107,11 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
+{
+
 }
 
 /*

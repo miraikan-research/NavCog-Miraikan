@@ -1063,10 +1063,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vCI-V7-ona">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" systemColor="systemGray6Color"/>
-                            </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UOF-OA-xF5">
                                 <rect key="frame" x="177.5" y="323.5" width="20" height="20"/>
                             </activityIndicatorView>
@@ -1100,18 +1096,13 @@
                             <constraint firstItem="Wpx-c4-w3p" firstAttribute="top" secondItem="IXp-1x-PzW" secondAttribute="bottom" constant="16" id="FHs-l9-haG"/>
                             <constraint firstItem="UOF-OA-xF5" firstAttribute="centerY" secondItem="fAA-3J-3v3" secondAttribute="centerY" id="UBM-OU-eRD"/>
                             <constraint firstItem="UOF-OA-xF5" firstAttribute="top" secondItem="Wpx-c4-w3p" secondAttribute="bottom" constant="10" id="URk-G6-3Aa"/>
-                            <constraint firstItem="vCI-V7-ona" firstAttribute="leading" secondItem="AhE-5q-2yW" secondAttribute="leading" id="hlj-oa-eud"/>
-                            <constraint firstItem="AhE-5q-2yW" firstAttribute="trailing" secondItem="vCI-V7-ona" secondAttribute="trailing" id="i9f-sg-cFs"/>
                             <constraint firstItem="IXp-1x-PzW" firstAttribute="leading" secondItem="fAA-3J-3v3" secondAttribute="leadingMargin" id="ml6-Ih-WqM"/>
-                            <constraint firstItem="vCI-V7-ona" firstAttribute="top" secondItem="AhE-5q-2yW" secondAttribute="top" id="qNC-mt-V8J"/>
                             <constraint firstItem="Wpx-c4-w3p" firstAttribute="centerX" secondItem="AhE-5q-2yW" secondAttribute="centerX" id="r60-6T-HIJ"/>
-                            <constraint firstItem="AhE-5q-2yW" firstAttribute="bottom" secondItem="vCI-V7-ona" secondAttribute="bottom" id="tio-ok-BGM"/>
                             <constraint firstAttribute="trailingMargin" secondItem="IXp-1x-PzW" secondAttribute="trailing" id="v83-Tu-snx"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="waitIndicator" destination="UOF-OA-xF5" id="tSS-YG-0o1"/>
-                        <outlet property="webView" destination="vCI-V7-ona" id="Dgr-2z-a7e"/>
                         <segue destination="CE9-at-5C0" kind="unwind" identifier="unwind_agreement" unwindAction="returnActionForSegue:" id="uF2-bR-U4g"/>
                     </connections>
                 </viewController>
@@ -1394,10 +1385,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="XlC-wp-uNx"/>
-        <segue reference="ygM-39-psy"/>
+        <segue reference="Kab-D7-zbh"/>
+        <segue reference="Goq-2Z-Z6n"/>
         <segue reference="y91-pz-cNT"/>
-        <segue reference="GK1-dG-XDF"/>
+        <segue reference="jup-Rk-ibd"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Menu" width="32" height="32"/>

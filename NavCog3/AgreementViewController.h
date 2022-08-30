@@ -21,10 +21,9 @@
  *******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
-@interface AgreementViewController : UIViewController <UIWebViewDelegate>
-
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@interface AgreementViewController : UIViewController <WKNavigationDelegate, WKUIDelegate>
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *waitIndicator;
 
