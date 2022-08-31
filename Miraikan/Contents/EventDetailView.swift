@@ -132,12 +132,13 @@ class EventDetailView: UIView {
                 scheduleView.isHidden = true
             }
 
-            let imageCoStudio = "co_studio"
-            let imageName = eventModel.id.contains(imageCoStudio)
-                ? imageCoStudio
-                : eventModel.id
-            
+            let imageName = eventModel.id
             if let image = UIImage(named: imageName) {
+                let scale = (UIScreen.main.bounds.width - margin * 2) / image.size.width
+                eventImgViewHeightConstraint.constant = image.size.height * scale
+                eventImgView.image = image
+            } else if let imagePlace = model?.schedule.place,
+                let image = UIImage(named: imagePlace) {
                 let scale = (UIScreen.main.bounds.width - margin * 2) / image.size.width
                 eventImgViewHeightConstraint.constant = image.size.height * scale
                 eventImgView.image = image
