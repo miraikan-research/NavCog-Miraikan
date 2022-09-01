@@ -39,7 +39,9 @@ class ScheduleListHeader: BaseView {
     override func setup() {
         super.setup()
         
-        lblDate.text = MiraikanUtil.todayText()
+        let todayText = MiraikanUtil.todayText()
+        lblDate.text = todayText.string
+        lblDate.accessibilityLabel = todayText.accessibility
         lblDate.font = .preferredFont(forTextStyle: .headline)
         lblDate.sizeToFit()
         addSubview(lblDate)

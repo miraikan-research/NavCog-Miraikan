@@ -56,6 +56,10 @@ struct ScheduleModel : Decodable {
     let event: String
     let description: String?
     let onHoliday: Bool?
+    let viewType: Int?
+    let type: Int?
+    let runningTime: Int?
+    let reserve: Bool?
 }
 
 /**
@@ -73,11 +77,21 @@ struct ScheduleModel : Decodable {
 struct EventModel : Decodable {
     let id: String
     let title: String
+    let titleEn: String?
+    let titlePron: String?
     let talkTitle: String?
     let imageType: String
     let schedule: [String]?
     let description: [String]?
     let content: String
+    let viewType: [EventTypeModel]?
+    let type: [EventTypeModel]?
+}
+
+struct EventTypeModel : Decodable {
+    let id: Int
+    let name: String
+    let nameEn: String?
 }
 
 /**

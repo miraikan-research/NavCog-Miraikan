@@ -41,6 +41,8 @@ struct FloorMapModel : Decodable {
     let floor: Int
     let counter: String?
     let title: String
+    let titleEn: String
+    let titlePron: String
     let exhibitionId: String
     let nodeId: String
 }

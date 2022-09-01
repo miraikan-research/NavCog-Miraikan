@@ -1,112 +1,133 @@
 [{
     "time": "10:20",
+    "running_time": 25,
     "place": "dome_theater",
     "event": "birthday",
-    "description": "（約25分）要予約"
+    "view_type": 3,
+    "reserve": true
 }, {
     "time": "10:30",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "diverse_world",
-    "description": "（約4分）"
 }, {
-    "time": "10:45",
+    "time": "11:00",
+    "running_time": 15,
     "place": "co_studio",
     "event": "co_studio_hayabusa",
-    "description": "（約15分）"
 }, {
     "time": "11:20",
+    "running_time": 30,
     "place": "dome_theater",
     "event": "inherit",
-    "description": "（約30分）要予約"
+    "view_type": 2,
+    "type": 1,
+    "reserve": true
 }, {
     "time": "11:30",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "digging_the_future",
-    "description": "（約4分）"
 }, {
     "time": "11:45",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "diverse_world",
-    "description": "（約4分）"
-}, {
-    "time": "11:45",
-    "place": "co_studio",
-    "event": "co_studio_cell",
-    "description": "（約15分）"
 }, {
     "time": "12:20",
+    "running_time": 30,
     "place": "dome_theater",
     "event": "nine_dimensions",
-    "description": "（約30分）要予約",
-    "on_holiday": false
+    "view_type": 2,
+    "type": 1,
+    "reserve": true,
+    "on_holiday": true
 }, {
     "time": "12:30",
+    "running_time": 7,
     "place": "geo_cosmos",
     "event": "world_processor",
-    "description": "（約7分）"
 }, {
     "time": "12:45",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "diverse_world",
-    "description": "（約4分）"
+}, {
+    "time": "13:00",
+    "running_time": 15,
+    "place": "co_studio",
+    "event": "co_studio_cell",
+    "on_holiday": true
 }, {
     "time": "13:20",
+    "running_time": 25,
     "place": "dome_theater",
     "event": "birthday",
-    "description": "（約25分）要予約"
+    "view_type": 3,
+    "reserve": true
 }, {
     "time": "13:30",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "digging_the_future",
-    "description": "（約4分）"
 }, {
     "time": "13:45",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "diverse_world",
-    "description": "（約4分）"
 }, {
-    "time": "13:45",
+    "time": "14:00",
+    "running_time": 15,
     "place": "co_studio",
     "event": "co_studio_reborn",
-    "description": "（約15分）"
+    "on_holiday": false
 }, {
     "time": "14:20",
+    "running_time": 30,
     "place": "dome_theater",
     "event": "inherit",
-    "description": "（約30分）要予約"
+    "view_type": 2,
+    "type": 2,
+    "reserve": true
 }, {
     "time": "14:30",
+    "running_time": 7,
     "place": "geo_cosmos",
     "event": "world_processor",
-    "description": "（約7分）"
 }, {
     "time": "14:45",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "diverse_world",
-    "description": "（約4分）"
 }, {
     "time": "15:20",
+    "running_time": 30,
     "place": "dome_theater",
     "event": "nine_dimensions",
-    "description": "（約30分）要予約"
+    "view_type": 3,
+    "reserve": true
 }, {
     "time": "15:30",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "digging_the_future",
-    "description": "（約4分）"
 }, {
-    "time": "15:45",
+    "time": "16:00",
+    "running_time": 15,
     "place": "co_studio",
     "event": "co_studio_molecule",
-    "description": "（約15分）"
+    "on_holiday": true
 }, {
     "time": "16:20",
+    "running_time": 25,
     "place": "dome_theater",
     "event": "birthday",
-    "description": "（約25分）要予約"
+    "view_type": 2,
+    "type": 1,
+    "reserve": true
 }, {
     "time": "16:30",
+    "running_time": 4,
     "place": "geo_cosmos",
     "event": "diverse_world",
-    "description": "（約4分）"
 }]

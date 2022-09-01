@@ -197,6 +197,7 @@
 		D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */; };
 		E5728D11282A4BD700E260F1 /* FloorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
+		E5B9CE8D28BF3123005812B7 /* AccessibilityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */; };
 		E5BFB1942859675700D57E93 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB1932859675700D57E93 /* EventDetailView.swift */; };
 		E5BFB198285967F600D57E93 /* EventDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5BFB197285967F600D57E93 /* EventDetailView.xib */; };
 		E5BFB19A2859680E00D57E93 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB1992859680E00D57E93 /* EventViewController.swift */; };
@@ -454,6 +455,7 @@
 		E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapViewController.swift; sourceTree = "<group>"; };
 		E5A716E6280F8EF600CF5757 /* SettingDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingDataManager.m; sourceTree = "<group>"; };
 		E5A716E8280F8F0200CF5757 /* SettingDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingDataManager.h; sourceTree = "<group>"; };
+		E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityModel.swift; sourceTree = "<group>"; };
 		E5BFB1932859675700D57E93 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		E5BFB197285967F600D57E93 /* EventDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventDetailView.xib; sourceTree = "<group>"; };
 		E5BFB1992859680E00D57E93 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
@@ -933,6 +935,7 @@
 				E5F52EBE2844C53400BB4152 /* RegularExhibitionModel.swift */,
 				E5F52ECC2845ACD100BB4152 /* FloorMapModel.swift */,
 				E5F52ECE2845AD4800BB4152 /* CardModel.swift */,
+				E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1415,6 +1418,7 @@
 				D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */,
 				D3921C30275760DF00F1DD55 /* BlankView.swift in Sources */,
 				E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */,
+				E5B9CE8D28BF3123005812B7 /* AccessibilityModel.swift in Sources */,
 				E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */,
 				D3A117F827294B0B00BEC1C8 /* NavBlindWebView.m in Sources */,
 				D364735E273E0D4400C110B0 /* ExhibitionListController.swift in Sources */,
