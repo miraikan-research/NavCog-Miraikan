@@ -61,10 +61,19 @@ class PermanentExhibitionController: BaseListController, BaseListDelegate {
             return floorA > floorB
         })
         var dividedItems = [Any]()
-        sorted.forEach({ model in
-            dividedItems += [model]
-            dividedItems += [model.intro]
-        })
+        
+        if NSLocalizedString("lang", comment: "") == "ja" {
+            sorted.forEach({ model in
+                dividedItems += [model]
+                dividedItems += [model.intro]
+            })
+        } else {
+            sorted.forEach({ model in
+                dividedItems += [model]
+                dividedItems += [model.introEn]
+            })
+        }
+
         items = dividedItems
     }
 
@@ -78,9 +87,14 @@ class PermanentExhibitionController: BaseListController, BaseListDelegate {
         let item = (items as? [Any])?[indexPath.row]
         if let model = item as? RegularExhibitionModel,
            let cell = tableView.dequeueReusableCell(withIdentifier: linkId,
-                                                          for: indexPath)
+                                                    for: indexPath)
             as? LinkRow {
+            
             var title = model.title
+            if NSLocalizedString("lang", comment: "") != "ja" {
+                title = model.titleEn
+            }
+            
             if let floor = model.floor {
                 title = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: "floor"), String(floor)) + " " + title
             }

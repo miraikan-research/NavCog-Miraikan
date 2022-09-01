@@ -1,6 +1,6 @@
 //
 //
-//  RegularExhibitionModel.swift
+//  AccessibilityModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,20 +27,7 @@
 
 import Foundation
 
-/**
- Data model for Regular Exhibition categories
- 
- - Parameters:
- - id: Category id
- - title: Category name
- - floor: The floor number; not available for multiple floors
- - intro: description of this category
- */
-struct RegularExhibitionModel: Decodable {
-    let id: String
-    let title: String
-    let titleEn: String
-    let floor: Int?
-    let intro: String
-    let introEn: String
+struct AccessibilityModel {
+    let string: String
+    let accessibility: String
 }

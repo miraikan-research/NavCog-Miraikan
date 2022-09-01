@@ -1,6 +1,8 @@
 [{
     "id": "digging_the_future",
     "title": "未来の地層\nDigging the Future",
+    "title_en": "Digging the Future",
+    "title_pron": "未来の地層 Digging the Future",
     "image_type": "geo_cosmos",
     "schedule": [
         "時間: 11:30 / 13:30 / 15:30 （約4分）"
@@ -9,6 +11,8 @@
 }, {
     "id": "diverse_world",
     "title": "Into the Diverse World\n多様な世界へ",
+    "title_en": "Into the Diverse World",
+    "title_pron": "Into the Diverse World 多様な世界へ",
     "image_type": "geo_cosmos",
     "schedule": [
         "時間: 10:30 / 11:45 / 12:45 / 13:45/ 14:45 / 16:30 （約4分）"
@@ -17,6 +21,8 @@
 }, {
     "id": "world_processor",
     "title": "World Processor SOCIAL\nワールドプロセッサー　社会の姿",
+    "title_en": "World Processor SOCIAL",
+    "title_pron": "World Processor SOCIAL ワールドプロセッサー　社会の姿",
     "image_type": "geo_cosmos",
     "schedule": [
         "時間: 12:30 / 14:30 （約7分）"
@@ -25,6 +31,8 @@
 }, {
     "id": "covid_19",
     "title": "COVID-19 Daily Cases\n日々の感染者数",
+    "title_en": "COVID-19 Daily Cases",
+    "title_pron": "COVID-19 Daily Cases 日々の感染者数",
     "image_type": "geo_cosmos",
     "schedule": [
         "時間: 11:00 / 13:00 / 15:00 （約4分）"
@@ -33,6 +41,8 @@
 }, {
     "id": "apollo_11",
     "title": "Apollo11“イーグルは着陸した”",
+    "title_en": "Apollo11",
+    "title_pron": "Apollo 11 イーグルは着陸した",
     "image_type": "geo_cosmos",
     "schedule": [
         "時間: 16:00 (約3分)"
@@ -41,27 +51,73 @@
 }, {
     "id": "birthday",
     "title": "バースデイ ～宇宙とわたしをつなぐもの～",
+    "title_en": "BIRTHDAY - What Links the Universe and Me -",
+    "title_pron": "バースデイ 宇宙とわたしをつなぐもの",
     "image_type": "dome_theater",
-    "content": "私たちが見慣れた日常の空間と、壮大なスケールの宇宙とをつないでいく物語です。第一線の研究者が科学データに基づいて描き出した宇宙像が全天周の立体視ならではの迫力で映し出され、まるで宇宙空間に浮かんでいるような感覚を生み出します。\n（上映時間: 約25分）"
+    "content": "私たちが見慣れた日常の空間と、壮大なスケールの宇宙とをつないでいく物語です。第一線の研究者が科学データに基づいて描き出した宇宙像が全天周の立体視ならではの迫力で映し出され、まるで宇宙空間に浮かんでいるような感覚を生み出します。\n（上映時間: 約25分）",
+    "view_type": [{
+        "id": 2,
+        "name": "【2D】"
+    }, {
+        "id": 3,
+        "name": "【3D】"
+    }],
+    "type": [{
+        "id": 1,
+        "name": "(日本語字幕)"
+    }]
 }, {
     "id": "nine_dimensions",
     "title": "9次元からきた男",
+    "title_en": "The Man from the 9 Dimensions",
+    "title_pron": "9次元からきた男",
     "image_type": "dome_theater",
-    "content": "物理学の究極の目標である「万物の理論」をテーマにした3Dドーム映像作品です。\n難解な数式で表現される理論物理学の最前線を、実写と精緻なCG・データビジュアライゼーションを融合させた映像で体感していただけます。\n（上映時間: 約30分）"
+    "content": "物理学の究極の目標である「万物の理論」をテーマにした3Dドーム映像作品です。\n難解な数式で表現される理論物理学の最前線を、実写と精緻なCG・データビジュアライゼーションを融合させた映像で体感していただけます。\n（上映時間: 約30分）",
+    "view_type": [{
+        "id": 2,
+        "name": "【2D】"
+    }, {
+        "id": 3,
+        "name": "【3D】"
+    }],
+    "type": [{
+        "id": 1,
+        "name": "(日本語字幕)"
+    }]
 }, {
     "id": "inherit",
     "title": "INHERIT ～はやぶさ２・宙への夢と挑戦をのせて～",
+    "title_en": "INHERIT ～Dream and Challenge in HAYABUSA2～",
+    "title_pron": "INHERIT はやぶさ２ 宙への夢と挑戦をのせて",
     "image_type": "dome_theater",
-    "content": "小惑星探査機「はやぶさ２」と、時を超えて継承される「ものづくり」をテーマにしたドーム映像作品です。世界で初めて、小惑星の地下物質の採取に挑んだ「はやぶさ２」。その開発に携わった人々の情熱、そして未来につなげていく宇宙への夢を、迫力のCG映像と壮大な世界観の音楽とともにお届けします。なお本作は佐々木蔵之介さんと櫻井孝宏さんが上映回ごとに交替でナレーションをつとめます。\n(上映時間:約30分、本作品は2D上映)"
+    "content": "小惑星探査機「はやぶさ２」と、時を超えて継承される「ものづくり」をテーマにしたドーム映像作品です。世界で初めて、小惑星の地下物質の採取に挑んだ「はやぶさ２」。その開発に携わった人々の情熱、そして未来につなげていく宇宙への夢を、迫力のCG映像と壮大な世界観の音楽とともにお届けします。なお本作は佐々木蔵之介さんと櫻井孝宏さんが上映回ごとに交替でナレーションをつとめます。\n(上映時間:約30分、本作品は2D上映)",
+    "view_type": [{
+        "id": 2,
+        "name": "【2D】"
+    }, {
+        "id": 3,
+        "name": "【3D】"
+    }],
+    "type": [{
+        "id": 1,
+        "name": "(佐々木蔵之介 ver)",
+        "nameEn": "(Sasaki Kuranosuke ver.)"
+    }, {
+        "id": 2,
+        "name": "(櫻井孝宏 ver)",
+        "nameEn": "(Sakurai Takahiro ver.)"
+    }]
 }, {
     "id": "co_studio_cell",
     "title": "科学コミュニケーター・トーク",
+    "title_en": "Science Communicator Talk",
+    "title_pron": "科学コミュニケーター トーク",
     "talk_title": "細胞たちのコミュニケーション",
     "image_type": "co_studio",
     "schedule": [
         "場所: 5階 コ・スタジオ",
-        "(平日) 11:45 / 13:45",
-        "(土日祝) 11:45 / 13:45 / 14:45 / 15:45"
+        "(平日) 11:00 / 14:00",
+        "(土日祝) 11:00 / 13:00 / 15:00 / 16:00"
     ],
     "description": [
         "各回約15分",
@@ -72,12 +128,14 @@
 }, {
     "id": "co_studio_hayabusa",
     "title": "科学コミュニケーター・トーク",
+    "title_en": "Science Communicator Talk",
+    "title_pron": "科学コミュニケーター トーク",
     "talk_title": "小惑星探査機ハヤブサ２",
     "image_type": "co_studio",
     "schedule": [
         "場所: 5階 コ・スタジオ",
-        "(平日) 11:45 / 13:45",
-        "(土日祝) 11:45 / 13:45 / 14:45 / 15:45"
+        "(平日) 11:00 / 14:00",
+        "(土日祝) 11:00 / 13:00 / 15:00 / 16:00"
     ],
     "description": [
         "各回約15分",
@@ -88,12 +146,14 @@
 }, {
     "id": "co_studio_reborn",
     "title": "科学コミュニケーター・トーク",
+    "title_en": "Science Communicator Talk",
+    "title_pron": "科学コミュニケーター トーク",
     "talk_title": "テクノロジーで体復活？",
     "image_type": "co_studio",
     "schedule": [
         "場所: 5階 コ・スタジオ",
-        "(平日) 11:45 / 13:45",
-        "(土日祝) 11:45 / 13:45 / 14:45 / 15:45"
+        "(平日) 11:00 / 14:00",
+        "(土日祝) 11:00 / 13:00 / 15:00 / 16:00"
     ],
     "description": [
         "各回約15分",
@@ -104,12 +164,14 @@
 }, {
     "id": "co_studio_molecule",
     "title": "科学コミュニケーター・トーク",
+    "title_en": "Science Communicator Talk",
+    "title_pron": "科学コミュニケーター トーク",
     "talk_title": "体内時計をあやつる「分子」",
     "image_type": "co_studio",
     "schedule": [
         "場所: 5階 コ・スタジオ",
-        "(平日) 11:45 / 13:45",
-        "(土日祝) 11:45 / 13:45 / 14:45 / 15:45"
+        "(平日) 11:00 / 14:00",
+        "(土日祝) 11:00 / 13:00 / 15:00 / 16:00"
     ],
     "description": [
         "各回約15分",

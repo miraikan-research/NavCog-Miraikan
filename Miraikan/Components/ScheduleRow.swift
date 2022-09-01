@@ -35,7 +35,7 @@ class ScheduleRow: BaseRow {
     private let lblTime = UILabel()
     private let lblPlace = UnderlinedLabel()
     private let lblEvent = UnderlinedLabel()
-    private var lblDescription = UILabel()
+    private var lblDescription = AutoWrapLabel()
     
     private let gapX: CGFloat = 20
     private let gapY: CGFloat = 10
@@ -65,7 +65,15 @@ class ScheduleRow: BaseRow {
         lblTime.text = model.schedule.time
         lblTime.sizeToFit()
         
-        lblPlace.title = model.floorMap.title
+        let lang = NSLocalizedString("lang", comment: "")
+
+        if lang == "ja" {
+            lblPlace.title = model.floorMap.title
+            lblPlace.accessibilityLabel = model.floorMap.titlePron
+        } else {
+            lblPlace.title = model.floorMap.titleEn
+            lblPlace.accessibilityLabel = model.floorMap.titleEn
+        }
         lblPlace.openView({ [weak self] _ in
             guard let self = self else { return }
             if let nav = self.nav {
@@ -78,7 +86,37 @@ class ScheduleRow: BaseRow {
         if let _talkTitle = model.event.talkTitle {
             talkTitle = "「\(_talkTitle)」"
         } else { talkTitle = nil }
-        let eventTitle = talkTitle ?? model.event.title.replacingOccurrences(of: "\n", with: "")
+        var eventTitle = ""
+        if lang == "ja" || model.event.titleEn == nil {
+            eventTitle = talkTitle ?? model.event.title.replacingOccurrences(of: "\n", with: "")
+        } else if let titleEn = model.event.titleEn {
+            eventTitle = talkTitle ?? titleEn.replacingOccurrences(of: "\n", with: "")
+        }
+        
+        if let viewType = model.schedule.viewType,
+           let viewTypeList = model.event.viewType {
+            for viewTypeData in viewTypeList {
+                if viewType == viewTypeData.id {
+                    eventTitle = viewTypeData.name + " " + eventTitle
+                    break
+                }
+            }
+        }
+
+        if let type = model.schedule.type,
+           let typeList = model.event.type {
+            for typeData in typeList {
+                if type == typeData.id {
+                    if lang == "ja" {
+                        eventTitle += " " + typeData.name
+                    } else if let nameEn = typeData.nameEn {
+                        eventTitle += " " + nameEn
+                    }
+                    break
+                }
+            }
+        }
+        
         lblEvent.title = eventTitle
         lblEvent.sizeToFit()
         lblEvent.openView({ [weak self] _ in
@@ -88,10 +126,61 @@ class ScheduleRow: BaseRow {
             }
         })
         
+        var option = ""
+        var optionPron = ""
         if let description = model.schedule.description {
-            lblDescription.text = description
-            lblDescription.sizeToFit()
+            option += description
+            optionPron += description
         }
+        
+        if let runningTime = model.schedule.runningTime,
+           runningTime > 0 {
+            if option.count > 0 {
+                option += " "
+            }
+            option += String(format: NSLocalizedString("Run Time", comment: ""), String(runningTime))
+            optionPron += String(format: NSLocalizedString("Run Time", comment: ""), String(runningTime))
+        }
+
+        if let reserve = model.schedule.reserve,
+           reserve {
+            if option.count > 0 {
+                option += " "
+            }
+            option += NSLocalizedString("Reservation required", comment: "")
+            optionPron += NSLocalizedString("Reservation required pron", comment: "")
+        }
+
+        if !option.isEmpty {
+            lblDescription.text = option
+        } else {
+            lblDescription.text = ""
+        }
+        lblDescription.sizeToFit()
+        lblDescription.isAccessibilityElement = false
+        
+        
+        var accessibility = ""
+        
+        let times = model.schedule.time.components(separatedBy: ":")
+        if times.count > 1 {
+            accessibility += String(format: NSLocalizedString("accessibility Time", comment: ""), String(times[0]), String(times[1]))
+        }
+        
+        if lang == "ja" {
+            accessibility += model.floorMap.titlePron
+        } else {
+            accessibility += model.floorMap.titleEn
+        }
+
+        if !eventTitle.isEmpty {
+            accessibility += eventTitle
+        }
+        
+        if !option.isEmpty {
+            accessibility += optionPron
+        }
+        lblTime.accessibilityLabel = accessibility
     }
 
     // MARK: layout
@@ -120,7 +209,13 @@ class ScheduleRow: BaseRow {
                                 height: lblEvent.sizeThatFits(szFit).height)
 
         y += lblEvent.frame.height + gapLine
-        lblDescription.frame.origin = CGPoint(x: leftColWidth, y: y)
+        
+        let descriptionWidth = min(rightColWidth, lblDescription.intrinsicContentSize.width)
+        let szDescriptionFit = CGSize(width: descriptionWidth, height: lblDescription.intrinsicContentSize.height)
+        lblDescription.frame = CGRect(x: leftColWidth,
+                                y: y,
+                                width: descriptionWidth,
+                                height: lblDescription.sizeThatFits(szDescriptionFit).height)
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -139,7 +234,8 @@ class ScheduleRow: BaseRow {
         y += lblEvent.sizeThatFits(szFit).height + gapLine
 
         if lblDescription.frame.width > 0 {
-            szFit = CGSize(width: frame.width - leftColWidth - insets.right,
+            let descriptionWidth = min(rightColWidth, lblDescription.intrinsicContentSize.width)
+            szFit = CGSize(width: descriptionWidth,
                            height: lblDescription.intrinsicContentSize.height)
             y += lblDescription.sizeThatFits(szFit).height + gapLine
         }

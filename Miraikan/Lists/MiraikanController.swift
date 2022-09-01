@@ -84,7 +84,7 @@ class MiraikanController: BaseController {
         
         if var schedules = MiraikanUtil.readJSONFile(filename: "schedule",
                                                      type: [ScheduleModel].self) as? [ScheduleModel] {
-            if !MiraikanUtil.isWeekend { schedules.removeAll(where: { $0.onHoliday == false }) }
+            if !MiraikanUtil.isWeekend { schedules.removeAll(where: { $0.onHoliday == true }) }
             ExhibitionDataStore.shared.schedules = schedules
 
         }

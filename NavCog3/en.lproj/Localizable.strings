@@ -218,6 +218,11 @@ Feedback is sending...";
 "Preview Speed Description" = "The preview speed is set to";
 "Pathfinding failed" = "Pathfinding failed";
 
+/* No comment provided by engineer. */
+"Run Time" = "Run Time: Approx. %@ min";
+"Reservation required" = "Reservation required";
+"accessibility Time" = "%@:%@";
+
 /* Button for navigation */
 "Guide to this exhibition" = "Guide to this exhibition";
 

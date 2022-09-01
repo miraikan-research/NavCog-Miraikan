@@ -176,14 +176,19 @@ class MiraikanUtil : NSObject {
         return calendar
     }
     
-    static public func todayText() ->String {
-        return todayText(df: "yyyy年MM月dd日 EEE")
+    static public func todayText() -> AccessibilityModel {
+        if NSLocalizedString("lang", comment: "") == "ja" {
+            return AccessibilityModel(string: todayText(df: "yyyy年MM月dd日 (EEEEE)"),
+                                      accessibility: todayText(df: "yyyy年MM月dd日 EEEE"))
+        }
+        return AccessibilityModel(string: todayText(df: "yyyy.MM.dd EEE"),
+                                  accessibility: todayText(df: "yyyy.MM.dd EEEE"))
     }
     
     static public func todayText(df: String) -> String {
         let format = DateFormatter()
         format.dateFormat = df
-        format.locale = Locale(identifier: "jp_JP")
+        format.locale = Locale.current
         return format.string(from: Date())
     }
     

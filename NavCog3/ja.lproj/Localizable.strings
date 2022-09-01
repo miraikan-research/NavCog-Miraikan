@@ -237,6 +237,12 @@ NavCogの設定画面から
 "Preview Speed Description" = "プレビュースピード";
 "Pathfinding failed" = "経路探索に失敗しました";
 
+/* No comment provided by engineer. */
+"Run Time" = "上映時間: 約%@分";
+"Reservation required" = "要予約";
+"Reservation required pron" = "ヨウヨヤク";
+"accessibility Time" = "%@時%@分";
+
 /* Button for navigation */
 "Guide to this exhibition" = "この展示へナビ";
 
