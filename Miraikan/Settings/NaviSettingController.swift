@@ -311,7 +311,7 @@ class NaviSettingController : BaseListController, BaseListDelegate {
     override func initTable() {
         super.initTable()
         
-        AudioGuideManager.shared.isDisplayButton(false)
+//        AudioGuideManager.shared.isDisplayButton(false)
 
         self.baseDelegate = self
         self.tableView.register(CurrentLocationRow.self, forCellReuseIdentifier: locationId)
