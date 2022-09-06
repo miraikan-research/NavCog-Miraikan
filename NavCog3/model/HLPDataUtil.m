@@ -108,6 +108,8 @@
                 NSLog(@"%@", [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding]);
                 callback(nil, nil);
             } else {
+                // debug deta check
+//                [self saveToPlistWithDictionary:json fileName:@"jsonloadDirectoryAtLat.plist"];
                 NSMutableArray *array = [@[] mutableCopy];
                 if (json[@"landmarks"] != nil) {
                     for(NSDictionary* dic in json[@"landmarks"]) {

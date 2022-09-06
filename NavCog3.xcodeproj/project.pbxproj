@@ -198,6 +198,8 @@
 		E5728D11282A4BD700E260F1 /* FloorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
 		E5B9CE8D28BF3123005812B7 /* AccessibilityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */; };
+		E5B9CE9128C1CF70005812B7 /* GuidePosition.json in Resources */ = {isa = PBXBuildFile; fileRef = E5B9CE9028C1CF70005812B7 /* GuidePosition.json */; };
+		E5B9CE9328C1CFBD005812B7 /* GuidePositionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9CE9228C1CFBD005812B7 /* GuidePositionModel.swift */; };
 		E5BFB1942859675700D57E93 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB1932859675700D57E93 /* EventDetailView.swift */; };
 		E5BFB198285967F600D57E93 /* EventDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5BFB197285967F600D57E93 /* EventDetailView.xib */; };
 		E5BFB19A2859680E00D57E93 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB1992859680E00D57E93 /* EventViewController.swift */; };
@@ -223,6 +225,7 @@
 		E5E31F1728ACCCAD00445462 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E31F1628ACCCAD00445462 /* UIColorExtension.swift */; };
 		E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */; };
 		E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */; };
+		E5F4505128C5B588009E7A6F /* CheckPointPosition.json in Resources */ = {isa = PBXBuildFile; fileRef = E5F4505028C5B588009E7A6F /* CheckPointPosition.json */; };
 		E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAD2844B7CF00BB4152 /* Button.swift */; };
 		E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAF2844B83F00BB4152 /* Switch.swift */; };
 		E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */; };
@@ -456,6 +459,8 @@
 		E5A716E6280F8EF600CF5757 /* SettingDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingDataManager.m; sourceTree = "<group>"; };
 		E5A716E8280F8F0200CF5757 /* SettingDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingDataManager.h; sourceTree = "<group>"; };
 		E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityModel.swift; sourceTree = "<group>"; };
+		E5B9CE9028C1CF70005812B7 /* GuidePosition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GuidePosition.json; sourceTree = "<group>"; };
+		E5B9CE9228C1CFBD005812B7 /* GuidePositionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidePositionModel.swift; sourceTree = "<group>"; };
 		E5BFB1932859675700D57E93 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		E5BFB197285967F600D57E93 /* EventDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventDetailView.xib; sourceTree = "<group>"; };
 		E5BFB1992859680E00D57E93 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
@@ -481,6 +486,7 @@
 		E5E31F1628ACCCAD00445462 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckViewController.swift; sourceTree = "<group>"; };
 		E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckView.swift; sourceTree = "<group>"; };
+		E5F4505028C5B588009E7A6F /* CheckPointPosition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CheckPointPosition.json; sourceTree = "<group>"; };
 		E5F52EAD2844B7CF00BB4152 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		E5F52EAF2844B83F00BB4152 /* Switch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
 		E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
@@ -818,6 +824,8 @@
 				D320F5852702B8F600F6AD28 /* schedule.json */,
 				D320F5862702B8F600F6AD28 /* exhibition_category.json */,
 				D320F5872702B8F600F6AD28 /* floor_map.json */,
+				E5B9CE9028C1CF70005812B7 /* GuidePosition.json */,
+				E5F4505028C5B588009E7A6F /* CheckPointPosition.json */,
 				D3A575D4270BF05200E9850A /* ExhibitionDataStore.swift */,
 				30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */,
 				D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */,
@@ -936,6 +944,7 @@
 				E5F52ECC2845ACD100BB4152 /* FloorMapModel.swift */,
 				E5F52ECE2845AD4800BB4152 /* CardModel.swift */,
 				E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */,
+				E5B9CE9228C1CFBD005812B7 /* GuidePositionModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1087,6 +1096,7 @@
 				D3A1183927294B0B00BEC1C8 /* HLPSettingViewPickerCell.xib in Resources */,
 				D3A1183A27294B0B00BEC1C8 /* InfoPlist.strings in Resources */,
 				D3A1183B27294B0B00BEC1C8 /* floor_map.json in Resources */,
+				E5F4505128C5B588009E7A6F /* CheckPointPosition.json in Resources */,
 				D3A1183C27294B0B00BEC1C8 /* LaunchScreen.storyboard in Resources */,
 				D3A1183D27294B0B00BEC1C8 /* exercise-data.json in Resources */,
 				D3A1183E27294B0B00BEC1C8 /* Assets.xcassets in Resources */,
@@ -1098,6 +1108,7 @@
 				D3A1184527294B0B00BEC1C8 /* BlindView.strings in Resources */,
 				D3A1184627294B0B00BEC1C8 /* HLPSettingViewSwitchCell.xib in Resources */,
 				D3A1184727294B0B00BEC1C8 /* Assets.xcassets in Resources */,
+				E5B9CE9128C1CF70005812B7 /* GuidePosition.json in Resources */,
 				D3A1184827294B0B00BEC1C8 /* HLPGeoJSON.strings in Resources */,
 				D3A1184927294B0B00BEC1C8 /* lastcommit.txt in Resources */,
 				D3A1184A27294B0B00BEC1C8 /* exhibition_category.json in Resources */,
@@ -1485,6 +1496,7 @@
 				E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */,
 				E5F52EB52844C06500BB4152 /* ScheduleRowModel.swift in Sources */,
 				E5BFB19E28602C9800D57E93 /* lineSegment.swift in Sources */,
+				E5B9CE9328C1CFBD005812B7 /* GuidePositionModel.swift in Sources */,
 				D3A1181A27294B0B00BEC1C8 /* DefaultTTS.m in Sources */,
 				D3A1181B27294B0B00BEC1C8 /* HLPSetting.m in Sources */,
 				D3A1181C27294B0B00BEC1C8 /* Model.swift in Sources */,

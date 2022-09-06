@@ -37,8 +37,10 @@ final public class AudioGuideManager: NSObject {
     private let tts = DefaultTTS()
     private var isPlaying = false
     private var items: [LandmarkModel] = []
-    private var nearestItems = [PositionModel?](repeating: nil, count: 6)
+    private var nearestItems = [PositionModel?](repeating: nil, count: 7)
     private var speakTexts: [String] = []
+    private var guidePositions: [GuidePositionModel] = []
+    private var checkPointPositions: [GuidePositionModel] = []
 
     private var checkLocation: HLPLocation?
     private var locationChangedTime = Date().timeIntervalSince1970
@@ -49,17 +51,22 @@ final public class AudioGuideManager: NSObject {
     private let checkTime: Double = 1
     private let checkDistance: Double = 1.2
     
-    private let nearestFront: Double = 9
-    private let nearestSide: Double = 7
-    private let nearestRear: Double = 5
+    private let nearestFront: Double = 8
+    private let nearestSide: Double = 6
+    private let nearestRear: Double = 4
 
-    private let angleFront: Double = 20
-    private let angleSide: Double = 110
-    private let angleRear: Double = 150
+    private let angleFront: Double = 15
+    private let angleSide: Double = 90
+    private let angleRear: Double = 110
+
+    private var filePath: URL?
 
     private override init() {
         super.init()
         active()
+        setFilePath()
+        initGuidePosition()
+        initCheckPointPosition()
     }
 
     public static let shared = AudioGuideManager()
@@ -111,6 +118,7 @@ final public class AudioGuideManager: NSObject {
             currentFloor != temporaryFloor {
             currentFloor = temporaryFloor
             setDataForFloor(floor: Int(currentFloor))
+            setCheckPointForFloor(floor: Int(currentFloor))
         }
 
         locationChanged(current: current)
@@ -127,26 +135,86 @@ final public class AudioGuideManager: NSObject {
             if let landmark = landmark as? HLPLandmark,
                Int(landmark.nodeHeight) + 1 == floor,
                !landmark.name.isEmpty,
-               let id = landmark.properties[PROPKEY_FACILITY_ID] as? String,
-               let coordinates = landmark.geometry.coordinates,
-               let latitude = coordinates[1] as? Double,
-               let longitude = coordinates[0] as? Double {
-                let linkModel = LandmarkModel(id: id,
-                                              nodeId: landmark.nodeID,
-                                              title: landmark.name,
-                                              titlePron: landmark.namePron,
-                                              nodeLocation: landmark.nodeLocation,
-                                              spotLocation: HLPLocation(lat: latitude, lng: longitude))
-                self.appendItem(model: linkModel)
-
-                if self.items.first(where: {$0.nodeId == id }) == nil {
+               let id = landmark.properties[PROPKEY_FACILITY_ID] as? String {
+                
+                var lat: Double?
+                var lon: Double?
+                if let guidePosition = getGuidePosition(title: landmark.name) {
+                    lat = Double(guidePosition.latitude)
+                    lon = Double(guidePosition.longitude)
+                } else if let coordinates = landmark.geometry.coordinates,
+                    let latitudeGeometry = coordinates[1] as? Double,
+                    let longitudeGeometry = coordinates[0] as? Double {
+                    lat = latitudeGeometry
+                    lon = longitudeGeometry
+                }
+                
+                if let latitude = lat,
+                   let longitude = lon {
                     let linkModel = LandmarkModel(id: id,
-                                                  nodeId: id,
+                                                  nodeId: landmark.nodeID,
                                                   title: landmark.name,
                                                   titlePron: landmark.namePron,
-                                                  nodeLocation: HLPLocation(lat: latitude, lng: longitude),
+                                                  nodeLocation: landmark.nodeLocation,
                                                   spotLocation: HLPLocation(lat: latitude, lng: longitude))
                     self.appendItem(model: linkModel)
+
+                    if self.items.first(where: {$0.nodeId == id }) == nil {
+                        let linkModel = LandmarkModel(id: id,
+                                                      nodeId: id,
+                                                      title: landmark.name,
+                                                      titlePron: landmark.namePron,
+                                                      nodeLocation: HLPLocation(lat: latitude, lng: longitude),
+                                                      spotLocation: HLPLocation(lat: latitude, lng: longitude))
+                        self.appendItem(model: linkModel)
+                    }
+                }
+            }
+        }
+    }
+
+    // TODO: Provisional processing
+    private func setCheckPointForFloor(floor: Int) {
+
+        guard let navDataStore = NavDataStore.shared(),
+              let destinations = navDataStore.destinations() else { return }
+        
+        for checkPointPosition in self.checkPointPositions {
+            if Int(checkPointPosition.floor) + 1 == floor,
+               let latitudeNode = Double(checkPointPosition.latitude),
+               let longitudeNode = Double(checkPointPosition.longitude) {
+                for landmark in destinations {
+                    if let landmark = landmark as? HLPLandmark,
+                       Int(landmark.nodeHeight) + 1 == floor,
+                       landmark.name == checkPointPosition.title,
+                       let id = landmark.properties[PROPKEY_FACILITY_ID] as? String {
+                     
+                        
+                        var lat: Double?
+                        var lon: Double?
+                        if let guidePosition = getGuidePosition(title: landmark.name) {
+                            lat = Double(guidePosition.latitude)
+                            lon = Double(guidePosition.longitude)
+                        } else if let coordinates = landmark.geometry.coordinates,
+                            let latitudeGeometry = coordinates[1] as? Double,
+                            let longitudeGeometry = coordinates[0] as? Double {
+                            lat = latitudeGeometry
+                            lon = longitudeGeometry
+                        }
+                        
+                        if let latitude = lat,
+                           let longitude = lon {
+                            let linkModel = LandmarkModel(id: id,
+                                                          nodeId: landmark.nodeID,
+                                                          title: landmark.name,
+                                                          titlePron: landmark.namePron,
+                                                          nodeLocation: HLPLocation(lat: latitudeNode,
+                                                                                    lng: longitudeNode),
+                                                          spotLocation: HLPLocation(lat: latitude, lng: longitude))
+                            self.appendItem(model: linkModel)
+                        }
+                        break
+                    }
                 }
             }
         }
@@ -206,6 +274,9 @@ final public class AudioGuideManager: NSObject {
                         positionModel.distance = item.distance
                         let isRightDirection = Line.isRightDirection(vector, point: destination)
                         positionModel.angle = sitaPi * (isRightDirection ? -1 : 1)
+                        
+                        positionModel.longitude = item.spotLocation.lng
+                        positionModel.latitude = item.spotLocation.lat
                         positionModels.append(positionModel)
                     }
                 }
@@ -223,7 +294,15 @@ final public class AudioGuideManager: NSObject {
                 }
 
                 if !localizeKey.isEmpty {
-                    self.speakTexts.append(String(format: NSLocalizedString(localizeKey, tableName: "BlindView", comment: ""), item.titlePron))
+                    let speakText = String(format: NSLocalizedString(localizeKey, tableName: "BlindView", comment: ""), item.titlePron.trimmingCharacters(in: .newlines))
+                    self.speakTexts.append(speakText)
+
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.calendar = Calendar(identifier: .gregorian)
+                    dateFormatter.locale = Locale(identifier: "ja_JP")
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+                    let dateString = dateFormatter.string(from: Date())
+                    self.writeData("\(dateString), \(speakText), \(item.distance), \(item.angle), \(item.latitude), \(item.longitude)\n")
                 }
             }
             
@@ -272,6 +351,75 @@ final public class AudioGuideManager: NSObject {
         if let text = speakTexts.first {
             self.play(text: text)
             self.speakTexts.removeFirst()
+        }
+    }
+}
+
+extension AudioGuideManager {
+
+    func initGuidePosition() {
+        if let guidePosition = MiraikanUtil.readJSONFile(filename: "GuidePosition",
+                                                         type: [GuidePositionModel].self) as? [GuidePositionModel] {
+            self.guidePositions = guidePosition
+        }
+    }
+
+    func getGuidePosition(title: String) -> GuidePositionModel? {
+        for guidePosition in self.guidePositions {
+            if title == guidePosition.title {
+                return guidePosition
+            }
+        }
+        return nil
+    }
+
+    func initCheckPointPosition() {
+        if let checkPointPositions = MiraikanUtil.readJSONFile(filename: "CheckPointPosition",
+                                                         type: [GuidePositionModel].self) as? [GuidePositionModel] {
+            self.checkPointPositions = checkPointPositions
+        }
+    }
+}
+
+extension AudioGuideManager {
+
+    func setFilePath() {
+        if !UserDefaults.standard.bool(forKey: "DebugMode") {
+            return
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.dateFormat = "yyyyMMddHHmm"
+        let dateString = dateFormatter.string(from: Date())
+        if let dir = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        ).first {
+            filePath = dir.appendingPathComponent("audioGuide\(dateString).csv")
+            guard let filePath = filePath else { return }
+            if FileManager.default.createFile(
+                            atPath: filePath.path,
+                            contents: nil,
+                            attributes: nil
+                            )
+            {
+            }
+        }
+    }
+    
+    func writeData(_ writeLine: String) {
+        if !UserDefaults.standard.bool(forKey: "DebugMode") {
+            return
+        }
+        guard let filePath = filePath else {
+            return
+        }
+        if let file = FileHandle(forWritingAtPath: filePath.path),
+           let data = writeLine.data(using: .utf8) {
+            file.seekToEndOfFile()
+            file.write(data)
         }
     }
 }
