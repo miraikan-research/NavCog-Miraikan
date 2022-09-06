@@ -52,7 +52,7 @@ final public class AudioGuideManager: NSObject {
     private let checkDistance: Double = 1.2
     
     private let nearestFront: Double = 8
-    private let nearestSide: Double = 6
+    private let nearestSide: Double = 7
     private let nearestRear: Double = 4
 
     private let angleFront: Double = 15
