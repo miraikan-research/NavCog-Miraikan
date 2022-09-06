@@ -1,6 +1,6 @@
 //
 //
-//  LandmarkModel.swift
+//  GuidePositionModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,41 +27,9 @@
 
 import Foundation
 
-class LandmarkModel {
-    
-    let id: String
-    let nodeId: String
-    let title: String
-    let titlePron: String
-    let nodeLocation: HLPLocation
-    let spotLocation: HLPLocation
-    var distance: Double = 0
-
-    init(id: String,
-         nodeId: String,
-         title: String,
-         titlePron: String,
-         nodeLocation: HLPLocation,
-         spotLocation: HLPLocation) {
-        self.id = id
-        self.nodeId = nodeId
-        self.title = title
-        self.titlePron = titlePron
-        self.nodeLocation = nodeLocation
-        self.spotLocation = spotLocation
-    }
-}
-
-class PositionModel {
-    let id: String
-    let titlePron: String
-    var distance: Double = 0
-    var angle: Double = 0
-    var latitude: Double = 0
-    var longitude: Double = 0
-
-    init(id: String,  titlePron: String) {
-        self.id = id
-        self.titlePron = titlePron
-    }
+struct GuidePositionModel: Codable {
+    var latitude: String
+    var longitude: String
+    var title: String
+    var floor: Int
 }

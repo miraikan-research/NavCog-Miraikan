@@ -767,6 +767,12 @@ static NavDataStore* instance_ = nil;
         temp[[obj nodeID]] = obj;
     }];
     destinationHash = temp;
+
+    // debug deta check
+//    for(HLPLandmark *obj in result) {
+//        NSLog(@"  ,[%@], %@, %@, %@", obj.name, @(obj.nodeLocation.lng), @(obj.nodeLocation.lat), @(obj.nodeHeight));
+//        NSLog(@"  ,%@, %@, %@, %@", obj.name, obj.geometry.coordinates[0], obj.geometry.coordinates[1], @(obj.nodeHeight));
+//    }
     
     // check directory item it is facility or not
     for (HLPDirectorySection *section in directoryCache.sections) {

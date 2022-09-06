@@ -275,7 +275,7 @@
             </objects>
             <point key="canvasLocation" x="2417" y="510"/>
         </scene>
-        <!--NavCog-->
+        <!--Blind View Controller-->
         <scene sceneID="jsF-Mo-vEC">
             <objects>
                 <viewController storyboardIdentifier="blind_ui" modalPresentationStyle="fullScreen" id="1gp-c3-Yyi" customClass="BlindViewController" sceneMemberID="viewController">
@@ -570,7 +570,7 @@
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <navigationItem key="navigationItem" title="NavCog" id="hf2-Dc-ViP">
+                    <navigationItem key="navigationItem" id="hf2-Dc-ViP">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="MaH-XF-NBI" userLabel="Back">
                             <connections>
                                 <action selector="doBack:" destination="1gp-c3-Yyi" id="MRo-pV-zFu"/>
