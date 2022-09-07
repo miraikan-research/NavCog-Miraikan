@@ -376,7 +376,7 @@ void uncaughtExceptionHandler(NSException *exception)
         [dateFormatte setLocale:[NSLocale systemLocale]];
         [dateFormatte setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
         NSString* dateString = [dateFormatte stringFromDate:[NSDate date]];
-        [self writeLocation: [NSString stringWithFormat: @"%@,%@\n", dateString, location]];
+        [self writeLocation: [NSString stringWithFormat: @"%@,%@,%@,%@,%@,%@,%@,%@\n", dateString, @(location.lng), @(location.lat), @(location.accuracy), @(location.floor), @(location.speed), @(location.orientation), @(location.orientationAccuracy)]];
     }
     
     // Floor change continuity check
@@ -549,7 +549,7 @@ void uncaughtExceptionHandler(NSException *exception)
     locationFileHandle = [NSFileHandle fileHandleForWritingAtPath: locationFilePath];
     
     if (isNew) {
-        [self writeLocation: @"date,lat,lng,accuracy,floor,speed,orientation,orientationAccuracy\n"];
+        [self writeLocation: @"date,lng,lat,accuracy,floor,speed,orientation,orientationAccuracy\n"];
     }
 }
 

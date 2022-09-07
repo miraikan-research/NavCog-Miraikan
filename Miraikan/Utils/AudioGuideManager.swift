@@ -64,7 +64,6 @@ final public class AudioGuideManager: NSObject {
     private override init() {
         super.init()
         active()
-        setFilePath()
         initGuidePosition()
         initCheckPointPosition()
     }
@@ -302,7 +301,7 @@ final public class AudioGuideManager: NSObject {
                     dateFormatter.locale = Locale(identifier: "ja_JP")
                     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
                     let dateString = dateFormatter.string(from: Date())
-                    self.writeData("\(dateString), \(speakText), \(item.distance), \(item.angle), \(item.latitude), \(item.longitude)\n")
+                    self.writeData("\(dateString), \(current.lng), \(current.lat), , , , , ,\(speakText), \(item.distance), \(item.angle), \(item.longitude), \(item.latitude)\n")
                 }
             }
             
@@ -383,7 +382,7 @@ extension AudioGuideManager {
 
 extension AudioGuideManager {
 
-    func setFilePath() {
+    func setFilePath(_ writeLine: String) {
         if !UserDefaults.standard.bool(forKey: "DebugMode") {
             return
         }
@@ -405,6 +404,11 @@ extension AudioGuideManager {
                             attributes: nil
                             )
             {
+                if let file = FileHandle(forWritingAtPath: filePath.path),
+                   let data = writeLine.data(using: .utf8) {
+                    file.seekToEndOfFile()
+                    file.write(data)
+                }
             }
         }
     }
@@ -413,13 +417,15 @@ extension AudioGuideManager {
         if !UserDefaults.standard.bool(forKey: "DebugMode") {
             return
         }
-        guard let filePath = filePath else {
-            return
-        }
-        if let file = FileHandle(forWritingAtPath: filePath.path),
-           let data = writeLine.data(using: .utf8) {
-            file.seekToEndOfFile()
-            file.write(data)
+
+        if let filePath = filePath {
+            if let file = FileHandle(forWritingAtPath: filePath.path),
+               let data = writeLine.data(using: .utf8) {
+                file.seekToEndOfFile()
+                file.write(data)
+            }
+        } else {
+            setFilePath(writeLine)
         }
     }
 }
