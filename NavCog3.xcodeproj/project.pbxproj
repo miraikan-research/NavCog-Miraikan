@@ -226,6 +226,9 @@
 		E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */; };
 		E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */; };
 		E5F4505128C5B588009E7A6F /* CheckPointPosition.json in Resources */ = {isa = PBXBuildFile; fileRef = E5F4505028C5B588009E7A6F /* CheckPointPosition.json */; };
+		E5F4505328C9A63B009E7A6F /* ToiletPositionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4505228C9A63B009E7A6F /* ToiletPositionModel.swift */; };
+		E5F4505528C9D9D4009E7A6F /* AdditionalLocation.json in Resources */ = {isa = PBXBuildFile; fileRef = E5F4505428C9D9D4009E7A6F /* AdditionalLocation.json */; };
+		E5F4505728C9DFE2009E7A6F /* AdditionalLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4505628C9DFE2009E7A6F /* AdditionalLocationModel.swift */; };
 		E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAD2844B7CF00BB4152 /* Button.swift */; };
 		E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAF2844B83F00BB4152 /* Switch.swift */; };
 		E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */; };
@@ -487,6 +490,9 @@
 		E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckViewController.swift; sourceTree = "<group>"; };
 		E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckView.swift; sourceTree = "<group>"; };
 		E5F4505028C5B588009E7A6F /* CheckPointPosition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CheckPointPosition.json; sourceTree = "<group>"; };
+		E5F4505228C9A63B009E7A6F /* ToiletPositionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToiletPositionModel.swift; sourceTree = "<group>"; };
+		E5F4505428C9D9D4009E7A6F /* AdditionalLocation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AdditionalLocation.json; sourceTree = "<group>"; };
+		E5F4505628C9DFE2009E7A6F /* AdditionalLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalLocationModel.swift; sourceTree = "<group>"; };
 		E5F52EAD2844B7CF00BB4152 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		E5F52EAF2844B83F00BB4152 /* Switch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
 		E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
@@ -824,6 +830,7 @@
 				D320F5852702B8F600F6AD28 /* schedule.json */,
 				D320F5862702B8F600F6AD28 /* exhibition_category.json */,
 				D320F5872702B8F600F6AD28 /* floor_map.json */,
+				E5F4505428C9D9D4009E7A6F /* AdditionalLocation.json */,
 				E5B9CE9028C1CF70005812B7 /* GuidePosition.json */,
 				E5F4505028C5B588009E7A6F /* CheckPointPosition.json */,
 				D3A575D4270BF05200E9850A /* ExhibitionDataStore.swift */,
@@ -945,6 +952,8 @@
 				E5F52ECE2845AD4800BB4152 /* CardModel.swift */,
 				E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */,
 				E5B9CE9228C1CFBD005812B7 /* GuidePositionModel.swift */,
+				E5F4505228C9A63B009E7A6F /* ToiletPositionModel.swift */,
+				E5F4505628C9DFE2009E7A6F /* AdditionalLocationModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1107,6 +1116,7 @@
 				D3A1184427294B0B00BEC1C8 /* schedule.json in Resources */,
 				D3A1184527294B0B00BEC1C8 /* BlindView.strings in Resources */,
 				D3A1184627294B0B00BEC1C8 /* HLPSettingViewSwitchCell.xib in Resources */,
+				E5F4505528C9D9D4009E7A6F /* AdditionalLocation.json in Resources */,
 				D3A1184727294B0B00BEC1C8 /* Assets.xcassets in Resources */,
 				E5B9CE9128C1CF70005812B7 /* GuidePosition.json in Resources */,
 				D3A1184827294B0B00BEC1C8 /* HLPGeoJSON.strings in Resources */,
@@ -1423,6 +1433,7 @@
 				D3A117F527294B0B00BEC1C8 /* MiraikanMapController.m in Sources */,
 				D3A117F627294B0B00BEC1C8 /* HLPSettingHelper.m in Sources */,
 				E5DC79882817E4D500EFF12F /* TabController.swift in Sources */,
+				E5F4505328C9A63B009E7A6F /* ToiletPositionModel.swift in Sources */,
 				D31E27C327424A9000755958 /* BaseListController.swift in Sources */,
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
 				E5F52EC92845A30300BB4152 /* ContentRow.swift in Sources */,
@@ -1437,6 +1448,7 @@
 				E5F52EBB2844C2DE00BB4152 /* ExhibitionContentModel.swift in Sources */,
 				E5E31F1728ACCCAD00445462 /* UIColorExtension.swift in Sources */,
 				D3A117FA27294B0B00BEC1C8 /* NavCoverView.m in Sources */,
+				E5F4505728C9DFE2009E7A6F /* AdditionalLocationModel.swift in Sources */,
 				D3A117FB27294B0B00BEC1C8 /* DestinationTableViewController.m in Sources */,
 				E5F52ECF2845AD4800BB4152 /* CardModel.swift in Sources */,
 				E5F52EC32845A1DB00BB4152 /* DescriptionRow.swift in Sources */,

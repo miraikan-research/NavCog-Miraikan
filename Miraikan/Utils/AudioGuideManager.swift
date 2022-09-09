@@ -41,6 +41,8 @@ final public class AudioGuideManager: NSObject {
     private var speakTexts: [String] = []
     private var guidePositions: [GuidePositionModel] = []
     private var checkPointPositions: [GuidePositionModel] = []
+    private var toiletPositions: [ToiletPositionModel] = []
+    private var additionalLocations: [AdditionalLocationModel] = []
 
     private var checkLocation: HLPLocation?
     private var locationChangedTime = Date().timeIntervalSince1970
@@ -66,6 +68,7 @@ final public class AudioGuideManager: NSObject {
         active()
         initGuidePosition()
         initCheckPointPosition()
+        initAdditionalLocation()
     }
 
     public static let shared = AudioGuideManager()
@@ -106,6 +109,8 @@ final public class AudioGuideManager: NSObject {
           return
         }
 
+        initToiletData()
+
         if (temporaryFloor == current.floor + 1) {
             continueFloorCount += 1
         } else {
@@ -116,8 +121,12 @@ final public class AudioGuideManager: NSObject {
         if continueFloorCount > 20 &&
             currentFloor != temporaryFloor {
             currentFloor = temporaryFloor
-            setDataForFloor(floor: Int(currentFloor))
-            setCheckPointForFloor(floor: Int(currentFloor))
+            let floor = Int(currentFloor)
+            
+            self.items.removeAll()
+            setDataForFloor(floor: floor)
+            setCheckPointForFloor(floor: floor)
+            setAdditionalLocationForFloor(floor: floor)
         }
 
         locationChanged(current: current)
@@ -128,17 +137,18 @@ final public class AudioGuideManager: NSObject {
         guard let navDataStore = NavDataStore.shared(),
               let destinations = navDataStore.destinations() else { return }
 
-        self.items.removeAll()
-        
         for landmark in destinations {
             if let landmark = landmark as? HLPLandmark,
                Int(landmark.nodeHeight) + 1 == floor,
-               !landmark.name.isEmpty,
-               let id = landmark.properties[PROPKEY_FACILITY_ID] as? String {
-                
+               var name = landmark.name,
+               var namePron = landmark.namePron,
+               let id = landmark.properties[PROPKEY_FACILITY_ID] as? String,
+                let nodeID = landmark.nodeID {
+
                 var lat: Double?
                 var lon: Double?
-                if let guidePosition = getGuidePosition(title: landmark.name) {
+                if !name.isEmpty,
+                    let guidePosition = getGuidePosition(title: name, floor: floor) {
                     lat = Double(guidePosition.latitude)
                     lon = Double(guidePosition.longitude)
                 } else if let coordinates = landmark.geometry.coordinates,
@@ -148,12 +158,25 @@ final public class AudioGuideManager: NSObject {
                     lon = longitudeGeometry
                 }
                 
-                if let latitude = lat,
+                if name.isEmpty {
+                    for toiletPosition in toiletPositions {
+                        if nodeID == toiletPosition.nodeId,
+                           let title = toiletPosition.title,
+                           let titlePron = toiletPosition.titlePron {
+                            name = title
+                            namePron = titlePron
+                            break
+                        }
+                    }
+                }
+
+                if !name.isEmpty,
+                   let latitude = lat,
                    let longitude = lon {
                     let linkModel = LandmarkModel(id: id,
-                                                  nodeId: landmark.nodeID,
-                                                  title: landmark.name,
-                                                  titlePron: landmark.namePron,
+                                                  nodeId: nodeID,
+                                                  title: name,
+                                                  titlePron: namePron,
                                                   nodeLocation: landmark.nodeLocation,
                                                   spotLocation: HLPLocation(lat: latitude, lng: longitude))
                     self.appendItem(model: linkModel)
@@ -161,8 +184,8 @@ final public class AudioGuideManager: NSObject {
                     if self.items.first(where: {$0.nodeId == id }) == nil {
                         let linkModel = LandmarkModel(id: id,
                                                       nodeId: id,
-                                                      title: landmark.name,
-                                                      titlePron: landmark.namePron,
+                                                      title: name,
+                                                      titlePron: namePron,
                                                       nodeLocation: HLPLocation(lat: latitude, lng: longitude),
                                                       spotLocation: HLPLocation(lat: latitude, lng: longitude))
                         self.appendItem(model: linkModel)
@@ -191,7 +214,7 @@ final public class AudioGuideManager: NSObject {
                         
                         var lat: Double?
                         var lon: Double?
-                        if let guidePosition = getGuidePosition(title: landmark.name) {
+                        if let guidePosition = getGuidePosition(title: landmark.name, floor: floor) {
                             lat = Double(guidePosition.latitude)
                             lon = Double(guidePosition.longitude)
                         } else if let coordinates = landmark.geometry.coordinates,
@@ -215,6 +238,37 @@ final public class AudioGuideManager: NSObject {
                         break
                     }
                 }
+                
+                for additionalLocation in additionalLocations {
+                    if additionalLocation.floor + 1 == floor,
+                       additionalLocation.title == checkPointPosition.title,
+                       let latitude = Double(additionalLocation.latitude),
+                       let longitude = Double(additionalLocation.longitude) {
+                        let linkModel = LandmarkModel(id: additionalLocation.id,
+                                                      nodeId: additionalLocation.nodeId,
+                                                      title: additionalLocation.title,
+                                                      titlePron: additionalLocation.titlePron,
+                                                      nodeLocation: HLPLocation(lat: latitudeNode, lng: longitudeNode),
+                                                      spotLocation: HLPLocation(lat: latitude, lng: longitude))
+                        self.appendItem(model: linkModel)
+                    }
+                }
+            }
+        }
+    }
+
+    private func setAdditionalLocationForFloor(floor: Int) {
+        for additionalLocation in additionalLocations {
+            if additionalLocation.floor + 1 == floor,
+               let latitude = Double(additionalLocation.latitude),
+               let longitude = Double(additionalLocation.longitude) {
+                let linkModel = LandmarkModel(id: additionalLocation.id,
+                                              nodeId: additionalLocation.nodeId,
+                                              title: additionalLocation.title,
+                                              titlePron: additionalLocation.titlePron,
+                                              nodeLocation: HLPLocation(lat: latitude, lng: longitude),
+                                              spotLocation: HLPLocation(lat: latitude, lng: longitude))
+                self.appendItem(model: linkModel)
             }
         }
     }
@@ -222,6 +276,54 @@ final public class AudioGuideManager: NSObject {
     private func appendItem(model: LandmarkModel) {
         if !model.title.contains("ASIMO") {
             self.items.append(model)
+        }
+    }
+
+    private func initToiletData() {
+        guard toiletPositions.isEmpty,
+              let navDataStore = NavDataStore.shared(),
+              let directory = navDataStore.directory(),
+              let destinations = navDataStore.destinations() else { return }
+
+        initHLPDirectorySection(sections: directory.sections)
+
+        for toiletPosition in toiletPositions {
+            for landmark in destinations {
+                if let landmark = landmark as? HLPLandmark,
+                   landmark.nodeID == toiletPosition.nodeId {
+                 
+                    toiletPosition.floor = Int(landmark.nodeHeight)
+                    
+                    if let coordinates = landmark.geometry.coordinates,
+                        let latitudeGeometry = coordinates[1] as? Double,
+                        let longitudeGeometry = coordinates[0] as? Double {
+                        toiletPosition.longitude  = longitudeGeometry
+                        toiletPosition.latitude = latitudeGeometry
+                    }
+                    break
+                }
+            }
+        }
+    }
+    
+    private func initHLPDirectorySection(sections: [HLPDirectorySection]) {
+        for section in sections {
+            for item in section.items {
+                if let content = item.content {
+                    initHLPDirectorySection(sections: content.sections)
+                } else {
+                    let toilet = item.toilet.rawValue
+                    if toilet != HLPToiletTypeNone.rawValue {
+                        let toiletPosition = ToiletPositionModel(nodeId: item.nodeID,
+                                                                 title: item.title,
+                                                                 titlePron: item.titlePron,
+                                                                 subtitle: item.subtitle,
+                                                                 subtitlePron: item.subtitlePron,
+                                                                 toilet: Int(toilet))
+                        self.toiletPositions.append(toiletPosition)
+                    }
+                }
+            }
         }
     }
 
@@ -363,9 +465,10 @@ extension AudioGuideManager {
         }
     }
 
-    func getGuidePosition(title: String) -> GuidePositionModel? {
+    func getGuidePosition(title: String, floor: Int) -> GuidePositionModel? {
         for guidePosition in self.guidePositions {
-            if title == guidePosition.title {
+            if title == guidePosition.title,
+               floor == guidePosition.floor + 1 {
                 return guidePosition
             }
         }
@@ -376,6 +479,13 @@ extension AudioGuideManager {
         if let checkPointPositions = MiraikanUtil.readJSONFile(filename: "CheckPointPosition",
                                                          type: [GuidePositionModel].self) as? [GuidePositionModel] {
             self.checkPointPositions = checkPointPositions
+        }
+    }
+
+    func initAdditionalLocation() {
+        if let additionalLocations = MiraikanUtil.readJSONFile(filename: "AdditionalLocation",
+                                                         type: [AdditionalLocationModel].self) as? [AdditionalLocationModel] {
+            self.additionalLocations = additionalLocations
         }
     }
 }

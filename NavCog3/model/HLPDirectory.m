@@ -31,6 +31,7 @@
     object->_titlePron  = self.titlePron;
     object->_subtitle = self.subtitle;
     object->_nodeID = self.nodeID;
+    object->_toilet = self.toilet;
     object->_content = [self.content copyWithZone:zone];
     return object;
 }
@@ -42,6 +43,7 @@
              @"subtitle": @"subtitle",
              @"subtitlePron": @"subtitlePron",
              @"nodeID": @"nodeID",
+             @"toilet": @"toilet",
              @"content": @"content"
              };
 }

@@ -104,4 +104,16 @@
  "title": "コンファレンスルーム火星", "longitude": "139.77652", "latitude": "35.61917", "floor": 6
 },{
  "title": "コンファレンスルーム金星", "longitude": "139.77656", "latitude": "35.61913", "floor": 6
+},{
+ "title": "エレベーター", "longitude": "139.776526", "latitude": "35.61936", "floor": 0
+},{
+ "title": "エレベーター", "longitude": "139.7765", "latitude": "35.61936", "floor": 2
+},{
+ "title": "エレベーター", "longitude": "139.77645", "latitude": "35.619316", "floor": 4
+},{
+ "title": "エレベーター", "longitude": "139.77645", "latitude": "35.619316", "floor": 5
+},{
+ "title": "エレベーター", "longitude": "139.7765", "latitude": "35.61934", "floor": 6
+},{
+ "title": "エレベーター", "longitude": "139.77655", "latitude": "35.61929", "floor": 6
 }]
