@@ -602,6 +602,7 @@ class Home : BaseListView {
             menuItem.isAvailable {
             if menuItem == .currentPosition {
                 guard let nav = self.navVC else { return }
+                AudioGuideManager.shared.floorPlan()
                 nav.openMap(nodeId: nil)
             } else {
                 let vc = menuItem.createVC()

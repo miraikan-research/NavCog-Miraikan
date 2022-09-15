@@ -1,6 +1,6 @@
 //
 //
-//  LandmarkModel.swift
+//  AdditionalLocationModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,55 +27,14 @@
 
 import Foundation
 
-class LandmarkModel {
-    
-    let id: String
-    let nodeId: String
+struct AdditionalLocationModel: Codable {
+    var id: String
+    var nodeId: String
     var title: String
+    var titleEn: String
     var titlePron: String
-    var titleEn: String?
-    let nodeLocation: HLPLocation
-    let spotLocation: HLPLocation
-    let groundFloor: Int
-    let checkPointOnly: Bool
-
-    var distance: Double = 0
-
-    ///groundFloor: -2-,-1,0,1,2
-    ///floor: -2, -1, 1, 2, 3
-    init(id: String,
-         nodeId: String,
-         groundFloor: Int,
-         title: String,
-         titlePron: String,
-         nodeLocation: HLPLocation,
-         spotLocation: HLPLocation,
-         checkPointOnly: Bool = false) {
-        self.id = id
-        self.nodeId = nodeId
-        self.groundFloor = groundFloor
-        self.title = title
-        self.titlePron = titlePron
-        self.nodeLocation = nodeLocation
-        self.spotLocation = spotLocation
-        self.checkPointOnly = checkPointOnly
-    }
-
-    var floor: Int {
-        groundFloor < 0 ? groundFloor : groundFloor + 1
-    }
-}
-
-class PositionModel {
-    let id: String
-    let titlePron: String
-    var distance: Double = 0
-    var angle: Double = 0
-    var latitude: Double = 0
-    var longitude: Double = 0
-
-    init(id: String,  titlePron: String) {
-        self.id = id
-        self.titlePron = titlePron
-    }
+    var floor: Int
+    var latitude: String
+    var longitude: String
+    var checkPointOnly: Bool?
 }

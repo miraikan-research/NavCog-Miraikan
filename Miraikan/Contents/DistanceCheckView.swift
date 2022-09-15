@@ -234,6 +234,7 @@ fileprivate class DistanceCheckContent: BaseView {
                    let longitude = coordinates[0] as? Double {
                     let linkModel = LandmarkModel(id: id,
                                                   nodeId: landmark.nodeID,
+                                                  groundFloor: Int(landmark.nodeHeight),
                                                   title: landmark.name,
                                                   titlePron: landmark.namePron,
                                                   nodeLocation: landmark.nodeLocation,
@@ -244,6 +245,7 @@ fileprivate class DistanceCheckContent: BaseView {
                     if self.items.first(where: {$0.nodeId == id }) == nil {
                         let linkModel = LandmarkModel(id: id,
                                                       nodeId: id,
+                                                      groundFloor: Int(landmark.nodeHeight),
                                                       title: landmark.name,
                                                       titlePron: landmark.namePron,
                                                       nodeLocation: HLPLocation(lat: latitude, lng: longitude),

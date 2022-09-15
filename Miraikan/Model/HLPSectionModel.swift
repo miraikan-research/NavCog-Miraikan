@@ -1,6 +1,6 @@
 //
 //
-//  LandmarkModel.swift
+//  HLPSectionModel.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -27,55 +27,29 @@
 
 import Foundation
 
-class LandmarkModel {
+class HLPSectionModel {
     
-    let id: String
-    let nodeId: String
-    var title: String
-    var titlePron: String
-    var titleEn: String?
-    let nodeLocation: HLPLocation
-    let spotLocation: HLPLocation
-    let groundFloor: Int
-    let checkPointOnly: Bool
+    let nodeId: String?
+    let title: String?
+    let titlePron: String?
+    let subtitle: String?
+    let subtitlePron: String?
+    let toilet: Int
 
-    var distance: Double = 0
+    var nodeLocation: HLPLocation?
+    var floor: Int?
 
-    ///groundFloor: -2-,-1,0,1,2
-    ///floor: -2, -1, 1, 2, 3
-    init(id: String,
-         nodeId: String,
-         groundFloor: Int,
-         title: String,
-         titlePron: String,
-         nodeLocation: HLPLocation,
-         spotLocation: HLPLocation,
-         checkPointOnly: Bool = false) {
-        self.id = id
+    init(nodeId: String?,
+         title: String?,
+         titlePron: String?,
+         subtitle: String?,
+         subtitlePron: String?,
+         toilet: Int = -1) {
         self.nodeId = nodeId
-        self.groundFloor = groundFloor
         self.title = title
         self.titlePron = titlePron
-        self.nodeLocation = nodeLocation
-        self.spotLocation = spotLocation
-        self.checkPointOnly = checkPointOnly
-    }
-
-    var floor: Int {
-        groundFloor < 0 ? groundFloor : groundFloor + 1
-    }
-}
-
-class PositionModel {
-    let id: String
-    let titlePron: String
-    var distance: Double = 0
-    var angle: Double = 0
-    var latitude: Double = 0
-    var longitude: Double = 0
-
-    init(id: String,  titlePron: String) {
-        self.id = id
-        self.titlePron = titlePron
+        self.subtitle = subtitle
+        self.subtitlePron = subtitlePron
+        self.toilet = toilet
     }
 }
