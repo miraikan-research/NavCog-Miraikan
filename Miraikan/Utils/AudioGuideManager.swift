@@ -67,6 +67,7 @@ final public class AudioGuideManager: NSObject {
     private let angleRear: Double = 110
 
     private var filePath: URL?
+    private var lang = ""
 
     private override init() {
         super.init()
@@ -74,6 +75,7 @@ final public class AudioGuideManager: NSObject {
         initGuidePosition()
         initCheckPointPosition()
         initAdditionalLocation()
+        lang = NSLocalizedString("lang", comment: "")
     }
 
     public static let shared = AudioGuideManager()
@@ -169,15 +171,22 @@ final public class AudioGuideManager: NSObject {
                         
                         for item in floorPlans {
                             if item.isSymbolZone {
-                                floorStr += item.titlePron
+                                floorStr += NSLocalizedString("TTS_PAUSE_CHAR", tableName: "BlindView", comment: "")
+                                floorStr += lang == "ja" ? item.titlePron : item.titleEn
                                 break
                             }
                         }
                     } else {
-                        floorStr += item.titlePron
-                        if let subTitlePron = item.subTitlePron,
+                        floorStr += NSLocalizedString("TTS_PAUSE_CHAR", tableName: "BlindView", comment: "")
+                        floorStr += lang == "ja" ? item.titlePron : item.titleEn
+
+                        if lang == "ja",
+                           let subTitlePron = item.subTitlePron,
                            !subTitlePron.isEmpty {
-                            floorStr += subTitlePron
+                            floorStr += NSLocalizedString("TTS_PAUSE_CHAR", tableName: "BlindView", comment: "") + subTitlePron
+                        } else if let subTitleEn = item.subTitleEn,
+                            !subTitleEn.isEmpty {
+                             floorStr += NSLocalizedString("TTS_PAUSE_CHAR", tableName: "BlindView", comment: "") + subTitleEn
                         }
                     }
                 }
@@ -459,7 +468,12 @@ final public class AudioGuideManager: NSObject {
             sortItems.sort(by: { $0.distance < $1.distance})
             
             if let sortItem = sortItems.first {
-                self.speakTexts.append(String(format: NSLocalizedString("Near", tableName: "BlindView", comment: ""), sortItem.titlePron))
+                var titlePron = sortItem.titlePron
+                if lang != "ja",
+                   let titleEn = sortItem.titleEn {
+                    titlePron = titleEn
+                }
+                self.speakTexts.append(String(format: NSLocalizedString("Near", tableName: "BlindView", comment: ""), titlePron))
                 self.dequeueSpeak()
             }
         }
