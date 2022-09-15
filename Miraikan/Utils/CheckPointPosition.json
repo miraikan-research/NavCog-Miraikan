@@ -33,7 +33,7 @@
 },{
  "title": "アンドロイド", "longitude": "139.77663", "latitude": "35.61923", "floor": 2
 },{
- "title": "おや？っこひろば", "longitude": "139.77648", "latitude": "35.61938", "floor": 2
+ "title": "おや？っこひろば", "longitude": "139.7765", "latitude": "35.6194", "floor": 2
 },{
  "title": "計算機と自然、計算機の自然", "longitude": "139.77683", "latitude": "35.61928", "floor": 2
 },{
@@ -104,4 +104,22 @@
  "title": "コンファレンスルーム火星", "longitude": "139.77652", "latitude": "35.61917", "floor": 6
 },{
  "title": "コンファレンスルーム金星", "longitude": "139.77656", "latitude": "35.61913", "floor": 6
+},{
+ "title": "エレベーター", "longitude": "139.77656", "latitude": "35.619375", "floor": 0
+},{
+ "title": "エレベーター", "longitude": "139.7765", "latitude": "35.61936", "floor": 2
+},{
+ "title": "エレベーター", "longitude": "139.7764", "latitude": "35.6193", "floor": 4
+},{
+ "title": "エレベーター", "longitude": "139.77627", "latitude": "35.61922", "floor": 5
+},{
+ "title": "エレベーター", "longitude": "139.7765", "latitude": "35.61934", "floor": 6
+},{
+ "title": "エレベーター", "longitude": "139.77655", "latitude": "35.61929", "floor": 6
+},{
+ "title": "トイレ", "longitude": "139.77656", "latitude": "35.619385", "floor": 0
+},{
+ "title": "トイレ", "longitude": "139.77648", "latitude": "35.619335", "floor": 2
+},{
+ "title": "トイレ", "longitude": "139.77628", "latitude": "35.61924", "floor": 4
 }]

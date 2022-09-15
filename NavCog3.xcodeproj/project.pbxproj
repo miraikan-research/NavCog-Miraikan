@@ -195,6 +195,8 @@
 		D3C4A43B276092240098CF29 /* HTTPAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */; };
 		D3C4A43D27609BF60098CF29 /* ImageAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */; };
 		D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */; };
+		E5428BD528D18F580048DA94 /* FloorPlan.json in Resources */ = {isa = PBXBuildFile; fileRef = E5428BD428D18F580048DA94 /* FloorPlan.json */; };
+		E5428BD728D199A50048DA94 /* FloorPlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5428BD628D199A50048DA94 /* FloorPlanModel.swift */; };
 		E5728D11282A4BD700E260F1 /* FloorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
 		E5B9CE8D28BF3123005812B7 /* AccessibilityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */; };
@@ -226,6 +228,9 @@
 		E5E9AE50283F0F08006BD51D /* DistanceCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */; };
 		E5E9AE52283F1156006BD51D /* DistanceCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */; };
 		E5F4505128C5B588009E7A6F /* CheckPointPosition.json in Resources */ = {isa = PBXBuildFile; fileRef = E5F4505028C5B588009E7A6F /* CheckPointPosition.json */; };
+		E5F4505328C9A63B009E7A6F /* HLPSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4505228C9A63B009E7A6F /* HLPSectionModel.swift */; };
+		E5F4505528C9D9D4009E7A6F /* AdditionalLocation.json in Resources */ = {isa = PBXBuildFile; fileRef = E5F4505428C9D9D4009E7A6F /* AdditionalLocation.json */; };
+		E5F4505728C9DFE2009E7A6F /* AdditionalLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F4505628C9DFE2009E7A6F /* AdditionalLocationModel.swift */; };
 		E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAD2844B7CF00BB4152 /* Button.swift */; };
 		E5F52EB02844B83F00BB4152 /* Switch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EAF2844B83F00BB4152 /* Switch.swift */; };
 		E5F52EB22844B8CD00BB4152 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */; };
@@ -455,6 +460,8 @@
 		D3C4A43A276092240098CF29 /* HTTPAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPAdaptor.swift; sourceTree = "<group>"; };
 		D3C4A43C27609BF60098CF29 /* ImageAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAdaptor.swift; sourceTree = "<group>"; };
 		D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWebView.swift; sourceTree = "<group>"; };
+		E5428BD428D18F580048DA94 /* FloorPlan.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FloorPlan.json; sourceTree = "<group>"; };
+		E5428BD628D199A50048DA94 /* FloorPlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanModel.swift; sourceTree = "<group>"; };
 		E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapViewController.swift; sourceTree = "<group>"; };
 		E5A716E6280F8EF600CF5757 /* SettingDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingDataManager.m; sourceTree = "<group>"; };
 		E5A716E8280F8F0200CF5757 /* SettingDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingDataManager.h; sourceTree = "<group>"; };
@@ -487,6 +494,9 @@
 		E5E9AE4F283F0F08006BD51D /* DistanceCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckViewController.swift; sourceTree = "<group>"; };
 		E5E9AE51283F1156006BD51D /* DistanceCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCheckView.swift; sourceTree = "<group>"; };
 		E5F4505028C5B588009E7A6F /* CheckPointPosition.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CheckPointPosition.json; sourceTree = "<group>"; };
+		E5F4505228C9A63B009E7A6F /* HLPSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HLPSectionModel.swift; sourceTree = "<group>"; };
+		E5F4505428C9D9D4009E7A6F /* AdditionalLocation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AdditionalLocation.json; sourceTree = "<group>"; };
+		E5F4505628C9DFE2009E7A6F /* AdditionalLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalLocationModel.swift; sourceTree = "<group>"; };
 		E5F52EAD2844B7CF00BB4152 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		E5F52EAF2844B83F00BB4152 /* Switch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switch.swift; sourceTree = "<group>"; };
 		E5F52EB12844B8CD00BB4152 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
@@ -824,6 +834,8 @@
 				D320F5852702B8F600F6AD28 /* schedule.json */,
 				D320F5862702B8F600F6AD28 /* exhibition_category.json */,
 				D320F5872702B8F600F6AD28 /* floor_map.json */,
+				E5428BD428D18F580048DA94 /* FloorPlan.json */,
+				E5F4505428C9D9D4009E7A6F /* AdditionalLocation.json */,
 				E5B9CE9028C1CF70005812B7 /* GuidePosition.json */,
 				E5F4505028C5B588009E7A6F /* CheckPointPosition.json */,
 				D3A575D4270BF05200E9850A /* ExhibitionDataStore.swift */,
@@ -942,9 +954,12 @@
 				E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */,
 				E5F52EBE2844C53400BB4152 /* RegularExhibitionModel.swift */,
 				E5F52ECC2845ACD100BB4152 /* FloorMapModel.swift */,
+				E5428BD628D199A50048DA94 /* FloorPlanModel.swift */,
 				E5F52ECE2845AD4800BB4152 /* CardModel.swift */,
 				E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */,
 				E5B9CE9228C1CFBD005812B7 /* GuidePositionModel.swift */,
+				E5F4505228C9A63B009E7A6F /* HLPSectionModel.swift */,
+				E5F4505628C9DFE2009E7A6F /* AdditionalLocationModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1107,6 +1122,7 @@
 				D3A1184427294B0B00BEC1C8 /* schedule.json in Resources */,
 				D3A1184527294B0B00BEC1C8 /* BlindView.strings in Resources */,
 				D3A1184627294B0B00BEC1C8 /* HLPSettingViewSwitchCell.xib in Resources */,
+				E5F4505528C9D9D4009E7A6F /* AdditionalLocation.json in Resources */,
 				D3A1184727294B0B00BEC1C8 /* Assets.xcassets in Resources */,
 				E5B9CE9128C1CF70005812B7 /* GuidePosition.json in Resources */,
 				D3A1184827294B0B00BEC1C8 /* HLPGeoJSON.strings in Resources */,
@@ -1121,6 +1137,7 @@
 				D3A1184F27294B0B00BEC1C8 /* event.json in Resources */,
 				D3A1185027294B0B00BEC1C8 /* Settings.bundle in Resources */,
 				D3A1185127294B0B00BEC1C8 /* HLPSettingViewTextCell.xib in Resources */,
+				E5428BD528D18F580048DA94 /* FloorPlan.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1423,6 +1440,7 @@
 				D3A117F527294B0B00BEC1C8 /* MiraikanMapController.m in Sources */,
 				D3A117F627294B0B00BEC1C8 /* HLPSettingHelper.m in Sources */,
 				E5DC79882817E4D500EFF12F /* TabController.swift in Sources */,
+				E5F4505328C9A63B009E7A6F /* HLPSectionModel.swift in Sources */,
 				D31E27C327424A9000755958 /* BaseListController.swift in Sources */,
 				D3A117F727294B0B00BEC1C8 /* BaseController.swift in Sources */,
 				E5F52EC92845A30300BB4152 /* ContentRow.swift in Sources */,
@@ -1437,6 +1455,7 @@
 				E5F52EBB2844C2DE00BB4152 /* ExhibitionContentModel.swift in Sources */,
 				E5E31F1728ACCCAD00445462 /* UIColorExtension.swift in Sources */,
 				D3A117FA27294B0B00BEC1C8 /* NavCoverView.m in Sources */,
+				E5F4505728C9DFE2009E7A6F /* AdditionalLocationModel.swift in Sources */,
 				D3A117FB27294B0B00BEC1C8 /* DestinationTableViewController.m in Sources */,
 				E5F52ECF2845AD4800BB4152 /* CardModel.swift in Sources */,
 				E5F52EC32845A1DB00BB4152 /* DescriptionRow.swift in Sources */,
@@ -1486,6 +1505,7 @@
 				D3A1181427294B0B00BEC1C8 /* BaseView.swift in Sources */,
 				D3C4A43B276092240098CF29 /* HTTPAdaptor.swift in Sources */,
 				E5F52EBD2844C38500BB4152 /* ExhibitionLinkModel.swift in Sources */,
+				E5428BD728D199A50048DA94 /* FloorPlanModel.swift in Sources */,
 				D3A1181527294B0B00BEC1C8 /* SettingView.swift in Sources */,
 				D3A1181627294B0B00BEC1C8 /* LoginView.swift in Sources */,
 				D3A1181727294B0B00BEC1C8 /* SettingViewController.m in Sources */,
