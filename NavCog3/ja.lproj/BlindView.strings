@@ -142,6 +142,33 @@
 /* floor */
 "FloorD" = "%@階";
 
+/* (No Commment) */
+"floor -2" = "地下2階";
+
+/* (No Commment) */
+"floor -1" = "地下1階";
+
+/* (No Commment) */
+"floor 1" = "1階";
+
+/* (No Commment) */
+"floor 2" = "2階";
+
+/* (No Commment) */
+"floor 3" = "3階";
+
+/* (No Commment) */
+"floor 4" = "4階";
+
+/* (No Commment) */
+"floor 5" = "5階";
+
+/* (No Commment) */
+"floor 6" = "6階";
+
+/* (No Commment) */
+"floor 7" = "7階";
+
 /* floor num type */
 "FloorNumType" = "cardinal";
 

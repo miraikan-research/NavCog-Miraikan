@@ -156,12 +156,7 @@ final public class AudioGuideManager: NSObject {
         for item in floorPlans {
             if currentFloor == item.floor {
                 
-                floorStr = ""
-                if currentFloor < 0 {
-                    floorStr = String(format: NSLocalizedString("FloorBasementD", tableName: "BlindView", comment: ""), String(abs(currentFloor)))
-                } else {
-                    floorStr = String(format: NSLocalizedString("FloorD", tableName: "BlindView", comment: ""), String(currentFloor))
-                }
+                floorStr = NSLocalizedString("floor \(currentFloor)" , tableName: "BlindView", comment: "")
 
                 if !item.titlePron.isEmpty,
                    isExhibitionZone(current: current) {
@@ -208,14 +203,9 @@ final public class AudioGuideManager: NSObject {
         
         for landmark in landmarks {
             if landmark.floor == floor {
-                let name = landmark.title
-                let namePron = landmark.titlePron
-                let id = landmark.id
-                let nodeID = landmark.nodeId
-
                 var location: HLPLocation?
-                if !name.isEmpty,
-                   let guidePosition = getGuidePosition(title: name, floor: floor),
+                if !landmark.title.isEmpty,
+                   let guidePosition = getGuidePosition(title: landmark.title, floor: floor),
                    let latitude = Double(guidePosition.latitude),
                    let longitude = Double(guidePosition.longitude) {
                     location = HLPLocation(lat: latitude, lng: longitude)
@@ -223,26 +213,30 @@ final public class AudioGuideManager: NSObject {
                     location = landmark.spotLocation
                 }
 
-                if !name.isEmpty,
+                if !landmark.title.isEmpty,
                    let location = location {
-                    let linkModel = LandmarkModel(id: id,
-                                                  nodeId: nodeID,
+                    let linkModel = LandmarkModel(id: landmark.id,
+                                                  nodeId: landmark.nodeId,
                                                   groundFloor: landmark.groundFloor,
-                                                  title: name,
-                                                  titlePron: namePron,
+                                                  title: landmark.title,
+                                                  titlePron: landmark.titlePron,
+                                                  titleEn: landmark.titleEn,
                                                   nodeLocation: landmark.nodeLocation,
                                                   spotLocation: location)
+                    linkModel.isExhibitionZone = landmark.isExhibitionZone
                     self.appendItem(model: linkModel)
 
-                    if self.items.first(where: {$0.nodeId == id }) == nil,
+                    if self.items.first(where: {$0.nodeId == landmark.id }) == nil,
                        !landmark.checkPointOnly {
-                        let linkModel = LandmarkModel(id: id,
-                                                      nodeId: id,
+                        let linkModel = LandmarkModel(id: landmark.id,
+                                                      nodeId: landmark.id,
                                                       groundFloor: landmark.groundFloor,
-                                                      title: name,
-                                                      titlePron: namePron,
+                                                      title: landmark.title,
+                                                      titlePron: landmark.titlePron,
+                                                      titleEn: landmark.titleEn,
                                                       nodeLocation: location,
                                                       spotLocation: location)
+                        linkModel.isExhibitionZone = landmark.isExhibitionZone
                         self.appendItem(model: linkModel)
                     }
                 }
@@ -266,9 +260,11 @@ final public class AudioGuideManager: NSObject {
                                                       groundFloor: Int(checkPointPosition.floor),
                                                       title: landmark.title,
                                                       titlePron: landmark.titlePron,
+                                                      titleEn: landmark.titleEn,
                                                       nodeLocation: HLPLocation(lat: latitudeNode,
                                                                                 lng: longitudeNode),
                                                       spotLocation: landmark.spotLocation)
+                        linkModel.isExhibitionZone = landmark.isExhibitionZone
                         self.appendItem(model: linkModel)
                         break
                     }
@@ -293,7 +289,8 @@ final public class AudioGuideManager: NSObject {
         initLandmark(destinations: destinations)
         appendAdditionalLocation()
         initHLPDirectorySection(sections: directory.sections)
-        updateSectionData(destinations: destinations)
+        updateSectionData()
+        updateLandmark()
         initFloorPlan()
     }
 
@@ -304,12 +301,13 @@ final public class AudioGuideManager: NSObject {
                let coordinates = landmark.geometry.coordinates,
                let latitude = coordinates[1] as? Double,
                let longitude = coordinates[0] as? Double {
-
+                let titleEn = landmark.properties[PROPKEY_NAME] as? String
                 let model = LandmarkModel(id: id,
                                           nodeId:  landmark.nodeID,
                                           groundFloor: Int(landmark.nodeHeight),
                                           title: landmark.name,
                                           titlePron: landmark.namePron,
+                                          titleEn: titleEn,
                                           nodeLocation: landmark.nodeLocation,
                                           spotLocation: HLPLocation(lat: latitude, lng: longitude))
                 self.landmarks.append(model)
@@ -326,6 +324,7 @@ final public class AudioGuideManager: NSObject {
                                           groundFloor: additionalLocation.floor,
                                           title: additionalLocation.title,
                                           titlePron: additionalLocation.titlePron,
+                                          titleEn: additionalLocation.titleEn,
                                           nodeLocation: HLPLocation(lat: latitude, lng: longitude),
                                           spotLocation: HLPLocation(lat: latitude, lng: longitude),
                                           checkPointOnly: additionalLocation.checkPointOnly ?? false)
@@ -355,19 +354,43 @@ final public class AudioGuideManager: NSObject {
         }
     }
 
-    private func updateSectionData(destinations: [Any]) {
+    private func updateSectionData() {
         for landmark in landmarks {
             if landmark.title.isEmpty {
                 for sectionItem in sectionItems {
                     if landmark.nodeId == sectionItem.nodeId,
                        let title = sectionItem.title,
                        let titlePron = sectionItem.titlePron {
-                        landmark.title = title
-                        landmark.titlePron = titlePron
+                        landmark.titleUpdate(title: title, titlePron: titlePron, titleEn: getRestRoomText(title: title))
                         break
                     }
                 }
             }
+        }
+    }
+
+    private func getRestRoomText(title: String) -> String {
+        
+        if title.contains("女性用多機能トイレ") {
+            return NSLocalizedString("FOR_FEMALEFOR_DISABLEDRESTROOM", tableName: "BlindView", comment: "")
+        } else if title.contains("男性用多機能トイレ") {
+            return NSLocalizedString("FOR_MALEFOR_DISABLEDRESTROOM", tableName: "BlindView", comment: "")
+        } else if title.contains("多機能トイレ") {
+            return NSLocalizedString("FOR_DISABLEDRESTROOM", tableName: "BlindView", comment: "")
+        } else if title.contains("女性用トイレ") {
+            return NSLocalizedString("FOR_FEMALERESTROOM", tableName: "BlindView", comment: "")
+        } else if title.contains("男性用トイレ") {
+            return NSLocalizedString("FOR_MALERESTROOM", tableName: "BlindView", comment: "")
+        } else if title.contains("トイレ") {
+            return NSLocalizedString("RESTROOM", tableName: "BlindView", comment: "")
+        }
+
+        return title
+    }
+
+    private func updateLandmark() {
+        for landmark in landmarks {
+            landmark.isExhibitionZone = isExhibitionZone(current: landmark.nodeLocation)
         }
     }
 
@@ -390,19 +413,20 @@ final public class AudioGuideManager: NSObject {
             let checkPoint = CGPoint(x: checkLocation.lat, y: checkLocation.lng)
             let currentPoint = CGPoint(x: current.lat, y: current.lng)
             let vector = Line(from: checkPoint, to: currentPoint)
+            let isExhibitionZone = isExhibitionZone(current: current)
             locationChangedTime = now
             self.checkLocation = current
 
             for item in self.items {
                 item.distance = current.distance(to: item.nodeLocation)
             }
-            
+
             var sortItems = self.items.filter({ $0.distance <= nearestFront })
             sortItems.sort(by: { $0.distance < $1.distance})
             
             var positionModels: [PositionModel] = []
 
-            for item in sortItems {
+            for item in sortItems where item.isExhibitionZone == isExhibitionZone {
                 if self.nearestItems.first(where: {$0?.id == item.id }) == nil,
                    positionModels.first(where: {$0.id == item.id }) == nil {
                     let destination = CGPoint(x: item.spotLocation.lat, y: item.spotLocation.lng)
@@ -415,7 +439,7 @@ final public class AudioGuideManager: NSObject {
                         sitaPi < angleSide && item.distance < nearestSide ||
                         sitaPi < angleRear && item.distance < nearestRear {
 
-                        let positionModel = PositionModel(id: item.id, titlePron: item.titlePron)
+                        let positionModel = PositionModel(id: item.id, titlePron: item.titlePron, titleEn: item.titleEn)
                         positionModel.distance = item.distance
                         let isRightDirection = Line.isRightDirection(vector, point: destination)
                         positionModel.angle = sitaPi * (isRightDirection ? -1 : 1)
@@ -439,7 +463,13 @@ final public class AudioGuideManager: NSObject {
                 }
 
                 if !localizeKey.isEmpty {
-                    let speakText = String(format: NSLocalizedString(localizeKey, tableName: "BlindView", comment: ""), item.titlePron.trimmingCharacters(in: .newlines))
+                    var titlePron = item.titlePron
+                    if lang != "ja",
+                       let titleEn = item.titleEn {
+                        titlePron = titleEn
+                    }
+
+                    let speakText = String(format: NSLocalizedString(localizeKey, tableName: "BlindView", comment: ""), titlePron)
                     self.speakTexts.append(speakText)
 
                     let dateFormatter = DateFormatter()
