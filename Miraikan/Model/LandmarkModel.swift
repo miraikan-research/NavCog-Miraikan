@@ -39,6 +39,7 @@ class LandmarkModel {
     let groundFloor: Int
     let checkPointOnly: Bool
 
+    var isExhibitionZone = false
     var distance: Double = 0
 
     ///groundFloor: -2-,-1,0,1,2
@@ -48,14 +49,16 @@ class LandmarkModel {
          groundFloor: Int,
          title: String,
          titlePron: String,
+         titleEn: String? = nil,
          nodeLocation: HLPLocation,
          spotLocation: HLPLocation,
          checkPointOnly: Bool = false) {
         self.id = id
         self.nodeId = nodeId
         self.groundFloor = groundFloor
-        self.title = title
-        self.titlePron = titlePron
+        self.title = title.trimmingCharacters(in: .newlines)
+        self.titlePron = titlePron.trimmingCharacters(in: .newlines)
+        self.titleEn = titleEn
         self.nodeLocation = nodeLocation
         self.spotLocation = spotLocation
         self.checkPointOnly = checkPointOnly
@@ -64,18 +67,26 @@ class LandmarkModel {
     var floor: Int {
         groundFloor < 0 ? groundFloor : groundFloor + 1
     }
+
+    func titleUpdate(title: String, titlePron: String, titleEn: String? = nil) {
+        self.title = title.trimmingCharacters(in: .newlines)
+        self.titlePron = titlePron.trimmingCharacters(in: .newlines)
+        self.titleEn = titleEn
+    }
 }
 
 class PositionModel {
     let id: String
     let titlePron: String
+    let titleEn: String?
     var distance: Double = 0
     var angle: Double = 0
     var latitude: Double = 0
     var longitude: Double = 0
 
-    init(id: String,  titlePron: String) {
+    init(id: String, titlePron: String, titleEn: String? = nil) {
         self.id = id
         self.titlePron = titlePron
+        self.titleEn = titleEn
     }
 }

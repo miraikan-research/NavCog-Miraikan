@@ -43,6 +43,33 @@
 /* floor */
 "FloorD" = "%@ floor";
 
+/* (No Commment) */
+"floor -2" = "second basement floor";
+
+/* (No Commment) */
+"floor -1" = "first basement floor";
+
+/* (No Commment) */
+"floor 1" = "first floor";
+
+/* (No Commment) */
+"floor 2" = "second floor";
+
+/* (No Commment) */
+"floor 3" = "third floor";
+
+/* (No Commment) */
+"floor 4" = "fourth floor";
+
+/* (No Commment) */
+"floor 5" = "fifth floor";
+
+/* (No Commment) */
+"floor 6" = "sixth floor";
+
+/* (No Commment) */
+"floor 7" = "seventh floor";
+
 /* floor num type */
 "FloorNumType" = "ordinal";
 
