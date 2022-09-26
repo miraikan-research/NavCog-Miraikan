@@ -30,7 +30,7 @@ import Foundation
 class HLPSectionModel {
     
     let nodeId: String?
-    let title: String?
+    let title: String
     let titlePron: String?
     let subtitle: String?
     let subtitlePron: String?
@@ -38,9 +38,10 @@ class HLPSectionModel {
 
     var nodeLocation: HLPLocation?
     var floor: Int?
+    var isExhibitionZone = false
 
     init(nodeId: String?,
-         title: String?,
+         title: String,
          titlePron: String?,
          subtitle: String?,
          subtitlePron: String?,
@@ -51,5 +52,30 @@ class HLPSectionModel {
         self.subtitle = subtitle
         self.subtitlePron = subtitlePron
         self.toilet = toilet
+    }
+}
+
+class SectionModel {
+
+    let nodeId: String
+    let title: String
+    let titlePron: String
+    let subtitle: String
+    let subtitlePron: String
+    let toilet: Int
+
+    var floor: Int
+    var isExhibitionZone = false
+
+    init(model: HLPSectionModel) {
+        self.nodeId = model.nodeId ?? ""
+        self.title = model.title
+        self.titlePron = model.titlePron ?? ""
+        self.subtitle = model.subtitle ?? ""
+        self.subtitlePron = model.subtitlePron ?? ""
+        self.toilet = model.toilet
+        let groundFloor = model.floor ?? 0
+        self.floor = groundFloor < 0 ? groundFloor: groundFloor + 1
+        self.isExhibitionZone = model.isExhibitionZone
     }
 }

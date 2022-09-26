@@ -289,8 +289,8 @@ final public class AudioGuideManager: NSObject {
         initLandmark(destinations: destinations)
         appendAdditionalLocation()
         initHLPDirectorySection(sections: directory.sections)
-        updateSectionData()
         updateLandmark()
+        updateSectionData()
         initFloorPlan()
     }
 
@@ -342,11 +342,11 @@ final public class AudioGuideManager: NSObject {
                     let toilet = item.toilet.rawValue
                     if toilet != HLPToiletTypeNone.rawValue {
                         let sectionItem = HLPSectionModel(nodeId: item.nodeID,
-                                                                 title: item.title,
-                                                                 titlePron: item.titlePron,
-                                                                 subtitle: item.subtitle,
-                                                                 subtitlePron: item.subtitlePron,
-                                                                 toilet: Int(toilet))
+                                                          title: item.title,
+                                                          titlePron: item.titlePron,
+                                                          subtitle: item.subtitle,
+                                                          subtitlePron: item.subtitlePron,
+                                                          toilet: Int(toilet))
                         self.sectionItems.append(sectionItem)
                     }
                 }
@@ -359,14 +359,26 @@ final public class AudioGuideManager: NSObject {
             if landmark.title.isEmpty {
                 for sectionItem in sectionItems {
                     if landmark.nodeId == sectionItem.nodeId,
-                       let title = sectionItem.title,
+                       !sectionItem.title.isEmpty,
                        let titlePron = sectionItem.titlePron {
-                        landmark.titleUpdate(title: title, titlePron: titlePron, titleEn: getRestRoomText(title: title))
+                        landmark.titleUpdate(title: sectionItem.title, titlePron: titlePron, titleEn: getRestRoomText(title: sectionItem.title))
+                        sectionItem.floor = landmark.floor
+                        sectionItem.isExhibitionZone = landmark.isExhibitionZone
                         break
                     }
                 }
             }
         }
+    }
+
+    func getRestList() -> [HLPSectionModel] {
+        initHLPDirectory()
+
+        var restList: [HLPSectionModel] = []
+        for item in sectionItems where item.floor != nil  {
+            restList.append(item)
+        }
+        return restList
     }
 
     private func getRestRoomText(title: String) -> String {
@@ -509,7 +521,7 @@ final public class AudioGuideManager: NSObject {
         }
     }
 
-    private func isExhibitionZone(current: HLPLocation) -> Bool {
+    func isExhibitionZone(current: HLPLocation) -> Bool {
         let startPoint = CGPoint(x: 139.77607, y: 35.61905)
         let endPoint = CGPoint(x: 139.7772, y: 35.61963)
 
@@ -521,7 +533,7 @@ final public class AudioGuideManager: NSObject {
         return isExhibitionZone
     }
     
-    private func isSymbolZone(current: HLPLocation) -> Bool {
+    func isSymbolZone(current: HLPLocation) -> Bool {
         let startPoint = CGPoint(x: 139.77693, y: 35.619495)
         let endPoint = CGPoint(x: 139.77711, y: 35.61927)
 
