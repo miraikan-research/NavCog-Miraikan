@@ -88,7 +88,7 @@ class LocationInputView: UIButton, UITextFieldDelegate {
         self.layer.shadowRadius = 5.0
         self.layer.shadowOffset = CGSize(width: 5.0, height: 5.0)
         
-        textField[HLPLocationItem.Latitude.rawValue].text = "35.618531"
+        textField[HLPLocationItem.Latitude.rawValue].text = "35.61905"
         textField[HLPLocationItem.Longitude.rawValue].text = "139.776347"
         textField[HLPLocationItem.Accuracy.rawValue].text = "0"
         textField[HLPLocationItem.Floor.rawValue].text = "4"

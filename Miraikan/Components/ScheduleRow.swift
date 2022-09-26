@@ -164,7 +164,12 @@ class ScheduleRow: BaseRow {
         
         let times = model.schedule.time.components(separatedBy: ":")
         if times.count > 1 {
-            accessibility += String(format: NSLocalizedString("accessibility Time", comment: ""), String(times[0]), String(times[1]))
+            if times[1] != "00" {
+                accessibility += String(format: NSLocalizedString("accessibility hour minute", comment: ""), String(times[0]), String(times[1]))
+            } else {
+                accessibility += String(format: NSLocalizedString("accessibility hour", comment: ""), String(times[0]), String(times[1]))
+            }            
+            accessibility += NSLocalizedString("TTS_PAUSE_CHAR", tableName: "BlindView", comment: "")
         }
         
         if lang == "ja" {
@@ -172,9 +177,11 @@ class ScheduleRow: BaseRow {
         } else {
             accessibility += model.floorMap.titleEn
         }
+        accessibility += NSLocalizedString("TTS_PAUSE_CHAR", tableName: "BlindView", comment: "")
 
         if !eventTitle.isEmpty {
             accessibility += eventTitle
+            accessibility += NSLocalizedString("TTS_PAUSE_CHAR", tableName: "BlindView", comment: "")
         }
         
         if !option.isEmpty {
