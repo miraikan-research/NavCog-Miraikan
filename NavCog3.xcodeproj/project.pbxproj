@@ -197,6 +197,7 @@
 		D3CBAF352759FA5400CD16D2 /* BaseWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */; };
 		E5428BD528D18F580048DA94 /* FloorPlan.json in Resources */ = {isa = PBXBuildFile; fileRef = E5428BD428D18F580048DA94 /* FloorPlan.json */; };
 		E5428BD728D199A50048DA94 /* FloorPlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5428BD628D199A50048DA94 /* FloorPlanModel.swift */; };
+		E56E687228E1877300DAD369 /* RestRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E687128E1877300DAD369 /* RestRoomListViewController.swift */; };
 		E5728D11282A4BD700E260F1 /* FloorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
 		E5B9CE8D28BF3123005812B7 /* AccessibilityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */; };
@@ -462,6 +463,7 @@
 		D3CBAF342759FA5400CD16D2 /* BaseWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWebView.swift; sourceTree = "<group>"; };
 		E5428BD428D18F580048DA94 /* FloorPlan.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FloorPlan.json; sourceTree = "<group>"; };
 		E5428BD628D199A50048DA94 /* FloorPlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanModel.swift; sourceTree = "<group>"; };
+		E56E687128E1877300DAD369 /* RestRoomListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestRoomListViewController.swift; sourceTree = "<group>"; };
 		E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapViewController.swift; sourceTree = "<group>"; };
 		E5A716E6280F8EF600CF5757 /* SettingDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingDataManager.m; sourceTree = "<group>"; };
 		E5A716E8280F8F0200CF5757 /* SettingDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingDataManager.h; sourceTree = "<group>"; };
@@ -860,6 +862,7 @@
 				D3083C79275603CA0052ABEE /* PermanentExhibitionController.swift */,
 				D3A575D8270BF59C00E9850A /* FloorSelectionController.swift */,
 				E5BFB19B2859688B00D57E93 /* EventDetailViewController.swift */,
+				E56E687128E1877300DAD369 /* RestRoomListViewController.swift */,
 			);
 			path = Lists;
 			sourceTree = "<group>";
@@ -1464,6 +1467,7 @@
 				D3A117FE27294B0B00BEC1C8 /* ExhibitionView.swift in Sources */,
 				D3A117FF27294B0B00BEC1C8 /* EventView.swift in Sources */,
 				D3A1180127294B0B00BEC1C8 /* ViewController.m in Sources */,
+				E56E687228E1877300DAD369 /* RestRoomListViewController.swift in Sources */,
 				D3A1180227294B0B00BEC1C8 /* NavDeviceTTS.m in Sources */,
 				D3B1A1A527546AFB00E6CBCB /* AIController.swift in Sources */,
 				E5BFB1942859675700D57E93 /* EventDetailView.swift in Sources */,

@@ -301,6 +301,7 @@ fileprivate enum MenuItem {
             .miraikanToday,
             .permanentExhibition,
             .currentPosition,
+//            .nearestWashroom,
             .setting,
             .miraikanIDmyPage,
             .aboutMiraikan,
@@ -353,6 +354,8 @@ fileprivate enum MenuItem {
             return PermanentExhibitionController(title: self.name)
         case .miraikanToday:
             return EventListController(title: self.name)
+        case .nearestWashroom:
+            return RestRoomListViewController(title: "")
         case .setting:
             return createVC(view: SettingView())
         case .miraikanIDmyPage:
