@@ -31,12 +31,17 @@ import HLPDialog
 /**
  Home and initial settings
  */
-class MiraikanController: BaseController {
+class MiraikanController: BaseController, CLLocationManagerDelegate {
 
     private let home = Home()
+    private var locationManager: CLLocationManager?
 
     init(title: String) {
         super.init(home, title: title)
+        if locationManager == nil {
+            locationManager = CLLocationManager()
+            locationManager?.delegate = self
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -55,6 +60,10 @@ class MiraikanController: BaseController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if CLLocationManager.locationServicesEnabled() {
+             locationManager!.startUpdatingLocation()
+        }
         
         NotificationCenter.default.removeObserver(self)
         NotificationCenter.default.addObserver(self,
@@ -92,12 +101,33 @@ class MiraikanController: BaseController {
         MiraikanUtil.startLocating()
     }
 
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        NSLog("\(URL(string: #file)!.lastPathComponent) \(#function): \(#line)")
+        guard let navDataStore = NavDataStore.shared(),
+              let newLocation = locations.last else { return }
+
+        manager.stopUpdatingLocation()
+        navDataStore.reloadDestinations(atLat: newLocation.coordinate.latitude,
+                                        lng: newLocation.coordinate.longitude,
+                                        forUser: navDataStore.userID,
+                                        withUserLang: navDataStore.userLanguage(),
+                                        withComplete: { (landmarks, directory) in
+        })
+    }
+
     @objc func getDestinations(note: Notification) {
 
         guard let navDataStore = NavDataStore.shared(),
-            let currentLocation = navDataStore.currentLocation() else { return }
+            let currentLocation = navDataStore.currentLocation(),
+              !currentLocation.lat.isNaN,
+              !currentLocation.lng.isNaN
+              else { return }
 
         NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"location_changed_notification"), object: nil)
+
+        if navDataStore.directory() != nil {
+            return
+        }
         navDataStore.reloadDestinations(atLat: currentLocation.lat,
                                         lng: currentLocation.lng,
                                         forUser: navDataStore.userID,
