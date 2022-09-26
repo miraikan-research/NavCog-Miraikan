@@ -241,7 +241,8 @@ NavCogの設定画面から
 "Run Time" = "上映時間: 約%@分";
 "Reservation required" = "要予約";
 "Reservation required pron" = "ヨウヨヤク";
-"accessibility Time" = "%@時%@分";
+"accessibility hour minute" = "%@時%@分";
+"accessibility hour" = "%@時";
 
 /* Button for navigation */
 "Guide to this exhibition" = "この展示へナビ";

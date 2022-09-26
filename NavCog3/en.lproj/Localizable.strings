@@ -221,7 +221,8 @@ Feedback is sending...";
 /* No comment provided by engineer. */
 "Run Time" = "Run Time: Approx. %@ min";
 "Reservation required" = "Reservation required";
-"accessibility Time" = "%@:%@";
+"accessibility hour minute" = "%@:%@";
+"accessibility hour" = "%@:%@";
 
 /* Button for navigation */
 "Guide to this exhibition" = "Guide to this exhibition";
