@@ -113,10 +113,6 @@
 }
 
 - (CGRect) makeHiddenAccessibilityFrame {
-    CGFloat top = 0;
-    if (@available(iOS 11.0, *)) {
-        top = self.window.safeAreaInsets.top;
-    }
     return CGRectMake(0,100,1,1);
 }
 

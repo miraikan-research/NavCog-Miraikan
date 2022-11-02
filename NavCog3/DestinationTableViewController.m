@@ -45,14 +45,14 @@
     NSString *query = searchController.searchBar.text;
     if (query && query.length > 0) {
         lastSearchQuery = query;
-        searchController.dimsBackgroundDuringPresentation = YES;
+        searchController.obscuresBackgroundDuringPresentation = YES;
         [[NavDataStore sharedDataStore] searchDestinations:query withComplete:^(HLPDirectory *directory) {
             if (![lastSearchQuery isEqualToString:query]) {
                 return;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 _source = [[NavDirectoryDataSource alloc] initWithDirectory:directory];
-                searchController.dimsBackgroundDuringPresentation = NO;
+                searchController.obscuresBackgroundDuringPresentation = NO;
                 [self.tableView reloadData];
             });
         }];
@@ -87,15 +87,10 @@
             
             searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
             searchController.searchResultsUpdater = self;
-            searchController.obscuresBackgroundDuringPresentation = YES;
-            searchController.dimsBackgroundDuringPresentation = NO;
+            searchController.obscuresBackgroundDuringPresentation = NO;
             searchController.hidesNavigationBarDuringPresentation = NO;
             searchController.searchBar.placeholder = @"Search";
-            if (@available(iOS 11.0, *)) {
-                self.navigationItem.searchController = searchController;
-            } else {
-                self.tableView.tableHeaderView = searchController.searchBar;
-            }
+            self.navigationItem.searchController = searchController;
         }
         [source update:nil];
         _source = _defaultSource = source;
@@ -151,16 +146,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (@available(iOS 11.0, *)) {
-        self.navigationItem.hidesSearchBarWhenScrolling = NO;
-    }
+    self.navigationItem.hidesSearchBarWhenScrolling = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (@available(iOS 11.0, *)) {
-        self.navigationItem.hidesSearchBarWhenScrolling = YES;
-    }
+    self.navigationItem.hidesSearchBarWhenScrolling = YES;
 }
 
 - (void)didReceiveMemoryWarning {
