@@ -26,6 +26,7 @@
 #import "NavDataStore.h"
 #import "NavDebugHelper.h"
 #import "NavDeviceTTS.h"
+#import "NavTalkButton.h"
 #import "NavUtil.h"
 #import "RatingViewController.h"
 #import "SettingViewController.h"
@@ -52,8 +53,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
     UISwipeGestureRecognizer *recognizer;
     NSDictionary *uiState;
-    DialogViewHelper *dialogHelper;
     UIButton *titleButton;
+    NavTalkButton *talkButton;
+
     NSDictionary *ratingInfo;
     NSArray *landmarks;
     
@@ -89,9 +91,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [_webView triggerWebviewControl: HLPWebviewControlEndNavigation];
 
     _webView.delegate = nil;
-    
-    dialogHelper.delegate = nil;
-    dialogHelper = nil;
     
     navigator.delegate = nil;
     navigator = nil;
@@ -156,8 +155,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [self updateView];
 
     if ([self destId]) {
-        dialogHelper.helperView.hidden = YES;
-//        [self hiddenVoiceGuide];
+        [talkButton setHidden:true];
     }
 
     BOOL checked = [ud boolForKey: @"checked_altimeter"];
@@ -190,18 +188,17 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     [super viewDidAppear:animated];
     
-    if (!dialogHelper) {
-        dialogHelper = [[DialogViewHelper alloc] init];
+    if (!talkButton) {
         double scale = 0.75;
         double size = (113*scale)/2;
         double x = size+8;
         double y = self.view.bounds.size.height + self.view.bounds.origin.y - (size+8);
         y -= self.view.safeAreaInsets.bottom;
-        dialogHelper.scale = scale;
-        [dialogHelper inactive];
-        [dialogHelper setup:self.view position:CGPointMake(x, y)];
-        dialogHelper.delegate = self;
-        dialogHelper.helperView.hidden = YES;
+
+        talkButton = [[NavTalkButton alloc] initWithFrame:CGRectMake(x - size, y - size, size * 2, size * 2)];
+        [talkButton setHidden:true];
+        [self.view addSubview: talkButton];
+        [talkButton addTarget:self action:@selector(talkTap:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -210,13 +207,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [super viewWillDisappear:animated];
     _webView.delegate = nil;
     
-    dialogHelper.delegate = nil;
-    dialogHelper = nil;
-    
     recognizer = nil;
     
     _settingButton = nil;
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -321,8 +314,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                 NSString *hash = [NSString stringWithFormat: @"navigate=%@&dummy=%f%@%@%@%@",
                                   [self destId], [[NSDate date] timeIntervalSince1970], elv, stairs, esc, dist];
                 state = ViewStateNavigation;
-                dialogHelper.helperView.hidden = YES;
-//                [self hiddenVoiceGuide];
+                [talkButton setHidden:true];
 //                NSLog(@"%s: %d, %@" , __func__, __LINE__, hash);
                 [_webView setLocationHash:hash];
                 isNaviStarted = YES;
@@ -419,12 +411,9 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }];
 }
 
-- (void)dialogViewTapped
+- (void)talkTap:(id)sender
 {
-    [dialogHelper inactive];
-    dialogHelper.helperView.hidden = YES;
     [self performSegueWithIdentifier:@"show_dialog_wc" sender:self];
-    
 }
 
 - (void)updateView
@@ -477,15 +466,12 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     if (state == ViewStateMap) {
         if ([[DialogManager sharedManager] isAvailable]  && (!isPreviewDisabled || validLocation) && ![self destId]) {
-            if (dialogHelper.helperView.hidden) {
-                dialogHelper.helperView.hidden = NO;
-                [dialogHelper recognize];
-            }
+            [talkButton setHidden:false];
         } else {
-            dialogHelper.helperView.hidden = YES;
+            [talkButton setHidden:true];
         }
     } else {
-        dialogHelper.helperView.hidden = YES;
+        [talkButton setHidden:true];
     }
     
     if (peerExists) {
@@ -721,8 +707,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSString *hash = [NSString stringWithFormat: @"navigate=%@&dummy=%f%@%@%@%@",
                       options[@"toID"], [[NSDate date] timeIntervalSince1970], elv, stairs, esc, dist];
     state = ViewStateNavigation;
-    dialogHelper.helperView.hidden = YES;
-//    [self hiddenVoiceGuide];
+    [talkButton setHidden:true];
 //    NSLog(@"%s: %d, %@" , __func__, __LINE__, hash);
     [_webView setLocationHash:hash];
     isNaviStarted = YES;

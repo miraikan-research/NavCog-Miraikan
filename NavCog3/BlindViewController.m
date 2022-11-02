@@ -27,6 +27,7 @@
 #import "NavDebugHelper.h"
 #import "NavDeviceTTS.h"
 #import "NavSound.h"
+#import "NavTalkButton.h"
 #import "NavUtil.h"
 #import "RatingViewController.h"
 #import "SettingViewController.h"
@@ -46,7 +47,8 @@
     NavPreviewer *previewer;
     
     UIButton *titleButton;
-    
+    NavTalkButton *talkButton;
+
     CMMotionManager *motionManager;
     NSOperationQueue *motionQueue;
     double yaws[10];
@@ -65,7 +67,6 @@
     UIColor *defaultColor;
     
     NSDictionary *uiState;
-    DialogViewHelper *dialogHelper;
     
     NSTimeInterval lastShake;
     NSTimeInterval lastLocationSent;
@@ -112,9 +113,6 @@
     
     previewer.delegate = nil;
     previewer = nil;
-    
-    dialogHelper.delegate = nil;
-    dialogHelper = nil;
     
     _settingButton = nil;
 
@@ -227,18 +225,17 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:DISABLE_STABILIZE_LOCALIZE object:self];
     [self becomeFirstResponder];
     
-    if (!dialogHelper) {
-        dialogHelper = [[DialogViewHelper alloc] init];
+    if (!talkButton) {
         double scale = 0.75;
         double size = (113*scale)/2;
         double x = size+8;
         double y = self.view.bounds.size.height + self.view.bounds.origin.y - (size+8);
         y -= self.view.safeAreaInsets.bottom;
-        dialogHelper.scale = scale;
-        [dialogHelper inactive];
-        [dialogHelper setup:self.view position:CGPointMake(x, y)];
-        dialogHelper.delegate = self;
-        dialogHelper.helperView.hidden = YES;
+        
+        talkButton = [[NavTalkButton alloc] initWithFrame:CGRectMake(x - size, y - size, size * 2, size * 2)];
+        [talkButton setHidden:true];
+        [self.view addSubview: talkButton];
+        [talkButton addTarget:self action:@selector(talkTap:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -301,11 +298,8 @@
     }];
 }
 
-- (void)dialogViewTapped
+- (void)talkTap:(id)sender
 {
-    [dialogHelper inactive];
-    dialogHelper.helperView.disabled = YES;
-
     if ([navigator isActive] ||
         self.navigationController.topViewController != self ||
         !self.searchButton.enabled) {
@@ -445,8 +439,8 @@
         [self.commitLabel setText:cn];
         
         NSMutableArray *elements = [@[self.navigationItem] mutableCopy];
-        if (dialogHelper && dialogHelper.helperView && !dialogHelper.helperView.hidden) {
-            [elements addObject:dialogHelper.helperView];
+        if (talkButton && !talkButton.hidden) {
+            [elements addObject:talkButton];
         }
         [elements addObject:_cover];
         self.view.accessibilityElements = elements;
@@ -468,21 +462,12 @@
 
 - (void)dialogHelperUpdate
 {
-    NavDataStore *nds = [NavDataStore sharedDataStore];
-    HLPLocation *loc = [nds currentLocation];
-    BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
-    BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
-    BOOL hasCenter = [[NavDataStore sharedDataStore] mapCenter] != nil;
     BOOL isActive = [navigator isActive];
 
     if ([[DialogManager sharedManager] isAvailable] && !isActive) {
-        if (dialogHelper.helperView.hidden) {
-            dialogHelper.helperView.hidden = NO;
-            [dialogHelper recognize];
-        }
-        dialogHelper.helperView.disabled = !(hasCenter && (!isPreviewDisabled || validLocation));
+        [talkButton setHidden:false];
     } else {
-        dialogHelper.helperView.hidden = YES;
+        [talkButton setHidden:true];
     }
 }
 
