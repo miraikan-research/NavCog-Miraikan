@@ -104,7 +104,6 @@
 
     _webView.delegate = nil;
     
-//    [navigator stop];
     navigator.delegate = nil;
     navigator = nil;
     
@@ -312,21 +311,6 @@
 }
 
 // show p2p debug
-- (void)handleSettingLongPressGesture:(UILongPressGestureRecognizer*)sender
-{
-    if (sender.state == UIGestureRecognizerStateBegan && sender.numberOfTouches == 1) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NavDebugHelper *dhelper = [NavDebugHelper sharedHelper];
-            [dhelper start];
-            
-            MCBrowserViewController *viewController = [[MCBrowserViewController alloc] initWithServiceType:NAVCOG3_DEBUG_SERVICE_TYPE
-                                                                                                   session:dhelper.session];
-            viewController.delegate = self;
-            
-            [self presentViewController:viewController animated:YES completion:nil];
-        });
-    }
-}
 
 - (BOOL)browserViewController:(MCBrowserViewController *)browserViewController
       shouldPresentNearbyPeer:(MCPeerID *)peerID
@@ -343,22 +327,6 @@
 - (void)browserViewControllerWasCancelled:(MCBrowserViewController *)browserViewController
 {
     [browserViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (UILabel*)findLabel:(NSArray*)views
-{
-    for(UIView* view in views) {
-        if ([view isKindOfClass:UILabel.class]) {
-            return (UILabel*)view;
-        }
-        if (view.subviews) {
-            UILabel* result = [self findLabel:view.subviews];
-            if (result) {
-                return result;
-            }
-        }
-    }
-    return (UILabel*)nil;
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -388,22 +356,13 @@
         self.searchButton.title = NSLocalizedStringFromTable(self.isNaviStarted ? @"Stop" : @"Search", @"BlindView", @"");
         [self.searchButton setAccessibilityLabel:NSLocalizedStringFromTable(self.isNaviStarted ? @"Stop Navigation" : @"Search Route", @"BlindView", @"")];
         
-        BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey:@"p2p_debug_follower"];
         BOOL previewMode = [NavDataStore sharedDataStore].previewMode;
         BOOL exerciseMode = [NavDataStore sharedDataStore].exerciseMode;
-        BOOL isActive = [navigator isActive];
         BOOL peerExists = [[[NavDebugHelper sharedHelper] peers] count] > 0;
 
         self.searchButton.enabled = !self.isNaviStarted;
         
         self.navigationItem.leftBarButtonItems = @[self.backButton];
-        if (isActive || previewMode || initFlag) {
-        } else {
-            UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleSettingLongPressGesture:)];
-            longPressGesture.minimumPressDuration = 1.0;
-            longPressGesture.numberOfTouchesRequired = 1;
-            [[_settingButton valueForKey:@"view"] addGestureRecognizer:longPressGesture];
-        }
         
         NSString *titleStr = NSLocalizedStringFromTable(exerciseMode ? @"Exercise" : (previewMode ? @"Preview" : @"Miraikan"), @"BlindView", @"");
         titleButton = [[UIButton alloc] init];
@@ -412,7 +371,7 @@
         self.navigationItem.titleView = titleButton;
         
         // Show Setting Button for current location only
-        if (debugFollower || initFlag) {
+        if (initFlag) {
             if (!self.destId) {
                 self.navigationItem.rightBarButtonItems = @[self.settingButton];
             } else {

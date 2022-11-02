@@ -51,7 +51,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
 @interface ViewController () {
     NavNavigator *navigator;
 
-    UISwipeGestureRecognizer *recognizer;
     NSDictionary *uiState;
     UIButton *titleButton;
     NavTalkButton *talkButton;
@@ -95,8 +94,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     navigator.delegate = nil;
     navigator = nil;
 
-    recognizer = nil;
-    
     _settingButton = nil;
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -131,10 +128,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     _webView.delegate = self;
     _webView.tts = self;
     [_webView setFullScreenForView:self.view];
-    
-    recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openMenu:)];
-    recognizer.delegate = self;
-    [self.webView addGestureRecognizer:recognizer];
     
     navigator = [[NavNavigator alloc] init];
     navigator.delegate = self;
@@ -206,8 +199,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     [super viewWillDisappear:animated];
     _webView.delegate = nil;
-    
-    recognizer = nil;
     
     _settingButton = nil;
 }
@@ -422,12 +413,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
     HLPLocation *loc = [nds currentLocation];
     BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
     BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
-    BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey: @"p2p_debug_follower"];
     BOOL peerExists = [[[NavDebugHelper sharedHelper] peers] count] > 0;
 
     switch(state) {
         case ViewStateMap:
-            self.navigationItem.rightBarButtonItems = debugFollower ? @[] : @[self.searchButton];
+            self.navigationItem.rightBarButtonItems =  @[self.searchButton];
             self.navigationItem.leftBarButtonItems = @[self.backButton];
             break;
         case ViewStateSearch:
@@ -580,30 +570,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_OPEN_URL object:self userInfo:@{@"url": url}];
 }
 
-#pragma mark -
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    NSLog(@"%@", touches);
-    NSLog(@"%@", event);
-}
-
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
-- (void)openMenu:(UIGestureRecognizer*)sender
-{
-    NSLog(@"%@", sender);
-    
-    CGPoint p = [sender locationInView:self.webView];
-    NSLog(@"%f %f", p.x, p.y);
-}
-
 #pragma mark - notification handlers
-
-
 - (void)openURL:(NSNotification*)note
 {
     [NavUtil openURL:[note userInfo][@"url"] onViewController:self];

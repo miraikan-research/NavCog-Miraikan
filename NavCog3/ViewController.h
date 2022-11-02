@@ -28,7 +28,6 @@
 
 
 @interface ViewController: MiraikanMapController <
-    UIGestureRecognizerDelegate,
     NavNavigatorDelegate,
     HLPWebViewDelegate,
     HLPTTSProtocol
@@ -42,7 +41,6 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *settingButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *stopButton;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *micButton;
 @property (weak, nonatomic) IBOutlet UIButton *retryButton;
 @property (weak, nonatomic) IBOutlet UILabel *errorMessage;
 
