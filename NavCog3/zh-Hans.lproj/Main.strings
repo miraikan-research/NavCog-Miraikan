@@ -97,7 +97,7 @@
 "g1h-0V-f7m.text" = "出发地";
 
 /* Class = "UINavigationItem"; title = "NavCog"; ObjectID = "hf2-Dc-ViP"; */
-"hf2-Dc-ViP.title" = "NavCog";
+"hf2-Dc-ViP.title" = "Miraikan";
 
 /* Class = "UILabel"; text = "Subtitle"; ObjectID = "hia-uJ-SXj"; */
 "hia-uJ-SXj.text" = "副标题";
@@ -190,7 +190,7 @@
 "Wpx-c4-w3p.normalTitle" = "重试";
 
 /* Class = "UINavigationItem"; title = "NavCog"; ObjectID = "xcm-nO-qOJ"; */
-"xcm-nO-qOJ.title" = "NavCog";
+"xcm-nO-qOJ.title" = "Miraikan";
 
 /* Class = "UIBarButtonItem"; title = "Search"; ObjectID = "yBn-Ni-tgc"; */
 "yBn-Ni-tgc.title" = "搜索";

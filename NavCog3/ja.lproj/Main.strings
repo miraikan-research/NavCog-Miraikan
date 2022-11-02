@@ -96,7 +96,7 @@
 "g1h-0V-f7m.text" = "出発地";
 
 /* Class = "UINavigationItem"; title = "NavCog"; ObjectID = "hf2-Dc-ViP"; */
-"hf2-Dc-ViP.title" = "NavCog";
+"hf2-Dc-ViP.title" = "日本科学未来館";
 
 /* Class = "UILabel"; text = "Subtitle"; ObjectID = "hia-uJ-SXj"; */
 "hia-uJ-SXj.text" = "サブタイトル";
@@ -179,6 +179,9 @@
 /* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "ARb-oa-Pkn"; */
 "ARb-oa-Pkn.title" = "戻る";
 
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "MaH-XF-NBI"; */
+"MaH-XF-NBI.title" = "戻る";
+
 /* Class = "UIButton"; normalTitle = "Up"; ObjectID = "w8D-6y-H77"; */
 "w8D-6y-H77.normalTitle" = "上の階";
 
@@ -189,7 +192,7 @@
 "Wpx-c4-w3p.normalTitle" = "やり直す";
 
 /* Class = "UINavigationItem"; title = "NavCog"; ObjectID = "xcm-nO-qOJ"; */
-"xcm-nO-qOJ.title" = "NavCog";
+"xcm-nO-qOJ.title" = "日本科学未来館";
 
 /* Class = "UIBarButtonItem"; title = "Search"; ObjectID = "yBn-Ni-tgc"; */
 "yBn-Ni-tgc.title" = "検索";
