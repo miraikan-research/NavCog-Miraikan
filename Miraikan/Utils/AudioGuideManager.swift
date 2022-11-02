@@ -111,10 +111,6 @@ final public class AudioGuideManager: NSObject {
     }
 
     @objc private func locationChanged(note: Notification) {
-        
-        if !self.isDisplay { return }
-        if !self.isActive { return }
-
         guard let userInfo = note.userInfo,
               let current = userInfo["current"] as? HLPLocation else {
           return
