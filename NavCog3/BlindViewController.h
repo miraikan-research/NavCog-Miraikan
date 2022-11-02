@@ -39,7 +39,6 @@
     NavCommanderDelegate,
     NavPreviewerDelegate,
     MCBrowserViewControllerDelegate,
-    DialogViewDelegate,
     WebViewControllerDelegate
 >
 

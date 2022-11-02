@@ -211,6 +211,8 @@
 		E5BFB1A028617AB400D57E93 /* LandmarkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */; };
 		E5C5B93F286E905900A48E88 /* AudioGuideManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */; };
 		E5C5B94128767ED100A48E88 /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C5B94028767ED100A48E88 /* UINavigationControllerExtension.swift */; };
+		E5CB3FB929123D9C0068298A /* NavTalkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CB3FB829123D9C0068298A /* NavTalkButton.m */; };
+		E5CB3FBB2912428E0068298A /* NavTalkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CB3FB829123D9C0068298A /* NavTalkButton.m */; };
 		E5CBF9A228A3792F00954AEF /* UserDefaultsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CBF9A128A3792F00954AEF /* UserDefaultsExtension.swift */; };
 		E5DC797B2817C72800EFF12F /* BaseTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797A2817C72800EFF12F /* BaseTabController.swift */; };
 		E5DC797E2817C77600EFF12F /* AITabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DC797D2817C77600EFF12F /* AITabController.swift */; };
@@ -471,6 +473,8 @@
 		E5BFB19F28617AB400D57E93 /* LandmarkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkModel.swift; sourceTree = "<group>"; };
 		E5C5B93E286E905900A48E88 /* AudioGuideManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGuideManager.swift; sourceTree = "<group>"; };
 		E5C5B94028767ED100A48E88 /* UINavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtension.swift; sourceTree = "<group>"; };
+		E5CB3FB829123D9C0068298A /* NavTalkButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavTalkButton.m; sourceTree = "<group>"; };
+		E5CB3FBA29123DA50068298A /* NavTalkButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavTalkButton.h; sourceTree = "<group>"; };
 		E5CBF9A128A3792F00954AEF /* UserDefaultsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtension.swift; sourceTree = "<group>"; };
 		E5DC797A2817C72800EFF12F /* BaseTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabController.swift; sourceTree = "<group>"; };
 		E5DC797D2817C77600EFF12F /* AITabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITabController.swift; sourceTree = "<group>"; };
@@ -718,6 +722,8 @@
 				7EAE6F0C1D2642D600614C35 /* NavBlindWebView.m */,
 				7EF7F7701DCC1E08000A625A /* NavCoverView.h */,
 				7EF7F7711DCC1E08000A625A /* NavCoverView.m */,
+				E5CB3FB829123D9C0068298A /* NavTalkButton.m */,
+				E5CB3FBA29123DA50068298A /* NavTalkButton.h */,
 			);
 			name = navigation;
 			sourceTree = "<group>";
@@ -1388,6 +1394,7 @@
 				7E9238E81D5189F100875766 /* HLPSettingTableView.m in Sources */,
 				7EE207DB2022F7BA00160160 /* HLPDirectory.m in Sources */,
 				7E6E42DE1D90C77C006B6899 /* HLPGeoJSON.m in Sources */,
+				E5CB3FB929123D9C0068298A /* NavTalkButton.m in Sources */,
 				7E2D71361D4EE85F00FDCA66 /* SettingViewController.m in Sources */,
 				A923DA0A1F26DBF60002E3CB /* DefaultTTS.m in Sources */,
 				7E9238E61D5189F100875766 /* HLPSetting.m in Sources */,
@@ -1409,6 +1416,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5CB3FBB2912428E0068298A /* NavTalkButton.m in Sources */,
 				E5F52ED52845B7AF00BB4152 /* MiraikanIDMyPageView.swift in Sources */,
 				E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */,
 				E5BFB19C2859688B00D57E93 /* EventDetailViewController.swift in Sources */,

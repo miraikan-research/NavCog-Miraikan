@@ -31,8 +31,7 @@
     UIGestureRecognizerDelegate,
     NavNavigatorDelegate,
     HLPWebViewDelegate,
-    HLPTTSProtocol,
-    DialogViewDelegate
+    HLPTTSProtocol
 >
 
 @property (strong, nonatomic) IBOutlet HLPWebView *webView;
