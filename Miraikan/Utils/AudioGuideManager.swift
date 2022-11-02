@@ -147,6 +147,9 @@ final public class AudioGuideManager: NSObject {
             reserveFloorGuide = false
         }
 
+        if !self.isDisplay { return }
+        if !self.isActive { return }
+
         locationChanged(current: current)
     }
 
@@ -191,8 +194,10 @@ final public class AudioGuideManager: NSObject {
 
         if !floorStr.isEmpty,
            previousFloorStr != floorStr {
-            self.speakTexts.append(floorStr)
-            self.dequeueSpeak()
+            if UserDefaults.standard.bool(forKey: "isVoiceGuideOn") {
+                self.speakTexts.append(floorStr)
+                self.dequeueSpeak()
+            }
         }
     }
 
@@ -407,6 +412,10 @@ final public class AudioGuideManager: NSObject {
     }
 
     private func locationChanged(current: HLPLocation) {
+        if !UserDefaults.standard.bool(forKey: "isVoiceGuideOn") {
+            return
+        }
+
         let now = Date().timeIntervalSince1970
         if !current.lat.isNaN && !current.lng.isNaN && (locationChangedTime + checkTime < now) {
 
@@ -499,7 +508,16 @@ final public class AudioGuideManager: NSObject {
         }
     }
     
-    func nearLocation(current: HLPLocation) {
+    func nearLocationSpeak(current: HLPLocation) {
+        if let model = nearLocation(current: current) {
+            if UserDefaults.standard.bool(forKey: "isVoiceGuideOn") {
+                self.speakTexts.append(String(format: NSLocalizedString("Near", tableName: "BlindView", comment: ""), model.accessibility))
+                self.dequeueSpeak()
+            }
+        }
+    }
+
+    func nearLocation(current: HLPLocation) -> AccessibilityModel? {
         if !current.lat.isNaN && !current.lng.isNaN {
 
             for item in self.items {
@@ -510,15 +528,15 @@ final public class AudioGuideManager: NSObject {
             sortItems.sort(by: { $0.distance < $1.distance})
             
             if let sortItem = sortItems.first {
-                var titlePron = sortItem.titlePron
+                let titlePron = sortItem.titlePron
                 if lang != "ja",
                    let titleEn = sortItem.titleEn {
-                    titlePron = titleEn
+                    return AccessibilityModel(string: titleEn, accessibility: titleEn)
                 }
-                self.speakTexts.append(String(format: NSLocalizedString("Near", tableName: "BlindView", comment: ""), titlePron))
-                self.dequeueSpeak()
+                return AccessibilityModel(string: sortItem.title, accessibility: titlePron)
             }
         }
+        return nil
     }
 
     func isExhibitionZone(current: HLPLocation) -> Bool {

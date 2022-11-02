@@ -63,7 +63,7 @@ class BaseNavController: UINavigationController {
             if MiraikanUtil.routeMode == .blind,
                nodeId == nil,
                let location = MiraikanUtil.location {
-                AudioGuideManager.shared.nearLocation(current: location)
+                AudioGuideManager.shared.nearLocationSpeak(current: location)
             }
         })
     }
