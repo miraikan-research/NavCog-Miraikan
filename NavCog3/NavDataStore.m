@@ -482,11 +482,7 @@ static NavDataStore* instance_ = nil;
         [currentLocation updateParams:obj];
     }
     
-    BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-        devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
-    }
-    if (!(isManualLocation && devMode)) {
+    if (!(isManualLocation)) {
         [self postLocationNotification];
     }
     if (!isManualLocation) {
@@ -580,14 +576,9 @@ static NavDataStore* instance_ = nil;
                    Accuracy:manualCurrentLocation.accuracy
                       Floor:manualCurrentLocation.floor];
         [location updateSpeed:manualCurrentLocation.speed];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-            [location updateOrientation:manualOrientation
-                           withAccuracy:0];
-        } else {
-            if (magneticOrientationAccuracy < location.orientationAccuracy) {
-                [location updateOrientation:magneticOrientation
-                               withAccuracy:magneticOrientationAccuracy];
-            }
+        if (magneticOrientationAccuracy < location.orientationAccuracy) {
+            [location updateOrientation:magneticOrientation
+                           withAccuracy:magneticOrientationAccuracy];
         }
     }
     

@@ -551,16 +551,12 @@ static HLPSetting *poiLabel, *ignoreFacility, *showPOI;
     
     if (userSettingHelper) {
         BOOL blindMode = [[[NSUserDefaults standardUserDefaults] stringForKey:@"user_mode"] isEqualToString:@"user_blind"];
-        BOOL devMode = NO;
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-            devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
-        }
         BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
         //[speechLabel setVisible:blindMode];
         //[speechSpeedSetting setVisible:blindMode];
         
-        [previewSpeedSetting setVisible:blindMode && (devMode || !isPreviewDisabled)];
-        [previewWithActionSetting setVisible:blindMode && (devMode || !isPreviewDisabled)];
+        [previewSpeedSetting setVisible:blindMode && !isPreviewDisabled];
+        [previewWithActionSetting setVisible:blindMode && !isPreviewDisabled];
         [ignoreFacility setVisible:blindMode];
         [showPOI setVisible:blindMode];
         [vibrateSetting setVisible:blindMode];
@@ -614,7 +610,6 @@ static HLPSetting *poiLabel, *ignoreFacility, *showPOI;
     
     
     [detailSettingHelper addSectionTitle:@"Developer mode"];
-    [detailSettingHelper addSettingWithType:NavCogSettingTypeBoolean Label:@"Developer mode" Name:@"developer_mode" DefaultValue:@(NO) Accept:nil];
     [detailSettingHelper addSettingWithType:NavCogSettingTypeAction Label:@"P2P Debug" Name:@"p2p_debug" DefaultValue:@(NO) Accept:nil];
     [detailSettingHelper addSettingWithType:NavCogSettingTypeBoolean Label:@"P2P Debug Follower" Name:@"p2p_debug_follower" DefaultValue:@(NO) Accept:nil];
     
