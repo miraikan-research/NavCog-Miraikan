@@ -59,7 +59,7 @@ static NavDeviceTTS *instance = nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(voiceOverStatusChanged)
-                                                 name:UIAccessibilityVoiceOverStatusChanged
+                                                 name:UIAccessibilityVoiceOverStatusDidChangeNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -437,7 +437,7 @@ static NavDeviceTTS *instance = nil;
     }    
 }
 
-- (BOOL) speakWithVoiceOver:(NSString*)str
+- (BOOL)speakWithVoiceOver:(NSString*)str
 {
     UIApplicationState applicationState = [[UIApplication sharedApplication] applicationState];
 

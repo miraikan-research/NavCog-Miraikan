@@ -234,9 +234,7 @@
         double size = (113*scale)/2;
         double x = size+8;
         double y = self.view.bounds.size.height + self.view.bounds.origin.y - (size+8);
-        if (@available(iOS 11.0, *)) {
-            y -= self.view.safeAreaInsets.bottom;
-        }
+        y -= self.view.safeAreaInsets.bottom;
         dialogHelper.scale = scale;
         [dialogHelper inactive];
         [dialogHelper setup:self.view position:CGPointMake(x, y)];
