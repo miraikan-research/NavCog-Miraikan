@@ -123,11 +123,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     [self.view addSubview:_webView];
-    BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]) {
-        devMode = [ud boolForKey: @"developer_mode"];
-    }
-    _webView.isDeveloperMode = devMode;
     _webView.userMode = [ud stringForKey: @"user_mode"];
     _webView.config = @{
                         @"serverHost": [ud stringForKey: @"selected_hokoukukan_server"],
@@ -155,7 +150,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openURL:) name: REQUEST_OPEN_URL object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestRating:) name:REQUEST_RATING object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
-    [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
 
     checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:NO];
     checkStateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkState:) userInfo:nil repeats:YES];
@@ -176,7 +170,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
                                                                        message: message
                                                                 preferredStyle: UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle: ok
-                                                  style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                                                  style: UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction *action) {
                                                   }]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -184,6 +179,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
         });
         [ud setBool:YES forKey:@"checked_altimeter"];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -432,10 +432,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NavDataStore *nds = [NavDataStore sharedDataStore];
     HLPLocation *loc = [nds currentLocation];
     BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
-    BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]) {
-        devMode = [[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"];
-    }
     BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
     BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey: @"p2p_debug_follower"];
     BOOL peerExists = [[[NavDebugHelper sharedHelper] peers] count] > 0;
@@ -480,7 +476,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
     
     if (state == ViewStateMap) {
-        if ([[DialogManager sharedManager] isAvailable]  && (!isPreviewDisabled || devMode || validLocation) && ![self destId]) {
+        if ([[DialogManager sharedManager] isAvailable]  && (!isPreviewDisabled || validLocation) && ![self destId]) {
             if (dialogHelper.helperView.hidden) {
                 dialogHelper.helperView.hidden = NO;
                 [dialogHelper recognize];
@@ -980,9 +976,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
-    if ([keyPath isEqualToString: @"developer_mode"]) {
-        _webView.isDeveloperMode = @([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]);
-    }
+
 }
 
 #pragma mark - NavNavigatorDelegate

@@ -142,11 +142,6 @@
             [self.view bringSubviewToFront:v];
         }
     }
-    BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"developer_mode"]) {
-        devMode = [ud boolForKey: @"developer_mode"];
-    }
-    _webView.isDeveloperMode = devMode;
     _webView.userMode = [ud stringForKey: @"user_mode"];
     _webView.config = @{
                         @"serverHost": [ud stringForKey: @"selected_hokoukukan_server"],
@@ -187,8 +182,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(routeCleared:) name:ROUTE_CLEARED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(manualLocation:) name:MANUAL_LOCATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestShowRoute:) name:REQUEST_PROCESS_SHOW_ROUTE object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareForDealloc) name:REQUEST_UNLOAD_VIEW object:nil];
-    [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"developer_mode" options:NSKeyValueObservingOptionNew context:nil];
 
     checkMapCenterTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkMapCenter:) userInfo:nil repeats:YES];
     [self updateView];
@@ -212,6 +205,12 @@
         });
         [ud setBool:YES forKey:@"checked_altimeter"];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -243,15 +242,9 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self updateView];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear: animated];
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -401,36 +394,16 @@
         self.searchButton.title = NSLocalizedStringFromTable(self.isNaviStarted ? @"Stop" : @"Search", @"BlindView", @"");
         [self.searchButton setAccessibilityLabel:NSLocalizedStringFromTable(self.isNaviStarted ? @"Stop Navigation" : @"Search Route", @"BlindView", @"")];
         
-        BOOL devMode = NO;
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-            devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
-        }
         BOOL debugFollower = [[NSUserDefaults standardUserDefaults] boolForKey:@"p2p_debug_follower"];
         BOOL previewMode = [NavDataStore sharedDataStore].previewMode;
         BOOL exerciseMode = [NavDataStore sharedDataStore].exerciseMode;
         BOOL isActive = [navigator isActive];
         BOOL peerExists = [[[NavDebugHelper sharedHelper] peers] count] > 0;
 
-        self.devGo.hidden = !devMode || previewMode;
-        self.devLeft.hidden = !devMode || previewMode;
-        self.devRight.hidden = !devMode || previewMode;
-        self.devAuto.hidden = !devMode || previewMode || !isActive;
-        self.devReset.hidden = !devMode || previewMode;
-        self.devMarker.hidden = !devMode || previewMode;
-        
-        self.devUp.hidden = !devMode || previewMode;
-        self.devDown.hidden = !devMode || previewMode;
-        self.devNote.hidden = !devMode || previewMode;
-        self.devRestart.hidden = !devMode || previewMode;
-        
-        self.devAuto.selected = previewer.autoProceed;
-        //self.cover.hidden = devMode || !isActive;
-        self.cover.hidden = devMode;
-        
         self.searchButton.enabled = !self.isNaviStarted;
         
         self.navigationItem.leftBarButtonItems = @[self.backButton];
-        if ((isActive && !devMode) || previewMode || initFlag) {
+        if (isActive || previewMode || initFlag) {
         } else {
             UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleSettingLongPressGesture:)];
             longPressGesture.minimumPressDuration = 1.0;
@@ -499,10 +472,6 @@
     HLPLocation *loc = [nds currentLocation];
     BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
     BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
-    BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-        devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
-    }
     BOOL hasCenter = [[NavDataStore sharedDataStore] mapCenter] != nil;
     BOOL isActive = [navigator isActive];
 
@@ -511,7 +480,7 @@
             dialogHelper.helperView.hidden = NO;
             [dialogHelper recognize];
         }
-        dialogHelper.helperView.disabled = !(hasCenter && (!isPreviewDisabled || devMode || validLocation));
+        dialogHelper.helperView.disabled = !(hasCenter && (!isPreviewDisabled || validLocation));
     } else {
         dialogHelper.helperView.hidden = YES;
     }
@@ -949,9 +918,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"developer_mode"]) {
-        _webView.isDeveloperMode = @([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]);
-    }
+
 }
 
 #pragma mark - IBActions
@@ -1128,9 +1095,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_BACKGROUND_LOCATION object:self userInfo:@{@"value":@(requestBackground)}];
     if ([properties[@"isActive"] boolValue]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (![[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-                [_webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
-            }
+            [_webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
         });
             
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"reset_as_start_point"] && !rerouteFlag) {
@@ -1532,9 +1497,7 @@
         rv.device_id = [nds userID];
     }
     if ([segue.identifier isEqualToString:@"show_search"]) {
-        if (![[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-            [_webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
-        }
+        [_webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
     }
     if ([segue.identifier isEqualToString:@"show_dialog_blind_wc"]){
         DialogViewController* dView = (DialogViewController*)segue.destinationViewController;

@@ -104,10 +104,6 @@
 
 - (void) checkConfig
 {
-    if (![[AuthManager sharedManager] isDeveloperAuthorized]) {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"developer_mode"];
-    }
-    
     if (retryCount > 3) {
         [self didNetworkError];
         return;

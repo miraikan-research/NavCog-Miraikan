@@ -1245,11 +1245,7 @@ static NavNavigatorConstants *_instance;
 - (void)_locationChanged:(NSNotification*)note
 {
     BOOL isManualLocation = [NavDataStore sharedDataStore].isManualLocation;
-    BOOL devMode = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-        devMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
-    }
-    if (!isManualLocation || devMode) {
+    if (!isManualLocation) {
         NSOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
             [self locationChanged:note];
         }];

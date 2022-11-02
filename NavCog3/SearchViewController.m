@@ -202,12 +202,8 @@
         
         NavDataStore *nds = [NavDataStore sharedDataStore];
         HLPLocation *loc = [nds currentLocation];
-        BOOL isDevMode = NO;
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"]) {
-            isDevMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"developer_mode"];
-        }
         BOOL isPreviewDisabled = [[ServerConfig sharedConfig] isPreviewDisabled];
-        BOOL isNotManual = ![nds isManualLocation] || isDevMode;
+        BOOL isNotManual = ![nds isManualLocation];
         BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
         
         self.fromButton.enabled = updated && actionEnabled;
@@ -217,8 +213,8 @@
         
         self.switchButton.enabled = (nds.to._id != nil && nds.from._id != nil && actionEnabled && !nds.from.isCurrentLocation);
         self.previewButton.enabled = (nds.to._id != nil && nds.from._id != nil && actionEnabled);
-        self.previewButton.hidden = !isDevMode && isPreviewDisabled;
-        self.startButton.enabled = (nds.to._id != nil && nds.from._id != nil && validLocation && actionEnabled && isNotManual) || isDevMode;
+        self.previewButton.hidden = isPreviewDisabled;
+        self.startButton.enabled = (nds.to._id != nil && nds.from._id != nil && validLocation && actionEnabled && isNotManual);
         
         
         [self.fromButton setTitle:nds.from.name forState:UIControlStateNormal];
