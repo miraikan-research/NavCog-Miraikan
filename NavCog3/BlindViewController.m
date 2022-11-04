@@ -49,6 +49,9 @@
     UIButton *titleButton;
     NavTalkButton *talkButton;
 
+    NSDictionary *uiState;
+    NSDictionary *ratingInfo;
+
     CMMotionManager *motionManager;
     NSOperationQueue *motionQueue;
     double yaws[10];
@@ -64,10 +67,6 @@
     BOOL isSetupNavigation;
     BOOL isNoRoute;
 
-    UIColor *defaultColor;
-    
-    NSDictionary *uiState;
-    
     NSTimeInterval lastShake;
     NSTimeInterval lastLocationSent;
     NSTimeInterval lastOrientationSent;
@@ -75,10 +74,8 @@
     NSTimer *checkMapCenterTimer;
 
     long locationChangedTime;
-
     BOOL isNaviStarted;
     BOOL isSetupMap;
-
     BOOL initialViewDidAppear;
     BOOL needVOFocus;
     WebViewController *showingPage;
@@ -86,7 +83,9 @@
 
 @end
 
-@implementation BlindViewController
+@implementation BlindViewController {
+    UIColor *defaultColor;
+}
 
 - (void)dealloc
 {
@@ -123,6 +122,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    defaultColor = self.navigationController.navigationBar.barTintColor;
+    
     self.isNaviStarted = NO;
     self.isDestLoaded = NO;
     self.isRouteRequested = NO;
@@ -139,17 +140,16 @@
             [self.view bringSubviewToFront:v];
         }
     }
-    _webView.userMode = [ud stringForKey: @"user_mode"];
+    _webView.userMode = [ud stringForKey:@"user_mode"];
     _webView.config = @{
-                        @"serverHost": [ud stringForKey: @"selected_hokoukukan_server"],
-                        @"serverContext": [ud stringForKey: @"hokoukukan_server_context"],
-                        @"usesHttps": @([ud boolForKey: @"https_connection"])
+                        @"serverHost": [ud stringForKey:@"selected_hokoukukan_server"],
+                        @"serverContext": [ud stringForKey:@"hokoukukan_server_context"],
+                        @"usesHttps": @([ud boolForKey:@"https_connection"])
                         };
     _webView.delegate = self;
     _webView.tts = self;
     [_webView setFullScreenForView:self.view];
-//    [self hiddenVoiceGuide];
-
+    
     navigator = [[NavNavigator alloc] init];
     commander = [[NavCommander alloc] init];
     previewer = [[NavPreviewer alloc] init];
@@ -157,8 +157,6 @@
     commander.delegate = self;
     previewer.delegate = self;
     _cover.fsSource = navigator;
-    
-    defaultColor = self.navigationController.navigationBar.barTintColor;
     
     _indicator.accessibilityLabel = NSLocalizedString(@"Loading, please wait", @"");
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _indicator);
@@ -310,46 +308,6 @@
     [self performSegueWithIdentifier:@"show_search" sender:@[@"toDestinations", @"show_dialog"]];
 }
 
-// show p2p debug
-
-- (BOOL)browserViewController:(MCBrowserViewController *)browserViewController
-      shouldPresentNearbyPeer:(MCPeerID *)peerID
-            withDiscoveryInfo:(NSDictionary *)info
-{
-    return YES;
-}
-
-- (void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController
-{
-    [browserViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)browserViewControllerWasCancelled:(MCBrowserViewController *)browserViewController
-{
-    [browserViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (BOOL)canBecomeFirstResponder
-{
-    return YES;
-}
-
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    if(event.type == UIEventSubtypeMotionShake)
-    {
-        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-        if (now - lastShake < 5) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_LOCATION_UNKNOWN object:self];
-            [[NavSound sharedInstance] vibrate:@{@"repeat":@(2)}];
-            lastShake = 0;
-        } else {
-            [[NavSound sharedInstance] vibrate:nil];
-            lastShake = now;
-        }
-    }
-}
-
 - (void)updateView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -388,7 +346,6 @@
         if (peerExists) {
             self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.9 alpha:1.0];
         } else {
-            //self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.9 alpha:1.0];
             self.navigationController.navigationBar.barTintColor = defaultColor;
         }
         
@@ -408,9 +365,9 @@
 
 - (void)setTitleButton:(NSString*)title
 {
-    [titleButton setTitle:title forState: UIControlStateNormal];
-    [titleButton setTitleColor:UIColor.blueColor forState: UIControlStateNormal];
-    [titleButton.titleLabel setFont: [UIFont boldSystemFontOfSize: 16]];
+    [titleButton setTitle:title forState:UIControlStateNormal];
+    [titleButton setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
+    [titleButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
     [titleButton setIsAccessibilityElement: false];
 }
 
@@ -440,6 +397,29 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [_webView evaluateJavaScript: @"document.getElementById('map-footer').style.display ='none';" completionHandler: nil];
     });
+}
+
+// show p2p debug
+- (BOOL)browserViewController:(MCBrowserViewController *)browserViewController
+      shouldPresentNearbyPeer:(MCPeerID *)peerID
+            withDiscoveryInfo:(NSDictionary *)info
+{
+    return YES;
+}
+
+- (void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController
+{
+    [browserViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)browserViewControllerWasCancelled:(MCBrowserViewController *)browserViewController
+{
+    [browserViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
 }
 
 #pragma mark - MKWebViewDelegate
@@ -483,23 +463,6 @@
     _retryButton.hidden = NO;
     _errorMessage.hidden = NO;
 }
-
-- (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
-{
-    [[NavDeviceTTS sharedTTS] speak:text withOptions:@{@"force": @(isForce)} completionHandler:handler];
-}
-
-- (BOOL)isSpeaking
-{
-    return [[NavDeviceTTS sharedTTS] isSpeaking];
-}
-
-/*
-- (void)vibrate
-{
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-}
- */
 
 - (void)webView:(HLPWebView *)webView didChangeLatitude:(double)lat longitude:(double)lng floor:(double)floor synchronized:(BOOL)sync
 {
@@ -575,6 +538,7 @@
     if ([NavDataStore sharedDataStore].previewMode == NO &&
         [[ServerConfig sharedConfig] shouldAskRating]) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            ratingInfo = [note userInfo];
             [self performSegueWithIdentifier:@"show_rating" sender:self];
         });
     }
@@ -882,7 +846,6 @@
 
 - (IBAction)floorUp:(id)sender {
     double floor = [[[NavDataStore sharedDataStore] currentLocation] floor];
-    
     [previewer manualGoFloor:floor+1];
 }
 
@@ -939,8 +902,8 @@
     _errorMessage.hidden = YES;
 }
 
-
-- (IBAction)autoProceed:(id)sender {
+- (IBAction)autoProceed:(id)sender
+{
     [previewer setAutoProceed:!previewer.autoProceed];
     [self updateView];
 }
@@ -1295,6 +1258,16 @@
     }
 }
 
+- (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
+{
+    [[NavDeviceTTS sharedTTS] speak:text withOptions:@{@"force": @(isForce)} completionHandler:handler];
+}
+
+- (BOOL)isSpeaking
+{
+    return [[NavDeviceTTS sharedTTS] isSpeaking];
+}
+
 - (void)vibrate
 {
     BOOL result = [[NavSound sharedInstance] vibrate:nil];
@@ -1431,14 +1404,15 @@
         SettingViewController *sv = (SettingViewController*)segue.destinationViewController;
         sv.webView = _webView;
     }
-    if ([segue.identifier isEqualToString:@"show_rating"]) {
+    if ([segue.identifier isEqualToString:@"show_rating"] && ratingInfo) {
         RatingViewController *rv = (RatingViewController*)segue.destinationViewController;
         NavDataStore *nds = [NavDataStore sharedDataStore];
-        rv.start = nds.start;
-        rv.end = [[NSDate date] timeIntervalSince1970];
-        rv.from = nds.from._id;
-        rv.to = nds.to._id;
+        rv.start = [ratingInfo[@"start"] doubleValue]/1000.0;
+        rv.end = [ratingInfo[@"end"] doubleValue]/1000.0;
+        rv.from = ratingInfo[@"from"];
+        rv.to = ratingInfo[@"to"];
         rv.device_id = [nds userID];
+        ratingInfo = nil;
     }
     if ([segue.identifier isEqualToString:@"show_search"]) {
         [_webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
