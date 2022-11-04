@@ -487,13 +487,13 @@ static HLPSetting *poiLabel, *ignoreFacility, *showPOI;
 {
     userSettingHelper = [[HLPSettingHelper alloc] init];
 
-    [userSettingHelper addSectionTitle:NSLocalizedString(@"Help", @"")];
-    [userSettingHelper addActionTitle:NSLocalizedString(@"OpenInstructions", @"") Name:@"OpenInstructions"];
-    [userSettingHelper addActionTitle:NSLocalizedString(@"OpenHelp", @"") Name:@"OpenHelp"];
-    [userSettingHelper addActionTitle:NSLocalizedString(@"Send Feedback", @"") Name:@"send_feedback"];
-    
-    [userSettingHelper addSectionTitle:NSLocalizedString(@"Mode", @"")];
-    [userSettingHelper addActionTitle:NSLocalizedString(@"Back to mode selection", @"") Name:@"back_to_mode_selection"];
+//    [userSettingHelper addSectionTitle:NSLocalizedString(@"Help", @"")];
+//    [userSettingHelper addActionTitle:NSLocalizedString(@"OpenInstructions", @"") Name:@"OpenInstructions"];
+//    [userSettingHelper addActionTitle:NSLocalizedString(@"OpenHelp", @"") Name:@"OpenHelp"];
+//    [userSettingHelper addActionTitle:NSLocalizedString(@"Send Feedback", @"") Name:@"send_feedback"];
+//    
+//    [userSettingHelper addSectionTitle:NSLocalizedString(@"Mode", @"")];
+//    [userSettingHelper addActionTitle:NSLocalizedString(@"Back to mode selection", @"") Name:@"back_to_mode_selection"];
     
     speechLabel = [userSettingHelper addSectionTitle:NSLocalizedString(@"Speech_Sound", @"label for tts options")];
     speechSpeedSetting = [userSettingHelper addSettingWithType:NavCogSettingTypeDouble Label:NSLocalizedString(@"Speech speed", @"label for speech speed option")
