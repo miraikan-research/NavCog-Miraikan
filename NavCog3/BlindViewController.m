@@ -605,18 +605,22 @@
 
 - (void)locationChanged: (NSNotification*) note
 {
+//    NSLog(@"%s: %d, %@" , __func__, __LINE__, note);
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
         if (appState == UIApplicationStateBackground || appState == UIApplicationStateInactive) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         
         NSDictionary *locations = [note userInfo];
         if (!locations) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         HLPLocation *location = locations[@"current"];
         if (!location || [location isEqual:[NSNull null]]) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         
@@ -635,11 +639,13 @@
         
         location = locations[@"actual"];
         if (!location || [location isEqual:[NSNull null]]) {
+//            NSLog(@"%s: %d" , __func__);
             return;
         }
         
         if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
+//                NSLog(@"%s: %d" , __func__);
                 return;
             }
             //return; // prevent too much send location info
@@ -674,14 +680,47 @@
     });
 }
 
+- (void)destinationChanged: (NSNotification*) note
+{
+
+    if (self.isNaviStarted) {
+        return;
+    }
+    self.isNaviStarted = YES;
+
+    [_webView initTarget:[note userInfo][@"destinations"]];
+    
+    NavDataStore *nds = [NavDataStore sharedDataStore];
+    NavDestination *from = [NavDataStore destinationForCurrentLocation];
+    NavDestination *to = [nds destinationByID: [self destId]];
+    [NavDataStore sharedDataStore].to = to;
+    
+    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
+                                     withOptions:AVAudioSessionCategoryOptionAllowBluetooth
+                                           error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [nds requestRouteFrom:from.singleId
+                       To:to._id
+          withPreferences:prefs complete:^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            nds.previewMode = [MiraikanUtil isPreview];
+            nds.exerciseMode = NO;
+        });
+    }];
+}
+
 - (void)setupNavigation
 {
+//    NSLog(@"%s: %d" , __func__);
     if (isSetupNavigation) {
+//        NSLog(@"%s: %d" , __func__);
         return;
     }
 
     NavDataStore *nds = [NavDataStore sharedDataStore];
     if (nds.directory == nil) {
+//        NSLog(@"%s: %d" , __func__);
         return;
     }
 
@@ -711,36 +750,6 @@
             }
         ];
     });
-}
-
-- (void)destinationChanged: (NSNotification*) note
-{
-
-    if (self.isNaviStarted) {
-        return;
-    }
-    self.isNaviStarted = YES;
-
-    [_webView initTarget:[note userInfo][@"destinations"]];
-    
-    NavDataStore *nds = [NavDataStore sharedDataStore];
-    NavDestination *from = [NavDataStore destinationForCurrentLocation];
-    NavDestination *to = [nds destinationByID: [self destId]];
-    [NavDataStore sharedDataStore].to = to;
-    
-    __block NSMutableDictionary *prefs = SettingDataManager.sharedManager.getPrefs;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback
-                                     withOptions:AVAudioSessionCategoryOptionAllowBluetooth
-                                           error:nil];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [nds requestRouteFrom:from.singleId
-                       To:to._id
-          withPreferences:prefs complete:^{
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            nds.previewMode = [MiraikanUtil isPreview];
-            nds.exerciseMode = NO;
-        });
-    }];
 }
 
 - (void)routeCleared: (NSNotification*) note
