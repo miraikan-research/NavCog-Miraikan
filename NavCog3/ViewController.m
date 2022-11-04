@@ -51,10 +51,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
 @interface ViewController () {
     NavNavigator *navigator;
 
-    NSDictionary *uiState;
     UIButton *titleButton;
     NavTalkButton *talkButton;
 
+    NSDictionary *uiState;
     NSDictionary *ratingInfo;
     NSArray *landmarks;
     
@@ -87,7 +87,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)prepareForDealloc
 {
-    [_webView triggerWebviewControl: HLPWebviewControlEndNavigation];
+    [_webView triggerWebviewControl:HLPWebviewControlEndNavigation];
 
     _webView.delegate = nil;
     
@@ -119,11 +119,11 @@ typedef NS_ENUM(NSInteger, ViewState) {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     _webView = [[HLPWebView alloc] initWithFrame:CGRectMake(0,0,0,0) configuration:[[WKWebViewConfiguration alloc] init]];
     [self.view addSubview:_webView];
-    _webView.userMode = [ud stringForKey: @"user_mode"];
+    _webView.userMode = [ud stringForKey:@"user_mode"];
     _webView.config = @{
-                        @"serverHost": [ud stringForKey: @"selected_hokoukukan_server"],
-                        @"serverContext": [ud stringForKey: @"hokoukukan_server_context"],
-                        @"usesHttps": @([ud boolForKey: @"https_connection"])
+                        @"serverHost": [ud stringForKey:@"selected_hokoukukan_server"],
+                        @"serverContext": [ud stringForKey:@"hokoukukan_server_context"],
+                        @"usesHttps": @([ud boolForKey:@"https_connection"])
                         };
     _webView.delegate = self;
     _webView.tts = self;
@@ -151,7 +151,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [talkButton setHidden:true];
     }
 
-    BOOL checked = [ud boolForKey: @"checked_altimeter"];
+    BOOL checked = [ud boolForKey:@"checked_altimeter"];
     if (!checked && ![CMAltimeter isRelativeAltitudeAvailable]) {
         NSString *title = NSLocalizedString(@"NoAltimeterAlertTitle", @"");
         NSString *message = NSLocalizedString(@"NoAltimeterAlertMessage", @"");
@@ -473,7 +473,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (void)setTitleButton:(NSString*)title
 {
-    [titleButton setTitle:title forState: UIControlStateNormal];
+    [titleButton setTitle:title forState:UIControlStateNormal];
     [titleButton setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
     [titleButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
     [titleButton setIsAccessibilityElement: false];
@@ -501,22 +501,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     _errorMessage.hidden = NO;
     _retryButton.hidden = NO;
-}
-
-- (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
-{
-    BOOL isVoiceGuideOn = false;
-    [[NavDeviceTTS sharedTTS] speak:isVoiceGuideOn ? text : @"" withOptions: @{@"force": @(isForce)} completionHandler:handler];
-}
-
-- (BOOL)isSpeaking
-{
-    return [[NavDeviceTTS sharedTTS] isSpeaking];
-}
-
-- (void)vibrate
-{
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
 - (void)webView:(HLPWebView *)webView didChangeLatitude:(double)lat longitude:(double)lng floor:(double)floor synchronized:(BOOL)sync
@@ -749,7 +733,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         double floor = location.floor;
         
-        [_webView sendData: @{
+        [_webView sendData:@{
                             @"lat": @(location.lat),
                             @"lng": @(location.lng),
                             @"floor": @(floor),
@@ -759,7 +743,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                             @"debug_info": location.params ? location.params[@"debug_info"] : [NSNull null],
                             @"debug_latlng": location.params ? location.params[@"debug_latlng"] : [NSNull null]
                             }
-                  withName: @"XYZ"];
+                  withName:@"XYZ"];
 
         lastLocationSent = now;
         
@@ -769,10 +753,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
 //            NSLog(@"%s: %d" , __func__);
             return;
         }
-//        if (!isInitTarget) {
-//            NSLog(@"%s: %d, return" , __func__, __LINE__);
-//            return;
-//        }
 
         if ([self destId]) {
             if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
@@ -845,6 +825,23 @@ typedef NS_ENUM(NSInteger, ViewState) {
 //    });
 }
 
+
+- (void)speak:(NSString *)text force:(BOOL)isForce completionHandler:(void (^)(void))handler
+{
+    BOOL isVoiceGuideOn = false;
+    [[NavDeviceTTS sharedTTS] speak:isVoiceGuideOn ? text : @"" withOptions: @{@"force": @(isForce)} completionHandler:handler];
+}
+
+- (BOOL)isSpeaking
+{
+    return [[NavDeviceTTS sharedTTS] isSpeaking];
+}
+
+- (void)vibrate
+{
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
 #pragma mark - IBActions
 
 - (IBAction)doSearch:(id)sender {
@@ -884,10 +881,10 @@ typedef NS_ENUM(NSInteger, ViewState) {
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-    if ([identifier isEqualToString: @"user_settings"] && (state == ViewStateMap || state == ViewStateLoading)) {
+    if ([identifier isEqualToString:@"user_settings"] && (state == ViewStateMap || state == ViewStateLoading)) {
         return YES;
     }
-    if ([identifier isEqualToString: @"user_settings"] && state == ViewStateSearch) {
+    if ([identifier isEqualToString:@"user_settings"] && state == ViewStateSearch) {
         state = ViewStateTransition;
         [self updateView];
         [_webView triggerWebviewControl:HLPWebviewControlRouteSearchOptionButton];
@@ -900,21 +897,21 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     segue.destinationViewController.restorationIdentifier = segue.identifier;
     
-    if ([segue.identifier isEqualToString: @"user_settings"]) {
+    if ([segue.identifier isEqualToString:@"user_settings"]) {
         SettingViewController *sv = (SettingViewController*)segue.destinationViewController;
         sv.webView = _webView;
     }
-    if ([segue.identifier isEqualToString: @"show_rating"] && ratingInfo) {
+    if ([segue.identifier isEqualToString:@"show_rating"] && ratingInfo) {
         RatingViewController *rv = (RatingViewController*)segue.destinationViewController;
+        NavDataStore *nds = [NavDataStore sharedDataStore];
         rv.start = [ratingInfo[@"start"] doubleValue]/1000.0;
         rv.end = [ratingInfo[@"end"] doubleValue]/1000.0;
         rv.from = ratingInfo[@"from"];
         rv.to = ratingInfo[@"to"];
-        rv.device_id = [[NavDataStore sharedDataStore] userID];
-        
+        rv.device_id = [nds userID];
         ratingInfo = nil;
     }
-    if ([segue.identifier isEqualToString: @"show_dialog_wc"]) {
+    if ([segue.identifier isEqualToString:@"show_dialog_wc"]) {
         DialogViewController* dView = (DialogViewController*)segue.destinationViewController;
         dView.tts = [DefaultTTS new];
         dView.root = self;
