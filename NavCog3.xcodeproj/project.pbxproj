@@ -108,7 +108,6 @@
 		D3A1184F27294B0B00BEC1C8 /* event.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5822702B8F600F6AD28 /* event.json */; };
 		D3A1185027294B0B00BEC1C8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E6E42DF1D90C7A3006B6899 /* Settings.bundle */; };
 		D3A1185127294B0B00BEC1C8 /* HLPSettingViewTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E9238E51D5189F100875766 /* HLPSettingViewTextCell.xib */; };
-		D3A1185C272950B400BEC1C8 /* Miraikan.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3A1185B272950B400BEC1C8 /* Miraikan.plist */; };
 		D3B06195276346BB0006B0DA /* VoiceGuideController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B06194276346BB0006B0DA /* VoiceGuideController.swift */; };
 		D3B1A1A527546AFB00E6CBCB /* AIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B1A1A427546AFB00E6CBCB /* AIController.swift */; };
 		D3B9D405274F76B1001F4D80 /* NaviSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */; };
@@ -444,7 +443,6 @@
 			files = (
 				D3A1182C27294B0B00BEC1C8 /* HLPLocationManager.framework in Frameworks */,
 				D3A1182D27294B0B00BEC1C8 /* AssetsLibrary.framework in Frameworks */,
-				D3A1182E27294B0B00BEC1C8 /* CoreBluetooth.framework in Frameworks */,
 				D3A1182E27294B0B00BEC1C8 /* CoreBluetooth.framework in Frameworks */,
 				D3A1182F27294B0B00BEC1C8 /* CoreMotion.framework in Frameworks */,
 				D3A1183027294B0B00BEC1C8 /* HLPWebView.framework in Frameworks */,
@@ -892,15 +890,14 @@
 		7EDEDC141D1E0C6800AC111A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Miraikan - The National Museum of Emerging Science and Innovation";
 			};
 			buildConfigurationList = 7EDEDC171D1E0C6800AC111A /* Build configuration list for PBXProject "NavCog3" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 				ja,
@@ -949,7 +946,6 @@
 				D3A1184827294B0B00BEC1C8 /* HLPGeoJSON.strings in Resources */,
 				D3A1184927294B0B00BEC1C8 /* lastcommit.txt in Resources */,
 				D3A1184A27294B0B00BEC1C8 /* exhibition_category.json in Resources */,
-				D3A1185C272950B400BEC1C8 /* Miraikan.plist in Resources */,
 				D3A1184B27294B0B00BEC1C8 /* Main.storyboard in Resources */,
 				D3A1184C27294B0B00BEC1C8 /* Localizable.strings in Resources */,
 				D3A1184D27294B0B00BEC1C8 /* HLPSettingView.strings in Resources */,
@@ -1319,14 +1315,17 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1351,7 +1350,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1373,14 +1372,17 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1399,7 +1401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
