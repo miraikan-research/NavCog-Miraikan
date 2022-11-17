@@ -26,10 +26,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>org.hulop.NavCog3.open</string>
+			<string>lab.miraikan.NavCog-Miraikan.open</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>navcog3</string>
+				<string>lab.miraikan</string>
 			</array>
 		</dict>
 	</array>

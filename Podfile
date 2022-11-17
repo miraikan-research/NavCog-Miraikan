@@ -1,12 +1,6 @@
 project 'NavCog3'
 inhibit_all_warnings!
 
-target 'NavCog3' do
-  platform :ios, '8.4'
-  pod 'OpenCV-Dynamic', :podspec => "https://raw.githubusercontent.com/hulop/blelocpp/v1.3.6/platform/ios/podspecs/OpenCV-Dynamic.podspec"
-  pod 'FormatterKit'
-end
-
 target 'NavCogMiraikan' do
   platform :ios, '13.0'
   pod 'OpenCV-Dynamic', :podspec => "https://raw.githubusercontent.com/hulop/blelocpp/v1.3.6/platform/ios/podspecs/OpenCV-Dynamic.podspec"
