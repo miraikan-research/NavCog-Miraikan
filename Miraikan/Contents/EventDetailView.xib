@@ -50,9 +50,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="51"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mfb-dc-rYF" customClass="StyledButton" customModule="NavCogMiraikan" customModuleProvider="target">
-                                                    <rect key="frame" x="20" y="10" width="124" height="31"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="この展示へナビ"/>
+                                                    <rect key="frame" x="20" y="10" width="108" height="31"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="この展示へナビ"/>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -84,12 +84,12 @@
                                             <rect key="frame" x="0.0" y="102" width="414" height="51"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GVW-eA-DYW" customClass="StyledButton" customModule="NavCogMiraikan" customModuleProvider="target">
-                                                    <rect key="frame" x="312.5" y="10" width="81.5" height="31"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="通知設定"/>
+                                                    <rect key="frame" x="332" y="10" width="62" height="31"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="通知設定"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DuB-Is-1JL">
-                                                    <rect key="frame" x="251.5" y="17" width="41" height="17"/>
+                                                    <rect key="frame" x="271" y="17" width="41" height="17"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -229,9 +229,9 @@
                                             <rect key="frame" x="0.0" y="758" width="414" height="51"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O96-mW-ZVs" customClass="StyledButton" customModule="NavCogMiraikan" customModuleProvider="target">
-                                                    <rect key="frame" x="145" y="10" width="124" height="31"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="ナビゲーション"/>
+                                                    <rect key="frame" x="153" y="10" width="108" height="31"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="ナビゲーション"/>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -283,13 +283,13 @@
     </objects>
     <designables>
         <designable name="GVW-eA-DYW">
-            <size key="intrinsicContentSize" width="81.5" height="31"/>
+            <size key="intrinsicContentSize" width="62" height="30"/>
         </designable>
         <designable name="Mfb-dc-rYF">
-            <size key="intrinsicContentSize" width="124" height="31"/>
+            <size key="intrinsicContentSize" width="108" height="30"/>
         </designable>
         <designable name="O96-mW-ZVs">
-            <size key="intrinsicContentSize" width="124" height="31"/>
+            <size key="intrinsicContentSize" width="108" height="30"/>
         </designable>
     </designables>
     <resources>
