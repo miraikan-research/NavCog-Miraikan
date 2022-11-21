@@ -74,7 +74,6 @@
 		D3A1182827294B0B00BEC1C8 /* NavSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF6FBB11DA4DD8200382F76 /* NavSound.m */; };
 		D3A1182927294B0B00BEC1C8 /* AuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E391E3F1E5600208042 /* AuthManager.m */; };
 		D3A1182C27294B0B00BEC1C8 /* HLPLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91D384B1F628107008A34D1 /* HLPLocationManager.framework */; };
-		D3A1182D27294B0B00BEC1C8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E9657EF1F619B9300A6B489 /* AssetsLibrary.framework */; };
 		D3A1182E27294B0B00BEC1C8 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EAE818E1E41E89C007B50D3 /* CoreBluetooth.framework */; };
 		D3A1182F27294B0B00BEC1C8 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EEA2F2B1D376BAD00FF25C4 /* CoreMotion.framework */; };
 		D3A1183027294B0B00BEC1C8 /* HLPWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91EA2FF1F55376200548203 /* HLPWebView.framework */; };
@@ -442,7 +441,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3A1182C27294B0B00BEC1C8 /* HLPLocationManager.framework in Frameworks */,
-				D3A1182D27294B0B00BEC1C8 /* AssetsLibrary.framework in Frameworks */,
 				D3A1182E27294B0B00BEC1C8 /* CoreBluetooth.framework in Frameworks */,
 				D3A1182F27294B0B00BEC1C8 /* CoreMotion.framework in Frameworks */,
 				D3A1183027294B0B00BEC1C8 /* HLPWebView.framework in Frameworks */,

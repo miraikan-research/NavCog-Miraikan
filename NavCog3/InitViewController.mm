@@ -216,7 +216,6 @@
       @"sigmaStopRW":       @"sigmaStop",
       @"sigmaMoveRW":       @"sigmaMove",
       @"relativeVelocityEscalator":@"relativeVelocityEscalator",
-      @"nStates":           @"nBurnIn",
       @"initialSearchRadius2D":@"burnInRadius2D",
       @"mixProba":          @"mixProba",
       @"rejectDistance":    @"rejectDistance",

@@ -556,7 +556,7 @@
     [string appendString:[self welcomePOIString:pois]];
     
     if (destination && ![destination isEqual:[NSNull null]] && [destination length] > 0){
-        [string appendFormat:NSLocalizedStringFromTable(@"distance to %1$@", @"BlindView", @"distance to a destination name"), destination, totalDist];
+        [string appendFormat:NSLocalizedStringFromTable(@"distance to %@, %@", @"BlindView", @"distance to a destination name"), destination, totalDist];
     } else {
         [string appendFormat:NSLocalizedStringFromTable(@"distance to the destination", @"BlindView", @"distance to the destination"), totalDist];
     }
@@ -617,7 +617,7 @@
     NSLog(@"%@", NSStringFromSelector(_cmd));
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"speak,<play success sound>");
-        [_delegate playSuccess];
+        [self->_delegate playSuccess];
     });
 }
 
@@ -640,7 +640,7 @@
     NSString *action = [self actionString:properties];
     NSString *string = nil;
     
-    if (false && action) {
+    if (false) {
         string = [NSString stringWithFormat:NSLocalizedStringFromTable(@"approaching to %@",@"BlindView",@"approaching to do something") , action];
     } else {
         string = NSLocalizedStringFromTable(@"approaching",@"BlindView",@"approaching");
@@ -842,7 +842,7 @@
         NSMutableString *string = [@"" mutableCopy];
         if (angle && (poi.text || text)) {
             if (poi.isDestination) {
-                [string appendFormat:NSLocalizedStringFromTable(@"destination is %@", @"BlindView", @""), text, angle];
+                [string appendFormat:NSLocalizedStringFromTable(@"destination is %@, %@", @"BlindView", @""), text, angle];
                 /*if (poi.text) {
                     [string appendString:NSLocalizedStringFromTable(@"PERIOD", @"BlindView", @"")];
                     [string appendString:poi.text];
@@ -850,11 +850,11 @@
                 isDestinationPOI = YES;
             } else {
                 if (poi.flagPlural) {
-                    [string appendFormat:NSLocalizedStringFromTable(@"poi are %@", @"BlindView", @""), text, angle];
+                    [string appendFormat:NSLocalizedStringFromTable(@"poi are %@, %@", @"BlindView", @""), text, angle];
                 } else if (poi.flagOnomastic) {
-                    [string appendFormat:NSLocalizedStringFromTable(@"name is %@", @"BlindView", @""), text, angle];
+                    [string appendFormat:NSLocalizedStringFromTable(@"name is %@, %@", @"BlindView", @""), text, angle];
                 } else {
-                    [string appendFormat:NSLocalizedStringFromTable(@"poi is %@", @"BlindView", @""), text, angle];
+                    [string appendFormat:NSLocalizedStringFromTable(@"poi is %@, %@", @"BlindView", @""), text, angle];
                 }
             }
         } else {
@@ -869,7 +869,7 @@
         
         NSArray *result = [self checkCommand:string];
         
-        [_delegate speak:result[0] withOptions:properties completionHandler:^{
+        [self->_delegate speak:result[0] withOptions:properties completionHandler:^{
             if (isDestinationPOI) {
                 [[NavDataStore sharedDataStore] clearRoute];
                 [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_RATING object:nil];
@@ -878,7 +878,7 @@
             if ([result count] < 2) {
                 return;
             }
-            [_delegate executeCommand:result[1]];
+            [self->_delegate executeCommand:result[1]];
         }];
         lastPOIAnnounceTime = now;
     }

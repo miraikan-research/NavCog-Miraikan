@@ -36,6 +36,8 @@
     HLPDirectoryItem *_item;
 }
 
++ (BOOL)supportsSecureCoding { return true;}
+
 - (BOOL) isEqual:(NavDestination*)obj
 {
     if (_type != obj.type) {
@@ -713,7 +715,7 @@ static NavDataStore* instance_ = nil;
     if (destinationCacheLocation && [destinationCacheLocation distanceTo:_loadLocation] < dist/2 &&
         destinationCache && destinationCache.count > 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:DESTINATIONS_CHANGED_NOTIFICATION object:self userInfo:@{@"destinations":destinationCache?destinationCache:@[]}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:DESTINATIONS_CHANGED_NOTIFICATION object:self userInfo:@{@"destinations" : self->destinationCache ? self->destinationCache:@[]}];
         });
         destinationRequesting = NO;
         return NO;
@@ -742,7 +744,7 @@ static NavDataStore* instance_ = nil;
         destinationCacheLocation = nil;
         destinationHash = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:DESTINATIONS_CHANGED_NOTIFICATION object:self userInfo:@{@"destinations":destinationCache?destinationCache:@[]}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:DESTINATIONS_CHANGED_NOTIFICATION object:self userInfo:@{@"destinations" : self->destinationCache ? self->destinationCache:@[]}];
         });
         return;
     }
@@ -777,7 +779,7 @@ static NavDataStore* instance_ = nil;
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:DESTINATIONS_CHANGED_NOTIFICATION object:self userInfo:@{@"destinations":destinationCache?destinationCache:@[]}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:DESTINATIONS_CHANGED_NOTIFICATION object:self userInfo:@{@"destinations" : self->destinationCache ? self->destinationCache:@[]}];
     });
     if (complete) {
         complete(destinationCache, directoryCache);
@@ -791,6 +793,7 @@ static NavDataStore* instance_ = nil;
     NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString* path = [documentsPath stringByAppendingPathComponent:@"history.object"];
 
+    // NSCocoaErrorDomain Code=4866, userInfo data Framework HLPLocationManager HLPLocation <NSCoding>, NO NSSecureCoding
     NSArray *history = @[];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         history = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
@@ -853,51 +856,51 @@ static NavDataStore* instance_ = nil;
             return;
         }
         [HLPDataUtil loadNodeMapForUser:user withLang:lang WithCallback:^(NSArray<HLPObject *> *result) {
-            featuresCache = result;
+            self->featuresCache = result;
             [HLPDataUtil loadFeaturesForUser:user withLang:lang WithCallback:^(NSArray<HLPObject *> *result) {
-                featuresCache = [featuresCache arrayByAddingObjectsFromArray: result];
+                self->featuresCache = [self->featuresCache arrayByAddingObjectsFromArray: result];
                 
-                for(HLPObject* f in featuresCache) {
+                for(HLPObject* f in self->featuresCache) {
                     [f updateWithLang:lang];
                 }
                 
-                [self analyzeFeatures:featuresCache];
+                [self analyzeFeatures:self->featuresCache];
                 [self updateRoute];
                 
                 if (complete) {
                     complete();
                 }
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:ROUTE_CHANGED_NOTIFICATION object:self userInfo:@{@"route":routeCache?routeCache:@[]}];
+                [[NSNotificationCenter defaultCenter] postNotificationName:ROUTE_CHANGED_NOTIFICATION object:self userInfo:@{@"route" : self->routeCache ? self->routeCache:@[]}];
             }];
         }];
     } else {
         [HLPDataUtil loadRouteFromNode:fromID toNode:toID forUser:user withLang:lang withPrefs:prefs withCallback:^(NSArray<HLPObject *> *result) {
-            routeCache = result;
-            if (useCache && featuresCache) {
+            self->routeCache = result;
+            if (useCache && self->featuresCache) {
                 if (complete) {
                     complete();
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:ROUTE_CHANGED_NOTIFICATION object:self userInfo:@{@"route":routeCache?routeCache:@[]}];
+                [[NSNotificationCenter defaultCenter] postNotificationName:ROUTE_CHANGED_NOTIFICATION object:self userInfo:@{@"route" : self->routeCache ? self->routeCache:@[]}];
                 return;
             }
             [HLPDataUtil loadNodeMapForUser:user withLang:lang WithCallback:^(NSArray<HLPObject *> *result) {
-                featuresCache = result;
+                self->featuresCache = result;
                 [HLPDataUtil loadFeaturesForUser:user withLang:lang WithCallback:^(NSArray<HLPObject *> *result) {
-                    featuresCache = [featuresCache arrayByAddingObjectsFromArray: result];
+                    self->featuresCache = [self->featuresCache arrayByAddingObjectsFromArray: result];
                     
-                    for(HLPObject* f in featuresCache) {
+                    for(HLPObject* f in self->featuresCache) {
                         [f updateWithLang:lang];
                     }
                     
-                    [self analyzeFeatures:featuresCache];
+                    [self analyzeFeatures:self->featuresCache];
                     [self updateRoute];
                     
                     if (complete) {
                         complete();
                     }
                     
-                    [[NSNotificationCenter defaultCenter] postNotificationName:ROUTE_CHANGED_NOTIFICATION object:self userInfo:@{@"route":routeCache?routeCache:@[]}];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ROUTE_CHANGED_NOTIFICATION object:self userInfo:@{@"route" : self->routeCache ? self->routeCache:@[]}];
                 }];
             }];
         }];
@@ -1303,7 +1306,7 @@ MKMapPoint convertFromGlobal(HLPLocation* global, HLPLocation* rp) {
 
     [HLPDataUtil getJSON:url withCallback:^(NSObject* json){
         if (json && [json isKindOfClass:NSDictionary.class]) {
-            serverConfig = (NSDictionary*)json;
+            self->serverConfig = (NSDictionary*)json;
             complete();
         } else {
             NSLog(@"error in loading dialog_config, retrying...");
@@ -1355,6 +1358,7 @@ MKMapPoint convertFromGlobal(HLPLocation* global, HLPLocation* rp) {
     
     NSArray *history = @[];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        // NSCocoaErrorDomain Code=4866, userInfo data Framework HLPLocationManager HLPLocation <NSCoding>, NO NSSecureCoding
         history = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     }
 

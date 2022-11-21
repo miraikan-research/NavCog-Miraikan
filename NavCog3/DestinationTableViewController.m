@@ -47,11 +47,11 @@
         lastSearchQuery = query;
         searchController.obscuresBackgroundDuringPresentation = YES;
         [[NavDataStore sharedDataStore] searchDestinations:query withComplete:^(HLPDirectory *directory) {
-            if (![lastSearchQuery isEqualToString:query]) {
+            if (![self->lastSearchQuery isEqualToString:query]) {
                 return;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                _source = [[NavDirectoryDataSource alloc] initWithDirectory:directory];
+                self->_source = [[NavDirectoryDataSource alloc] initWithDirectory:directory];
                 searchController.obscuresBackgroundDuringPresentation = NO;
                 [self.tableView reloadData];
             });

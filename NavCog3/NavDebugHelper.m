@@ -83,11 +83,12 @@ static NavDebugHelper* instance;
 
     NSDictionary *userInfo = [note userInfo];
 
+    // NSCocoaErrorDomain Code=4866, userInfo data Framework HLPLocationManager HLPLocation <NSCoding>, NO NSSecureCoding
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
                     @{
                       @"name": name,
                       @"timestamp": @([[NSDate date] timeIntervalSince1970]),
-                      @"userInfo": userInfo?userInfo:[NSNull null]
+                      @"userInfo": userInfo ? userInfo : [NSNull null]
                       }];
     if (data) {
         [self sendData:data];
@@ -111,11 +112,12 @@ static NavDebugHelper* instance;
     
     NSDictionary *userInfo = [note userInfo];
     
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:
+    // userInfo data Framework HLPLocationManager HLPLocation <NSCoding>, NO NSSecureCoding
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:
                     @{
                       @"name": name,
                       @"timestamp": @([[NSDate date] timeIntervalSince1970]),
-                      @"userInfo": userInfo?userInfo:[NSNull null]
+                      @"userInfo": userInfo ? userInfo : [NSNull null]
                       }];
     if (data) {
         [self sendData:data];

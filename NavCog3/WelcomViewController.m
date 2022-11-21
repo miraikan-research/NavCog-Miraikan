@@ -73,12 +73,12 @@
 - (void)updateView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (networkError) {
+        if (self->networkError) {
             self.statusLabel.text = NSLocalizedString(@"checkNetworkConnection",@"");
         } else {
             self.statusLabel.text = @"";
         }
-        self.retryButton.hidden = !networkError;
+        self.retryButton.hidden = !self->networkError;
     });
 }
 
@@ -89,12 +89,12 @@
 
 - (void)didNetworkError
 {
-    networkError = YES;
+    self->networkError = YES;
     [self updateView];
 }
 
 - (IBAction)retry:(id)sender {
-    networkError = NO;
+    self->networkError = NO;
     retryCount = 0;
     agreementCount = 0;
     [[ServerConfig sharedConfig] clear];
@@ -121,7 +121,7 @@
             [[ServerConfig sharedConfig] requestServerList:^(ServerList *list) {
                 config.selected = list.firstObject;
                 [self checkConfig];
-                if (list) { retryCount = 0; }
+                if (list) { self->retryCount = 0; }
             }];
         }
         return;
@@ -134,7 +134,7 @@
             NSString *identifier = [[NavDataStore sharedDataStore] userID];
             [[ServerConfig sharedConfig] checkAgreementForIdentifier:identifier withCompletion:^(NSDictionary* config) {
                 [self checkConfig];
-                if (config) { retryCount = 0; }
+                if (config) { self->retryCount = 0; }
             }];
             return;
         }
@@ -158,7 +158,7 @@
             });
             [[ServerConfig sharedConfig] requestServerConfig:^(NSDictionary *config) {
                 [self checkConfig];
-                if (config) { retryCount = 0; }
+                if (config) { self->retryCount = 0; }
             }];
             return;
         } else {

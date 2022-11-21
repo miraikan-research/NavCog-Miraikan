@@ -24,6 +24,8 @@
 
 @implementation HLPDirectoryItem
 
++(BOOL)supportsSecureCoding { return true;}
+
 -(id) copyWithZone:(NSZone *) zone
 {
     HLPDirectoryItem *object = [super copyWithZone:zone];
