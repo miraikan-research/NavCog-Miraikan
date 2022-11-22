@@ -500,10 +500,10 @@ class Home : BaseListView {
     }
 
     private func setHeaderFooter() {
-        let headerView = UIView (frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 20.0))
+        let headerView = UIView (frame: CGRect(x: 0, y: 0, width: self.frame.width, height: CGFloat.leastNonzeroMagnitude))
         self.tableView.tableHeaderView = headerView
 
-        let footerView = UIView (frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 80.0))
+        let footerView = UIView (frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 90.0))
         self.tableView.tableFooterView = footerView
     }
 

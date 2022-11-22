@@ -78,7 +78,7 @@ class PermanentExhibitionController: BaseListController, BaseListDelegate {
     }
 
     private func setHeaderFooter() {
-        let headerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 20.0))
+        let headerView = UIView (frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: CGFloat.leastNonzeroMagnitude))
         self.tableView.tableHeaderView = headerView
     }
 

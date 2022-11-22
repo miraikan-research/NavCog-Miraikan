@@ -35,7 +35,7 @@ class DescriptionRow: BaseRow {
     private let lblDescription = AutoWrapLabel()
     
     private let gapX: CGFloat = 20
-    private let gapY: CGFloat = 20
+    private let gapY: CGFloat = 10
 
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
