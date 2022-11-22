@@ -234,32 +234,32 @@
 }
 
 - (void) update:(NSNotification*)note {
-    if (!_filter) {
-        _filter = _defaultFilter;
+    if (!self->_filter) {
+        self->_filter = _defaultFilter;
     } else {
-        _filter = [_filter mtl_dictionaryByAddingEntriesFromDictionary:_defaultFilter];
+        self->_filter = [self->_filter mtl_dictionaryByAddingEntriesFromDictionary:_defaultFilter];
     }
     
     NSArray *all = [[[NavDataStore sharedDataStore] destinations] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(HLPLandmark *landmark, NSDictionary<NSString *,id> * _Nullable bindings) {
         BOOL flag = YES;
-        if (_filter) {
-            for(NSString *key in _filter.allKeys) {
-                if ([[NSNull null] isEqual:_filter[key]]) {
+        if (self->_filter) {
+            for(NSString *key in self->_filter.allKeys) {
+                if ([[NSNull null] isEqual:self->_filter[key]]) {
                     flag = flag && landmark.properties[key] == nil;
-                } else if ([_filter[key] isKindOfClass:NSDictionary.class]) {
-                    NSDictionary *filter = _filter[key];
+                } else if ([self->_filter[key] isKindOfClass:NSDictionary.class]) {
+                    NSDictionary *filter = self->_filter[key];
                     if (filter[@"$not"]) {
                         flag = flag && ![landmark.properties[key] isEqual:filter[@"$not"]];
                     }
                     if (filter[@"$not_contains"]) {
                         flag = flag && ![landmark.properties[key] containsString:filter[@"$not_contains"]];
                     }
-                } else if ([_filter[key] isKindOfClass:NSString.class]) {
-                    flag = flag && ([_filter[key] isEqualToString:landmark.properties[key]] ||
-                                    ([_filter[key] isEqualToString:@""] &&
+                } else if ([self->_filter[key] isKindOfClass:NSString.class]) {
+                    flag = flag && ([self->_filter[key] isEqualToString:landmark.properties[key]] ||
+                                    ([self->_filter[key] isEqualToString:@""] &&
                                      landmark.properties[key] == nil));
                 } else {
-                    flag = flag && [landmark.properties[key] isEqual:_filter[key]];
+                    flag = flag && [landmark.properties[key] isEqual:self->_filter[key]];
                 }
             }
         }
@@ -589,6 +589,7 @@
 
 - (BOOL)isKnownHist:(NSDictionary*)dic
 {
+    // NSCocoaErrorDomain Code=4866, userInfo data Framework HLPLocationManager HLPLocation <NSCoding>, NO NSSecureCoding
     NavDestination *from = [NSKeyedUnarchiver unarchiveObjectWithData:dic[@"from"]];
     NavDestination *to = [NSKeyedUnarchiver unarchiveObjectWithData:dic[@"to"]];
     return [[NavDataStore sharedDataStore] isKnownDestination:from] &&
@@ -619,6 +620,7 @@
     NSDictionary *dic = hist[indexPath.row];
     BOOL isKnown = [self isKnownHist:dic];
     
+    // NSCocoaErrorDomain Code=4866, userInfo data Framework HLPLocationManager HLPLocation <NSCoding>, NO NSSecureCoding
     NavDestination *from = [NSKeyedUnarchiver unarchiveObjectWithData:dic[@"from"]];
     NavDestination *to = [NSKeyedUnarchiver unarchiveObjectWithData:dic[@"to"]];
     

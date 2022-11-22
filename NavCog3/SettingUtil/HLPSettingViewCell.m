@@ -188,12 +188,13 @@
         }
     }]];
     
-    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    while (topController.presentedViewController) {
-        topController = topController.presentedViewController;
+    UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
+    if ([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]) {
+        UIWindow *window = [(id <UIWindowSceneDelegate>)scene.delegate window];
+        UIViewController *topController = window.rootViewController;
+        [topController presentViewController:alert animated:YES completion:nil];
     }
     
-    [topController presentViewController:alert animated:YES completion:nil];
 }
 
 - (IBAction)removeItem:(id)sender {
@@ -214,12 +215,13 @@
         [self updateView];
     }]];
     
-    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    while (topController.presentedViewController) {
-        topController = topController.presentedViewController;
+    UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
+    if ([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]) {
+        UIWindow *window = [(id <UIWindowSceneDelegate>)scene.delegate window];
+        UIViewController *topController = window.rootViewController;
+        [topController presentViewController:alert animated:YES completion:nil];
     }
     
-    [topController presentViewController:alert animated:YES completion:nil];
 }
 
 - (IBAction)switchChanged:(id)sender {

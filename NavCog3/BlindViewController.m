@@ -323,13 +323,13 @@
         self.navigationItem.leftBarButtonItems = @[self.backButton];
         
         NSString *titleStr = NSLocalizedStringFromTable(exerciseMode ? @"Exercise" : (previewMode ? @"Preview" : @"Miraikan"), @"BlindView", @"");
-        titleButton = [[UIButton alloc] init];
-        [titleButton addTarget:self action:@selector(titleAction) forControlEvents:UIControlEventTouchUpInside];
+        self->titleButton = [[UIButton alloc] init];
+        [self->titleButton addTarget:self action:@selector(titleAction) forControlEvents:UIControlEventTouchUpInside];
         [self setTitleButton: titleStr];
-        self.navigationItem.titleView = titleButton;
+        self.navigationItem.titleView = self->titleButton;
         
         // Show Setting Button for current location only
-        if (initFlag) {
+        if (self->initFlag) {
             if (!self.destId) {
                 self.navigationItem.rightBarButtonItems = @[self.settingButton];
             } else {
@@ -337,16 +337,16 @@
             }
         } else {
             if (!self.destId) {
-                self.navigationItem.rightBarButtonItems = @[self.settingButton, _searchButton];
+                self.navigationItem.rightBarButtonItems = @[self.settingButton, self.searchButton];
             } else {
-                self.navigationItem.rightBarButtonItems = @[_searchButton];
+                self.navigationItem.rightBarButtonItems = @[self.searchButton];
             }
         }
         
         if (peerExists) {
             self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.9 alpha:1.0];
         } else {
-            self.navigationController.navigationBar.barTintColor = defaultColor;
+            self.navigationController.navigationBar.barTintColor = self->defaultColor;
         }
         
         [self dialogHelperUpdate];
@@ -355,10 +355,10 @@
         [self.commitLabel setText:cn];
         
         NSMutableArray *elements = [@[self.navigationItem] mutableCopy];
-        if (talkButton && !talkButton.hidden) {
-            [elements addObject:talkButton];
+        if (self->talkButton && !self->talkButton.hidden) {
+            [elements addObject:self->talkButton];
         }
-        [elements addObject:_cover];
+        [elements addObject:self.cover];
         self.view.accessibilityElements = elements;
     });
 }
@@ -395,7 +395,7 @@
 - (void)webFooterHidden
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [_webView evaluateJavaScript: @"document.getElementById('map-footer').style.display ='none';" completionHandler: nil];
+        [self.webView evaluateJavaScript: @"document.getElementById('map-footer').style.display ='none';" completionHandler: nil];
     });
 }
 
@@ -443,7 +443,7 @@
 
     [self webFooterHidden];
     [UIView animateWithDuration:0.3 animations: ^{
-        _webView.alpha = 1;
+        self.webView.alpha = 1;
     }];
     initFlag = true;
 }
@@ -538,7 +538,7 @@
     if ([NavDataStore sharedDataStore].previewMode == NO &&
         [[ServerConfig sharedConfig] shouldAskRating]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            ratingInfo = [note userInfo];
+            self->ratingInfo = [note userInfo];
             [self performSegueWithIdentifier:@"show_rating" sender:self];
         });
     }
@@ -628,13 +628,13 @@
         
         double orientation = -location.orientation / 180 * M_PI;
         
-        if (lastOrientationSent + 0.2 < now) {
-            [_webView sendData:@[@{
+        if (self->lastOrientationSent + 0.2 < now) {
+            [self.webView sendData:@[@{
                                 @"type": @"ORIENTATION",
                                 @"z": @(orientation)
                                 }]
                       withName: @"Sensor"];
-            lastOrientationSent = now;
+            self->lastOrientationSent = now;
         }
         
         location = locations[@"actual"];
@@ -643,7 +643,7 @@
             return;
         }
         
-        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
+        if (now < self->lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
 //                NSLog(@"%s: %d" , __func__);
                 return;
@@ -653,7 +653,7 @@
         
         double floor = location.floor;
         
-        [_webView sendData:@{
+        [self.webView sendData:@{
                             @"lat": @(location.lat),
                             @"lng": @(location.lng),
                             @"floor": @(floor),
@@ -665,10 +665,10 @@
                             }
                   withName:@"XYZ"];
 
-        lastLocationSent = now;
+        self->lastLocationSent = now;
         [self dialogHelperUpdate];
         
-        if (initFlag && [self destId] && !isSetupNavigation) {
+        if (self->initFlag && [self destId] && !self->isSetupNavigation) {
             if ([[NavDataStore sharedDataStore] reloadDestinations:NO]) {
                 NSString *msg = [MiraikanUtil isPreview]
                     ? NSLocalizedString(@"Loading preview",@"")
@@ -945,51 +945,51 @@
     }
     if (previewWithAction) {
         [motionManager startDeviceMotionUpdatesToQueue:motionQueue withHandler:^(CMDeviceMotion * _Nullable motion, NSError * _Nullable error) {
-            yaws[yawsIndex] = motion.attitude.yaw;
-            yawsIndex = (yawsIndex+1)%10;
+            self->yaws[self->yawsIndex] = motion.attitude.yaw;
+            self->yawsIndex = (self->yawsIndex+1)%10;
             double ave = 0;
             for(int i = 0; i < 10; i++) {
-                ave += yaws[i]*0.1;
+                ave += self->yaws[i]*0.1;
             }
             //NSLog(@"angle=, %f, %f, %f", ave, motion.attitude.yaw, fabs(ave - motion.attitude.yaw));
             if (fabs(ave - motion.attitude.yaw) > M_PI*10/180) {
-                turnAction = ave - motion.attitude.yaw;
+                self->turnAction = ave - motion.attitude.yaw;
             } else {
-                turnAction = 0;
+                self->turnAction = 0;
             }
             
             CMAcceleration acc =  motion.userAcceleration;
             double d = sqrt(pow(acc.x, 2)+pow(acc.y, 2)+pow(acc.z, 2));
-            accs[accsIndex] = d;
-            accsIndex = (accsIndex+1)%10;
+            self->accs[self->accsIndex] = d;
+            self->accsIndex = (self->accsIndex+1)%10;
             ave = 0;
             for(int i = 0; i < 10; i++) {
-                ave += accs[i]*0.1;
+                ave += self->accs[i]*0.1;
             }
             //NSLog(@"angle=, %f", ave);
-            forwardAction = ave > 0.3;
+            self->forwardAction = ave > 0.3;
             
         }];
     }
     if (exerciseMode) {
         [motionManager startDeviceMotionUpdatesToQueue:motionQueue withHandler:^(CMDeviceMotion * _Nullable motion, NSError * _Nullable error) {
-            if (yawsIndex > 0) {
-                turnAction = [HLPLocation normalizeDegree:-(motion.attitude.yaw - yaws[0])/M_PI*180];
+            if (self->yawsIndex > 0) {
+                self->turnAction = [HLPLocation normalizeDegree:-(motion.attitude.yaw - self->yaws[0])/M_PI*180];
             } else {
-                turnAction = 0;
+                self->turnAction = 0;
             }
-            yaws[0] = motion.attitude.yaw;
-            yawsIndex = 1;
+            self->yaws[0] = motion.attitude.yaw;
+            self->yawsIndex = 1;
             
             CMAcceleration acc =  motion.userAcceleration;
             double d = sqrt(pow(acc.x, 2)+pow(acc.y, 2)+pow(acc.z, 2));
-            accs[accsIndex] = d;
-            accsIndex = (accsIndex+1)%10;
+            self->accs[self->accsIndex] = d;
+            self->accsIndex = (self->accsIndex+1)%10;
             double ave = 0;
             for(int i = 0; i < 10; i++) {
-                ave += accs[i]*0.1;
+                ave += self->accs[i]*0.1;
             }
-            forwardAction = ave > 0.05;
+            self->forwardAction = ave > 0.05;
         }];
         
     }
@@ -1011,7 +1011,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_BACKGROUND_LOCATION object:self userInfo:@{@"value":@(requestBackground)}];
     if ([properties[@"isActive"] boolValue]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
+            [self.webView evaluateJavaScript:@"$hulop.map.setSync(true);" completionHandler:nil];
         });
             
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"reset_as_start_point"] && !rerouteFlag) {
@@ -1034,7 +1034,7 @@
             double delayInSeconds = 2.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                [previewer setAutoProceed:YES];
+                [self->previewer setAutoProceed:YES];
             });
         }
 
@@ -1072,7 +1072,7 @@
     self.isNaviStarted = YES;
     [NavDataStore sharedDataStore].start = [[NSDate date] timeIntervalSince1970];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [_webView evaluateJavaScript:[NSString stringWithFormat:@"$hulop.map.getMap().getView().setZoom(%f);", [[NSUserDefaults standardUserDefaults] doubleForKey:@"zoom_for_navigation"]] completionHandler:nil];
+        [self.webView evaluateJavaScript:[NSString stringWithFormat:@"$hulop.map.getMap().getView().setZoom(%f);", [[NSUserDefaults standardUserDefaults] doubleForKey:@"zoom_for_navigation"]] completionHandler:nil];
 
         //_cover.preventCurrentStatus = YES;
         [NavUtil hideModalWaiting];
@@ -1340,17 +1340,17 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (contentURL == nil && name == nil) {
-            if (showingPage) {
-                [showingPage.navigationController popViewControllerAnimated:YES];
+            if (self->showingPage) {
+                [self->showingPage.navigationController popViewControllerAnimated:YES];
             }
             return;
         }
-        if (showingPage) {
+        if (self->showingPage) {
             return;
         }
         
-        showingPage = [WebViewController getInstance];
-        showingPage.delegate = self;
+        self->showingPage = [WebViewController getInstance];
+        self->showingPage.delegate = self;
         
         NSURL *url = nil;
         if ([contentURL hasPrefix:@"bundle://"]) {
@@ -1364,9 +1364,9 @@
             url = [NSURL URLWithString:contentURL];
         }
         
-        showingPage.title = name;
-        showingPage.url = url;
-        [self.navigationController showViewController:showingPage sender:self];
+        self->showingPage.title = name;
+        self->showingPage.url = url;
+        [self.navigationController showViewController:self->showingPage sender:self];
         [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_NAVIGATION_PAUSE object:nil];
     });
 }
@@ -1374,7 +1374,7 @@
 - (void)webViewControllerClosed:(WebViewController *)controller
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_NAVIGATION_RESUME object:nil];
-    showingPage = nil;
+    self->showingPage = nil;
 }
 
 - (void)handleLocaionUnknown:(NSNotification*)note

@@ -195,8 +195,8 @@
 - (void) updateViewWithFlag:(BOOL)voiceoverNotificationFlag
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.navigationItem.hidesBackButton = !updated || !actionEnabled;
-        if (!updated || !actionEnabled) {
+        self.navigationItem.hidesBackButton = !self->updated || !self->actionEnabled;
+        if (!self->updated || !self->actionEnabled) {
             self.navigationItem.leftBarButtonItem = nil;
         }
         
@@ -206,15 +206,15 @@
         BOOL isNotManual = ![nds isManualLocation];
         BOOL validLocation = loc && !isnan(loc.lat) && !isnan(loc.lng) && !isnan(loc.floor);
         
-        self.fromButton.enabled = updated && actionEnabled;
-        self.toButton.enabled = updated && actionEnabled;
-        self.refreshButton.enabled = updated && actionEnabled;
-        self.routeOptionsButton.enabled = updated && actionEnabled;
+        self.fromButton.enabled = self->updated && self->actionEnabled;
+        self.toButton.enabled = self->updated && self->actionEnabled;
+        self.refreshButton.enabled = self->updated && self->actionEnabled;
+        self.routeOptionsButton.enabled = self->updated && self->actionEnabled;
         
-        self.switchButton.enabled = (nds.to._id != nil && nds.from._id != nil && actionEnabled && !nds.from.isCurrentLocation);
-        self.previewButton.enabled = (nds.to._id != nil && nds.from._id != nil && actionEnabled);
+        self.switchButton.enabled = (nds.to._id != nil && nds.from._id != nil && self->actionEnabled && !nds.from.isCurrentLocation);
+        self.previewButton.enabled = (nds.to._id != nil && nds.from._id != nil && self->actionEnabled);
         self.previewButton.hidden = isPreviewDisabled;
-        self.startButton.enabled = (nds.to._id != nil && nds.from._id != nil && validLocation && actionEnabled && isNotManual);
+        self.startButton.enabled = (nds.to._id != nil && nds.from._id != nil && validLocation && self->actionEnabled && isNotManual);
         
         
         [self.fromButton setTitle:nds.from.name forState:UIControlStateNormal];
@@ -232,7 +232,7 @@
             self.toButton.accessibilityLabel = [NSString stringWithFormat:NSLocalizedStringFromTable(@"To_button", @"BlindView", @""), nds.to.namePron];
         }
         
-        self.historyClearButton.enabled = ([[nds searchHistory] count] > 0) && updated && actionEnabled;
+        self.historyClearButton.enabled = ([[nds searchHistory] count] > 0) && self->updated && self->actionEnabled;
     });
 }
 
@@ -334,6 +334,7 @@
     NSDictionary *hist = [historySource historyAtIndexPath:indexPath];
     
     if ([historySource isKnownHist:hist]) {
+        // NSCocoaErrorDomain Code=4866, userInfo data Framework HLPLocationManager HLPLocation <NSCoding>, NO NSSecureCoding
         NavDataStore *nds = [NavDataStore sharedDataStore];
         nds.to = [NSKeyedUnarchiver unarchiveObjectWithData:hist[@"to"]];
         nds.from = [NSKeyedUnarchiver unarchiveObjectWithData:hist[@"from"]];

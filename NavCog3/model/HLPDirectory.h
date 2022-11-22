@@ -34,7 +34,7 @@ typedef enum: int {
     HLPToiletTypeForWomen = 2
 } HLPToiletType;
 
-@interface HLPDirectoryItem : MTLModel<MTLJSONSerializing, NSCoding>
+@interface HLPDirectoryItem : MTLModel<MTLJSONSerializing, NSSecureCoding>
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *titlePron;
 @property (nonatomic, readonly) NSString *subtitle;

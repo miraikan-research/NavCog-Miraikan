@@ -329,8 +329,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     dispatch_async(dispatch_get_main_queue(), ^{
 //        NSLog(@"%s: %d, %@" , __func__, __LINE__, script);
-        [_webView evaluateJavaScript:script completionHandler:nil];
-        isNaviStarted = YES;
+        [self.webView evaluateJavaScript:script completionHandler:nil];
+        self->isNaviStarted = YES;
     });
 }
 
@@ -357,7 +357,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     
     dispatch_async(dispatch_get_main_queue(), ^{
 //        NSLog(@"%s: %d, %@" , __func__, __LINE__, script);
-        [_webView evaluateJavaScript:script completionHandler:nil];
+        [self.webView evaluateJavaScript:script completionHandler:nil];
     });
     isInitTarget = true;
 }
@@ -385,7 +385,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     dispatch_async(dispatch_get_main_queue(), ^{
 //        NSLog(@"%s: %d, %@" , __func__, __LINE__, script);
         [NavUtil hideModalWaiting];
-        [_webView evaluateJavaScript:script completionHandler:nil];
+        [self.webView evaluateJavaScript:script completionHandler:nil];
     });
 }
 
@@ -569,7 +569,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     if ([[ServerConfig sharedConfig] shouldAskRating]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            ratingInfo = [note userInfo];
+            self->ratingInfo = [note userInfo];
             [self performSegueWithIdentifier:@"show_rating" sender:self];
         });
     }
@@ -613,7 +613,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                     if ([self initLocation]) {
-                        reserveNavigation = true;
+                        self->reserveNavigation = true;
                     }
                 });
             }
@@ -708,13 +708,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         double orientation = -location.orientation / 180 * M_PI;
         
-        if (lastOrientationSent + 0.2 < now) {
-            [_webView sendData:@[@{
+        if (self->lastOrientationSent + 0.2 < now) {
+            [self.webView sendData:@[@{
                                 @"type": @"ORIENTATION",
                                 @"z": @(orientation)
                                 }]
                       withName: @"Sensor"];
-            lastOrientationSent = now;
+            self->lastOrientationSent = now;
         }
         
         location = locations[@"actual"];
@@ -723,7 +723,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
             return;
         }
         
-        if (now < lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
+        if (now < self->lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
 //                NSLog(@"%s: %d" , __func__);
                 return;
@@ -733,23 +733,23 @@ typedef NS_ENUM(NSInteger, ViewState) {
         
         double floor = location.floor;
         
-        [_webView sendData:@{
-                            @"lat": @(location.lat),
-                            @"lng": @(location.lng),
-                            @"floor": @(floor),
-                            @"accuracy": @(location.accuracy),
-                            @"rotate": @(0), // dummy
-                            @"orientation": @(999), //dummy
-                            @"debug_info": location.params ? location.params[@"debug_info"] : [NSNull null],
-                            @"debug_latlng": location.params ? location.params[@"debug_latlng"] : [NSNull null]
-                            }
-                  withName:@"XYZ"];
+        [self.webView sendData:@{
+            @"lat": @(location.lat),
+            @"lng": @(location.lng),
+            @"floor": @(floor),
+            @"accuracy": @(location.accuracy),
+            @"rotate": @(0), // dummy
+            @"orientation": @(999), //dummy
+            @"debug_info": location.params ? location.params[@"debug_info"] : [NSNull null],
+            @"debug_latlng": location.params ? location.params[@"debug_latlng"] : [NSNull null]
+        }
+                      withName:@"XYZ"];
 
-        lastLocationSent = now;
+        self->lastLocationSent = now;
         
         [NavUtil hideWaitingForView:self.view];
 
-        if (!self.destId || isNaviStarted) {
+        if (!self.destId || self->isNaviStarted) {
 //            NSLog(@"%s: %d" , __func__);
             return;
         }
@@ -762,7 +762,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
                 [NavUtil showModalWaitingWithMessage:msg];
             }
             
-            if (reserveNavigation) {
+            if (self->reserveNavigation) {
                 [self setupNavigation];
             }
         }

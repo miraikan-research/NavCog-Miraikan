@@ -97,7 +97,7 @@ static NavDeviceTTS *instance = nil;
     voice.delegate = self;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        speakTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(processSpeak:) userInfo:nil repeats:YES];
+        self->speakTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(processSpeak:) userInfo:nil repeats:YES];
     });
 }
 
@@ -318,7 +318,7 @@ static NavDeviceTTS *instance = nil;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(se.pauseDuration * NSEC_PER_SEC));
         //NSLog(@"speak_pause(%.2f)", se.pauseDuration);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            isProcessing = NO;
+            self->isProcessing = NO;
         });
         return;
     }

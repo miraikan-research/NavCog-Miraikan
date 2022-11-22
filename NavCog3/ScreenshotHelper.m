@@ -110,12 +110,12 @@ static ScreenshotHelper *instance;
                     NSLog(@"screenshot,%@,%ld",fileName,(long)([NSDate date].timeIntervalSince1970*1000));
                     NSLog(@"%@",filePath);
                     
-                    @synchronized (images) {
-                        [images addObject:fileName];
+                    @synchronized (self->images) {
+                        [self->images addObject:fileName];
                     }
                     [self checkLimit];
                 }];
-                [queue  addOperation:operation];
+                [self->queue  addOperation:operation];
             });
         }];
     }
@@ -123,8 +123,8 @@ static ScreenshotHelper *instance;
 
 - (void)checkLimit
 {
-    @synchronized (images) {
-        while(images.count > MAX_SCS) {
+    @synchronized (self->images) {
+        while(self->images.count > MAX_SCS) {
             NSString *name = images.firstObject;
             NSString *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
             NSString *scsPath = [docPath stringByAppendingPathComponent:@"screenshots"];
@@ -134,7 +134,7 @@ static ScreenshotHelper *instance;
 
             NSError *error;
             [fm removeItemAtPath:path error:&error];
-            [images removeObjectAtIndex:0];
+            [self->images removeObjectAtIndex:0];
             if (error ) {
                 NSLog(@"error removing file %@, (%@)", path, error);
             }
@@ -154,8 +154,12 @@ static ScreenshotHelper *instance;
     CGContextTranslateCTM(ctx, 0.0, screenSize.height);
     CGContextScaleCTM(ctx, scale, -scale);
     
-    for (UIView *view in [UIApplication sharedApplication].keyWindow.subviews) {
-        [(CALayer*)view.layer renderInContext:ctx];
+    UIScene *scene = [[[[UIApplication sharedApplication] connectedScenes] allObjects] firstObject];
+    if ([scene.delegate conformsToProtocol:@protocol(UIWindowSceneDelegate)]) {
+        UIWindow *window = [(id <UIWindowSceneDelegate>)scene.delegate window];
+        for (UIView *view in window.subviews) {
+            [(CALayer*)view.layer renderInContext:ctx];
+        }
     }
     
     CGImageRef cgImage = CGBitmapContextCreateImage(ctx);

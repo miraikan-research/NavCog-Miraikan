@@ -74,7 +74,6 @@
 		D3A1182827294B0B00BEC1C8 /* NavSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF6FBB11DA4DD8200382F76 /* NavSound.m */; };
 		D3A1182927294B0B00BEC1C8 /* AuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF45E391E3F1E5600208042 /* AuthManager.m */; };
 		D3A1182C27294B0B00BEC1C8 /* HLPLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91D384B1F628107008A34D1 /* HLPLocationManager.framework */; };
-		D3A1182D27294B0B00BEC1C8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E9657EF1F619B9300A6B489 /* AssetsLibrary.framework */; };
 		D3A1182E27294B0B00BEC1C8 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EAE818E1E41E89C007B50D3 /* CoreBluetooth.framework */; };
 		D3A1182F27294B0B00BEC1C8 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EEA2F2B1D376BAD00FF25C4 /* CoreMotion.framework */; };
 		D3A1183027294B0B00BEC1C8 /* HLPWebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A91EA2FF1F55376200548203 /* HLPWebView.framework */; };
@@ -108,7 +107,6 @@
 		D3A1184F27294B0B00BEC1C8 /* event.json in Resources */ = {isa = PBXBuildFile; fileRef = D320F5822702B8F600F6AD28 /* event.json */; };
 		D3A1185027294B0B00BEC1C8 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E6E42DF1D90C7A3006B6899 /* Settings.bundle */; };
 		D3A1185127294B0B00BEC1C8 /* HLPSettingViewTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E9238E51D5189F100875766 /* HLPSettingViewTextCell.xib */; };
-		D3A1185C272950B400BEC1C8 /* Miraikan.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3A1185B272950B400BEC1C8 /* Miraikan.plist */; };
 		D3B06195276346BB0006B0DA /* VoiceGuideController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B06194276346BB0006B0DA /* VoiceGuideController.swift */; };
 		D3B1A1A527546AFB00E6CBCB /* AIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B1A1A427546AFB00E6CBCB /* AIController.swift */; };
 		D3B9D405274F76B1001F4D80 /* NaviSettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B9D404274F76B1001F4D80 /* NaviSettingController.swift */; };
@@ -181,7 +179,6 @@
 		30B0B3BA2750A28A0001E582 /* DefaultTTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTTS.swift; sourceTree = "<group>"; };
 		3AF7CE4FA37DA8CC1D99A442 /* Pods-NavCogFP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogFP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogFP/Pods-NavCogFP.debug.xcconfig"; sourceTree = "<group>"; };
 		40D977CBB37A56EF684BDB52 /* Pods-NavCogFP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogFP.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogFP/Pods-NavCogFP.release.xcconfig"; sourceTree = "<group>"; };
-		4434DBB4252C53354B18A48B /* libPods-NavCog3.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NavCog3.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49EF4A10A8A15A8B96509BB9 /* Pods-NavCogPreview.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogPreview.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogPreview/Pods-NavCogPreview.release.xcconfig"; sourceTree = "<group>"; };
 		4BC556D591657CDFAF060D0D /* Pods-NavCogMiraikan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogMiraikan.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogMiraikan/Pods-NavCogMiraikan.release.xcconfig"; sourceTree = "<group>"; };
 		553D73F9F69079BF8547ED01 /* Pods-NavCogMiraikan.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavCogMiraikan.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavCogMiraikan/Pods-NavCogMiraikan.debug.xcconfig"; sourceTree = "<group>"; };
@@ -443,8 +440,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3A1182C27294B0B00BEC1C8 /* HLPLocationManager.framework in Frameworks */,
-				D3A1182D27294B0B00BEC1C8 /* AssetsLibrary.framework in Frameworks */,
-				D3A1182E27294B0B00BEC1C8 /* CoreBluetooth.framework in Frameworks */,
 				D3A1182E27294B0B00BEC1C8 /* CoreBluetooth.framework in Frameworks */,
 				D3A1182F27294B0B00BEC1C8 /* CoreMotion.framework in Frameworks */,
 				D3A1183027294B0B00BEC1C8 /* HLPWebView.framework in Frameworks */,
@@ -479,7 +474,6 @@
 				A93ED2731ED2DBA900B75760 /* UIKit.framework */,
 				A91AAE5D1F6A786300B5F903 /* ZipArchive.framework */,
 				D028BF9D3DF5E5BCF988A86C /* libPods-NavCogMiraikan.a */,
-				4434DBB4252C53354B18A48B /* libPods-NavCog3.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -892,15 +886,14 @@
 		7EDEDC141D1E0C6800AC111A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Miraikan - The National Museum of Emerging Science and Innovation";
 			};
 			buildConfigurationList = 7EDEDC171D1E0C6800AC111A /* Build configuration list for PBXProject "NavCog3" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 				ja,
@@ -949,7 +942,6 @@
 				D3A1184827294B0B00BEC1C8 /* HLPGeoJSON.strings in Resources */,
 				D3A1184927294B0B00BEC1C8 /* lastcommit.txt in Resources */,
 				D3A1184A27294B0B00BEC1C8 /* exhibition_category.json in Resources */,
-				D3A1185C272950B400BEC1C8 /* Miraikan.plist in Resources */,
 				D3A1184B27294B0B00BEC1C8 /* Main.storyboard in Resources */,
 				D3A1184C27294B0B00BEC1C8 /* Localizable.strings in Resources */,
 				D3A1184D27294B0B00BEC1C8 /* HLPSettingView.strings in Resources */,
@@ -1319,14 +1311,17 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1351,7 +1346,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1373,14 +1368,17 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1399,7 +1397,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
