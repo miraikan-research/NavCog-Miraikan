@@ -689,18 +689,18 @@ typedef NS_ENUM(NSInteger, ViewState) {
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
         if (appState == UIApplicationStateBackground || appState == UIApplicationStateInactive) {
-//            NSLog(@"%s: %d" , __func__);
+//            NSLog(@"%s: %d", __func__, __LINE__);
             return;
         }
         
         NSDictionary *locations = [note userInfo];
         if (!locations) {
-//            NSLog(@"%s: %d" , __func__);
+//            NSLog(@"%s: %d", __func__, __LINE__);
             return;
         }
         HLPLocation *location = locations[@"current"];
-        if (!location || [location isEqual:[NSNull null]]) {
-//            NSLog(@"%s: %d" , __func__);
+        if (!location || isnan(location.lat) || isnan(location.lng)) {
+//            NSLog(@"%s: %d", __func__, __LINE__);
             return;
         }
         
@@ -718,14 +718,14 @@ typedef NS_ENUM(NSInteger, ViewState) {
         }
         
         location = locations[@"actual"];
-        if (!location || [location isEqual:[NSNull null]]) {
-//            NSLog(@"%s: %d" , __func__);
+        if (!location || isnan(location.lat) || isnan(location.lng)) {
+//            NSLog(@"%s: %d", __func__, __LINE__);
             return;
         }
         
         if (now < self->lastLocationSent + [[NSUserDefaults standardUserDefaults] doubleForKey: @"webview_update_min_interval"]) {
             if (!location.params) {
-//                NSLog(@"%s: %d" , __func__);
+//                NSLog(@"%s: %d", __func__, __LINE__);
                 return;
             }
             //return; // prevent too much send location info
@@ -750,7 +750,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [NavUtil hideWaitingForView:self.view];
 
         if (!self.destId || self->isNaviStarted) {
-//            NSLog(@"%s: %d" , __func__);
+//            NSLog(@"%s: %d", __func__, __LINE__);
             return;
         }
 
