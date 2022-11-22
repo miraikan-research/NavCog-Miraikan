@@ -35,6 +35,7 @@ class LinkRow: BaseRow {
     private let titleLink = UnderlinedLabel()
 
     private let gapX: CGFloat = 20
+    private let gapY: CGFloat = 10
 
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -58,7 +59,7 @@ class LinkRow: BaseRow {
         let linkSize = CGSize(width: innerSize.width - gapX * 2,
                               height: titleLink.intrinsicContentSize.height)
         titleLink.frame = CGRect(x: x,
-                                 y: insets.top,
+                                 y: insets.top + gapY,
                                  width: innerSize.width - gapX * 2,
                                  height: titleLink.sizeThatFits(linkSize).height)
     }
@@ -67,7 +68,7 @@ class LinkRow: BaseRow {
         let linkSize = CGSize(width: innerSizing(parentSize: size).width - gapX * 2,
                               height: titleLink.intrinsicContentSize.height)
         let totalHeight = insets.top
-            + titleLink.sizeThatFits(linkSize).height
+            + titleLink.sizeThatFits(linkSize).height + gapY
             + insets.bottom
         return CGSize(width: size.width, height: totalHeight)
     }

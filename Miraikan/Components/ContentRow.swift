@@ -37,7 +37,7 @@ class ContentRow: BaseRow {
     private var lblOverview = AutoWrapLabel()
 
     private let gapX: CGFloat = 20
-    private let gapY: CGFloat = 20
+    private let gapY: CGFloat = 10
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
