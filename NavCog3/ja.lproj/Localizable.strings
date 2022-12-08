@@ -301,4 +301,6 @@ NavCogの設定画面から
 
 "location unknown" = "現在地が不明です";
 
-
+"AR navigation" = "ARナビゲーション";
+"Switch to AR navigation" = "ARナビゲーションに切り替え";
+"Do you want to start the Miraikan AR app?" = "未来館ARアプリを起動しますか？";
