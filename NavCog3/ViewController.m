@@ -256,44 +256,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
     return true;
 }
 
-- (void)checkMapCenter:(NSTimer*)timer
-{
-    NSString *script = @"(function(){var a=$hulop.map.getCenter();var f=$hulop.indoor.getCurrentFloor();f=f>0?f-1:f;return {lat:a[1],lng:a[0],floor:f};})()";
-    [_webView evaluateJavaScript:script completionHandler:^(id _Nullable state, NSError * _Nullable error) {
-        NSDictionary *json = state;
-        if (json) {
-            double lat = [json[@"lat"] doubleValue];
-            double lng = [json[@"lng"] doubleValue];
-            double floor = [json[@"floor"] doubleValue];
-            if (lat == 0 || lng == 0 || floor == 0) {
-                return;
-            }
-            HLPLocation *center = [[HLPLocation alloc] initWithLat: lat
-                                                               Lng: lng
-                                                             Floor: floor];
-            [NavDataStore sharedDataStore].mapCenter = center;
-            HLPLocation *current = [NavDataStore sharedDataStore].currentLocation;
-            if (isnan(current.lat) || isnan(current.lng)) {
-                NSDictionary *param =
-                @{
-                  @"floor": @(center.floor),
-                  @"lat": @(center.lat),
-                  @"lng": @(center.lng),
-                  @"sync": @(YES)
-                  };
-                [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
-                // Start navigating here within iBeacon environment
-//                if ([self destId] && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
-//                    [NavUtil hideWaitingForView:self.view];
-//                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
-//                }
-            }
-            
-            [timer invalidate];
-        }
-    }];
-}
-
 - (void)startNavi: (HLPLocation*)center {
     
     if (isRouteNavi) {
@@ -336,6 +298,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     });
 }
 
+// NavBlindWebViewと同じ
 - (void)initTarget:(NSArray *)landmarks
 {
     if (isInitTarget) {
@@ -348,7 +311,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
     }
     
     if ([temp count] == 0) {
-        NSLog(@"No Landmarks");
+        //NSLog(@"No Landmarks %@", landmarks);
         return;
     }
     
@@ -362,6 +325,13 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [self.webView evaluateJavaScript:script completionHandler:nil];
     });
     isInitTarget = true;
+}
+
+- (void)clearRoute
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.webView evaluateJavaScript:@"$hulop.map.clearRoute()" completionHandler:nil];
+    });
 }
 
 - (void)showRoute
@@ -389,6 +359,44 @@ typedef NS_ENUM(NSInteger, ViewState) {
         [NavUtil hideModalWaiting];
         [self.webView evaluateJavaScript:script completionHandler:nil];
     });
+}
+
+- (void)checkMapCenter:(NSTimer*)timer
+{
+    NSString *script = @"(function(){var a=$hulop.map.getCenter();var f=$hulop.indoor.getCurrentFloor();f=f>0?f-1:f;return {lat:a[1],lng:a[0],floor:f};})()";
+    [_webView evaluateJavaScript:script completionHandler:^(id _Nullable state, NSError * _Nullable error) {
+        NSDictionary *json = state;
+        if (json) {
+            double lat = [json[@"lat"] doubleValue];
+            double lng = [json[@"lng"] doubleValue];
+            double floor = [json[@"floor"] doubleValue];
+            if (lat == 0 || lng == 0 || floor == 0) {
+                return;
+            }
+            HLPLocation *center = [[HLPLocation alloc] initWithLat: lat
+                                                               Lng: lng
+                                                             Floor: floor];
+            [NavDataStore sharedDataStore].mapCenter = center;
+            HLPLocation *current = [NavDataStore sharedDataStore].currentLocation;
+            if (isnan(current.lat) || isnan(current.lng)) {
+                NSDictionary *param =
+                @{
+                  @"floor": @(center.floor),
+                  @"lat": @(center.lat),
+                  @"lng": @(center.lng),
+                  @"sync": @(YES)
+                  };
+                [[NSNotificationCenter defaultCenter] postNotificationName:MANUAL_LOCATION_CHANGED_NOTIFICATION object:self userInfo:param];
+                // Start navigating here within iBeacon environment
+//                if ([self destId] && [[NavDataStore sharedDataStore] reloadDestinations:NO]) {
+//                    [NavUtil hideWaitingForView:self.view];
+//                    [NavUtil showModalWaitingWithMessage:NSLocalizedString(@"Loading preview", @"")];
+//                }
+            }
+            
+            [timer invalidate];
+        }
+    }];
 }
 
 - (void)checkState:(NSTimer*)timer
@@ -812,19 +820,6 @@ typedef NS_ENUM(NSInteger, ViewState) {
                                      withOptions:AVAudioSessionCategoryOptionAllowBluetooth
                                            error:nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//        NSLog(@"%s: %d" , __func__, __LINE__);
-//        [nds requestRouteFrom:from.singleId
-//                           To:to._id
-//              withPreferences:prefs complete:^{
-//                if (self == nil) return;
-//                nds.previewMode = [MiraikanUtil isPreview];
-//                nds.exerciseMode = NO;
-//                [self showRoute];
-//            }
-//        ];
-//    });
 }
 
 

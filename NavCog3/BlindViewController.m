@@ -166,7 +166,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestStartNavigation:) name:REQUEST_START_NAVIGATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uiStateChanged:) name:WCUI_STATE_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logReplay:) name:REQUEST_LOG_REPLAY object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(debugPeerStateChanged:) name:DEBUG_PEER_STATE_CHANGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dialogStateChanged:) name:DialogManager.DIALOG_AVAILABILITY_CHANGED_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLocaionUnknown:) name:REQUEST_HANDLE_LOCATION_UNKNOWN object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationStatusChanged:) name:NAV_LOCATION_STATUS_CHANGE object:nil];
@@ -333,9 +332,9 @@
         // Show Setting Button for current location only
         if (self->initFlag) {
             if (!self.destId) {
-                self.navigationItem.rightBarButtonItems = @[self.settingButton];
+                self.navigationItem.rightBarButtonItems = @[self.settingButton, self.searchButton];
             } else {
-                self.navigationItem.rightBarButtonItems = @[];
+                self.navigationItem.rightBarButtonItems = @[self.searchButton];
             }
         } else {
             if (!self.destId) {
@@ -526,11 +525,6 @@
 }
 
 - (void)dialogStateChanged:(NSNotification*)note
-{
-    [self updateView];
-}
-
-- (void)debugPeerStateChanged:(NSNotification*)note
 {
     [self updateView];
 }
