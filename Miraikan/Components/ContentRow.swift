@@ -93,30 +93,29 @@ class ContentRow: BaseRow {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        let innerSz = CGSize(width: innerSize.width - gapX * 2, height: innerSize.height)
         var y = insets.top
         lblDescription.frame = CGRect(x: insets.left + gapX,
                                       y: y,
                                       width: innerSize.width - gapX * 2,
-                                      height: lblDescription.sizeThatFits(innerSize).height)
+                                      height: lblDescription.sizeThatFits(innerSz).height)
 
         if MiraikanUtil.routeMode == .blind {
             y += lblDescription.frame.height
             lblOverview.frame = CGRect(x: insets.left + gapX,
                                        y: y,
                                        width: innerSize.width - gapX * 2,
-                                       height: lblOverview.sizeThatFits(innerSize).height)
+                                       height: lblOverview.sizeThatFits(innerSz).height)
         }
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let innerSz = innerSizing(parentSize: size)
+        let innerSz = CGSize(width: innerSize.width - gapX * 2, height: innerSize.height)
 
-        let height =
-            MiraikanUtil.routeMode != .blind
-                ?  insets.top + insets.bottom + lblDescription.sizeThatFits(innerSz).height
-                : [lblDescription, lblOverview]
-                    .map({ $0.sizeThatFits(innerSz).height })
-                    .reduce((insets.top + insets.bottom), { $0 + $1})
+        var height = insets.top + lblDescription.sizeThatFits(innerSz).height
+        if MiraikanUtil.routeMode == .blind {
+            height += lblOverview.sizeThatFits(innerSz).height
+        }
 
         return CGSize(width: size.width, height: height + gapY * 2)
     }
