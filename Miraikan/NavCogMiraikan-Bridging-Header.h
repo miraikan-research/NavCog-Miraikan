@@ -29,6 +29,7 @@
 #import "NavSound.h"
 #import "SettingViewController.h"
 #import "SettingDataManager.h"
+#import "ExpandedFunction.h"
 
 // External Libraries
 #import <AVFAudio/AVAudioSession.h>

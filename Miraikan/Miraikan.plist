@@ -40,6 +40,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>navcogdialog</string>
+		<string>lab.miraikan.ar</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

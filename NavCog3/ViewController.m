@@ -22,6 +22,7 @@
 
 #import "ViewController.h"
 #import "DefaultTTS.h"
+#import "ExpandedFunction.h"
 #import "LocationEvent.h"
 #import "NavDataStore.h"
 #import "NavDebugHelper.h"
@@ -557,6 +558,7 @@ typedef NS_ENUM(NSInteger, ViewState) {
       };
 //    NSLog(@"%s: %d, %@" , __func__, __LINE__, navigationInfo);
     [[NSNotificationCenter defaultCenter] postNotificationName:REQUEST_RATING object:self userInfo:navigationInfo];
+    [self checkDestId];
 }
 
 - (void)webView:(HLPWebView *)webView openURL:(NSURL *)url
@@ -945,6 +947,57 @@ typedef NS_ENUM(NSInteger, ViewState) {
 - (void)didNavigationFinished:(NSDictionary *)properties
 {
 
+}
+
+- (BOOL)checkDestId
+{
+    NSURL *url = [NSURL URLWithString:URL_AR_SCHEME];
+    if (![[UIApplication sharedApplication] canOpenURL:url]) {
+        return false;
+    }
+
+    if (([[self destId] isEqualToString:@"EDITOR_node_1616507298602"]) ||       // ビジョナリーラボ
+        ([[self destId] isEqualToString:@"EDITOR_node_1637131463094"])) {       // 細胞たち研究開発中
+        [self nearArAlert];
+        return true;
+    }
+    return false;
+}
+
+- (void)nearArAlert
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Switch to AR navigation", @"")
+                                                                   message:NSLocalizedString(@"Do you want to start the Miraikan AR app?", @"")
+                                                            preferredStyle: UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle: NSLocalizedStringFromTable(@"YES", @"BlindView", @"")
+                                              style: UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction *action) {
+        [self openArApp];
+                                              }]];
+    [alert addAction:[UIAlertAction actionWithTitle: NSLocalizedStringFromTable(@"NO", @"BlindView", @"")
+                                              style: UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction *action) {
+                                              }]];
+     [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)openArApp
+{
+    NSURL *url = [NSURL URLWithString:URL_AR_SCHEME];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+        
+        HLPLocation *location = [[NavDataStore sharedDataStore] currentLocation];
+        
+        if (!isnan(location.lat) && !isnan(location.lng)) {
+            NSString * query = [NSString stringWithFormat:URL_AR_QUERY, @(location.floor), @(location.lat), @(location.lng)];
+            url = [NSURL URLWithString: [NSString stringWithFormat:@"%@%@?%@", URL_AR_SCHEME,  URL_AR_HOST, query]];
+        }
+
+        [[UIApplication sharedApplication] openURL:url
+                                           options:@{}
+                                 completionHandler:nil];
+    }
 }
 
 @end
