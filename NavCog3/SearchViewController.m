@@ -135,6 +135,7 @@
 {
     [super viewDidAppear:animated];
     [self updateViewWithFlag:YES];
+    [[NSUserDefaults standardUserDefaults] setValue:@(NO) forKey:@"isFooterButtonView"];
 }
 
 - (IBAction)refreshDestinations:(id)sender {

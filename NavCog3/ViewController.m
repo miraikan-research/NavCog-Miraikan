@@ -181,6 +181,8 @@ typedef NS_ENUM(NSInteger, ViewState) {
 {
     [super viewDidAppear:animated];
     
+    [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"isFooterButtonView"];
+
     if (!talkButton) {
         double scale = 0.75;
         double size = (113*scale)/2;

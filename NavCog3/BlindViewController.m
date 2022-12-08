@@ -213,6 +213,8 @@
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(elementDidBecomeFocused:) name:AccessibilityElementDidBecomeFocused object:nil];
     
+    [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"isFooterButtonView"];
+
     if (!initialViewDidAppear) {
         needVOFocus = YES;
     }
