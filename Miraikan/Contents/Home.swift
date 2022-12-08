@@ -302,7 +302,7 @@ fileprivate enum MenuItem {
             .miraikanToday,
             .permanentExhibition,
             .currentPosition,
-//            .nearestWashroom,
+            .nearestWashroom,
             .setting,
             .miraikanIDmyPage,
             .aboutMiraikan,
