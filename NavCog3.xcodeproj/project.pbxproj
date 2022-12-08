@@ -117,6 +117,7 @@
 		E5428BD728D199A50048DA94 /* FloorPlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5428BD628D199A50048DA94 /* FloorPlanModel.swift */; };
 		E56E687228E1877300DAD369 /* RestRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56E687128E1877300DAD369 /* RestRoomListViewController.swift */; };
 		E5728D11282A4BD700E260F1 /* FloorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */; };
+		E57DBE22294187360037DD6F /* ThroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E57DBE21294187360037DD6F /* ThroughView.swift */; };
 		E5A716E9280F914400CF5757 /* SettingDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A716E6280F8EF600CF5757 /* SettingDataManager.m */; };
 		E5B9CE8D28BF3123005812B7 /* AccessibilityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */; };
 		E5B9CE9128C1CF70005812B7 /* GuidePosition.json in Resources */ = {isa = PBXBuildFile; fileRef = E5B9CE9028C1CF70005812B7 /* GuidePosition.json */; };
@@ -375,6 +376,7 @@
 		E5428BD628D199A50048DA94 /* FloorPlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanModel.swift; sourceTree = "<group>"; };
 		E56E687128E1877300DAD369 /* RestRoomListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestRoomListViewController.swift; sourceTree = "<group>"; };
 		E5728D10282A4BD700E260F1 /* FloorMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapViewController.swift; sourceTree = "<group>"; };
+		E57DBE21294187360037DD6F /* ThroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThroughView.swift; sourceTree = "<group>"; };
 		E5A716E6280F8EF600CF5757 /* SettingDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingDataManager.m; sourceTree = "<group>"; };
 		E5A716E8280F8F0200CF5757 /* SettingDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingDataManager.h; sourceTree = "<group>"; };
 		E5B9CE8C28BF3123005812B7 /* AccessibilityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityModel.swift; sourceTree = "<group>"; };
@@ -788,6 +790,7 @@
 				E5F52EC62845A2B400BB4152 /* ScheduleListHeader.swift */,
 				E5F52EC82845A30300BB4152 /* ContentRow.swift */,
 				E5F52ECA2845AA8F00BB4152 /* ScheduleRow.swift */,
+				E57DBE21294187360037DD6F /* ThroughView.swift */,
 				E5F52ED02845B0BC00BB4152 /* VoiceGuideRow.swift */,
 				E5DD185D28A0A3C800213F66 /* VoiceGuideButton.swift */,
 				E5DD185F28A0AB0500213F66 /* LocationRecordingButton.swift */,
@@ -1082,6 +1085,7 @@
 				D3A117EE27294B0B00BEC1C8 /* NavDataStore.m in Sources */,
 				D364735B273E0CFD00C110B0 /* BaseListView.swift in Sources */,
 				D3A117EF27294B0B00BEC1C8 /* ServerConfig.m in Sources */,
+				E57DBE22294187360037DD6F /* ThroughView.swift in Sources */,
 				D3A117F027294B0B00BEC1C8 /* AgreementViewController.m in Sources */,
 				D3A117F127294B0B00BEC1C8 /* InitViewController.mm in Sources */,
 				E5F52EAE2844B7CF00BB4152 /* Button.swift in Sources */,

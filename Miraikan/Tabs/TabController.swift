@@ -33,11 +33,13 @@ import UIKit
  */
 class TabController: UITabBarController, UITabBarControllerDelegate {
 
+    private var buttonBaseView = ThroughView()
     private var voiceGuideButton = VoiceGuideButton()
     private var logButton = LocationRecordingButton()
     private var locationButton = LocationInputButton()
     private var locationInputView = LocationInputView()
     var observer: NSKeyValueObservation?
+    var footerButtonViewObserver: NSKeyValueObservation?
     var debugObserver: NSKeyValueObservation?
     var debugLocationObserver: NSKeyValueObservation?
     var locationObserver: NSKeyValueObservation?
@@ -67,6 +69,7 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
             }
         }
 
+        UserDefaults.standard.set(true, forKey: "isFooterButtonView")
         AudioGuideManager.shared.active()
         AudioGuideManager.shared.isActive(UserDefaults.standard.bool(forKey: "isVoiceGuideOn"))
         setLayerButton()
@@ -112,6 +115,14 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
             }
         })
         
+        footerButtonViewObserver = UserDefaults.standard.observe(\.isFooterButtonView, options: [.initial, .new], changeHandler: { [weak self] (defaults, change) in
+            guard let self = self else { return }
+            if let change = change.newValue {
+                UserDefaults.standard.set(change, forKey: "isFooterButtonView")
+                self.buttonBaseView.isHidden = !change
+            }
+        })
+
         locationObserver = UserDefaults.standard.observe(\.isLocationInput, options: [.initial, .new], changeHandler: { [weak self] (defaults, change) in
             guard let self = self else { return }
             if let change = change.newValue {
@@ -151,23 +162,30 @@ class TabController: UITabBarController, UITabBarControllerDelegate {
 
         let tabHeight = self.tabBar.frame.height
         
+        buttonBaseView.frame = CGRect(x: 0,
+                                      y: UIScreen.main.bounds.height - 100 - tabHeight - bottomPadding,
+                                      width: UIScreen.main.bounds.width,
+                                      height: 100)
+        buttonBaseView.backgroundColor = .clear
+        self.view.addSubview(buttonBaseView)
+
         voiceGuideButton.frame = CGRect(x: UIScreen.main.bounds.width - 100 - rightPadding,
-                                        y: UIScreen.main.bounds.height - 90 - tabHeight - bottomPadding,
+                                        y: 10,
                                         width: 80,
                                         height: 80)
-        self.view.addSubview(voiceGuideButton)
+        buttonBaseView.addSubview(voiceGuideButton)
 
         logButton.frame = CGRect(x: UIScreen.main.bounds.width - 100 - 10 - 60 - rightPadding,
-                                 y: UIScreen.main.bounds.height - 90 + 10 - tabHeight - bottomPadding,
+                                 y: 20,
                                  width: 60,
                                  height: 60)
-        self.view.addSubview(logButton)
+        buttonBaseView.addSubview(logButton)
         
         locationButton.frame = CGRect(x: leftPadding + leftPadding + 100,
-                                      y: UIScreen.main.bounds.height - 90 + 10 - tabHeight - bottomPadding,
+                                      y: 20,
                                       width: 60,
                                       height: 60)
-        self.view.addSubview(locationButton)
+        buttonBaseView.addSubview(locationButton)
 
         locationInputView.frame = CGRect(x: 0,
                                          y: 0,

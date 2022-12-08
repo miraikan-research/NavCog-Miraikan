@@ -1,6 +1,6 @@
 //
 //
-//  UserDefaultsExtension.swift
+//  ThroughView.swift
 //  NavCogMiraikan
 //
 /*******************************************************************************
@@ -25,26 +25,23 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-import Foundation
+import UIKit
 
-extension UserDefaults {
-    @objc dynamic var isMoveLogStart: Bool {
-        return Bool("isMoveLogStart") ?? false
+class ThroughView: UIView {
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 
-    @objc dynamic var isLocationInput: Bool {
-        return Bool("isLocationInput") ?? false
+    override init(frame: CGRect) {
+        super.init(frame:frame)
     }
 
-    @objc dynamic var isFooterButtonView: Bool {
-        return Bool("isFooterButtonView") ?? false
-    }
-
-    @objc dynamic var DebugMode: Bool {
-        return Bool("DebugMode") ?? false
-    }
-
-    @objc dynamic var DebugLocationInput: Bool {
-        return Bool("DebugLocationInput") ?? false
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        if view == self {
+            return nil
+        }
+        return view
     }
 }
