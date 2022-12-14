@@ -343,13 +343,13 @@
 "bear right" = "少し右に向く";
 
 /* No comment provided by engineer. */
-"destination is %@" = "%1$@は%2$@です";
+"destination is %@, %@" = "%1$@は%2$@です";
 
 /* remaining distance to the destination */
 "destination is in distance" = "%2$@先、%1$@です";
 
 /* distance to a destination name */
-"distance to %1$@" = "%1$@まで%2$@";
+"distance to %@, %@" = "%1$@まで%2$@";
 
 /* distance to the destination */
 "distance to the destination" = "目的地まで残り%1$@";
@@ -382,7 +382,7 @@
 "make a u-turn to the right" = "右に折り返す";
 
 /* No comment provided by engineer. */
-"name is %@" = "%2$@に%1$@";
+"name is %@, %@" = "%2$@に%1$@";
 
 /* (No Commment) */
 "on %@" = "%@";
@@ -412,10 +412,10 @@
 "on your right side(front)" = "右斜め前";
 
 /* No comment provided by engineer. */
-"poi are %@" = "%2$@に%1$@";
+"poi are %@, %@" = "%2$@に%1$@";
 
 /* No comment provided by engineer. */
-"poi is %@" = "%2$@に%1$@";
+"poi is %@, %@" = "%2$@に%1$@";
 
 /* (No Commment) */
 "proceed distance" = "%1$@進む";

@@ -1475,19 +1475,21 @@
 
 - (void)nearArAlert
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Switch to AR navigation", @"")
-                                                                   message:NSLocalizedString(@"Do you want to start the Miraikan AR app?", @"")
-                                                            preferredStyle: UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle: NSLocalizedStringFromTable(@"YES", @"BlindView", @"")
-                                              style: UIAlertActionStyleDefault
-                                            handler:^(UIAlertAction *action) {
-        [self openArApp];
-                                              }]];
-    [alert addAction:[UIAlertAction actionWithTitle: NSLocalizedStringFromTable(@"NO", @"BlindView", @"")
-                                              style: UIAlertActionStyleDefault
-                                            handler:^(UIAlertAction *action) {
-                                              }]];
-     [self presentViewController:alert animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Switch to AR navigation", @"")
+                                                                       message:NSLocalizedString(@"Do you want to start the Miraikan AR app?", @"")
+                                                                preferredStyle: UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle: NSLocalizedStringFromTable(@"YES", @"BlindView", @"")
+                                                  style: UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction *action) {
+            [self openArApp];
+                                                  }]];
+        [alert addAction:[UIAlertAction actionWithTitle: NSLocalizedStringFromTable(@"NO", @"BlindView", @"")
+                                                  style: UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction *action) {
+                                                  }]];
+         [self presentViewController:alert animated:YES completion:nil];
+    });
 }
 
 - (void)openArApp

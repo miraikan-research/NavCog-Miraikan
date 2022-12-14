@@ -2436,6 +2436,9 @@ static NavNavigatorConstants *_instance;
     }
     NavNavigatorConstants *C = [NavNavigatorConstants constants];
     
+    if (linkInfos.count <= navIndex) {
+        return;
+    }
     id obj = linkInfos[navIndex];
     if (obj && [obj isKindOfClass:NavLinkInfo.class]) {
         NavLinkInfo *linkInfo = (NavLinkInfo*)obj;
