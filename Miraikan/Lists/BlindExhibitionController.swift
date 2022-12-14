@@ -99,7 +99,8 @@ class BlindExhibitionController: BaseListController, BaseListDelegate {
             headers += [linkModel]
             let navModel = NavButtonModel(nodeId: model.nodeId,
                                           locations: model.locations,
-                                          title: model.title)
+                                          title: model.title,
+                                          titlePron: model.titlePron)
             let contentModel = ExhibitionContentModel(title: model.title,
                                                       intro: model.intro,
                                                       blindIntro: model.blindIntro,
@@ -124,7 +125,7 @@ class BlindExhibitionController: BaseListController, BaseListDelegate {
         
         if let model = item?.0, let cell = cell as? NavButtonRow {
             if let nodeId = model.nodeId {
-                cell.configure(nodeId: nodeId)
+                cell.configure(nodeId: nodeId, title: model.titlePron)
             } else if let locations = model.locations, let title = model.title {
                 cell.configure(locations: locations, title: title)
             }

@@ -31,4 +31,5 @@ struct NavButtonModel {
     let nodeId: String?
     let locations: [ExhibitionLocation]?
     let title: String?
+    let titlePron: String?
 }

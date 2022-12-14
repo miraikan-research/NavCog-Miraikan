@@ -105,7 +105,8 @@ class ExhibitionListController: BaseListController, BaseListDelegate {
             cells += [linkId]
             let navModel = NavButtonModel(nodeId: model.nodeId,
                                           locations: model.locations,
-                                          title: model.title)
+                                          title: model.title,
+                                          titlePron: model.titlePron)
             dividedItems += [navModel]
             cells += [navId]
             let contentModel = ExhibitionContentModel(title: model.title,
@@ -143,7 +144,7 @@ class ExhibitionListController: BaseListController, BaseListDelegate {
             return cell
         } else if let model = item as? NavButtonModel, let cell = cell as? NavButtonRow {
             if let nodeId = model.nodeId {
-                cell.configure(nodeId: nodeId)
+                cell.configure(nodeId: nodeId, title : model.titlePron)
             } else if let locations = model.locations, let title = model.title {
                 cell.configure(locations: locations, title: title)
             }

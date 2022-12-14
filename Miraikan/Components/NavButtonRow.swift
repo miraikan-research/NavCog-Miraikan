@@ -45,13 +45,17 @@ class NavButtonRow: BaseRow {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func configure(nodeId : String) {
+    public func configure(nodeId: String, title: String?) {
         btnNavi.tapAction({ [weak self] _ in
             guard let self = self else { return }
             guard let nav = self.nav else { return }
             AudioGuideManager.shared.isDisplayButton(false)
             nav.openMap(nodeId: nodeId)
         })
+        
+        if let title = title {
+            btnNavi.accessibilityLabel = String(format: NSLocalizedString("Guide to", comment: ""), title)
+        }
     }
 
     public func configure(locations : [ExhibitionLocation], title : String) {
