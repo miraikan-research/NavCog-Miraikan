@@ -230,6 +230,9 @@ Feedback is sending...";
 /* Button for navigation */
 "Guide to" = "Guide to %@";
 
+/* Button for navigation */
+"Guide to %@" = "Guide to %@";
+
 /* Exhibition explanation */
 "Description" = "Description";
 

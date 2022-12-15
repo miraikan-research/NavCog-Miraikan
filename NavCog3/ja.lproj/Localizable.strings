@@ -250,6 +250,9 @@ NavCogの設定画面から
 /* Button for navigation */
 "Guide to" = "%@へナビ";
 
+/* Button for navigation */
+"Guide to %@" = "%@へナビゲーション";
+
 /* Exhibition explanation */
 "Description" = "概要";
 

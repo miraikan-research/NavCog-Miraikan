@@ -54,7 +54,7 @@ class NavButtonRow: BaseRow {
         })
         
         if let title = title {
-            btnNavi.accessibilityLabel = String(format: NSLocalizedString("Guide to", comment: ""), title)
+            btnNavi.accessibilityLabel = String(format: NSLocalizedString("Guide to %@", comment: ""), title)
         }
     }
 

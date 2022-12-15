@@ -237,6 +237,9 @@
 /* Button for navigation */
 "Guide to" = "%@ 안내한다";
 
+/* Button for navigation */
+"Guide to %@" = "%@ 안내한다";
+
 /* Exhibition explanation */
 "Description" = "설명";
 

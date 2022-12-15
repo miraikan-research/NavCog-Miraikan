@@ -239,6 +239,9 @@
 /* Button for navigation */
 "Guide to" = "%@指南";
 
+/* Button for navigation */
+"Guide to %@" = "%@指南";
+
 /* Exhibition explanation */
 "Description" = "描述";
 

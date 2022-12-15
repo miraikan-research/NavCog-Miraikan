@@ -80,5 +80,6 @@ class LinkRow: BaseRow {
         titleLink.title = title
         titleLink.sizeToFit()
         titleLink.accessibilityLabel = accessibility
+        titleLink.accessibilityTraits = .button
     }
 }
