@@ -1120,21 +1120,21 @@
             descriptions = [@[description] mutableCopy];
         }
         ExhibitionDataStore.shared.descriptions = descriptions;
-        // Display the texts
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (![self checkDestId]) {
-                VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
-                // Back to exhibition list instead of map
-                [self prepareForDealloc];
-                [self.navigationController popViewControllerAnimated:YES];
-                [self.navigationController pushViewController:vc animated:YES];
-            }
-        });
-        return;
     }
 
     [commander didNavigationFinished:properties];
     [previewer didNavigationFinished:properties];
+
+    // Display the texts
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (![self checkDestId]) {
+            VoiceGuideController *vc = [[VoiceGuideController alloc] initWithTitle:@"Voice Guide"];
+            // Back to exhibition list instead of map
+            [self prepareForDealloc];
+            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    });
 }
 
 // basic functions
