@@ -64,7 +64,8 @@
     downloadingFiles = files;
     
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-
+    config.timeoutIntervalForRequest = 180;
+    config.timeoutIntervalForResource = 240;
     downloadQueue = [[NSOperationQueue alloc] init];
     
     downloadedLength = 0;
